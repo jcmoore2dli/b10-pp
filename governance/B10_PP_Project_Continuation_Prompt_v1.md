@@ -250,16 +250,20 @@ Director Model: Jeff Moore = domain expert, spec author, quality gate. Claude Co
 **Phase 3 — Instructor Dashboard**
 **Phase 4 — Polish and Pilot Preparation**
 
-### Current status as of March 31, 2026
-- B10-PP Spec v0.1 fully drafted (13 sections, 1,581 lines) — pending Jeff review
-- Governance Log 001 completed
-- Phase 1 Build Kickoff Prompt drafted and reviewed
-- Pre-Build Environment Setup Prompt drafted
-- GitHub repository: NOT YET CREATED
-- React/Vite scaffold: NOT YET INITIALIZED
-- Firebase project: NOT YET SET UP
-- Azure TTS voice: NOT YET SELECTED
-- Audio pilot batch (5–10 MP3s): NOT YET GENERATED
+### Current status as of April 1, 2026
+
+B10-PP Spec v0.1 fully drafted (13 sections, 1,581 lines) — pending Jeff review
+Governance Log 001 completed
+GitHub repository: ✅ CREATED — github.com/jcmoore2dli/b10-pp
+React/Vite scaffold: ✅ INITIALIZED in /frontend/
+PWA configured: ✅ vite-plugin-pwa installed and configured
+Tailwind CSS: ✅ installed
+Phase 1 scaffold: ✅ COMPLETE — all 5 tasks done
+Firebase project: ❌ NOT YET SET UP
+Azure TTS voice: ❌ NOT YET SELECTED
+Audio pilot batch (5–10 MP3s): ❌ NOT YET GENERATED
+Updated continuation prompt (Section L + Section M)
+New services/, hooks/, utils/ folders
 
 ### IMMEDIATE NEXT TASK
 Pre-build environment setup:
@@ -274,7 +278,6 @@ Pre-build environment setup:
 
 ## SECTION M — REQUIRED FOLDER STRUCTURE (TARGET)
 
-```
 b10-pp/
 ├── README.md
 ├── docs/
@@ -282,7 +285,7 @@ b10-pp/
 ├── frontend/
 │   └── src/
 │       ├── components/
-│       ├── pages/
+│       ├── screens/
 │       ├── services/
 │       ├── hooks/
 │       └── utils/
@@ -293,7 +296,14 @@ b10-pp/
 │   └── ext/
 ├── data/
 └── scripts/
-```
+
+Notes
+
+screens/ is the canonical folder name for all student-facing view components (Entry, Menu, Passage Detail, Recording, Feedback)
+services/, hooks/, and utils/ are required empty folders — create at scaffold time if not present
+audio/ subdirectories (orient/, core/, ext/) must exist before MP3 files are committed
+data/ holds passages.json and future passage metadata files
+scripts/ holds utility and pre-deployment scripts (TTS generation, etc.)
 
 ---
 

@@ -1,0 +1,92 @@
+[
+  {
+    "passage_id": "B10-COR-HLT-001",
+    "domain": "Health & Medicine",
+    "domain_code": "HLT",
+    "domain_cluster": "H&E",
+    "layer": "CORE",
+    "tier": "Tier 1",
+    "word_count": 78,
+    "text": "Researchers at a major university hospital have found that patients who sleep fewer than six hours per night are significantly more likely to develop high blood pressure within five years. The study, which followed over four thousand adults for a decade, found that short sleep duration increased the risk by nearly forty percent, even after controlling for diet and exercise. Surprisingly, the effect was strongest among adults under fifty, suggesting that sleep deprivation may have a greater long-term impact on younger adults than previously understood.",
+    "audio_path": "/audio/core/B10-COR-HLT-001.mp3"
+  },
+  {
+    "passage_id": "B10-COR-HLT-002",
+    "domain": "Health & Medicine",
+    "domain_code": "HLT",
+    "domain_cluster": "H&E",
+    "layer": "CORE",
+    "tier": "Tier 1",
+    "word_count": 82,
+    "text": "A new analysis of antibiotic prescribing patterns in public hospitals has revealed that more than thirty percent of antibiotic prescriptions may be unnecessary or incorrectly matched to the patient's infection. The report, issued by a national health advisory board, warns that overprescription is accelerating antibiotic resistance at a rate that could render common treatments ineffective within two decades. Experts are calling for mandatory prescription review protocols and stronger reporting requirements to track resistance patterns across hospital networks.",
+    "audio_path": "/audio/core/B10-COR-HLT-002.mp3"
+  },
+  {
+    "passage_id": "B10-COR-GOV-001",
+    "domain": "Governance & Society",
+    "domain_code": "GOV",
+    "domain_cluster": "G&S",
+    "layer": "CORE",
+    "tier": "Tier 1",
+    "word_count": 76,
+    "text": "A recent survey of municipal governments found that cities which adopted participatory budgeting programs — where residents vote directly on how to allocate a portion of the public budget — reported higher levels of civic trust and increased voter turnout in subsequent local elections. However, critics argue that participation rates in these programs remain low, often favoring wealthier and more educated residents, which may produce outcomes that do not reflect the priorities of the broader community.",
+    "audio_path": "/audio/core/B10-COR-GOV-001.mp3"
+  },
+  {
+    "passage_id": "B10-COR-ENV-001",
+    "domain": "Environment",
+    "domain_code": "ENV",
+    "domain_cluster": "H&E",
+    "layer": "CORE",
+    "tier": "Tier 2",
+    "word_count": 84,
+    "text": "Scientists studying permafrost thaw in northern Canada have detected methane emissions significantly higher than climate models had predicted. Methane, a greenhouse gas far more potent than carbon dioxide over short time horizons, is being released as previously frozen organic matter decomposes. The researchers warn that if thaw rates continue at their current pace, this so-called permafrost carbon feedback could contribute an additional half degree of warming by the end of the century — an outcome that current international climate agreements do not account for.",
+    "audio_path": "/audio/core/B10-COR-ENV-001.mp3"
+  },
+  {
+    "passage_id": "B10-COR-TEC-001",
+    "domain": "Technology & Science",
+    "domain_code": "TEC",
+    "domain_cluster": "T&S",
+    "layer": "CORE",
+    "tier": "Tier 0",
+    "word_count": 73,
+    "text": "A technology company has developed an artificial intelligence system that can detect early-stage pancreatic cancer from routine blood tests with an accuracy rate of over ninety percent. Pancreatic cancer is notoriously difficult to diagnose until it reaches an advanced stage, at which point survival rates drop sharply. While the results are promising, medical researchers caution that the system must be validated across larger and more diverse patient populations before it can be considered for clinical use.",
+    "audio_path": "/audio/core/B10-COR-TEC-001.mp3"
+  },
+  {
+    "passage_id": "B10-COR-LRW-001",
+    "domain": "Learning & Work",
+    "domain_code": "LRW",
+    "domain_cluster": "L&W",
+    "layer": "CORE",
+    "tier": "Tier 1",
+    "word_count": 80,
+    "text": "A longitudinal study of workplace training programs found that employees who received structured mentorship in addition to formal training courses were twice as likely to remain with their organization after three years compared to those who received training alone. The study, which tracked over six thousand employees across twelve industries, concluded that mentorship provides the contextual guidance that formal instruction cannot — particularly in navigating organizational culture and building professional relationships. Companies that invest in mentorship programs also reported measurably higher rates of internal promotion.",
+    "audio_path": "/audio/core/B10-COR-LRW-001.mp3"
+  },
+  {
+    "passage_id": "B10-ORI-HLT-001",
+    "domain": "Health & Medicine",
+    "domain_code": "HLT",
+    "domain_cluster": "H&E",
+    "layer": "ORIENT",
+    "tier": null,
+    "word_count": 52,
+    "text": "Studies show that people who sleep less than six hours a night are more likely to develop health problems over time. Researchers tracked thousands of adults for ten years and found that poor sleep was linked to higher blood pressure. The effect was especially strong in younger adults.",
+    "audio_path": "/audio/orient/B10-ORI-HLT-001.mp3"
+  },
+  {
+    "passage_id": "B10-EXT-GOV-001",
+    "domain": "Governance & Society",
+    "domain_code": "GOV",
+    "domain_cluster": "G&S",
+    "layer": "EXT",
+    "tier": null,
+    "ext_band": "EXT-M",
+    "pil_level": "PIL-F",
+    "word_count": 148,
+    "text": "A comprehensive review of participatory governance initiatives across forty-three countries has found that community-led decision-making processes consistently produce higher rates of policy compliance and long-term stakeholder satisfaction than top-down administrative approaches. The review, commissioned by an international development organization, examined programs ranging from neighborhood infrastructure projects to national budget consultations. In each case, communities that had meaningful input into decisions affecting them were more likely to support implementation, maintain shared infrastructure, and report trust in local institutions. However, the review also identified a recurring challenge: without deliberate design features to lower barriers to participation — such as accessible meeting times, multilingual materials, and childcare provisions — participatory processes systematically underrepresent lower-income households, younger residents, and non-dominant language communities. Researchers concluded that participatory governance is not inherently inclusive and requires continuous structural attention to equity if its stated benefits are to be realized across entire communities rather than the most engaged segments only.",
+    "audio_path": "/audio/ext/B10-EXT-GOV-001.mp3"
+  }
+]
