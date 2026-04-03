@@ -74,7 +74,7 @@ export default function PassageDetailScreen() {
             {passage.layer === 'EXT' && passage.ext_band && (
               <>
                 <MetaBadge label="Band" value={passage.ext_band} />
-                {passage.pil_level && <MetaBadge label="PIL" value={passage.pil_level} />}
+                {passage.pil && <MetaBadge label="PIL" value={passage.pil} />}
               </>
             )}
             <MetaBadge label="Cluster" value={passage.domain_cluster} />
@@ -94,7 +94,7 @@ export default function PassageDetailScreen() {
 
         {/* Audio Player */}
         <AudioPlayer
-          audioSrc={passage.audio_path}
+          audioSrc={passage.audio_file}
           onPlayStart={() => setHasEngaged(true)}
         />
 

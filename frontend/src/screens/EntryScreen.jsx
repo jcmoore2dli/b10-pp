@@ -45,12 +45,6 @@ export default function EntryScreen() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 py-12">
       {/* Header */}
       <div className="text-center mb-10">
-        <div
-          className="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-widest mb-4"
-          style={{ backgroundColor: '#1e3a5f', color: '#c8a84b' }}
-        >
-          DLIELC
-        </div>
         <h1 className="text-3xl font-bold mb-2" style={{ color: '#1e3a5f' }}>
           B10 Practice Platform
         </h1>
