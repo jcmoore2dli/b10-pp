@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!-- saved from url=(0173)file:///C:/Users/jeffrey.moore/Documents/Moore/OPI%20SLT/ESO%20Project/ESO%20CC%20Bot%20Beta/Ver%20B10/B10%20Practice%20Platform/DOCS/Docs%20v9_4/b10pp-ecosystem-visual.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Ecosystem Vision</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #030712;
+    color: #e2e8f0;
+    font-family: 'Inter', 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    padding: 60px 24px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 72px; }
+  .header-label {
+    font-size: 11px; letter-spacing: 6px; color: #38bdf8;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 48px; font-weight: 900; line-height: 1.1;
+    background: linear-gradient(135deg, #f1f5f9 0%, #38bdf8 50%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 16px;
+  }
+  .header-sub {
+    font-size: 16px; color: #64748b; font-weight: 300; line-height: 1.6;
+    max-width: 560px; margin: 0 auto;
+  }
+
+  /* Core argument */
+  .argument {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1040 100%);
+    border: 1px solid #a78bfa33;
+    border-radius: 16px; padding: 32px 36px; margin-bottom: 64px;
+    text-align: center;
+  }
+  .argument-label { font-size: 10px; letter-spacing: 4px; color: #a78bfa; text-transform: uppercase; margin-bottom: 16px; }
+  .argument p { font-size: 17px; color: #cbd5e1; line-height: 1.8; font-weight: 300; }
+  .argument strong { color: #f1f5f9; font-weight: 600; }
+
+  /* Layer system */
+  .layers-label { text-align: center; font-size: 11px; letter-spacing: 4px; color: #475569; text-transform: uppercase; margin-bottom: 32px; }
+
+  .layer { margin-bottom: 24px; position: relative; }
+  .layer-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px;
+  }
+  .layer-number {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .layer-meta { flex: 1; }
+  .layer-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .layer-window { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .layer-status {
+    font-size: 10px; letter-spacing: 2px; padding: 3px 10px;
+    border-radius: 4px; border: 1px solid; text-transform: uppercase;
+  }
+
+  .modules {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px; padding-left: 56px;
+  }
+  .module {
+    background: #0a1220; border-radius: 10px; padding: 16px;
+    border: 1px solid; position: relative; overflow: hidden;
+  }
+  .module::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .module-name { font-size: 13px; font-weight: 600; color: #f1f5f9; margin-bottom: 6px; }
+  .module-desc { font-size: 11px; color: #94a3b8; line-height: 1.5; }
+  .module-tag {
+    display: inline-block; font-size: 9px; letter-spacing: 1px;
+    padding: 2px 6px; border-radius: 3px; margin-top: 8px;
+    text-transform: uppercase; font-weight: 600;
+  }
+
+  /* Connector lines between layers */
+  .connector {
+    text-align: center; padding: 8px 0; margin-bottom: 8px;
+    font-size: 20px; color: #1e293b;
+  }
+
+  /* Impact metrics */
+  .metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin: 64px 0;
+  }
+  .metric {
+    background: #0a1220; border: 1px solid #1e293b;
+    border-radius: 12px; padding: 24px; text-align: center;
+  }
+  .metric-val { font-size: 36px; font-weight: 900; margin-bottom: 8px; }
+  .metric-label { font-size: 12px; color: #475569; line-height: 1.4; }
+
+  /* Timeline bar */
+  .timeline { margin: 48px 0; }
+  .timeline-label { font-size: 11px; letter-spacing: 4px; color: #94a3b8; text-transform: uppercase; margin-bottom: 24px; text-align: center; }
+  .timeline-bar {
+    display: flex; border-radius: 8px; overflow: hidden;
+    height: 72px; margin-bottom: 16px;
+  }
+  .tbar-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; text-align: center;
+    padding: 6px 4px; line-height: 1.4;
+  }
+  .timeline-dates {
+    display: grid; grid-template-columns: 8% 14% 8% 18% 10% 18% 12% 12%;
+    font-size: 11px; color: #64748b; padding: 0 2px; gap: 0;
+  }
+  .timeline-dates span { text-align: center; }
+
+  /* Footer */
+  .eco-footer {
+    text-align: center; margin-top: 64px;
+    padding-top: 32px; border-top: 1px solid #1e293b;
+  }
+  .eco-footer p { font-size: 11px; color: #334155; letter-spacing: 2px; text-transform: uppercase; line-height: 2; }
+
+  @media print {
+    body { background: white; color: #111; }
+    .header h1 { -webkit-text-fill-color: #111; color: #111; }
+    .argument, .module, .metric { background: #f8f8f8; border-color: #ddd; }
+    .module::before { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-label">DLIELC · Defense Language Institute English Language Center</div>
+    <h1>B10 Practice Platform</h1>
+    <p class="header-sub">A persistent, student-centered AI practice ecosystem for ILR proficiency development — built by instructors, for instructors.</p>
+  </div>
+
+  <!-- Core Argument -->
+  <div class="argument">
+    <div class="argument-label">The Core Argument</div>
+    <p>
+      DLIELC's throughput targets depend on <strong>consistent, measurable progress</strong> across a distributed instructional environment where students rotate through multiple instructors weekly and historical data rarely follows them.
+      B10-PP creates a <strong>persistent, portable performance record anchored to the student</strong> — not the instructor — so that every instructor who touches a student in a given week works from the same current picture of where that student is and what still needs work.
+      The result is <strong>reduced session ramp-up time, better continuity across rotations, and longitudinal progress data</strong> visible at the program level for the first time.
+    </p>
+  </div>
+
+  <!-- Layers -->
+  <div class="layers-label">The Ecosystem — Three Layers · Built to Scale</div>
+
+  <!-- Layer 1 -->
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-number" style="background:#38bdf822;color:#38bdf8;border:2px solid #38bdf8">1</div>
+      <div class="layer-meta">
+        <div class="layer-title" style="color:#38bdf8">Core Platform — Now</div>
+        <div class="layer-window" style="color:#38bdf8">2026 · Active Development</div>
+      </div>
+      <span class="layer-status" style="color:#4ade80;border-color:#4ade8044;background:#052e1622">IN BUILD</span>
+    </div>
+    <div class="modules">
+      <div class="module" style="border-color:#38bdf833">
+        <div class="module::before" style="background:#38bdf8"></div>
+        <div class="module-name">Student-Centric Access</div>
+        <div class="module-desc">B10 ID as access key. Any instructor looks up any student. No rosters. No CUI risk.</div>
+        <span class="module-tag" style="background:#38bdf811;color:#38bdf8">Phase 2A</span>
+      </div>
+      <div class="module" style="border-color:#38bdf833">
+        <div class="module-name">Listening Practice</div>
+        <div class="module-desc">ORI · COR · EXT passages. ILR 3 paraphrase. Extended listening with arc + twist rubric.</div>
+        <span class="module-tag" style="background:#38bdf811;color:#38bdf8">Phase 3 · Jul 2026</span>
+      </div>
+      <div class="module" style="border-color:#38bdf833">
+        <div class="module-name">Main + SLT Integration</div>
+        <div class="module-desc">Green/yellow queue. Anonymous session notes. Personal instructor groups.</div>
+        <span class="module-tag" style="background:#38bdf811;color:#38bdf8">Phase 3 · Jul 2026</span>
+      </div>
+      <div class="module" style="border-color:#38bdf833">
+        <div class="module-name">Track B Remediation</div>
+        <div class="module-desc">ILR 2 narration, description, instructions. Text prompts. Claude feedback.</div>
+        <span class="module-tag" style="background:#38bdf811;color:#38bdf8">Phase 3B · Aug 2026</span>
+      </div>
+      <div class="module" style="border-color:#38bdf833">
+        <div class="module-name">Claude Feedback Engine</div>
+        <div class="module-desc">Grammar · MF vocab · abstraction · discourse · fluency. Student's own words cited.</div>
+        <span class="module-tag" style="background:#38bdf811;color:#38bdf8">Phase 3</span>
+      </div>
+      <div class="module" style="border-color:#38bdf833">
+        <div class="module-name">Performance Arc Dashboard</div>
+        <div class="module-desc">Assigned vs. attempted. Expandable by domain and scaffold. Gap visible at a glance.</div>
+        <span class="module-tag" style="background:#38bdf811;color:#38bdf8">Phase 3–4</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">↓</div>
+
+  <!-- Layer 2 -->
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-number" style="background:#a78bfa22;color:#a78bfa;border:2px solid #a78bfa">2</div>
+      <div class="layer-meta">
+        <div class="layer-title" style="color:#a78bfa">Advanced Modules — Near</div>
+        <div class="layer-window" style="color:#a78bfa">2026–2027 · Planned</div>
+      </div>
+      <span class="layer-status" style="color:#a78bfa;border-color:#a78bfa44;background:#1e104022">PLANNED</span>
+    </div>
+    <div class="modules">
+      <div class="module" style="border-color:#a78bfa33">
+        <div class="module-name">ESOP Module</div>
+        <div class="module-desc">Extended Supported Opinion. Component rubric: claim · support · conclusion · connectors.</div>
+        <span class="module-tag" style="background:#a78bfa11;color:#a78bfa">Phase 4 · Sep 2026</span>
+      </div>
+      <div class="module" style="border-color:#a78bfa33">
+        <div class="module-name">Scaffold System</div>
+        <div class="module-desc">6 discourse frames + 7 grammar structures. Instructor-configured. Claude-aware feedback.</div>
+        <span class="module-tag" style="background:#a78bfa11;color:#a78bfa">Phase 4 · Sep 2026</span>
+      </div>
+      <div class="module" style="border-color:#a78bfa33">
+        <div class="module-name">MF Lexicon Analytics</div>
+        <div class="module-desc">Claude evaluates student output against human-verified MF lexicon. Vocabulary growth tracking.</div>
+        <span class="module-tag" style="background:#a78bfa11;color:#a78bfa">Phase 4</span>
+      </div>
+      <div class="module" style="border-color:#a78bfa33">
+        <div class="module-name">Hypothesizing Module</div>
+        <div class="module-desc">ILR 3 speculative language. Hedging · modality · attribution. Scaffold system extended.</div>
+        <span class="module-tag" style="background:#a78bfa11;color:#a78bfa">Phase 5 · Oct 2026</span>
+      </div>
+      <div class="module" style="border-color:#a78bfa33">
+        <div class="module-name">Pronunciation + Prosody</div>
+        <div class="module-desc">Segmental error detection. Phrase-level stress. Thought group scoring. Both tracks.</div>
+        <span class="module-tag" style="background:#a78bfa11;color:#a78bfa">Phase 6 · 2027</span>
+      </div>
+      <div class="module" style="border-color:#a78bfa33">
+        <div class="module-name">Cohort Analytics</div>
+        <div class="module-desc">Program-level visibility. Which features are emerging. Traffic light per student.</div>
+        <span class="module-tag" style="background:#a78bfa11;color:#a78bfa">Phase 4–5</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">↓</div>
+
+  <!-- Layer 3 -->
+  <div class="layer">
+    <div class="layer-header">
+      <div class="layer-number" style="background:#fef3c7;color:#92400e;border:2px solid #d97706">3</div>
+      <div class="layer-meta">
+        <div class="layer-title" style="color:#d97706">Plug and Play — Future</div>
+        <div class="layer-window" style="color:#d97706">2027–2028 · Vision</div>
+      </div>
+      <span class="layer-status" style="color:#92400e;border-color:#f59e0b;background:#fef3c7">VISION</span>
+    </div>
+    <div class="modules">
+      <div class="module" style="border-color:#fbbf2433">
+        <div class="module-name">Instructor-Defined Activities</div>
+        <div class="module-desc">Instructors set their own evaluation criteria. AI feedback on custom rubrics. Full autonomy.</div>
+        <span class="module-tag" style="background:#fbbf2411;color:#fbbf24">Phase 7</span>
+      </div>
+      <div class="module" style="border-color:#fbbf2433">
+        <div class="module-name">Reported Speech Tasks</div>
+        <div class="module-desc">ILR 2 concrete + ILR 3 abstract. Student asks questions, reports back. New task type family.</div>
+        <span class="module-tag" style="background:#fbbf2411;color:#fbbf24">Phase 7</span>
+      </div>
+      <div class="module" style="border-color:#fbbf2433">
+        <div class="module-name">Modular Content Families</div>
+        <div class="module-desc">Future long-form listening types beyond EXT. Lectures · briefings · multi-point discourse.</div>
+        <span class="module-tag" style="background:#fbbf2411;color:#fbbf24">Phase 7+</span>
+      </div>
+      <div class="module" style="border-color:#fbbf2433">
+        <div class="module-name">Program Integration</div>
+        <div class="module-desc">B10-PP as institutional platform. Multiple programs. Shared passage library. Cross-program analytics.</div>
+        <span class="module-tag" style="background:#fbbf2411;color:#fbbf24">2028+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Impact Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-val" style="color:#38bdf8">0</div>
+      <div class="metric-label">Admin hours per week to maintain instructor access across rotating schedules</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#4ade80">∞</div>
+      <div class="metric-label">Number of instructors who can work with a student simultaneously using one B10 ID</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#a78bfa">100%</div>
+      <div class="metric-label">Of attempt history, feedback, and session notes that persist across instructor rotations</div>
+    </div>
+  </div>
+
+  <!-- Timeline Bar -->
+  <div class="timeline">
+    <div class="timeline-label">Projected Build Timeline</div>
+    <div class="timeline-bar">
+      <div class="tbar-seg" style="background:#16a34a;color:#030712;width:8%">✓<br>P1</div>
+      <div class="tbar-seg" style="background:#0369a1;color:#f1f5f9;width:14%">P2A<br>Schema</div>
+      <div class="tbar-seg" style="background:#0284c7;color:#f1f5f9;width:8%">P2B</div>
+      <div class="tbar-seg" style="background:#7c3aed;color:#f1f5f9;width:18%">Phase 3<br>Core MVP<br>Jul 2026</div>
+      <div class="tbar-seg" style="background:#6d28d9;color:#f1f5f9;width:10%">3B<br>Track B</div>
+      <div class="tbar-seg" style="background:#be185d;color:#f1f5f9;width:18%">Phase 4<br>ESOP +<br>Analytics</div>
+      <div class="tbar-seg" style="background:#9f1239;color:#f1f5f9;width:14%">Phase 5<br>Hyp.</div>
+      <div class="tbar-seg" style="background:#4a1d96;color:#f1f5f9;width:10%">Phase 6<br>Pron.</div>
+    </div>
+    <div class="timeline-dates">
+      <span>Apr<br>2026</span>
+      <span>May<br>2026</span>
+      <span>Jun</span>
+      <span>Jul<br>2026</span>
+      <span>Aug</span>
+      <span>Sep–Oct<br>2026</span>
+      <span>Oct–Dec<br>2026</span>
+      <span>Jan–Apr<br>2027</span>
+    </div>
+  </div>
+
+  <!-- Track Summary -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:48px">
+    <div style="flex:1;min-width:240px;background:#0a1220;border:1px solid #a78bfa33;border-radius:12px;padding:24px">
+      <div style="font-size:11px;color:#a78bfa;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">Track A — ILR 2+/3</div>
+      <div style="font-size:13px;color:#475569;line-height:1.8">
+        Listening · Paraphrase · ESOP<br>
+        Hypothesizing · Extended Listening<br>
+        Discourse Frame Scaffold<br>
+        Grammar Structure Scaffold<br>
+        MF Lexicon Tracking<br>
+        Pronunciation + Prosody
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px;background:#0a1220;border:1px solid #fbbf2433;border-radius:12px;padding:24px">
+      <div style="font-size:11px;color:#fbbf24;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">Track B — ILR 2</div>
+      <div style="font-size:13px;color:#475569;line-height:1.8">
+        Past Tense Narration<br>
+        Place + Object Description<br>
+        Sequential Instructions<br>
+        Text Prompt Interface<br>
+        Same feedback · same arc view<br>
+        Pronunciation + Prosody
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px;background:#0a1220;border:1px solid #4ade8033;border-radius:12px;padding:24px">
+      <div style="font-size:11px;color:#4ade80;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">All Instructors</div>
+      <div style="font-size:13px;color:#475569;line-height:1.8">
+        B10 ID lookup — any student<br>
+        Full attempt history<br>
+        All session notes<br>
+        Assign: main or SLT<br>
+        Personal groups<br>
+        No admin required
+      </div>
+    </div>
+  </div>
+
+  <div class="eco-footer">
+    <p>
+      B10 Practice Platform · DLIELC · J. Moore · 2026–2027<br>
+      Built on Firebase · React · OpenAI Whisper · Anthropic Claude<br>
+      Student-Centric · ILR-Anchored · Mobile-First · Instructor-Driven
+    </p>
+  </div>
+
+</div>
+
+
+</body></html>

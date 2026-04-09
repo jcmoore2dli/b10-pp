@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)file:///C:/Users/jeffrey.moore/Downloads/b10pp-roadmap-v9.1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Roadmap v9.1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8fafc; color: #1e293b; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px 20px; }
+  .wrap { max-width: 740px; margin: 0 auto; }
+
+  .doc-label { font-size: 11px; letter-spacing: 4px; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  h1 { font-size: 30px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+  .version { font-size: 18px; font-weight: 400; color: #64748b; }
+  .subtitle { font-size: 12px; color: #64748b; margin-bottom: 28px; line-height: 1.6; letter-spacing: 0.5px; }
+
+  /* Stats row */
+  .stats { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+  .stat { padding: 14px 18px; border-right: 1px solid #e2e8f0; flex: 1; min-width: 130px; background: white; }
+  .stat:last-child { border-right: none; }
+  .stat-label { font-size: 10px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+  .stat-val { font-size: 14px; color: #0f172a; font-weight: 700; }
+
+  h2 { font-size: 11px; color: #0284c7; letter-spacing: 3px; text-transform: uppercase; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #bae6fd; font-weight: 700; }
+
+  /* Governance table */
+  .gov { background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+  .gov-row { display: flex; border-bottom: 1px solid #f1f5f9; }
+  .gov-row:last-child { border-bottom: none; }
+  .gov-label { font-size: 12px; font-weight: 700; color: #0f172a; min-width: 185px; flex-shrink: 0; padding: 11px 14px; background: #f8fafc; border-right: 1px solid #e2e8f0; }
+  .gov-text { font-size: 12px; color: #334155; line-height: 1.6; padding: 11px 14px; }
+
+  /* Track boxes */
+  .track-boxes { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .track-box { flex: 1; min-width: 200px; border-radius: 8px; padding: 14px 16px; border: 1px solid; background: white; }
+  .track-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+  .track-text { font-size: 12px; color: #475569; line-height: 1.7; }
+
+  /* Use cases */
+  .use-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .use-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
+  .use-title { font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .use-text { font-size: 12px; color: #475569; line-height: 1.5; }
+
+  /* Phase timeline */
+  .phase { position: relative; padding-left: 40px; }
+  .phase::before { content:''; position:absolute; left:9px; top:0; bottom:0; width:2px; background:#e2e8f0; }
+  .node { position:absolute; left:1px; top:18px; width:18px; height:18px; border-radius:50%; border:3px solid; background:white; }
+  .card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; border-left-width: 4px; }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .phase-tag { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-right: 6px; }
+  .status-badge { font-size: 10px; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 700; border: 1px solid; }
+  .phase-title { font-size: 16px; color: #0f172a; font-weight: 700; margin-top: 4px; }
+  .sprint { font-size: 11px; color: #b45309; margin-top: 4px; font-weight: 600; }
+  .period { font-size: 11px; color: #64748b; text-align: right; font-weight: 600; }
+  .best-real { font-size: 10px; color: #94a3b8; text-align: right; margin-top: 3px; }
+
+  .checklist { border-top: 1px solid #f1f5f9; padding-top: 10px; }
+  .item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+  .box { width: 15px; height: 15px; border-radius: 3px; border: 2px solid #cbd5e1; flex-shrink: 0; margin-top: 2px; background: white; display: flex; align-items: center; justify-content: center; }
+  .box.done { background: #22c55e; border-color: #22c55e; }
+  .box.done::after { content: '✓'; font-size: 9px; color: white; font-weight: 900; }
+  .item-text { font-size: 13px; color: #334155; line-height: 1.5; }
+  .item-text.done { color: #94a3b8; text-decoration: line-through; }
+  .item-text.deferred { color: #94a3b8; font-style: italic; }
+
+  .divider { font-size: 11px; font-weight: 700; color: #0284c7; letter-spacing: 2px; text-transform: uppercase; padding: 10px 0 6px; border-top: 1px solid #f1f5f9; margin-top: 4px; }
+
+  .legend { font-size: 11px; color: #94a3b8; margin-top: 10px; padding-left: 40px; }
+  .footer { margin-top: 48px; font-size: 10px; color: #94a3b8; text-align: center; letter-spacing: 2px; line-height: 2.2; border-top: 1px solid #e2e8f0; padding-top: 20px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-label">DLIELC · B10 Practice Platform</div>
+  <h1>Development Roadmap <span class="version">v9.1</span></h1>
+  <div class="subtitle">STUDENT-CENTRIC · SCAFFOLD SYSTEM · SUPPLEMENTAL POOL · PARALLEL TO SCHEMA v9.1 · CANONICAL</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Bandwidth</div><div class="stat-val">8–10 hrs/wk</div></div>
+    <div class="stat"><div class="stat-label">Sprint Week</div><div class="stat-val">Apr 20 (~36 hrs)</div></div>
+    <div class="stat"><div class="stat-label">First Live Use</div><div class="stat-val">Jul 2026</div></div>
+    <div class="stat"><div class="stat-label">Best Case</div><div class="stat-val">Dec 2026</div></div>
+    <div class="stat"><div class="stat-label">Realistic</div><div class="stat-val">Apr 2027</div></div>
+    <div class="stat"><div class="stat-label">Plug &amp; Play</div><div class="stat-val">2027–2028</div></div>
+  </div>
+
+  <div class="track-boxes">
+    <div class="track-box" style="border-color:#c4b5fd;">
+      <div class="track-label" style="color:#7c3aed;">Track A — ILR 2+/3 · ilrTarget = "3"</div>
+      <div class="track-text">ORI · COR · EXT audio passages<br>Paraphrase · ESOP · Hypothesizing · Extended Listening<br>Level 2 tasks assignable for interview floor prep</div>
+    </div>
+    <div class="track-box" style="border-color:#fde68a;">
+      <div class="track-label" style="color:#b45309;">Track B — ILR 2 · ilrTarget = "2"</div>
+      <div class="track-text">Text prompts · corpusType = "none"<br>Narration · Description · Instructions<br>Terminal · unaware Track A exists</div>
+    </div>
+  </div>
+
+  <h2>Locked Governance Decisions</h2>
+  <div class="gov">
+    <div class="gov-row"><div class="gov-label">Student-centric access</div><div class="gov-text">Any instructor looks up any student by B10 ID. No class membership. No admin roster maintenance. No CUI risk. Student shares B10 ID voluntarily.</div></div>
+    <div class="gov-row"><div class="gov-label">SLT instructor access</div><div class="gov-text">Full library — no restrictions. assignmentType = "slt" is a label only. Supplemental pool is additive. Text-prompt tasks are generatively infinite — no supplemental pool needed.</div></div>
+    <div class="gov-row"><div class="gov-label">Scaffold system</div><div class="gov-text">ESOP + hypothesizing. Two-axis: 6 discourse frames + 7 grammar structures. Four modes: holistic (default) · argument_structure · discourse_frame · grammar_structure · combined.</div></div>
+    <div class="gov-row"><div class="gov-label">ILR target values</div><div class="gov-text">"2" and "3" only. No "2+" anywhere. 2+ is an OPI rating outcome. mfTier scaffolds within level 3 — all tier 0/1/2 passages are ilrTarget = "3".</div></div>
+    <div class="gov-row"><div class="gov-label">Track A level 2 tasks</div><div class="gov-text">Assigning narration/description/instructions to Track A = strategic floor prep for 3-level interview gateway. Not remediation.</div></div>
+    <div class="gov-row"><div class="gov-label">EXT subtype</div><div class="gov-text">EXT is one canonized long-form family — not the umbrella. Future long-form families carry their own corpus types and constraints.</div></div>
+    <div class="gov-row"><div class="gov-label">EXT launch</div><div class="gov-text">Simultaneous with core passages in Phase 3. Full visibility from day one.</div></div>
+    <div class="gov-row"><div class="gov-label">Instructor autonomy</div><div class="gov-text">Platform informs sessions — never prescribes them. No gates, no alerts, no pressure.</div></div>
+    <div class="gov-row"><div class="gov-label">Recommended path</div><div class="gov-text">Orient → Core → Extended · Tier 0 → Tier 1 → Tier 2 as one-tap suggestion. Full library always one tap away.</div></div>
+    <div class="gov-row"><div class="gov-label">poolType scope</div><div class="gov-text">Audio corpus types only (ORI/COR/EXT). Text-prompt tasks have no poolType — generatively infinite.</div></div>
+    <div class="gov-row"><div class="gov-label">MC locked</div><div class="gov-text">No MC as primary assessment. ESOP pre-task scaffold only. Track A. Admin-controlled. scaffoldOnly always true.</div></div>
+    <div class="gov-row"><div class="gov-label">Audio TTL</div><div class="gov-text">Track A only. Deleted after 2 weeks. Transcript + feedback + features persist permanently.</div></div>
+    <div class="gov-row"><div class="gov-label">Mobile-first</div><div class="gov-text">Full functionality on iPhone and Android. PWA installable. iOS Safari and Android Chrome tested before Phase 3 launch.</div></div>
+    <div class="gov-row"><div class="gov-label">Phase 7 placeholder</div><div class="gov-text">Plug and play module — 2027–2028. Instructor-defined activities. passageSource = "instructor_created".</div></div>
+  </div>
+
+  <h2>Deployment Use Cases</h2>
+  <div class="use-grid">
+    <div class="use-card"><div class="use-title">On-site DLIELC</div><div class="use-text">Main + SLT instructors all look up same student by B10 ID. Full history visible. assignedBy tracks accountability.</div></div>
+    <div class="use-card"><div class="use-title">Off-site / Mobile</div><div class="use-text">Access codes distributed before deployment. Practice continues in field on phones. Admin monitors remotely.</div></div>
+    <div class="use-card"><div class="use-title">Remote site</div><div class="use-text">On-site instructors look up students by B10 ID. Admin manages from DLIELC. Identical experience.</div></div>
+    <div class="use-card"><div class="use-title">Individual study</div><div class="use-text">Admin assigns directly to student by B10 ID. No group required. Student practices anywhere.</div></div>
+  </div>
+
+  <h2>Phases</h2>
+  <div style="position:relative">
+
+    <div class="phase">
+      <div class="node" style="border-color:#22c55e;background:#22c55e;"></div>
+      <div class="card" style="border-left-color:#22c55e;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#16a34a;">Phase 1</span>
+            <span class="status-badge" style="color:#16a34a;border-color:#bbf7d0;background:#f0fdf4;">COMPLETE</span>
+            <div class="phase-title">Foundation</div>
+          </div>
+          <div><div class="period">Completed</div><div class="best-real">6/6 items</div></div>
+        </div>
+        <div class="checklist">
+          <div class="item"><div class="box done"></div><div class="item-text done">React + Vite scaffold</div></div>
+          <div class="item"><div class="box done"></div><div class="item-text done">Firebase project init + GitHub</div></div>
+          <div class="item"><div class="box done"></div><div class="item-text done">OpenAI Whisper integration (initial)</div></div>
+          <div class="item"><div class="box done"></div><div class="item-text done">Claude API feedback pipeline</div></div>
+          <div class="item"><div class="box done"></div><div class="item-text done">Environment setup (Linux Mint / Claude Code)</div></div>
+          <div class="item"><div class="box done"></div><div class="item-text done">Checkpoint 1 gate</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#0284c7;"></div>
+      <div class="card" style="border-left-color:#0284c7;background:#f0f9ff;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#0284c7;">Phase 2A</span>
+            <span class="status-badge" style="color:#0284c7;border-color:#bae6fd;background:#e0f2fe;">IN PROGRESS</span>
+            <div class="phase-title">Firebase Schema &amp; Role Architecture — v9.1</div>
+            <div class="sprint">36-hr sprint: week of Apr 20</div>
+          </div>
+          <div><div class="period">Apr 20 – May 2026</div><div class="best-real">▲ May W1 · ◆ May W2</div></div>
+        </div>
+        <div class="checklist">
+          <div class="divider">Core collections — v9.1 schema</div>
+          <div class="item"><div class="box"></div><div class="item-text">Collections: users, students, groups, notes, passages, assignments, attempts</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">students: B10 ID as key · track write-protected after creation · admin override requires trackOverrideNote</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">groups: instructor-owned · instructorId + groupName + studentIds · private to owner</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">notes: studentId + timestamp + content + sessionType ("main" | "slt") · anonymous</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">passages.poolType: "main" | "supplemental" | "both" — audio corpus types only</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">passages.passageSource: "b10_curated" | "instructor_created"</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">passages.corpusType: "ORI" | "EXT" | "COR" | "none" — never null</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">passages.ilrTarget: "2" | "3" only — no "2+" anywhere</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">assignments.assignmentType: "main" | "slt" — one click, drives green/yellow indicator</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">assignments.scaffoldConfig: focusArea + primaryFrame + primaryStructure + secondaries + studentCueText</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">attempts: score top-level only · ilrTarget denormalized · scaffoldConfig denormalized · assignmentId optional</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">features map: full structure defined · MVP populates falseStartCount only</div></div>
+          <div class="divider">Security rules</div>
+          <div class="item"><div class="box"></div><div class="item-text">Any instructor reads any student by B10 ID — all attempts, notes, assignments</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Student reads passage only if passage.track == student.track OR passage.track == "both"</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">students.track write-protected after creation</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Groups private to owning instructor · React auth: login → role → correct view</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Audio TTL: audioExpiresAt + Cloud Function auto-delete 2 weeks</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Full emulator test: all roles · both tracks · B10 ID lookup · group privacy</div></div>
+          <div class="item"><div class="box"></div><div class="item-text deferred">⟳ DEFERRED: previousInstructorIds — add post-pilot</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#0284c7;"></div>
+      <div class="card" style="border-left-color:#0284c7;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#0284c7;">Phase 2B</span>
+            <span class="status-badge" style="color:#64748b;border-color:#e2e8f0;background:#f8fafc;">UPCOMING</span>
+            <div class="phase-title">Whisper Integration</div>
+          </div>
+          <div><div class="period">May – Jun 2026</div><div class="best-real">▲ May W3 · ◆ Jun W1</div></div>
+        </div>
+        <div class="checklist">
+          <div class="item"><div class="box"></div><div class="item-text">Browser mic access + recording UI</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Upload audio to Firebase Storage with audioExpiresAt (Track A only)</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Whisper transcription → transcript in attempt document</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">falseStartCount → features map · both tracks</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Verify: audio deletes after 2 weeks · transcript + feedback persist permanently</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#7c3aed;"></div>
+      <div class="card" style="border-left-color:#7c3aed;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#7c3aed;">Phase 3</span>
+            <span class="status-badge" style="color:#64748b;border-color:#e2e8f0;background:#f8fafc;">UPCOMING</span>
+            <div class="phase-title">Track A — Core MVP · ORI + COR + EXT Full Launch</div>
+          </div>
+          <div><div class="period">Jun – Jul 2026</div><div class="best-real">▲ Jun W3 · ◆ Jul 2026</div></div>
+        </div>
+        <div class="checklist">
+          <div class="divider">True MVP — minimum for first live use</div>
+          <div class="item"><div class="box"></div><div class="item-text">Audio playback UI — student cannot advance until played once</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Student queue: green (main) / yellow (SLT) · assigned passages only</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Recording → Whisper → Claude level 3 paraphrase rubric</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">claudeFeedback: grammar · structure · MF vocab · abstraction · discourse · fluency · student's words cited</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">score + transcript + claudeFeedback + falseStartCount + ilrTarget + assignmentType → attempt</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Student feedback display after submission</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Instructor: B10 ID lookup · attempt history · notes · assign (main/slt) · leave note · My Groups</div></div>
+          <div class="divider">Student performance arc dashboard — Phase 3 top level</div>
+          <div class="item"><div class="box"></div><div class="item-text">Hierarchical assigned vs. attempted count by task type — expandable by domain</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Gap between assigned and attempted visible at a glance</div></div>
+          <div class="divider">EXT simultaneous launch + supplemental pool</div>
+          <div class="item"><div class="box"></div><div class="item-text">Upload EXT beta MP3s · extBand + lexBand + pilLevel verified before upload · LEX-B + PIL-H rejected</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Separate Claude prompt: narrative arc + twist rubric</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Upload supplemental listening passages (poolType = "supplemental")</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Instructor menu: filter by poolType · corpusType · taskType · ilrTarget · phase · mfTier</div></div>
+          <div class="divider">Instructor autonomy + mobile-first + pilot</div>
+          <div class="item"><div class="box"></div><div class="item-text">Recommended path: Orient → Core → Extended · Tier 0 → Tier 1 → Tier 2 — one-tap option. Full library one tap away.</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">All screens tested on small screen first · iOS Safari + Android Chrome tested · PWA installable</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Pilot: 2–3 main class instructors + 1–2 SLT instructors · ideally 1 student with both in pilot</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">SLT feedback: B10 ID lookup · green/yellow clarity · note format · supplemental pool utility · role clarity</div></div>
+          <div class="item"><div class="box"></div><div class="item-text deferred">⟳ SLIPPED TO PHASE 4: MF vocab analytics · scaffold drill-down · rich dashboards</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#d97706;"></div>
+      <div class="card" style="border-left-color:#d97706;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#d97706;">Phase 3B</span>
+            <span class="status-badge" style="color:#64748b;border-color:#e2e8f0;background:#f8fafc;">UPCOMING</span>
+            <div class="phase-title">Track B — ILR 2 Remediation MVP</div>
+          </div>
+          <div><div class="period">Jul – Aug 2026</div><div class="best-real">▲ Jul W3 · ◆ Aug W2</div></div>
+        </div>
+        <div class="checklist">
+          <div class="divider">NAR · DESC · SEQ — ilrTarget = "2" · corpusType = "none" · text prompts</div>
+          <div class="item"><div class="box"></div><div class="item-text">Text prompt display UI — no audio · Track B never sees Track A content</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">NAR ~100 prompts · Claude rubric: irregular past tense, basic structures, narrative coherence</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">DESC ~100 prompts · Claude rubric: spatial markers, detail density, listener orientation</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">SEQ ~100 prompts · Claude rubric: sequential markers, logical ordering, step clarity</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Green/yellow queue active · session notes + B10 ID lookup identical to Track A</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#be185d;"></div>
+      <div class="card" style="border-left-color:#be185d;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#be185d;">Phase 4</span>
+            <span class="status-badge" style="color:#64748b;border-color:#e2e8f0;background:#f8fafc;">UPCOMING</span>
+            <div class="phase-title">Track A — ESOP + Scaffold System + MF Analytics + Dashboards</div>
+          </div>
+          <div><div class="period">Sep – Oct 2026</div><div class="best-real">▲ Sep · ◆ Oct 2026</div></div>
+        </div>
+        <div class="checklist">
+          <div class="divider">ESOP module</div>
+          <div class="item"><div class="box"></div><div class="item-text">ESOP passage corpus · taskType = "esop" · ilrTarget = "3"</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Component rubric: claim / support / conclusion / connectors · student wording cited back</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">esopComponents → features map · MC pre-task scaffold: admin-enabled, labeled, never scored</div></div>
+          <div class="divider">Scaffold system — ESOP + hypothesizing</div>
+          <div class="item"><div class="box"></div><div class="item-text">Instructor scaffold picker: focusArea · primaryFrame · primaryStructure · secondaries</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">studentCueText auto-generated in plain language · student sees cue, not framework labels</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Claude prompt updated to consume scaffoldConfig — full technical spec sent to LLM</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">scaffoldConfig denormalized to attempt document for analytics</div></div>
+          <div class="divider">MF analytics + rich dashboards</div>
+          <div class="item"><div class="box"></div><div class="item-text">Claude evaluates transcript against pre-verified MF lexicon → mfVocabUsed / mfVocabMissed</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Scaffold drill-down in dashboard: frame and structure attempt distribution</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Instructor view: main vs SLT filter · notes timeline · traffic light per student</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Auto-generated one-sentence student summary from attempt data</div></div>
+        </div>
+
+        <!-- Research direction note -->
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px 16px;margin-top:14px;border-left:4px solid #d97706;">
+          <div style="font-size:10px;font-weight:700;color:#d97706;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Research Direction — Documented, Not Yet a Build Item</div>
+          <div style="font-size:12px;color:#334155;line-height:1.7;">
+            <strong style="color:#0f172a;">Spoken MF Vocabulary Mini Corpus.</strong>
+            As attempt transcripts accumulate, a background process could extract mid-frequency vocabulary
+            from attempts scored 3 (Good) or 4 (Excellent) and build a frequency-ranked spoken learner
+            corpus — identifying which MF words actually appear in high-performing ILR 3 spoken production,
+            and which words in the lexicon rarely surface despite being pre-verified.<br><br>
+            This would produce something that does not currently exist: a frequency-ranked spoken MF
+            vocabulary list derived specifically from ILR 3-level production in a military English context.
+            Aggregate only — no individual student data. Ethically handled under standard anonymized
+            data use disclosure at platform launch.<br><br>
+            <strong style="color:#0f172a;">Potential value:</strong> Informs instruction · surfaces productive vs. dormant MF vocabulary ·
+            publishable applied linguistics resource after 12–18 months of data accumulation ·
+            improves scaffold and feedback targeting in later phases.<br><br>
+            <em style="color:#94a3b8;">Schema note: No new collections required. Derived from existing /attempts data
+            (transcript + score fields). Would surface as an admin-visible aggregate report.</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#0284c7;"></div>
+      <div class="card" style="border-left-color:#0284c7;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#0284c7;">Phase 5</span>
+            <span class="status-badge" style="color:#64748b;border-color:#e2e8f0;background:#f8fafc;">UPCOMING</span>
+            <div class="phase-title">Track A — Hypothesizing + Scaffold Extension</div>
+          </div>
+          <div><div class="period">Oct – Dec 2026</div><div class="best-real">▲ Oct · ◆ Dec 2026</div></div>
+        </div>
+        <div class="checklist">
+          <div class="item"><div class="box"></div><div class="item-text">Hypothesizing passage corpus · taskType = "hypothesizing" · ilrTarget = "3"</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">ILR 3 discourse rubric: hedging · modality · attribution · speculative markers</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">scaffoldConfig active for hypothesizing — same two-axis system as ESOP</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">hedgingPresent + discourseMarkers → features map · per-student longitudinal profile</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Cohort view: which features emerging across instructor's group</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#16a34a;"></div>
+      <div class="card" style="border-left-color:#16a34a;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#16a34a;">Phase 6</span>
+            <span class="status-badge" style="color:#64748b;border-color:#e2e8f0;background:#f8fafc;">FUTURE</span>
+            <div class="phase-title">Both Tracks — Pronunciation &amp; Prosody</div>
+          </div>
+          <div><div class="period">Jan – Apr 2027</div><div class="best-real">▲ Jan · ◆ Apr 2027</div></div>
+        </div>
+        <div class="checklist">
+          <div class="item"><div class="box"></div><div class="item-text">Azure Speech vs Whisper evaluation for phoneme-level output</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Segmental error detection · L1 background mapping · phrase-level stress + rhythm scoring</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Prosody feedback UI · pronunciation data → features map · both tracks</div></div>
+          <div class="item"><div class="box"></div><div class="item-text">Track A + Track B integrated reports</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="node" style="border-color:#cbd5e1;"></div>
+      <div class="card" style="border-left-color:#cbd5e1;">
+        <div class="card-header">
+          <div>
+            <span class="phase-tag" style="color:#94a3b8;">Phase 7</span>
+            <span class="status-badge" style="color:#94a3b8;border-color:#e2e8f0;background:#f8fafc;">PLACEHOLDER</span>
+            <div class="phase-title" style="color:#64748b;">Plug and Play — Instructor-Defined Activities</div>
+          </div>
+          <div><div class="period">2027–2028</div></div>
+        </div>
+        <div class="checklist">
+          <div class="item"><div class="box"></div><div class="item-text deferred">Instructor-defined evaluation criteria · passageSource = "instructor_created"</div></div>
+          <div class="item"><div class="box"></div><div class="item-text deferred">AI feedback on instructor-defined rubrics · full instructor autonomy</div></div>
+          <div class="item"><div class="box"></div><div class="item-text deferred">Modular — patches into existing platform · zero impact on B10 curated content</div></div>
+          <div class="item"><div class="box"></div><div class="item-text deferred">reported_speech_2 + reported_speech_3 task types introduced here or earlier if corpus ready</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="legend">▲ Best case &nbsp;·&nbsp; ◆ Realistic &nbsp;·&nbsp; <em>⟳ Deferred / Slipped</em></div>
+
+  <div class="footer">
+    Student-Centric · B10 ID as Access Key · Green = Main · Yellow = SLT<br>
+    Scaffold System · 6 Discourse Frames · 7 Grammar Structures<br>
+    B10-PP · DLIELC · J. Moore · 2026–2027<br>
+    Roadmap v9.1 · Parallel to Schema v9.1 · Canonical · Locked
+  </div>
+
+</div>
+
+
+</body></html>

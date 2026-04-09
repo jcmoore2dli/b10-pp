@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<!-- saved from url=(0072)file:///C:/Users/jeffrey.moore/Downloads/b10pp-pronunciation-module.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Pronunciation Module</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f8fafc;
+    color: #1e293b;
+    font-family: 'DM Sans', sans-serif;
+    padding: 40px 20px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+
+  /* Page header */
+  .page-label { font-size: 11px; letter-spacing: 4px; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+  h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .page-sub { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; }
+
+  hr.divider { border: none; border-top: 1px solid #e2e8f0; margin: 56px 0; }
+
+  /* ─── GRAPHIC 1: OVERVIEW ──────────────────────────────── */
+  .graphic-title { font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
+
+  .pipeline-wrap { background: #0f172a; border-radius: 16px; padding: 32px; margin-bottom: 16px; }
+  .pipeline-label { font-size: 10px; letter-spacing: 4px; color: #475569; text-transform: uppercase; margin-bottom: 24px; font-weight: 600; }
+
+  .pipeline-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 20px; }
+  .pipe-box {
+    background: #1e293b; border-radius: 10px; padding: 16px 18px;
+    flex: 1; border: 1px solid #334155;
+  }
+  .pipe-arrow {
+    display: flex; align-items: center; padding: 0 10px;
+    font-size: 18px; color: #475569; flex-shrink: 0;
+  }
+  .pipe-label { font-size: 10px; letter-spacing: 2px; color: #64748b; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+  .pipe-title { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+  .pipe-desc { font-size: 11px; color: #64748b; line-height: 1.5; }
+  .pipe-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .pipe-tag { font-size: 10px; background: #334155; color: #94a3b8; padding: 2px 8px; border-radius: 3px; font-family: 'DM Mono', monospace; }
+
+  /* Four domains grid */
+  .domains-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .domain-card {
+    border-radius: 12px; padding: 18px; border: 1px solid;
+  }
+  .domain-icon { font-size: 22px; margin-bottom: 10px; }
+  .domain-name { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .domain-desc { font-size: 12px; line-height: 1.5; }
+  .domain-examples { margin-top: 10px; }
+  .domain-ex { font-size: 11px; padding: 4px 0; border-top: 1px solid; display: flex; gap: 8px; align-items: flex-start; }
+  .domain-ex-label { font-size: 10px; font-weight: 700; min-width: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ILR connection box */
+  .ilr-box { background: #0f172a; border-radius: 12px; padding: 20px 24px; }
+  .ilr-label { font-size: 10px; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .ilr-row { display: flex; gap: 20px; flex-wrap: wrap; }
+  .ilr-item { flex: 1; min-width: 200px; }
+  .ilr-item-label { font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 4px; }
+  .ilr-item-text { font-size: 12px; color: #64748b; line-height: 1.5; }
+  .ilr-item-text strong { color: #cbd5e1; }
+
+  /* ─── PHONE FRAMES ──────────────────────────────────────── */
+  .screens-grid { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+  .screen-wrap { flex: 1; min-width: 260px; max-width: 300px; }
+  .screen-label-top { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; text-align: center; margin-bottom: 12px; }
+
+  .phone {
+    background: white; border: 2px solid #334155; border-radius: 32px;
+    padding: 20px 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  .phone-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .phone-back { font-size: 11px; color: #0284c7; font-weight: 600; }
+  .phone-title { font-size: 13px; font-weight: 700; color: #0f172a; }
+  .phone-action { font-size: 11px; color: #0284c7; font-weight: 600; }
+
+  /* Score hero */
+  .score-hero { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #e2e8f0; }
+  .score-ring { width: 52px; height: 52px; border-radius: 50%; border: 3px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .score-ring-num { font-size: 20px; font-weight: 900; line-height: 1; }
+  .score-ring-lbl { font-size: 8px; font-weight: 700; line-height: 1; margin-top: 1px; }
+  .score-hero-info { flex: 1; }
+  .score-hero-task { font-size: 12px; font-weight: 700; color: #0f172a; }
+  .score-hero-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+  /* Waveform visualization */
+  .waveform-wrap { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+  .waveform-label { font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .waveform { display: flex; align-items: center; gap: 2px; height: 40px; }
+  .waveform-bar { border-radius: 2px; flex-shrink: 0; }
+  .waveform-annotation { display: flex; justify-content: space-between; margin-top: 4px; }
+  .waveform-ann-item { font-size: 9px; color: #94a3b8; text-align: center; }
+
+  /* Feedback sections */
+  .fb-section { margin-bottom: 12px; }
+  .fb-head { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .fb-text { font-size: 11px; color: #334155; line-height: 1.6; }
+  .fb-text strong { color: #0f172a; }
+
+  /* Sound grid for segmentals */
+  .sound-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+  .sound-item { border-radius: 6px; padding: 8px 10px; border: 1px solid; }
+  .sound-phoneme { font-size: 16px; font-weight: 800; font-family: 'DM Mono', monospace; }
+  .sound-desc { font-size: 10px; margin-top: 2px; line-height: 1.3; }
+  .sound-example { font-size: 10px; font-style: italic; margin-top: 3px; }
+
+  /* Stress visualization */
+  .stress-wrap { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .stress-word-row { display: flex; align-items: flex-end; gap: 2px; justify-content: center; margin-bottom: 8px; }
+  .stress-syl { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .stress-bar-wrap { display: flex; align-items: flex-end; height: 36px; }
+  .stress-bar { width: 18px; border-radius: 3px 3px 0 0; }
+  .stress-syl-label { font-size: 10px; font-weight: 700; font-family: 'DM Mono', monospace; }
+  .stress-divider { width: 100%; border-top: 1px dashed #e2e8f0; margin: 8px 0; }
+  .stress-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stress-col { text-align: center; }
+  .stress-col-label { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .stress-word { font-size: 11px; font-family: 'DM Mono', monospace; }
+  .stress-word .primary { font-size: 14px; font-weight: 900; text-decoration: underline; }
+
+  /* Chunking visualization */
+  .chunk-wrap { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .chunk-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; align-items: center; }
+  .chunk-group { display: flex; gap: 2px; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 6px; padding: 4px 6px; }
+  .chunk-word { font-size: 11px; color: #0f172a; font-weight: 500; }
+  .chunk-pause { font-size: 16px; color: #94a3b8; padding: 0 2px; }
+  .chunk-bad { display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+  .chunk-word-bad { font-size: 11px; color: #64748b; }
+  .chunk-pause-bad { font-size: 10px; color: #fb7185; font-weight: 700; padding: 0 1px; }
+
+  /* Schwa examples */
+  .schwa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+  .schwa-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; }
+  .schwa-written { font-size: 11px; color: #64748b; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+  .schwa-spoken { font-size: 12px; font-weight: 700; color: #0f172a; font-family: 'DM Mono', monospace; }
+  .schwa-mark { color: #7c3aed; }
+  .schwa-desc { font-size: 9px; color: #94a3b8; margin-top: 3px; }
+
+  /* Practice suggestion */
+  .practice-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 12px; margin-top: 10px; border-left: 3px solid #22c55e; }
+  .practice-label { font-size: 9px; font-weight: 700; color: #16a34a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+  .practice-text { font-size: 11px; color: #334155; line-height: 1.5; }
+
+  .footer-note { text-align: center; margin-top: 56px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; line-height: 2; }
+
+  /* Phase badge */
+  .phase-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 4px; border: 1px solid; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-label">DLIELC · B10 Practice Platform · Phase 6</div>
+  <h1>Pronunciation Module</h1>
+  <p class="page-sub">
+    At ILR 2+/3, pronunciation is often the gatekeeper — students may have the vocabulary, the grammar, and the ideas, but delivery failures reduce perceived communicative competence and block score achievement.
+    The pronunciation module addresses this through two parallel pipelines: Whisper for content accuracy and a prosody engine for speech delivery quality.
+    Phase 6 feature — documented here as a preview of platform trajectory.
+  </p>
+
+  <!-- ============================================================ -->
+  <!-- GRAPHIC 1: ARCHITECTURE OVERVIEW -->
+  <!-- ============================================================ -->
+  <div class="graphic-title">Graphic 1 — Two-Pipeline Architecture</div>
+  <span class="phase-badge" style="color:#7c3aed;border-color:#c4b5fd;background:#faf5ff;">Phase 6 · Jan–Apr 2027</span>
+
+  <div class="pipeline-wrap">
+    <div class="pipeline-label">How speech gets analyzed</div>
+
+    <!-- Input -->
+    <div class="pipeline-row">
+      <div class="pipe-box" style="background:#1a2744;border-color:#0284c7;text-align:center;">
+        <div class="pipe-label" style="color:#38bdf8;">Input</div>
+        <div class="pipe-title" style="font-size:16px;">Student Recording</div>
+        <div class="pipe-desc" style="color:#94a3b8;">Web Audio API · MP3 · stored 2 weeks</div>
+      </div>
+    </div>
+
+    <!-- Two pipelines -->
+    <div style="display:flex;gap:12px;margin-bottom:16px;">
+      <div style="flex:1;">
+        <div style="text-align:center;font-size:10px;color:#38bdf8;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Pipeline A — Content</div>
+        <div class="pipe-box" style="margin-bottom:8px;">
+          <div class="pipe-label">Step 1</div>
+          <div class="pipe-title">Whisper API</div>
+          <div class="pipe-desc">Transcript + word-level timestamps + confidence scores</div>
+          <div class="pipe-tags"><span class="pipe-tag">transcript</span><span class="pipe-tag">timing</span><span class="pipe-tag">pauses</span></div>
+        </div>
+        <div style="text-align:center;font-size:16px;color:#38bdf8;margin:4px 0;">↓</div>
+        <div class="pipe-box">
+          <div class="pipe-label">Step 2</div>
+          <div class="pipe-title">Claude — Content Scoring</div>
+          <div class="pipe-desc">Task accuracy · grammar · MF vocab · discourse · ESOP arc</div>
+          <div class="pipe-tags"><span class="pipe-tag">score 1-4</span><span class="pipe-tag">strengths</span><span class="pipe-tag">gaps</span></div>
+        </div>
+      </div>
+
+      <div style="flex:1;">
+        <div style="text-align:center;font-size:10px;color:#a78bfa;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Pipeline B — Delivery</div>
+        <div class="pipe-box" style="margin-bottom:8px;border-color:#7c3aed;">
+          <div class="pipe-label" style="color:#a78bfa;">Step 1</div>
+          <div class="pipe-title">Prosody Engine</div>
+          <div class="pipe-desc">Raw audio analysis · pitch curve (F0) · energy · duration · rhythm</div>
+          <div class="pipe-tags"><span class="pipe-tag">intonation</span><span class="pipe-tag">stress</span><span class="pipe-tag">timing</span></div>
+        </div>
+        <div style="text-align:center;font-size:16px;color:#a78bfa;margin:4px 0;">↓</div>
+        <div class="pipe-box" style="border-color:#7c3aed;">
+          <div class="pipe-label" style="color:#a78bfa;">Step 2</div>
+          <div class="pipe-title">Alignment Layer</div>
+          <div class="pipe-desc">Acoustic features mapped to specific words and phrases in transcript</div>
+          <div class="pipe-tags"><span class="pipe-tag">word stress</span><span class="pipe-tag">chunking</span><span class="pipe-tag">linking</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Merged output -->
+    <div style="text-align:center;font-size:16px;color:#4ade80;margin-bottom:8px;">↓ merged ↓</div>
+    <div class="pipe-box" style="border-color:#4ade80;background:#0a1a12;">
+      <div class="pipe-label" style="color:#4ade80;">Output</div>
+      <div class="pipe-title" style="color:#f1f5f9;">Claude — Integrated Pronunciation Feedback</div>
+      <div class="pipe-desc" style="color:#64748b;">Ties delivery failures to task success. Not "your stress was off" — "this chunking breakdown reduced clarity at the point where your main argument landed."</div>
+    </div>
+  </div>
+
+  <!-- Four domains -->
+  <div class="graphic-title" style="margin-top:32px;">Graphic 2 — Four Pronunciation Domains</div>
+
+  <div class="domains-grid">
+
+    <div class="domain-card" style="background:#faf5ff;border-color:#c4b5fd;">
+      <div class="domain-icon">🔊</div>
+      <div class="domain-name" style="color:#7c3aed;">Segmentals</div>
+      <div class="domain-desc" style="color:#475569;">Individual sound accuracy. Consonants and vowels. L1 interference patterns mapped by background language.</div>
+      <div class="domain-examples">
+        <div class="domain-ex" style="border-color:#e9d5ff;">
+          <span class="domain-ex-label" style="color:#7c3aed;">eg</span>
+          <span style="font-size:11px;color:#64748b;">/θ/ → /t/ or /d/ (Arabic, Spanish, Russian speakers)</span>
+        </div>
+        <div class="domain-ex" style="border-color:#e9d5ff;">
+          <span class="domain-ex-label" style="color:#7c3aed;">eg</span>
+          <span style="font-size:11px;color:#64748b;">/v/ vs /b/ confusion · /r/ vs /l/ distinction</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="domain-card" style="background:#fff7ed;border-color:#fed7aa;">
+      <div class="domain-icon">📊</div>
+      <div class="domain-name" style="color:#c2410c;">Primary Phrase Stress</div>
+      <div class="domain-desc" style="color:#475569;">Stress placement within words and phrases. Content vs. function word stress. Contrastive and emphatic stress.</div>
+      <div class="domain-examples">
+        <div class="domain-ex" style="border-color:#fed7aa;">
+          <span class="domain-ex-label" style="color:#c2410c;">eg</span>
+          <span style="font-size:11px;color:#64748b;font-family:&#39;DM Mono&#39;,monospace;">ecoNOMic → ECOnomic</span>
+        </div>
+        <div class="domain-ex" style="border-color:#fed7aa;">
+          <span class="domain-ex-label" style="color:#c2410c;">eg</span>
+          <span style="font-size:11px;color:#64748b;">Flat delivery across clauses · no emphasis on key information</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="domain-card" style="background:#f0fdf4;border-color:#bbf7d0;">
+      <div class="domain-icon">🔗</div>
+      <div class="domain-name" style="color:#15803d;">Linking, Blending and Schwa</div>
+      <div class="domain-desc" style="color:#475569;">Connected speech features. Consonant linking. Vowel reduction. Schwa in unstressed syllables. Elision and intrusion.</div>
+      <div class="domain-examples">
+        <div class="domain-ex" style="border-color:#bbf7d0;">
+          <span class="domain-ex-label" style="color:#15803d;">eg</span>
+          <span style="font-size:11px;color:#64748b;font-family:&#39;DM Mono&#39;,monospace;">"of the" → /əvðə/ not /ɒv ðiː/</span>
+        </div>
+        <div class="domain-ex" style="border-color:#bbf7d0;">
+          <span class="domain-ex-label" style="color:#15803d;">eg</span>
+          <span style="font-size:11px;color:#64748b;font-family:&#39;DM Mono&#39;,monospace;">"and" → /ən/ · "to" → /tə/</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="domain-card" style="background:#eff6ff;border-color:#bfdbfe;">
+      <div class="domain-icon">〰️</div>
+      <div class="domain-name" style="color:#1d4ed8;">Intonation and Chunking</div>
+      <div class="domain-desc" style="color:#475569;">Thought group boundaries. Rising/falling patterns. Discourse intonation. Meaningful pausing vs. fluency breakdown pausing.</div>
+      <div class="domain-examples">
+        <div class="domain-ex" style="border-color:#bfdbfe;">
+          <span class="domain-ex-label" style="color:#1d4ed8;">eg</span>
+          <span style="font-size:11px;color:#64748b;">"In many cases / the policy fails / due to misaligned incentives" — correct chunking</span>
+        </div>
+        <div class="domain-ex" style="border-color:#bfdbfe;">
+          <span class="domain-ex-label" style="color:#1d4ed8;">eg</span>
+          <span style="font-size:11px;color:#64748b;">Falling intonation on assertions · rising on questions</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ILR connection -->
+  <div class="ilr-box">
+    <div class="ilr-label">Why This Is the Gatekeeper at ILR 2+/3</div>
+    <div class="ilr-row">
+      <div class="ilr-item">
+        <div class="ilr-item-label">The Gap</div>
+        <div class="ilr-item-text">Students at 2+/3 often have sufficient vocabulary and can produce ideas. They fail because <strong>delivery reduces perceived communicative competence</strong> — poor prosody signals lower proficiency even when content is accurate.</div>
+      </div>
+      <div class="ilr-item">
+        <div class="ilr-item-label">What This Closes</div>
+        <div class="ilr-item-text">The gap between <strong>linguistic competence</strong> (what they know) and <strong>perceived communicative competence</strong> (what the rater hears). Pronunciation feedback ties delivery failures directly to task success outcomes.</div>
+      </div>
+      <div class="ilr-item">
+        <div class="ilr-item-label">Task-Specific Targeting</div>
+        <div class="ilr-item-text">Paraphrase → <strong>chunking and clarity</strong>. ESOP → <strong>emphatic and rhetorical stress</strong>. Hypothesizing → <strong>intonation for modality</strong>. Narration → <strong>fluency and past-tense linking</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================================================ -->
+  <!-- THREE PHONE MOCKUPS -->
+  <!-- ============================================================ -->
+  <div class="graphic-title">UI Mockups — Three Pronunciation Feedback Screens</div>
+  <div style="font-size:13px;color:#64748b;margin-bottom:32px;line-height:1.5;">What the student sees after a pronunciation-enabled attempt. Each screen focuses on one domain. All three appear in sequence in the full feedback view — student can swipe between them.</div>
+
+  <div class="screens-grid">
+
+    <!-- SCREEN A: SEGMENTALS -->
+    <div class="screen-wrap">
+      <div class="screen-label-top" style="color:#7c3aed;">Screen A · Segmentals</div>
+      <div class="phone">
+        <div class="phone-bar">
+          <div class="phone-back">‹ Feedback</div>
+          <div class="phone-title">Sounds</div>
+          <div class="phone-action">1 / 3</div>
+        </div>
+
+        <div class="score-hero">
+          <div class="score-ring" style="border-color:#d97706;">
+            <div class="score-ring-num" style="color:#d97706;">3</div>
+            <div class="score-ring-lbl" style="color:#d97706;">Good</div>
+          </div>
+          <div class="score-hero-info">
+            <div class="score-hero-task">Paraphrase · ORI-047</div>
+            <div class="score-hero-sub">Pronunciation · Segmentals</div>
+          </div>
+        </div>
+
+        <div class="fb-section">
+          <div class="fb-head" style="color:#16a34a;">Sounds produced accurately</div>
+          <div class="sound-grid">
+            <div class="sound-item" style="background:#f0fdf4;border-color:#bbf7d0;">
+              <div class="sound-phoneme" style="color:#16a34a;">/s/ /z/</div>
+              <div class="sound-desc" style="color:#475569;">Fricatives accurate throughout</div>
+            </div>
+            <div class="sound-item" style="background:#f0fdf4;border-color:#bbf7d0;">
+              <div class="sound-phoneme" style="color:#16a34a;">/p/ /b/</div>
+              <div class="sound-desc" style="color:#475569;">Stop distinction consistent</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fb-section">
+          <div class="fb-head" style="color:#be185d;">Sounds needing attention</div>
+          <div class="sound-grid">
+            <div class="sound-item" style="background:#fff1f2;border-color:#fecdd3;">
+              <div class="sound-phoneme" style="color:#be185d;">/θ/</div>
+              <div class="sound-desc" style="color:#475569;">Produced as /t/ in 4 instances</div>
+              <div class="sound-example" style="color:#94a3b8;">"the" → /te/ · "think" → /tink/</div>
+            </div>
+            <div class="sound-item" style="background:#fff1f2;border-color:#fecdd3;">
+              <div class="sound-phoneme" style="color:#be185d;">/æ/</div>
+              <div class="sound-desc" style="color:#475569;">Raised toward /ɛ/ consistently</div>
+              <div class="sound-example" style="color:#94a3b8;">"that" · "has" · "can"</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-box">
+          <div class="practice-label">Practice suggestion</div>
+          <div class="practice-text">Focus on /θ/ tongue placement — tip between teeth. Try: <em>"the theory," "this thing," "those three."</em></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN B: PRIMARY PHRASE STRESS -->
+    <div class="screen-wrap">
+      <div class="screen-label-top" style="color:#c2410c;">Screen B · Phrase Stress</div>
+      <div class="phone">
+        <div class="phone-bar">
+          <div class="phone-back">‹ Sounds</div>
+          <div class="phone-title">Stress</div>
+          <div class="phone-action">2 / 3</div>
+        </div>
+
+        <div class="score-hero">
+          <div class="score-ring" style="border-color:#d97706;">
+            <div class="score-ring-num" style="color:#d97706;">3</div>
+            <div class="score-ring-lbl" style="color:#d97706;">Good</div>
+          </div>
+          <div class="score-hero-info">
+            <div class="score-hero-task">Paraphrase · ORI-047</div>
+            <div class="score-hero-sub">Pronunciation · Phrase Stress</div>
+          </div>
+        </div>
+
+        <!-- Stress visualization -->
+        <div class="stress-wrap">
+          <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Word stress pattern detected</div>
+          <div class="stress-word-row">
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:36px;background:#be185d;"></div></div>
+              <div class="stress-syl-label" style="color:#be185d;">e</div>
+            </div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:20px;background:#94a3b8;"></div></div>
+              <div class="stress-syl-label">co</div>
+            </div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:14px;background:#94a3b8;"></div></div>
+              <div class="stress-syl-label">no</div>
+            </div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:14px;background:#94a3b8;"></div></div>
+              <div class="stress-syl-label">mic</div>
+            </div>
+            <div style="width:20px;"></div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:14px;background:#94a3b8;"></div></div>
+              <div class="stress-syl-label" style="color:#16a34a;">e</div>
+            </div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:36px;background:#16a34a;"></div></div>
+              <div class="stress-syl-label" style="color:#16a34a;">CO</div>
+            </div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:14px;background:#94a3b8;"></div></div>
+              <div class="stress-syl-label" style="color:#16a34a;">no</div>
+            </div>
+            <div class="stress-syl">
+              <div class="stress-bar-wrap"><div class="stress-bar" style="height:14px;background:#94a3b8;"></div></div>
+              <div class="stress-syl-label" style="color:#16a34a;">mic</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:32px;margin-top:8px;">
+            <div style="text-align:center;"><div style="font-size:9px;color:#be185d;font-weight:700;">You said</div><div style="font-size:11px;font-family:&#39;DM Mono&#39;,monospace;color:#be185d;">ecoNOMic</div></div>
+            <div style="text-align:center;"><div style="font-size:9px;color:#16a34a;font-weight:700;">Target</div><div style="font-size:11px;font-family:&#39;DM Mono&#39;,monospace;color:#16a34a;">ECOnomic</div></div>
+          </div>
+        </div>
+
+        <div class="fb-section">
+          <div class="fb-head" style="color:#d97706;">2 stress errors detected</div>
+          <div class="fb-text">
+            <strong>ecoNOMic</strong> → ECOnomic<br>
+            <strong>inforMAtion</strong> → inforMAtion ✓<br>
+            <strong>imPLEment</strong> → IMplement
+          </div>
+        </div>
+
+        <div class="fb-section">
+          <div class="fb-head" style="color:#16a34a;">Contrastive stress — strong</div>
+          <div class="fb-text">You correctly emphasized content words and reduced function words throughout your response.</div>
+        </div>
+
+        <div class="practice-box">
+          <div class="practice-label">Practice suggestion</div>
+          <div class="practice-text">Mark stress before speaking: <em>ECO·no·mic · PO·li·cy · IM·ple·ment.</em> Say each word aloud three times with stress marked.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN C: LINKING AND BLENDING -->
+    <div class="screen-wrap">
+      <div class="screen-label-top" style="color:#15803d;">Screen C · Linking and Schwa</div>
+      <div class="phone">
+        <div class="phone-bar">
+          <div class="phone-back">‹ Stress</div>
+          <div class="phone-title">Linking</div>
+          <div class="phone-action">3 / 3</div>
+        </div>
+
+        <div class="score-hero">
+          <div class="score-ring" style="border-color:#d97706;">
+            <div class="score-ring-num" style="color:#d97706;">3</div>
+            <div class="score-ring-lbl" style="color:#d97706;">Good</div>
+          </div>
+          <div class="score-hero-info">
+            <div class="score-hero-task">Paraphrase · ORI-047</div>
+            <div class="score-hero-sub">Linking · Blending · Schwa</div>
+          </div>
+        </div>
+
+        <!-- Chunking visualization -->
+        <div class="chunk-wrap">
+          <div style="font-size:9px;font-weight:700;color:#94a3b8;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Thought group chunking</div>
+
+          <div style="font-size:9px;color:#16a34a;font-weight:700;margin-bottom:4px;">Good chunking detected</div>
+          <div class="chunk-row">
+            <div class="chunk-group"><span class="chunk-word">In many cases</span></div>
+            <div class="chunk-pause">|</div>
+            <div class="chunk-group"><span class="chunk-word">the policy fails</span></div>
+            <div class="chunk-pause">|</div>
+            <div class="chunk-group"><span class="chunk-word">due to costs</span></div>
+          </div>
+
+          <div class="stress-divider"></div>
+
+          <div style="font-size:9px;color:#be185d;font-weight:700;margin-bottom:4px;">Chunking breakdown detected</div>
+          <div class="chunk-bad">
+            <span class="chunk-word-bad">The</span>
+            <span class="chunk-pause-bad">//</span>
+            <span class="chunk-word-bad">system</span>
+            <span class="chunk-pause-bad">//</span>
+            <span class="chunk-word-bad">is</span>
+            <span class="chunk-pause-bad">//</span>
+            <span class="chunk-word-bad">not</span>
+            <span class="chunk-word-bad">effective</span>
+          </div>
+          <div style="font-size:9px;color:#94a3b8;margin-top:4px;">Pausing within phrase disrupts meaning</div>
+        </div>
+
+        <!-- Schwa examples -->
+        <div class="fb-section">
+          <div class="fb-head" style="color:#15803d;">Schwa reduction — improving</div>
+          <div class="schwa-grid">
+            <div class="schwa-item">
+              <div class="schwa-written">of the</div>
+              <div class="schwa-spoken">/əv<span class="schwa-mark">ð</span>ə/ ✓</div>
+              <div class="schwa-desc">Correctly reduced</div>
+            </div>
+            <div class="schwa-item">
+              <div class="schwa-written">and</div>
+              <div class="schwa-spoken">/ænd/ ✗</div>
+              <div class="schwa-desc">Should reduce to /ən/</div>
+            </div>
+            <div class="schwa-item">
+              <div class="schwa-written">to</div>
+              <div class="schwa-spoken">/tə/ ✓</div>
+              <div class="schwa-desc">Correctly reduced</div>
+            </div>
+            <div class="schwa-item">
+              <div class="schwa-written">for a</div>
+              <div class="schwa-spoken">/fɔːr eɪ/ ✗</div>
+              <div class="schwa-desc">Should link: /fər<span class="schwa-mark">ə</span>/</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-box">
+          <div class="practice-label">Practice suggestion</div>
+          <div class="practice-text">Use slash notation to mark thought groups before recording: <em>"In many cases / the policy fails / due to costs."</em> Pause only at slashes.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- Summary note -->
+  <div style="background:#0f172a;border-radius:12px;padding:24px;color:#f1f5f9;">
+    <div style="font-size:10px;letter-spacing:3px;color:#38bdf8;text-transform:uppercase;font-weight:700;margin-bottom:12px;">Phase 6 — Why This Comes Last</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:4px;">Most complex</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">Requires a prosody engine, audio alignment layer, and L1 background mapping on top of the existing Whisper + Claude pipeline.</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:4px;">Most costly</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">Azure Speech or equivalent prosody analysis adds ~$260/year to operating costs for 50 students — the largest single cost increase in the roadmap.</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:4px;">Most impactful</div>
+        <div style="font-size:12px;color:#64748b;line-height:1.5;">Pronunciation is the gatekeeper at 2+/3. The platform does not fully address the ILR scoring gap until this module is live. Worth doing right.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    B10 Practice Platform · DLIELC · J. Moore · 2026<br>
+    Pronunciation Module · Phase 6 Preview · Jan–Apr 2027
+  </div>
+
+</div>
+
+
+</body></html>

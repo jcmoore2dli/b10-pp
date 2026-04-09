@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!-- saved from url=(0173)file:///C:/Users/jeffrey.moore/Documents/Moore/OPI%20SLT/ESO%20Project/ESO%20CC%20Bot%20Beta/Ver%20B10/B10%20Practice%20Platform/DOCS/Docs%20v9_4/b10pp-supervisor-brief.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Supervisor Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #ffffff;
+    color: #1e293b;
+    font-family: 'Inter', 'Helvetica Neue', sans-serif;
+    padding: 60px 48px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .brief-header {
+    border-bottom: 3px solid #0f172a;
+    padding-bottom: 24px; margin-bottom: 32px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .brief-org { font-size: 11px; letter-spacing: 3px; color: #64748b; text-transform: uppercase; margin-bottom: 8px; }
+  .brief-title { font-size: 28px; font-weight: 900; color: #0f172a; line-height: 1.1; }
+  .brief-sub { font-size: 13px; color: #64748b; margin-top: 6px; }
+  .brief-date { font-size: 11px; color: #94a3b8; text-align: right; }
+
+  /* Track record */
+  .track-record {
+    background: #f8fafc; border-left: 4px solid #0ea5e9;
+    padding: 20px 24px; margin-bottom: 28px; border-radius: 0 8px 8px 0;
+  }
+  .section-label {
+    font-size: 10px; letter-spacing: 3px; color: #64748b;
+    text-transform: uppercase; margin-bottom: 12px; font-weight: 600;
+  }
+  .track-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .track-item { display: flex; gap: 10px; align-items: flex-start; }
+  .track-dot { width: 6px; height: 6px; border-radius: 50%; background: #0ea5e9; flex-shrink: 0; margin-top: 6px; }
+  .track-text { font-size: 13px; color: #334155; line-height: 1.4; }
+  .track-text strong { color: #0f172a; font-weight: 600; }
+
+  /* Problem -->  Solution -->  Ask */
+  .psa { margin-bottom: 28px; }
+  .psa-block { margin-bottom: 20px; }
+  .psa-label {
+    font-size: 10px; letter-spacing: 3px; color: #64748b;
+    text-transform: uppercase; font-weight: 600; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .psa-number {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .psa-text { font-size: 14px; color: #334155; line-height: 1.7; }
+  .psa-text strong { color: #0f172a; font-weight: 600; }
+
+  /* Capabilities strip */
+  .capabilities {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-bottom: 28px;
+  }
+  .cap {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 8px; padding: 14px;
+  }
+  .cap-val { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+  .cap-label { font-size: 11px; color: #64748b; line-height: 1.4; }
+
+  /* Timeline mini */
+  .timeline-mini { margin-bottom: 28px; }
+  .tline { display: flex; gap: 0; margin: 12px 0; border-radius: 6px; overflow: hidden; height: 56px; }
+  .tseg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white; padding: 0 4px;
+    text-align: center; line-height: 1.3;
+  }
+  .tdate { display: grid; grid-template-columns: 8% 22% 14% 14% 14% 14% 14%; font-size: 10px; color: #64748b; gap: 0; }
+  .tdate span { text-align: center; }
+
+  /* Ask box */
+  .ask-box {
+    background: #0f172a; color: #f1f5f9;
+    border-radius: 10px; padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+  .ask-label { font-size: 10px; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  .ask-text { font-size: 15px; line-height: 1.7; color: #e2e8f0; }
+  .ask-text strong { color: #38bdf8; }
+
+  /* Footer */
+  .brief-footer {
+    border-top: 1px solid #e2e8f0; padding-top: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .brief-footer p { font-size: 11px; color: #94a3b8; }
+
+  @media print {
+    body { padding: 40px; }
+    .ask-box { background: #1e293b; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="brief-header">
+    <div>
+      <div class="brief-org">Defense Language Institute English Language Center</div>
+      <div class="brief-title">B10 Practice Platform<br>Program Brief</div>
+      <div class="brief-sub">AI-assisted ILR proficiency practice · Student-centric · Instructor-driven</div>
+    </div>
+    <div class="brief-date">
+      April 2026<br>
+      For supervisor review
+    </div>
+  </div>
+
+  <!-- Track Record -->
+  <div class="track-record">
+    <div class="section-label">Established Track Record of Evidence-Based Innovation</div>
+    <div class="track-grid">
+      <div class="track-item">
+        <div class="track-dot"></div>
+        <div class="track-text"><strong>Military Decision Making Process Workbook</strong> — 93-page original curriculum resource for ELL learners in professional military contexts</div>
+      </div>
+      <div class="track-item">
+        <div class="track-dot"></div>
+        <div class="track-text"><strong>8-Week ILR 3 Curriculum</strong> — purpose-built reading proficiency program for German language track; evidence-based design, full instructor materials</div>
+      </div>
+      <div class="track-item">
+        <div class="track-dot"></div>
+        <div class="track-text"><strong>B10 Passage Corpus + Lexicon</strong> — original listening passage library with human-verified mid-frequency vocabulary classification across 3 tiers</div>
+      </div>
+      <div class="track-item">
+        <div class="track-dot"></div>
+        <div class="track-text"><strong>Snorkl Integration</strong> — active AI-assisted speaking practice deployed with students; demonstrated adoption and engagement across SLT sessions</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#475569;margin-top:14px;font-style:italic">
+      This is not a proposal. It is the next iteration of a system already working — built by the same instructor, using the same methodology, at greater scale.
+    </div>
+  </div>
+
+  <!-- Problem → Solution → Impact -->
+  <div class="psa">
+    <div class="psa-block">
+      <div class="psa-label">
+        <div class="psa-number" style="background:#fee2e2;color:#ef4444">1</div>
+        The Problem Leadership Already Owns
+      </div>
+      <div class="psa-text">
+        DLIELC's throughput targets depend on <strong>consistent, measurable progress</strong> across a distributed instructional environment where students rotate through multiple instructors weekly — sometimes six or more in a single week. <strong>Historical performance data rarely follows the student.</strong> Each new instructor starts without context. Session time is lost to orientation rather than instruction. Continuity is informal, verbal, and inconsistent.
+      </div>
+    </div>
+
+    <div class="psa-block">
+      <div class="psa-label">
+        <div class="psa-number" style="background:#dcfce7;color:#16a34a">2</div>
+        The Solution Already Being Built
+      </div>
+      <div class="psa-text">
+        B10 Practice Platform creates a <strong>persistent performance record anchored to the student</strong> — not the roster, not the class, not the instructor. Students carry a B10 ID. Any instructor who works with them that week — main class or supplemental — looks up the student in seconds and sees the complete arc: what was practiced, how they scored, what Claude flagged, what every prior instructor noted. <strong>No admin burden. No roster management. No CUI risk.</strong> The student's history travels with them automatically.
+      </div>
+    </div>
+
+    <div class="psa-block">
+      <div class="psa-label">
+        <div class="psa-number" style="background:#eff6ff;color:#2563eb">3</div>
+        What This Means for the Program
+      </div>
+      <div class="psa-text">
+        Every instructor who touches a student in a given week works from the <strong>same current picture</strong>. Session ramp-up time is reduced. Supplemental language training becomes additive rather than redundant. Progress is visible at the program level for the first time — not inferred from interview outcomes, but tracked continuously across every practice session. <strong>The platform does not replace instructor judgment. It informs it.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Capability Strip -->
+  <div class="capabilities">
+    <div class="cap">
+      <div class="cap-val" style="color:#0ea5e9">0</div>
+      <div class="cap-label">Admin hours per week to maintain instructor access across rotating schedules</div>
+    </div>
+    <div class="cap">
+      <div class="cap-val" style="color:#16a34a">∞</div>
+      <div class="cap-label">Instructors who can work with a student simultaneously using one B10 ID</div>
+    </div>
+    <div class="cap">
+      <div class="cap-val" style="color:#7c3aed">100%</div>
+      <div class="cap-label">Of attempt history and feedback that persists across every instructor rotation</div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline-mini">
+    <div class="section-label">Build Timeline — Projected</div>
+    <div class="tline">
+      <div class="tseg" style="background:#16a34a;width:8%">✓<br>P1</div>
+      <div class="tseg" style="background:#0369a1;width:22%">P2A Schema<br>+ P2B Whisper</div>
+      <div class="tseg" style="background:#7c3aed;width:14%">Phase 3<br>Core MVP</div>
+      <div class="tseg" style="background:#6d28d9;width:14%">3B<br>Track B</div>
+      <div class="tseg" style="background:#be185d;width:14%">Phase 4<br>ESOP</div>
+      <div class="tseg" style="background:#9f1239;width:14%">Phase 5<br>Hyp.</div>
+      <div class="tseg" style="background:#4a1d96;width:14%">Phase 6<br>Pron.</div>
+    </div>
+    <div class="tdate">
+      <span>Apr<br>2026</span>
+      <span>Apr–Jun<br>2026</span>
+      <span>Jul<br>2026</span>
+      <span>Aug<br>2026</span>
+      <span>Sep–Oct<br>2026</span>
+      <span>Oct–Dec<br>2026</span>
+      <span>Jan–Apr<br>2027</span>
+    </div>
+  </div>
+
+  <!-- The Ask -->
+  <div class="ask-box">
+    <div class="ask-label">The Ask</div>
+    <div class="ask-text">
+      The core platform reaches its first student-facing milestone in <strong>July 2026</strong>. A pilot cohort of 2–3 main class instructors and 1–2 SLT instructors will validate the system in real instructional conditions over approximately one month.
+      <br><br>
+      The request is not for funding or resources. It is for <strong>30 minutes to walk through pilot results</strong> when they are available — and to discuss whether formal program adoption makes sense in the context of DLIELC's throughput and continuity priorities.
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="brief-footer">
+    <p>B10 Practice Platform · DLIELC · J. Moore · April 2026</p>
+    <p>Built on Firebase · React · OpenAI Whisper · Anthropic Claude</p>
+  </div>
+
+
+
+</body></html>

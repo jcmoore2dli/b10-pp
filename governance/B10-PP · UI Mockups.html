@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///C:/Users/jeffrey.moore/Downloads/b10pp-ui-mockups.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · UI Mockups</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8fafc; color: #1e293b; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px 20px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .page-header { margin-bottom: 48px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; }
+  .page-label { font-size: 11px; letter-spacing: 4px; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+  .page-header p { font-size: 13px; color: #64748b; }
+
+  .slide { margin-bottom: 64px; }
+  .slide-meta { font-size: 10px; letter-spacing: 3px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+  .slide-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+  .slide-desc { font-size: 13px; color: #64748b; margin-bottom: 20px; line-height: 1.5; }
+
+  hr.divider { border: none; border-top: 1px solid #e2e8f0; margin: 48px 0; }
+  hr.section-break { border: none; border-top: 3px solid #0f172a; margin: 56px 0 20px; }
+
+  .section-title { font-size: 14px; font-weight: 800; color: #0f172a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .section-desc { font-size: 13px; color: #64748b; margin-bottom: 32px; }
+
+  /* Device frames */
+  .phone-frame {
+    background: #ffffff; border: 2px solid #334155; border-radius: 24px;
+    padding: 20px; max-width: 360px; margin: 0 auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  .phone-frame-tall {
+    background: #ffffff; border: 2px solid #334155; border-radius: 32px;
+    padding: 24px 18px; max-width: 320px; margin: 0 auto;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    min-height: 620px;
+  }
+  .toggle-row {
+    display: flex; gap: 0; margin-bottom: 16px;
+    border: 1.5px solid #e2e8f0; border-radius: 8px; overflow: hidden;
+  }
+  .toggle-opt {
+    flex: 1; padding: 9px 4px; text-align: center;
+    font-size: 12px; font-weight: 600; color: #64748b;
+    border-right: 1px solid #e2e8f0;
+  }
+  .toggle-opt:last-child { border-right: none; }
+  .toggle-opt.active {
+    background: #0f172a; color: white; font-weight: 700;
+  }
+  .toggle-opt.active-green {
+    background: #f0fdf4; color: #16a34a; font-weight: 700;
+    border-color: #bbf7d0;
+  }
+  .toggle-opt.active-yellow {
+    background: #fffbeb; color: #d97706; font-weight: 700;
+    border-color: #fde68a;
+  }
+  .desktop-frame {
+    background: #ffffff; border: 2px solid #334155; border-radius: 12px;
+    padding: 20px 22px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  .frame-bar { display: flex; gap: 6px; margin-bottom: 18px; align-items: center; }
+  .frame-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .frame-title { font-size: 11px; color: #64748b; margin-left: 8px; }
+
+  /* Screen labels */
+  .screen-label { font-size: 10px; letter-spacing: 3px; color: #0284c7; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+  .screen-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 16px; }
+
+  /* Queue */
+  .queue-item { display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: #f8fafc; }
+  .q-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .q-name { font-size: 13px; font-weight: 700; color: #0f172a; }
+  .q-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .q-arrow { color: #cbd5e1; font-size: 16px; margin-left: auto; }
+  .legend-row { display: flex; gap: 20px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Lookup */
+  .lookup-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .lookup-id { font-size: 14px; font-weight: 800; color: #0f172a; font-family: 'Courier New', monospace; }
+  .lookup-found { font-size: 11px; color: #16a34a; font-weight: 700; margin-left: auto; }
+  .stat-row { display: flex; gap: 0; margin-bottom: 16px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+  .stat-cell { flex: 1; padding: 10px 12px; border-right: 1px solid #e2e8f0; text-align: center; }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell-label { font-size: 9px; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+  .stat-cell-val { font-size: 13px; font-weight: 800; color: #0f172a; }
+
+  /* History with corrected score badges */
+  .hist-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+  .hist-name { font-size: 12px; font-weight: 700; color: #0f172a; }
+  .hist-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .score-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
+  .score-num { font-size: 15px; font-weight: 900; line-height: 1; }
+  .score-lbl { font-size: 8px; font-weight: 700; line-height: 1; margin-top: 1px; text-align: center; }
+
+  /* Note card */
+  .note-card { border-left: 3px solid; padding: 10px 12px; margin-bottom: 10px; border-radius: 0 8px 8px 0; background: #f8fafc; }
+  .note-time { font-size: 10px; color: #94a3b8; margin-bottom: 5px; font-weight: 600; letter-spacing: 1px; }
+  .note-text { font-size: 12px; color: #334155; line-height: 1.6; }
+  .note-type { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+
+  /* Dashboard tree */
+  .tree-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f1f5f9; }
+  .tree-row.level-1 { font-size: 13px; font-weight: 800; color: #0f172a; }
+  .tree-row.level-2 { font-size: 12px; font-weight: 600; color: #334155; padding-left: 18px; }
+  .tree-row.level-3 { font-size: 12px; color: #475569; padding-left: 36px; }
+  .tree-counts { display: flex; gap: 14px; font-size: 11px; font-weight: 600; }
+  .tc-a { color: #0284c7; } .tc-b { color: #16a34a; } .tc-c { color: #be185d; }
+
+  /* Scaffold options */
+  .field-label { font-size: 10px; font-weight: 700; color: #64748b; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .option-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .opt { font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 1.5px solid #e2e8f0; color: #64748b; font-weight: 500; }
+  .opt.sel { border-color: #0284c7; color: #0284c7; background: #f0f9ff; font-weight: 700; }
+  .opt.sel-purple { border-color: #7c3aed; color: #7c3aed; background: #faf5ff; font-weight: 700; }
+  .opt.sel-green { border-color: #16a34a; color: #16a34a; background: #f0fdf4; font-weight: 700; }
+
+  .student-cue-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+  .cue-label { font-size: 10px; font-weight: 700; color: #0284c7; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .cue-text { font-size: 13px; color: #1e293b; line-height: 1.5; }
+
+  .argument-confirm { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+  .argument-label { font-size: 10px; font-weight: 700; color: #16a34a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .argument-text { font-size: 13px; color: #1e293b; line-height: 1.5; }
+
+  .btn-row { display: flex; gap: 10px; }
+  .btn-primary { background: #0f172a; color: white; border-radius: 8px; padding: 12px; text-align: center; font-size: 13px; font-weight: 700; flex: 1; }
+  .btn-secondary { background: white; border: 1px solid #e2e8f0; color: #64748b; border-radius: 8px; padding: 12px 20px; font-size: 13px; font-weight: 600; }
+
+  /* Feedback screen — Section 8.5 */
+  .score-hero { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; }
+  .score-circle { width: 64px; height: 64px; border-radius: 50%; border: 3px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .score-circle-num { font-size: 26px; font-weight: 900; line-height: 1; }
+  .score-circle-lbl { font-size: 9px; font-weight: 700; line-height: 1; margin-top: 2px; }
+  .score-hero-text { font-size: 11px; color: #64748b; line-height: 1.5; }
+  .score-hero-task { font-size: 12px; font-weight: 700; color: #0f172a; }
+
+  .fb-block { margin-bottom: 14px; }
+  .fb-heading { font-size: 10px; font-weight: 800; color: #0284c7; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .fb-heading.green { color: #16a34a; }
+  .fb-heading.amber { color: #d97706; }
+  .fb-heading.slate { color: #475569; }
+  .fb-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #334155; line-height: 1.7; }
+  .fb-cite { color: #b45309; font-style: italic; font-weight: 600; }
+  .fb-note { background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #78350f; margin-top: 10px; }
+
+  /* Note input */
+  .note-input-box { border: 1.5px dashed #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-top: 14px; }
+  .note-placeholder { font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+  .note-type-btns { display: flex; gap: 8px; }
+  .note-type-btn { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 4px; border: 1.5px solid; display: flex; align-items: center; gap: 5px; }
+
+  .footer-note { text-align: center; margin-top: 48px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; line-height: 2; }
+
+  /* Scaffold config section label */
+  .scaffold-divider { font-size: 11px; font-weight: 800; color: #0f172a; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header">
+    <div class="page-label">DLIELC · B10 Practice Platform</div>
+    <h1>Interface Mockups</h1>
+    <p>Nine views · Mobile-first · B10 4-point rubric · Scaffold system · Section 8 scoring · Navigate tabs on phone or desktop · For supervisor and academic director review</p>
+  </div>
+
+  <!-- SLIDE 1: Student Queue — tall mobile frame, toggle, realistic density -->
+  <div class="slide">
+    <div class="slide-meta">Slide 1 of 9 · Student View · iPhone / Android</div>
+    <div class="slide-title">The Student Queue — Simple, Clear, Actionable</div>
+    <div class="slide-desc">Students see their assigned practice on any phone. A toggle separates Main Class from SLT assignments at a tap. Color indicators make context immediately clear — no instructor names, no complexity. A full week of assignments is visible without scrolling.</div>
+    <div class="phone-frame-tall">
+
+      <!-- Status bar simulation -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding:0 2px;">
+        <div style="font-size:12px;font-weight:700;color:#0f172a;">B10 Practice</div>
+        <div style="font-size:11px;color:#64748b;">This Week</div>
+      </div>
+
+      <!-- Toggle -->
+      <div class="toggle-row">
+        <div class="toggle-opt active">All</div>
+        <div class="toggle-opt">Main Class</div>
+        <div class="toggle-opt">SLT</div>
+      </div>
+
+      <!-- Queue items — full week realistic -->
+      <div class="queue-item">
+        <div class="q-dot" style="background:#22c55e;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Paraphrase · ORI-047</div>
+          <div class="q-meta">Orient · Policy · Main class</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="q-dot" style="background:#f59e0b;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Paraphrase · COR-018</div>
+          <div class="q-meta">Core · Health · SLT</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="q-dot" style="background:#22c55e;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Extended Listening · EXT-012</div>
+          <div class="q-meta">Extended · Science · Main class</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="q-dot" style="background:#f59e0b;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Extended Supported Opinion</div>
+          <div class="q-meta">ESOP · Trade-offs frame · SLT</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="q-dot" style="background:#22c55e;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Paraphrase · ORI-052</div>
+          <div class="q-meta">Orient · Environment · Main class</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="q-dot" style="background:#f59e0b;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Paraphrase · COR-024</div>
+          <div class="q-meta">Core · Economics · SLT</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="queue-item">
+        <div class="q-dot" style="background:#22c55e;"></div>
+        <div style="flex:1;">
+          <div class="q-name">Extended Supported Opinion</div>
+          <div class="q-meta">ESOP · Causal Systems · Main class</div>
+        </div>
+        <div class="q-arrow">›</div>
+      </div>
+
+      <div class="legend-row">
+        <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div>Main class</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>SLT session</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1B + 1C: Toggle states -->
+  <div class="slide">
+    <div class="slide-meta">Slide 1 of 9 · Toggle States · Main Class and SLT Filtered Views</div>
+    <div class="slide-title">The Toggle — One Tap to Filter</div>
+    <div class="slide-desc">Tapping Main Class shows only green assignments. Tapping SLT shows only yellow. Students with multiple instructors assigning in the same week can orient quickly to what each context requires.</div>
+
+    <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+
+      <!-- Main Class filtered -->
+      <div>
+        <div style="text-align:center;font-size:11px;font-weight:700;color:#16a34a;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Main Class selected</div>
+        <div class="phone-frame-tall" style="min-height:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding:0 2px;">
+            <div style="font-size:12px;font-weight:700;color:#0f172a;">B10 Practice</div>
+            <div style="font-size:11px;color:#64748b;">This Week</div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-opt">All</div>
+            <div class="toggle-opt active-green">Main Class</div>
+            <div class="toggle-opt">SLT</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#22c55e;"></div>
+            <div style="flex:1;"><div class="q-name">Paraphrase · ORI-047</div><div class="q-meta">Orient · Policy</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#22c55e;"></div>
+            <div style="flex:1;"><div class="q-name">Extended Listening · EXT-012</div><div class="q-meta">Extended · Science</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#22c55e;"></div>
+            <div style="flex:1;"><div class="q-name">Paraphrase · ORI-052</div><div class="q-meta">Orient · Environment</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#22c55e;"></div>
+            <div style="flex:1;"><div class="q-name">Extended Supported Opinion</div><div class="q-meta">ESOP · Causal Systems</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div style="margin-top:12px;text-align:center;font-size:11px;color:#94a3b8;">4 main class assignments</div>
+        </div>
+      </div>
+
+      <!-- SLT filtered -->
+      <div>
+        <div style="text-align:center;font-size:11px;font-weight:700;color:#d97706;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">SLT selected</div>
+        <div class="phone-frame-tall" style="min-height:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding:0 2px;">
+            <div style="font-size:12px;font-weight:700;color:#0f172a;">B10 Practice</div>
+            <div style="font-size:11px;color:#64748b;">This Week</div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-opt">All</div>
+            <div class="toggle-opt">Main Class</div>
+            <div class="toggle-opt active-yellow">SLT</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#f59e0b;"></div>
+            <div style="flex:1;"><div class="q-name">Paraphrase · COR-018</div><div class="q-meta">Core · Health</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#f59e0b;"></div>
+            <div style="flex:1;"><div class="q-name">Extended Supported Opinion</div><div class="q-meta">ESOP · Trade-offs frame</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div class="queue-item">
+            <div class="q-dot" style="background:#f59e0b;"></div>
+            <div style="flex:1;"><div class="q-name">Paraphrase · COR-024</div><div class="q-meta">Core · Economics</div></div>
+            <div class="q-arrow">›</div>
+          </div>
+          <div style="margin-top:12px;text-align:center;font-size:11px;color:#94a3b8;">3 SLT assignments</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- SLIDE 2: Instructor Student Lookup with Navigation -->
+  <div class="slide">
+    <div class="slide-meta">Slide 2 of 9 · Instructor View · Mobile-First</div>
+    <div class="slide-title">Student Lookup — Full History in Seconds</div>
+    <div class="slide-desc">Any instructor looks up a student by B10 ID on any device — phone, tablet, or desktop. Navigation tabs give immediate access to attempts, performance arc, session notes, and assignment tools from a single student record.</div>
+    <div class="phone-frame">
+      <div class="lookup-box"><div><div style="font-size:10px;color:#64748b;margin-bottom:2px;font-weight:600;letter-spacing:1px;">STUDENT B10 ID</div><div class="lookup-id">B10-2026-0847</div></div><div class="lookup-found">Found</div></div>
+      <div class="stat-row">
+        <div class="stat-cell"><div class="stat-cell-label">Track</div><div class="stat-cell-val" style="color:#7c3aed;font-size:11px;">A · ILR 2+/3</div></div>
+        <div class="stat-cell"><div class="stat-cell-label">Attempts</div><div class="stat-cell-val">47</div></div>
+        <div class="stat-cell"><div class="stat-cell-label">Last Practice</div><div class="stat-cell-val">Today</div></div>
+        <div class="stat-cell"><div class="stat-cell-label">Trend</div><div class="stat-cell-val" style="color:#16a34a;font-size:11px;">Improving</div></div>
+      </div>
+
+      <!-- Navigation tabs -->
+      <div style="display:flex;gap:0;margin-bottom:16px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:700;color:#0284c7;background:#f0f9ff;border-right:1px solid #e2e8f0;">Attempts</div>
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:#64748b;border-right:1px solid #e2e8f0;">Arc</div>
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:#64748b;border-right:1px solid #e2e8f0;">Notes</div>
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:#64748b;">Assign</div>
+      </div>
+
+      <!-- Attempts tab — active -->
+      <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Recent Attempts</div>
+      <div class="hist-item">
+        <div><div class="hist-name">Paraphrase · ORI-047 · Policy</div><div class="hist-meta">Today · Main class</div></div>
+        <div class="score-badge" style="color:#16a34a;border-color:#bbf7d0;"><div class="score-num" style="color:#16a34a;">4</div><div class="score-lbl" style="color:#16a34a;">Excellent</div></div>
+      </div>
+      <div class="hist-item">
+        <div><div class="hist-name">ESOP · FRAME_02 · STRUCT_01 · ECS-031</div><div class="hist-meta">Yesterday · SLT</div></div>
+        <div class="score-badge" style="color:#d97706;border-color:#fde68a;"><div class="score-num" style="color:#d97706;">3</div><div class="score-lbl" style="color:#d97706;">Good</div></div>
+      </div>
+      <div class="hist-item">
+        <div><div class="hist-name">Extended Listening · EXT-012 · Science</div><div class="hist-meta">2 days ago · Main class</div></div>
+        <div class="score-badge" style="color:#d97706;border-color:#fde68a;"><div class="score-num" style="color:#d97706;">3</div><div class="score-lbl" style="color:#d97706;">Good</div></div>
+      </div>
+      <div class="hist-item">
+        <div><div class="hist-name">Paraphrase · COR-018 · Health</div><div class="hist-meta">3 days ago · Main class</div></div>
+        <div class="score-badge" style="color:#d97706;border-color:#fde68a;"><div class="score-num" style="color:#d97706;">3</div><div class="score-lbl" style="color:#d97706;">Good</div></div>
+      </div>
+      <div class="hist-item">
+        <div><div class="hist-name">Paraphrase · ORI-041 · Environment</div><div class="hist-meta">4 days ago · SLT</div></div>
+        <div class="score-badge" style="color:#0284c7;border-color:#bae6fd;"><div class="score-num" style="color:#0284c7;">2</div><div class="score-lbl" style="color:#0284c7;">Partial</div></div>
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <div style="font-size:12px;font-weight:700;color:#0284c7;border:1px solid #bae6fd;border-radius:6px;padding:8px;background:#f0f9ff;">View all 47 attempts</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SLIDE 3: Performance Arc — corrected labels, realistic density, mobile tabs -->
+  <div class="slide">
+    <div class="slide-meta">Slide 3 of 9 · Instructor View · Arc Tab · Mobile-First</div>
+    <div class="slide-title">Performance Arc — What Has Been Worked On and What Has Not</div>
+    <div class="slide-desc">Hierarchical view of assigned vs. attempted counts by task type, domain, and scaffold focus. The gap between assigned and attempted is as informative as the attempts themselves. Shown here as the Arc tab — accessible on phone, tablet, or desktop.</div>
+    <div class="phone-frame">
+      <div class="lookup-box" style="margin-bottom:12px;"><div><div style="font-size:10px;color:#64748b;margin-bottom:2px;font-weight:600;letter-spacing:1px;">STUDENT B10 ID</div><div class="lookup-id">B10-2026-0847</div></div><div class="lookup-found">Found</div></div>
+
+      <!-- Navigation tabs — Arc active -->
+      <div style="display:flex;gap:0;margin-bottom:14px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:#64748b;border-right:1px solid #e2e8f0;">Attempts</div>
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:700;color:#0284c7;background:#f0f9ff;border-right:1px solid #e2e8f0;">Arc</div>
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:#64748b;border-right:1px solid #e2e8f0;">Notes</div>
+        <div style="flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:#64748b;">Assign</div>
+      </div>
+
+      <div style="display:flex;gap:14px;margin-bottom:12px;font-size:11px;font-weight:700;">
+        <span style="color:#0284c7;">Assigned</span>
+        <span style="color:#16a34a;">Attempted</span>
+        <span style="color:#be185d;">Gap</span>
+      </div>
+
+      <div class="tree-row level-1"><span>▼ LISTENING PASSAGES</span><div class="tree-counts"><span class="tc-a">54</span><span class="tc-b">48</span><span class="tc-c">-6</span></div></div>
+
+      <div class="tree-row level-2"><span>▼ Orient (ORI)</span><div class="tree-counts"><span class="tc-a">24</span><span class="tc-b">22</span></div></div>
+      <div class="tree-row level-3"><span>Policy &amp; Government</span><div class="tree-counts"><span class="tc-a">8</span><span class="tc-b">8</span></div></div>
+      <div class="tree-row level-3"><span>Science &amp; Technology</span><div class="tree-counts"><span class="tc-a">7</span><span class="tc-b">6</span></div></div>
+      <div class="tree-row level-3"><span>Society &amp; Culture</span><div class="tree-counts"><span class="tc-a">5</span><span class="tc-b">5</span></div></div>
+      <div class="tree-row level-3"><span>Environment</span><div class="tree-counts"><span class="tc-a">4</span><span class="tc-b">3</span></div></div>
+
+      <div class="tree-row level-2"><span>▼ Core (COR)</span><div class="tree-counts"><span class="tc-a">18</span><span class="tc-b">16</span></div></div>
+      <div class="tree-row level-3"><span>Health &amp; Medicine</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">6</span></div></div>
+      <div class="tree-row level-3"><span>Policy &amp; Government</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">5</span></div></div>
+      <div class="tree-row level-3"><span>Economics</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">5</span></div></div>
+
+      <div class="tree-row level-2"><span>▼ Extended (EXT)</span><div class="tree-counts"><span class="tc-a">12</span><span class="tc-b">10</span></div></div>
+      <div class="tree-row level-3"><span>Science &amp; Technology</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">5</span></div></div>
+      <div class="tree-row level-3"><span>Society &amp; Culture</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">5</span></div></div>
+
+      <div class="tree-row level-1" style="margin-top:6px;"><span>▼ EXTENDED SUPPORTED OPINION</span><div class="tree-counts"><span class="tc-a">22</span><span class="tc-b">19</span><span class="tc-c">-3</span></div></div>
+      <div class="tree-row level-2"><span>▼ Discourse Frame</span></div>
+      <div class="tree-row level-3"><span>Trade-offs &amp; Constraints</span><div class="tree-counts"><span class="tc-a">8</span><span class="tc-b">8</span></div></div>
+      <div class="tree-row level-3"><span>Scale &amp; Stakeholder</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">5</span></div></div>
+      <div class="tree-row level-3"><span>Causal Systems</span><div class="tree-counts"><span class="tc-a">5</span><span class="tc-b">4</span></div></div>
+      <div class="tree-row level-3" style="color:#be185d;font-style:italic;"><span>Hypothetical &amp; Conditional</span><div class="tree-counts"><span style="color:#be185d;">0 — not yet assigned</span></div></div>
+      <div class="tree-row level-2"><span>▼ Grammar Structure</span></div>
+      <div class="tree-row level-3"><span>Modality &amp; Hedging</span><div class="tree-counts"><span class="tc-a">9</span><span class="tc-b">9</span></div></div>
+      <div class="tree-row level-3"><span>Concession &amp; Contrast</span><div class="tree-counts"><span class="tc-a">7</span><span class="tc-b">6</span></div></div>
+      <div class="tree-row level-3"><span>Conditional Systems</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-b">4</span></div></div>
+      <div class="tree-row level-3" style="color:#be185d;font-style:italic;"><span>Nominalization</span><div class="tree-counts"><span style="color:#be185d;">0 — not yet assigned</span></div></div>
+
+      <div class="tree-row level-1" style="margin-top:6px;"><span>▼ HYPOTHESIZING</span><div class="tree-counts"><span class="tc-a">6</span><span class="tc-c">2 attempted — gap of 4</span></div></div>
+    </div>
+  </div>
+
+    <hr class="divider">
+
+  <!-- SLIDE 5: Scaffold — Grammar Structure -->
+  <div class="slide">
+    <div class="slide-meta">Slide 5 of 9 · Instructor View · Mode: Grammar Structure</div>
+    <div class="slide-title">Scaffold Configuration — Grammar Structure Selected</div>
+    <div class="slide-desc">Instructor selects a grammatical target. Seven productive structures available. Claude gives primary feedback attention to whether the student deployed the target structure accurately and naturally.</div>
+    <div class="desktop-frame">
+      <div class="frame-bar"><div class="frame-dot" style="background:#fb7185;"></div><div class="frame-dot" style="background:#fbbf24;"></div><div class="frame-dot" style="background:#4ade80;"></div><div class="frame-title">Assign Task · ESOP · B10-2026-0847</div></div>
+      <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Should a four-day work week be adopted as national labor policy?</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:18px;">WRK-007 · Labor &amp; Employment · ESOP · Task level 3</div>
+      <div style="display:flex;gap:10px;margin-bottom:18px;">
+        <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600;color:#94a3b8;display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#22c55e;"></div>Main class</div>
+        <div style="border:2px solid #f59e0b;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;color:#d97706;display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>SLT</div>
+      </div>
+      <div class="scaffold-divider">Scaffold Configuration (Optional)</div>
+      <div class="field-label">What should Claude focus on?</div>
+      <div class="option-group">
+        <div class="opt">Holistic</div>
+        <div class="opt">Argument structure</div>
+        <div class="opt">Discourse frame</div>
+        <div class="opt sel-purple">Grammar structure</div>
+        <div class="opt">Combined</div>
+      </div>
+      <div class="field-label">Primary Grammar Structure</div>
+      <div class="option-group">
+        <div class="opt">Conditional Systems</div>
+        <div class="opt">Concession &amp; Contrast</div>
+        <div class="opt">Relative &amp; Embedded Clauses</div>
+        <div class="opt sel-purple">Modality &amp; Hedging</div>
+        <div class="opt">Nominalization &amp; Abstract Nouns</div>
+        <div class="opt">Passive &amp; Reporting</div>
+        <div class="opt">Parallelism &amp; Coordination</div>
+      </div>
+      <div class="field-label">Secondary Grammar Structure (optional)</div>
+      <div class="option-group">
+        <div class="opt sel" style="border-color:#94a3b8;color:#94a3b8;background:#f8fafc;">None</div>
+        <div class="opt">Concession &amp; Contrast</div>
+        <div class="opt">Nominalization &amp; Abstract Nouns</div>
+      </div>
+      <div class="student-cue-box" style="background:#faf5ff;border-color:#c4b5fd;">
+        <div class="cue-label" style="color:#7c3aed;">Student will see</div>
+        <div class="cue-text">"Use language that expresses uncertainty and probability — words like may, might, could, it appears, arguably, tends to. For example: this could potentially reduce burnout, or it appears that productivity tends to remain stable."</div>
+      </div>
+      <div class="btn-row"><div class="btn-primary">Assign Task</div><div class="btn-secondary">Cancel</div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SLIDE 6: Scaffold — Combined -->
+  <div class="slide">
+    <div class="slide-meta">Slide 6 of 9 · Instructor View · Mode: Combined</div>
+    <div class="slide-title">Scaffold Configuration — Combined Selected</div>
+    <div class="slide-desc">Instructor selects both a discourse frame and a grammar structure simultaneously. Claude attends to both targets. The student sees two plain-language cues — one for thinking, one for language.</div>
+    <div class="desktop-frame">
+      <div class="frame-bar"><div class="frame-dot" style="background:#fb7185;"></div><div class="frame-dot" style="background:#fbbf24;"></div><div class="frame-dot" style="background:#4ade80;"></div><div class="frame-title">Assign Task · ESOP · B10-2026-0847</div></div>
+      <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Should governments regulate digital platforms to limit the spread of misinformation?</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:18px;">GOV-020 · Governance &amp; Civic Life · ESOP · Task level 3</div>
+      <div style="display:flex;gap:10px;margin-bottom:18px;">
+        <div style="border:2px solid #22c55e;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;color:#16a34a;display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#22c55e;"></div>Main class</div>
+        <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600;color:#94a3b8;display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>SLT</div>
+      </div>
+      <div class="scaffold-divider">Scaffold Configuration (Optional)</div>
+      <div class="field-label">What should Claude focus on?</div>
+      <div class="option-group">
+        <div class="opt">Holistic</div>
+        <div class="opt">Argument structure</div>
+        <div class="opt">Discourse frame</div>
+        <div class="opt">Grammar structure</div>
+        <div class="opt sel" style="border-color:#be185d;color:#be185d;background:#fff1f2;">Combined</div>
+      </div>
+      <div class="field-label">Primary Discourse Frame</div>
+      <div class="option-group">
+        <div class="opt sel">Scale &amp; Stakeholder</div>
+        <div class="opt">Trade-offs &amp; Constraints</div>
+        <div class="opt">Causal Systems</div>
+        <div class="opt">Hypothetical &amp; Conditional</div>
+        <div class="opt">Value-based Evaluation</div>
+        <div class="opt">Synthesis &amp; Judgment</div>
+      </div>
+      <div class="field-label">Primary Grammar Structure</div>
+      <div class="option-group">
+        <div class="opt sel-purple">Concession &amp; Contrast</div>
+        <div class="opt">Conditional Systems</div>
+        <div class="opt">Modality &amp; Hedging</div>
+        <div class="opt">Nominalization &amp; Abstract Nouns</div>
+        <div class="opt">Passive &amp; Reporting</div>
+        <div class="opt">Relative &amp; Embedded Clauses</div>
+        <div class="opt">Parallelism &amp; Coordination</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <div class="student-cue-box" style="flex:1;margin-bottom:0;">
+          <div class="cue-label">Thinking cue</div>
+          <div class="cue-text">"Consider both the individual level — free speech and personal access to information — and the societal level — democratic integrity and public trust. Who is affected differently at each level?"</div>
+        </div>
+        <div class="student-cue-box" style="flex:1;margin-bottom:0;background:#faf5ff;border-color:#c4b5fd;">
+          <div class="cue-label" style="color:#7c3aed;">Language cue</div>
+          <div class="cue-text">"Use contrast and concession to show competing values — although restricting platforms may protect the public, it could also suppress legitimate speech."</div>
+        </div>
+      </div>
+      <div class="btn-row"><div class="btn-primary">Assign Task</div><div class="btn-secondary">Cancel</div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SLIDE 7: Scaffold — Argument Structure -->
+  <div class="slide">
+    <div class="slide-meta">Slide 7 of 9 · Instructor View · Mode: Argument Structure</div>
+    <div class="slide-title">Scaffold Configuration — Argument Structure Selected</div>
+    <div class="slide-desc">No sub-selection needed. Claude foregrounds the PSU arc — point, support, analysis — in its feedback. The student sees a plain-language reminder of the structural expectation.</div>
+    <div class="desktop-frame">
+      <div class="frame-bar"><div class="frame-dot" style="background:#fb7185;"></div><div class="frame-dot" style="background:#fbbf24;"></div><div class="frame-dot" style="background:#4ade80;"></div><div class="frame-title">Assign Task · ESOP · B10-2026-0847</div></div>
+      <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px;">Is technology making societies more or less equal?</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:18px;">ESOP prompt · Task level 3</div>
+      <div style="display:flex;gap:10px;margin-bottom:18px;">
+        <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600;color:#94a3b8;display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#22c55e;"></div>Main class</div>
+        <div style="border:2px solid #f59e0b;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;color:#d97706;display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>SLT</div>
+      </div>
+      <div class="scaffold-divider">Scaffold Configuration (Optional)</div>
+      <div class="field-label">What should Claude focus on?</div>
+      <div class="option-group">
+        <div class="opt">Holistic</div>
+        <div class="opt sel-green">Argument structure</div>
+        <div class="opt">Discourse frame</div>
+        <div class="opt">Grammar structure</div>
+        <div class="opt">Combined</div>
+      </div>
+      <div class="argument-confirm">
+        <div class="argument-label">Argument structure selected — no further selection needed</div>
+        <div class="argument-text">Claude will evaluate how clearly the student moves through a stated position, developed support, and substantive analysis. Where the argument flattens or stalls will be identified specifically.</div>
+      </div>
+      <div class="student-cue-box" style="background:#f0fdf4;border-color:#bbf7d0;">
+        <div class="cue-label" style="color:#16a34a;">Student will see</div>
+        <div class="cue-text">"Make sure your response has a clear position, specific support for that position, and a broader analysis of why it matters."</div>
+      </div>
+      <div class="btn-row"><div class="btn-primary">Assign Task</div><div class="btn-secondary">Cancel</div></div>
+    </div>
+  </div>
+
+  <hr class="section-break">
+  <div class="section-title">Student-Facing Views</div>
+  <div class="section-desc">The following two slides show what the student sees after completing a task.</div>
+
+  <!-- SLIDE 8: Claude Feedback — Section 8.5 -->
+  <div class="slide">
+    <div class="slide-meta">Slide 8 of 9 · Student View · Mobile · B10 4-Point Rubric</div>
+    <div class="slide-title">Feedback Screen — Evidence-Based, Scaffold-Aware</div>
+    <div class="slide-desc">After every attempt, the student receives structured feedback per Section 8.5. Score displays on the B10 4-point rubric with no ILR labeling. All feedback cites the student's own words and the passage content specifically.</div>
+    <div class="phone-frame">
+      <div class="score-hero">
+        <div class="score-circle" style="border-color:#d97706;">
+          <div class="score-circle-num" style="color:#d97706;">3</div>
+          <div class="score-circle-lbl" style="color:#d97706;">Good</div>
+        </div>
+        <div>
+          <div class="score-hero-task">ESOP · Trade-offs focus · ORI-047</div>
+          <div class="score-hero-text">B10 4-point practice rubric<br>Formative feedback — not an official assessment</div>
+        </div>
+      </div>
+
+      <div class="fb-block">
+        <div class="fb-heading">Trade-offs Focus</div>
+        <div class="fb-box">You identified a clear short-term concern when you said <span class="fb-cite">"initially this reduces office costs"</span> — strong opening to trade-off reasoning. The long-term analysis was brief. You moved to your conclusion without exploring unintended consequences or stakeholder impact over time.</div>
+      </div>
+
+      <div class="fb-block">
+        <div class="fb-heading green">What you did well</div>
+        <div class="fb-box">You accurately conveyed the central issue and used hedging naturally: <span class="fb-cite">"this could potentially lead to"</span> and <span class="fb-cite">"it appears that"</span> both appeared. Your concessive clause <span class="fb-cite">"although productivity may increase"</span> was well-formed and added nuance.</div>
+      </div>
+
+      <div class="fb-block">
+        <div class="fb-heading amber">What to work on</div>
+        <div class="fb-box">Push further into the long-term tier of your trade-off analysis. Ask: what happens two or three steps downstream? Who benefits and who is disadvantaged over time? The passage's point about distributed workforce inequality was not addressed.</div>
+      </div>
+
+      <div class="fb-block">
+        <div class="fb-heading slate">Language note</div>
+        <div class="fb-box">Consider using nominalization to increase abstraction — "the distribution of work" rather than "when people work from different places."</div>
+      </div>
+
+      <div class="fb-block">
+        <div class="fb-heading slate">What we heard you say</div>
+        <div class="fb-box" style="font-style:italic;color:#64748b;">The passage discusses whether remote work should remain standard. The speaker argues that although productivity may increase, it could potentially lead to greater inequality. Initially this reduces office costs but there are long-term concerns...</div>
+      </div>
+
+      <div class="fb-note">Minor transcription artifacts detected — scored on meaning conveyed, not surface form.</div>
+
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <div style="flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:#334155;">Try again</div>
+        <div style="flex:1;background:#0f172a;border-radius:8px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:white;">Next passage</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SLIDE 9: Session Notes -->
+  <div class="slide">
+    <div class="slide-meta">Slide 9 of 9 · Instructor View · Desktop</div>
+    <div class="slide-title">Session Notes — Continuity Across Any Number of Instructors</div>
+    <div class="slide-desc">Any instructor who works with a student can leave a note. Anonymous, timestamped, visible to every subsequent instructor. An on-demand summary synthesizes the full note history — generated by Claude when the instructor needs orientation, cached until refreshed. This replaces the 5-word SLT topic log and makes true continuity possible.</div>
+    <div class="desktop-frame">
+      <div class="frame-bar"><div class="frame-dot" style="background:#fb7185;"></div><div class="frame-dot" style="background:#fbbf24;"></div><div class="frame-dot" style="background:#4ade80;"></div><div class="frame-title">Student B10-2026-0847 · Session Notes</div></div>
+      <div class="note-card" style="border-color:#16a34a;"><div class="note-time">APR 5, 2026 · 09:15</div><div class="note-text">Strong session today. Student spontaneously used concessive structure twice without prompting — "although this approach is efficient, it may overlook..." Scaffold awareness becoming procedural. Ready to move to hypothetical frame next session.</div><div class="note-type" style="color:#16a34a;">Main Class</div></div>
+      <div class="note-card" style="border-color:#0284c7;"><div class="note-time">APR 4, 2026 · 14:32</div><div class="note-text">Student demonstrating stronger hedging language but still defaulting to concrete examples before pushing into societal analysis. ESOP structure improving — needs more practice on the analysis tier. Suggested reviewing the PSU framework before next practice.</div><div class="note-type" style="color:#0284c7;">SLT</div></div>
+      <div class="note-card" style="border-color:#0284c7;"><div class="note-time">APR 3, 2026 · 11:00</div><div class="note-text">Worked on Trade-offs frame with conditionals. Student understands short-term/long-term distinction conceptually but language remains below task level in the analysis tier. Focus on nominalization next — "the implementation of" rather than "when they implement."</div><div class="note-type" style="color:#0284c7;">SLT</div></div>
+      <div class="note-card" style="border-color:#7c3aed;"><div class="note-time">APR 1, 2026 · 16:45</div><div class="note-text">Pronunciation progress. Linking and blending improving significantly on practiced phrases. Recommend 2 more sessions with NAR passages to solidify fluency floor before returning to full ESOP practice.</div><div class="note-type" style="color:#7c3aed;">SLT · Pronunciation Focus</div></div>
+      <!-- Summary section -->
+      <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:14px 16px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:10px;font-weight:700;color:#0284c7;letter-spacing:2px;text-transform:uppercase;">Note Summary</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="font-size:10px;color:#94a3b8;">Last updated: Apr 5, 2026</div>
+            <div style="font-size:11px;font-weight:700;color:#0284c7;border:1px solid #bae6fd;border-radius:4px;padding:3px 10px;background:white;cursor:pointer;">Refresh</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#334155;line-height:1.7;">This student has shown consistent progress on hedging language across four SLT sessions. The recurring gap is the transition from concrete support into societal analysis in ESOP tasks — language remains below task level in the analysis tier. The most recent session (Apr 5) indicates scaffold awareness is becoming procedural and the student may be ready to advance to the hypothetical frame.</div>
+      </div>
+
+      <!-- Summarize button when no summary exists -->
+      <div style="text-align:center;margin-bottom:12px;display:none;">
+        <div style="display:inline-block;font-size:12px;font-weight:700;color:#0284c7;border:1.5px solid #bae6fd;border-radius:6px;padding:8px 20px;background:#f0f9ff;cursor:pointer;">Summarize notes</div>
+      </div>
+
+      <div class="note-input-box">
+        <div class="note-placeholder">Leave a session note...</div>
+        <div class="note-type-btns">
+          <div class="note-type-btn" style="color:#16a34a;border-color:#bbf7d0;background:#f0fdf4;"><div style="width:7px;height:7px;border-radius:50%;background:#22c55e;"></div>Main class</div>
+          <div class="note-type-btn" style="color:#d97706;border-color:#fde68a;background:#fffbeb;"><div style="width:7px;height:7px;border-radius:50%;background:#f59e0b;"></div>SLT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    B10 Practice Platform · DLIELC · J. Moore · 2026<br>
+    Nine views · B10 4-point rubric · Scaffold system · Section 8 scoring spec<br>
+    Formative practice tool only — not an official ILR assessment
+  </div>
+
+</div>
+
+
+</body></html>
