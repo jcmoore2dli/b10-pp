@@ -1,0 +1,36 @@
+[
+  {
+    "assignmentId": "assign_0001",
+    "studentId": "B10-A001",
+    "passageIds": [
+      "ORI-TEC-001",
+      "COR-TEC-015"
+    ],
+    "assignmentType": "main",
+    "assignedBy": "instr_001_uid",
+    "assignedAt": "2026-04-20T12:00:00Z",
+    "dueDate": "2026-04-23T23:59:00Z",
+    "notes": "Complete both paraphrases before next session.",
+    "scaffoldConfig": null
+  },
+  {
+    "assignmentId": "assign_0002",
+    "studentId": "B10-A001",
+    "passageIds": [
+      "NAR-001"
+    ],
+    "assignmentType": "slt",
+    "assignedBy": "instr_002_uid",
+    "assignedAt": "2026-04-20T12:10:00Z",
+    "dueDate": null,
+    "notes": "Use this as floor-building prep for the next interview cycle.",
+    "scaffoldConfig": {
+      "focusArea": "grammar_structure",
+      "primaryFrame": null,
+      "secondaryFrame": null,
+      "primaryStructure": "STRUCT_02",
+      "secondaryStructure": null,
+      "studentCueText": "Focus on contrast language such as although, but, and however."
+    }
+  }
+]

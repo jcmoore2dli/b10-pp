@@ -1,0 +1,54 @@
+[
+  {
+    "attemptId": "attempt_0001",
+    "studentId": "B10-A001",
+    "passageId": "COR-TEC-015",
+    "corpusType": "COR",
+    "taskType": "paraphrase",
+    "track": "A",
+    "ilrTarget": "3",
+    "assignmentType": "main",
+    "assignmentId": "assign_0001",
+    "scaffoldConfig": null,
+    "timestamp": "2026-04-20T13:00:00Z",
+    "transcript": "The passage says governments want access to secure messages to help stop crime, but experts warn that once this access exists it can weaken security for everyone and be exploited by criminals or foreign actors.",
+    "claudeFeedback": "Good grasp of the central claim and core causal relationship.",
+    "score": 3,
+    "score_label": "Good",
+    "strengths": "The response captures the main tension and identifies the security risk created by access mechanisms.",
+    "gaps": "It does not fully explain the broader implication that public-safety efforts can unintentionally increase digital vulnerability.",
+    "language_feedback": "Solid comprehension. To improve, make the concluding implication more explicit and connect the causal chain more fully.",
+    "transcript_note": "",
+    "features": {
+      "falseStartCount": 1
+    },
+    "audioUrl": "gs://b10pp-audio-submissions/attempt_0001.webm",
+    "audioExpiresAt": "2026-05-04T13:00:00Z"
+  },
+  {
+    "attemptId": "attempt_0002",
+    "studentId": "B10-B001",
+    "passageId": "NAR-001",
+    "corpusType": "none",
+    "taskType": "narration",
+    "track": "B",
+    "ilrTarget": "2",
+    "assignmentType": null,
+    "assignmentId": null,
+    "scaffoldConfig": null,
+    "timestamp": "2026-04-20T13:10:00Z",
+    "transcript": "Last month our training started late because the bus arrived late, so we changed rooms and the instructor shortened the final activity.",
+    "claudeFeedback": "Clear sequence and understandable narration.",
+    "score": 3,
+    "score_label": "Good",
+    "strengths": "The response gives a clear time reference and sequence of events.",
+    "gaps": "The narration is brief and could include more detail about the change and outcome.",
+    "language_feedback": "Good control for the task. Add one or two more details to strengthen the sequence.",
+    "transcript_note": "",
+    "features": {
+      "falseStartCount": 0
+    },
+    "audioUrl": "",
+    "audioExpiresAt": null
+  }
+]

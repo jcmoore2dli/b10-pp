@@ -1,0 +1,16 @@
+[
+  {
+    "noteId": "note_0001",
+    "studentId": "B10-A001",
+    "timestamp": "2026-04-20T11:00:00Z",
+    "content": "Student captured main idea of COR passage but omitted one key causal relationship. Recommend one more paraphrase and then EXT preview.",
+    "sessionType": "main"
+  },
+  {
+    "noteId": "note_0002",
+    "studentId": "B10-A001",
+    "timestamp": "2026-04-20T14:00:00Z",
+    "content": "Student needed support with concession language and sequencing of reasoning. Good responsiveness to modeling.",
+    "sessionType": "slt"
+  }
+]

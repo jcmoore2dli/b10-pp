@@ -1,0 +1,21 @@
+[
+  {
+    "groupId": "group_alpha_001",
+    "instructorId": "instr_001_uid",
+    "groupName": "Alpha Main Group",
+    "studentIds": [
+      "B10-A001",
+      "B10-B001"
+    ],
+    "createdAt": "2026-04-20T10:00:00Z"
+  },
+  {
+    "groupId": "group_bravo_001",
+    "instructorId": "instr_002_uid",
+    "groupName": "Bravo SLT Group",
+    "studentIds": [
+      "B10-A001"
+    ],
+    "createdAt": "2026-04-20T10:05:00Z"
+  }
+]

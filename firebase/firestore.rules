@@ -1,0 +1,315 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function studentPath(studentId) {
+      return /databases/$(database)/documents/students/$(studentId);
+    }
+
+    function userIndexPath(uid) {
+      return /databases/$(database)/documents/userIndex/$(uid);
+    }
+
+    function userExists() {
+      return signedIn() && exists(userPath(request.auth.uid));
+    }
+
+    function userDoc() {
+      return get(userPath(request.auth.uid)).data;
+    }
+
+    function role() {
+      return userDoc().role;
+    }
+
+    function isAdmin() {
+      return userExists() && role() == "admin";
+    }
+
+    function isInstructor() {
+      return userExists() && role() == "instructor";
+    }
+
+    function isStudent() {
+      return userExists() && role() == "student";
+    }
+
+    function isAdminOrInstructor() {
+      return isAdmin() || isInstructor();
+    }
+
+    function hasUserIndex() {
+      return signedIn() && exists(userIndexPath(request.auth.uid));
+    }
+
+    function currentStudentId() {
+      return get(userIndexPath(request.auth.uid)).data.studentId;
+    }
+
+    function hasCurrentStudent() {
+      return hasUserIndex() && exists(studentPath(currentStudentId()));
+    }
+
+    function currentStudent() {
+      return get(studentPath(currentStudentId())).data;
+    }
+
+    function validRole(v) {
+      return v in ["admin", "instructor", "student"];
+    }
+
+    function validTrack(v) {
+      return v in ["A", "B"];
+    }
+
+    function validStudentTrackOrBoth(v) {
+      return v in ["A", "B", "both"];
+    }
+
+    function validIlrTarget(v) {
+      return v in ["2", "3"];
+    }
+
+    function validAssignmentType(v) {
+      return v in ["main", "slt"];
+    }
+
+    function validSessionType(v) {
+      return v in ["main", "slt"];
+    }
+
+    function validCorpusType(v) {
+      return v in ["ORI", "COR", "EXT", "none"];
+    }
+
+    function validTaskType(v) {
+      return v in [
+        "paraphrase",
+        "esop",
+        "hypothesizing",
+        "extended_listening",
+        "narration",
+        "description",
+        "instructions"
+      ];
+    }
+
+    function validInputType(v) {
+      return v in ["audio", "text"];
+    }
+
+    function validPoolType(v) {
+      return v in ["main", "supplemental", "both"];
+    }
+
+    function validPassageSource(v) {
+      return v in ["b10_curated", "instructor_created"];
+    }
+
+    function validScore(v) {
+      return v is int && v >= 1 && v <= 4;
+    }
+
+    function validScoreLabel(v) {
+      return v in ["Inaccurate", "Partial", "Good", "Excellent"];
+    }
+
+    function validFocusArea(v) {
+      return v in [
+        "holistic",
+        "argument_structure",
+        "discourse_frame",
+        "grammar_structure",
+        "combined"
+      ];
+    }
+
+    function validFrame(v) {
+      return v == null || v in [
+        "FRAME_01", "FRAME_02", "FRAME_03",
+        "FRAME_04", "FRAME_05", "FRAME_06"
+      ];
+    }
+
+    function validStructure(v) {
+      return v == null || v in [
+        "STRUCT_01", "STRUCT_02", "STRUCT_03", "STRUCT_04",
+        "STRUCT_05", "STRUCT_06", "STRUCT_07"
+      ];
+    }
+
+    function validScaffoldConfig(sc) {
+      return sc == null || (
+        sc.keys().hasOnly([
+          "focusArea",
+          "primaryFrame",
+          "secondaryFrame",
+          "primaryStructure",
+          "secondaryStructure",
+          "studentCueText"
+        ]) &&
+        validFocusArea(sc.focusArea) &&
+        validFrame(sc.primaryFrame) &&
+        validFrame(sc.secondaryFrame) &&
+        validStructure(sc.primaryStructure) &&
+        validStructure(sc.secondaryStructure) &&
+        sc.studentCueText is string
+      );
+    }
+
+    match /users/{userId} {
+      allow read: if userExists() && (isAdmin() || request.auth.uid == userId);
+      allow create, update, delete: if isAdmin()
+        && request.resource.data.userId == userId
+        && validRole(request.resource.data.role);
+    }
+
+    match /userIndex/{userId} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == userId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /students/{studentId} {
+      allow read: if userExists() && (
+        isAdmin() ||
+        isInstructor() ||
+        (isStudent() && hasCurrentStudent() && currentStudentId() == studentId)
+      );
+
+      allow create: if isAdmin()
+        && request.resource.data.studentId == studentId
+        && validTrack(request.resource.data.track)
+        && validIlrTarget(request.resource.data.ilrBaseline);
+
+      allow update: if
+        (
+          isAdmin() &&
+          (
+            request.resource.data.track == resource.data.track ||
+            (
+              request.resource.data.track != resource.data.track &&
+              request.resource.data.trackOverrideNote is string &&
+              request.resource.data.trackOverrideNote.size() > 0
+            )
+          )
+        )
+        ||
+        (
+          isInstructor() &&
+          request.resource.data.diff(resource.data).changedKeys().hasOnly([
+            "studentSummary",
+            "studentSummaryUpdatedAt"
+          ]) &&
+          request.resource.data.track == resource.data.track
+        );
+
+      allow delete: if isAdmin();
+    }
+
+    match /groups/{groupId} {
+      allow read: if isAdmin() || (isInstructor() && resource.data.instructorId == request.auth.uid);
+
+      allow create: if isInstructor()
+        && request.resource.data.instructorId == request.auth.uid
+        && request.resource.data.groupName is string
+        && request.resource.data.studentIds is list;
+
+      allow update: if isInstructor()
+        && resource.data.instructorId == request.auth.uid
+        && request.resource.data.instructorId == resource.data.instructorId;
+
+      allow delete: if isInstructor() && resource.data.instructorId == request.auth.uid;
+    }
+
+    match /notes/{noteId} {
+      allow read: if isAdminOrInstructor();
+
+      allow create: if isAdminOrInstructor()
+        && exists(studentPath(request.resource.data.studentId))
+        && validSessionType(request.resource.data.sessionType);
+
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    match /passages/{passageId} {
+      allow read: if
+        isAdmin() ||
+        isInstructor() ||
+        (
+          isStudent() &&
+          hasCurrentStudent() &&
+          (
+            resource.data.track == currentStudent().track ||
+            resource.data.track == "both"
+          )
+        );
+
+      allow create: if isAdmin()
+        && validCorpusType(request.resource.data.corpusType)
+        && validTaskType(request.resource.data.taskType)
+        && validStudentTrackOrBoth(request.resource.data.track)
+        && validInputType(request.resource.data.inputType)
+        && validIlrTarget(request.resource.data.ilrTarget)
+        && request.resource.data.passageSource in ["b10_curated", "instructor_created"];
+
+      allow update, delete: if isAdmin();
+    }
+
+    match /assignments/{assignmentId} {
+      allow read: if
+        isAdmin() ||
+        isInstructor() ||
+        (
+          isStudent() &&
+          hasCurrentStudent() &&
+          resource.data.studentId == currentStudentId()
+        );
+
+      allow create: if isAdminOrInstructor()
+        && exists(studentPath(request.resource.data.studentId))
+        && validAssignmentType(request.resource.data.assignmentType)
+        && request.resource.data.assignedBy == request.auth.uid
+        && request.resource.data.passageIds is list
+        && validScaffoldConfig(request.resource.data.scaffoldConfig);
+
+      allow update: if isAdminOrInstructor()
+        && resource.data.assignedBy == request.auth.uid
+        && request.resource.data.assignedBy == resource.data.assignedBy
+        && validAssignmentType(request.resource.data.assignmentType)
+        && validScaffoldConfig(request.resource.data.scaffoldConfig);
+
+      allow delete: if isAdmin() || (isInstructor() && resource.data.assignedBy == request.auth.uid);
+    }
+
+    match /attempts/{attemptId} {
+      allow read: if
+        isAdmin() ||
+        isInstructor() ||
+        (
+          isStudent() &&
+          hasCurrentStudent() &&
+          resource.data.studentId == currentStudentId()
+        );
+
+      allow create: if
+        isAdminOrInstructor() ||
+        (
+          isStudent() &&
+          hasCurrentStudent() &&
+          request.resource.data.studentId == currentStudentId()
+        );
+
+      allow update: if isAdmin() || isInstructor();
+      allow delete: if isAdmin();
+    }
+  }
+}

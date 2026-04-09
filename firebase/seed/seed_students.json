@@ -1,0 +1,28 @@
+[
+  {
+    "studentId": "B10-A001",
+    "userId": "student_001_uid",
+    "displayName": "Student One",
+    "accessCode": "ACX491",
+    "ilrBaseline": "2",
+    "track": "A",
+    "trackAssignedBy": "admin_001_uid",
+    "trackOverrideNote": "",
+    "studentSummary": null,
+    "studentSummaryUpdatedAt": null,
+    "createdAt": "2026-04-20T09:15:00Z"
+  },
+  {
+    "studentId": "B10-B001",
+    "userId": "student_002_uid",
+    "displayName": "Student Two",
+    "accessCode": "BCY771",
+    "ilrBaseline": "2",
+    "track": "B",
+    "trackAssignedBy": "admin_001_uid",
+    "trackOverrideNote": "",
+    "studentSummary": null,
+    "studentSummaryUpdatedAt": null,
+    "createdAt": "2026-04-20T09:16:00Z"
+  }
+]
