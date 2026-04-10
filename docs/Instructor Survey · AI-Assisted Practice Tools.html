@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)file:///C:/Users/jeffrey.moore/Downloads/b10pp-instructor-survey.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Survey · AI-Assisted Practice Tools</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8fafc; color: #1e293b; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px 20px; }
+  .wrap { max-width: 660px; margin: 0 auto; }
+
+  .doc-label { font-size: 11px; letter-spacing: 4px; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  h1 { font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+  .intro { font-size: 13px; color: #475569; line-height: 1.7; margin-bottom: 8px; }
+  .time-note { font-size: 12px; color: #94a3b8; margin-bottom: 32px; font-style: italic; }
+
+  /* Build notes */
+  .build-note { background: #0f172a; color: #f1f5f9; border-radius: 10px; padding: 16px 20px; margin-bottom: 32px; font-size: 12px; line-height: 1.7; }
+  .build-note strong { color: #38bdf8; }
+  .build-note code { font-family: 'Courier New', monospace; background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+
+  /* Question cards */
+  .q-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 22px; margin-bottom: 16px; border-left: 4px solid; }
+  .q-num { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .q-text { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 12px; line-height: 1.4; }
+  .q-note { font-size: 11px; color: #94a3b8; font-style: italic; margin-bottom: 12px; line-height: 1.5; }
+  .q-type { font-size: 10px; font-weight: 700; color: #64748b; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; color: #334155; }
+  .option-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #cbd5e1; flex-shrink: 0; }
+  .option-check { width: 14px; height: 14px; border-radius: 3px; border: 2px solid #cbd5e1; flex-shrink: 0; }
+
+  /* Scale */
+  .scale-wrap { margin-top: 4px; }
+  .scale-row { display: flex; gap: 6px; margin-bottom: 6px; }
+  .scale-item { flex: 1; text-align: center; }
+  .scale-circle { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #cbd5e1; margin: 0 auto 4px; }
+  .scale-label { font-size: 10px; color: #94a3b8; line-height: 1.3; }
+  .scale-ends { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; margin-top: 4px; }
+
+  /* Text box */
+  .text-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; min-height: 72px; font-size: 13px; color: #94a3b8; font-style: italic; }
+  .text-box-sm { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; min-height: 40px; font-size: 13px; color: #94a3b8; font-style: italic; }
+
+  /* Sub-question */
+  .sub-q { margin-top: 14px; padding-top: 14px; border-top: 1px solid #f1f5f9; }
+  .sub-q-text { font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+
+  /* Strategic note */
+  .strategic { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 14px; margin-top: 12px; border-left: 3px solid #d97706; }
+  .strategic-label { font-size: 9px; font-weight: 700; color: #d97706; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .strategic-text { font-size: 11px; color: #78350f; line-height: 1.5; }
+
+  /* Section break */
+  hr { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }
+
+  /* Thank you card */
+  .thankyou { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 20px 22px; margin-bottom: 16px; }
+  .thankyou-label { font-size: 10px; font-weight: 700; color: #16a34a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .thankyou-text { font-size: 13px; color: #334155; line-height: 1.6; }
+
+  .footer { margin-top: 40px; font-size: 10px; color: #94a3b8; text-align: center; letter-spacing: 2px; line-height: 2; text-transform: uppercase; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-label">DLIELC · B10 Practice Platform · Evidence Collection</div>
+  <h1>Instructor Survey<br>AI-Assisted Practice Tools</h1>
+  <p class="intro">This brief survey collects information about how instructors are currently using AI-assisted tools for student speaking practice. Responses will be used in aggregate to inform program planning. No identifying information will be shared without your permission.</p>
+  <p class="time-note">Estimated time: 3–4 minutes · 7 questions</p>
+
+  <!-- Build instructions -->
+  <div class="build-note">
+    <strong>How to use this document:</strong> Copy each question directly into Google Forms or SurveyMonkey. Question type is labeled on each card (<code>Multiple choice</code> · <code>Checkboxes</code> · <code>Scale</code> · <code>Short text</code> · <code>Paragraph</code>). Strategic notes in amber are for your reference only — do not include them in the form. Remove this instruction box before sending.
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" style="border-color:#0284c7;">
+    <div class="q-num" style="color:#0284c7;">Question 1 of 7</div>
+    <div class="q-text">How often do you use AI-assisted practice tools — such as Snorkl — with your students?</div>
+    <div class="q-type">Multiple choice · Select one</div>
+    <div class="options">
+      <div class="option"><div class="option-dot"></div>Daily</div>
+      <div class="option"><div class="option-dot"></div>Several times per week</div>
+      <div class="option"><div class="option-dot"></div>About once a week</div>
+      <div class="option"><div class="option-dot"></div>A few times per month</div>
+      <div class="option"><div class="option-dot"></div>Rarely or just getting started</div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-text">Which tools do you currently use for AI-assisted student practice? List any that apply.</div>
+      <div class="q-type">Short text</div>
+      <div class="text-box-sm">Type your answer...</div>
+    </div>
+
+    <div class="strategic">
+      <div class="strategic-label">Strategic note</div>
+      <div class="strategic-text">The sub-question may surface tools you are not aware of — useful intelligence. It also validates that Snorkl is the primary tool in use without you having to assert it.</div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" style="border-color:#7c3aed;">
+    <div class="q-num" style="color:#7c3aed;">Question 2 of 7</div>
+    <div class="q-text">Which types of speaking practice tasks have you used with students? Select all that apply.</div>
+    <div class="q-type">Checkboxes · Select all that apply</div>
+    <div class="options">
+      <div class="option"><div class="option-check"></div>Extended Supported Opinion (ESOP)</div>
+      <div class="option"><div class="option-check"></div>Oral paraphrase of listening passages</div>
+      <div class="option"><div class="option-check"></div>Past tense narration</div>
+      <div class="option"><div class="option-check"></div>Description tasks</div>
+      <div class="option"><div class="option-check"></div>Hypothesizing or speculative language</div>
+      <div class="option"><div class="option-check"></div>Other (please describe below)</div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-text">If other, please describe:</div>
+      <div class="q-type">Short text</div>
+      <div class="text-box-sm">Type your answer...</div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" style="border-color:#d97706;">
+    <div class="q-num" style="color:#d97706;">Question 3 of 7</div>
+    <div class="q-text">Roughly how many student sessions have involved AI-assisted practice since you started using these tools?</div>
+    <div class="q-note">A session means one student completing one practice activity. Your best estimate is fine.</div>
+    <div class="q-type">Multiple choice · Select one</div>
+    <div class="options">
+      <div class="option"><div class="option-dot"></div>Fewer than 20</div>
+      <div class="option"><div class="option-dot"></div>20 – 50</div>
+      <div class="option"><div class="option-dot"></div>50 – 100</div>
+      <div class="option"><div class="option-dot"></div>100 – 200</div>
+      <div class="option"><div class="option-dot"></div>More than 200</div>
+      <div class="option"><div class="option-dot"></div>I am not sure — I have had to delete records</div>
+    </div>
+
+    <div class="strategic">
+      <div class="strategic-label">Strategic note</div>
+      <div class="strategic-text">The last option — "I have had to delete records" — surfaces the free account storage problem without you naming it. She will select this naturally if it applies. Do not remove this option.</div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" style="border-color:#16a34a;">
+    <div class="q-num" style="color:#16a34a;">Question 4 of 7</div>
+    <div class="q-text">In your observation, how has using AI-assisted practice tools affected your students in the following areas?</div>
+    <div class="q-note">Rate each area based on what you have personally observed. There are no right or wrong answers.</div>
+    <div class="q-type">Scale 1–5 · One row per area</div>
+
+    <div style="margin-top:12px;">
+      <div style="font-size:12px;font-weight:700;color:#334155;margin-bottom:10px;">Student engagement during sessions</div>
+      <div class="scale-row">
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">1</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">2</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">3</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">4</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">5</div></div>
+      </div>
+      <div class="scale-ends"><span>No change observed</span><span>Noticeably more engaged</span></div>
+    </div>
+
+    <hr>
+
+    <div style="margin-top:12px;">
+      <div style="font-size:12px;font-weight:700;color:#334155;margin-bottom:10px;">Student preparation and readiness for speaking tasks</div>
+      <div class="scale-row">
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">1</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">2</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">3</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">4</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">5</div></div>
+      </div>
+      <div class="scale-ends"><span>No change observed</span><span>Noticeably better prepared</span></div>
+    </div>
+
+    <hr>
+
+    <div style="margin-top:12px;">
+      <div style="font-size:12px;font-weight:700;color:#334155;margin-bottom:10px;">Student confidence in speaking practice</div>
+      <div class="scale-row">
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">1</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">2</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">3</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">4</div></div>
+        <div class="scale-item"><div class="scale-circle"></div><div class="scale-label">5</div></div>
+      </div>
+      <div class="scale-ends"><span>No change observed</span><span>Noticeably more confident</span></div>
+    </div>
+
+    <div class="sub-q">
+      <div class="sub-q-text">Can you describe a specific moment or pattern you have observed? Any example helps.</div>
+      <div class="q-type">Paragraph · Optional but encouraged</div>
+      <div class="text-box">Type your answer...</div>
+    </div>
+
+    <div class="strategic">
+      <div class="strategic-label">Strategic note</div>
+      <div class="strategic-text">The open text here is the most valuable part of the entire survey. An anecdote from an independent instructor — in her own words — carries more weight with an academic director than any quantitative data you can present. Do not skip this question or make it feel optional in how you introduce the survey.</div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" style="border-color:#be185d;">
+    <div class="q-num" style="color:#be185d;">Question 5 of 7</div>
+    <div class="q-text">What is the biggest limitation of the tools you currently use that affects your ability to use them with students?</div>
+    <div class="q-note">Be as specific as you like. This information directly informs program planning.</div>
+    <div class="q-type">Paragraph · Open text</div>
+    <div class="text-box">Type your answer...</div>
+
+    <div class="strategic">
+      <div class="strategic-label">Strategic note</div>
+      <div class="strategic-text">This is where "I have to delete student records to free up memory" surfaces in her words, not yours. It may also surface other limitations you have not thought of. Do not prompt her with examples before she completes the survey — you want her unfiltered response.</div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" style="border-color:#0284c7;">
+    <div class="q-num" style="color:#0284c7;">Question 6 of 7</div>
+    <div class="q-text">If a purpose-built platform were available — with persistent student records, ILR-aligned feedback, no storage limits, and continuity across instructor rotations — how would that change your practice?</div>
+    <div class="q-note">There is no commitment implied by your answer. This is about understanding what would be most useful.</div>
+    <div class="q-type">Paragraph · Open text</div>
+    <div class="text-box">Type your answer...</div>
+
+    <div class="strategic">
+      <div class="strategic-label">Strategic note</div>
+      <div class="strategic-text">This question plants the vision of B10-PP without naming it. Her answer describes the value of the platform in her own words — which is exactly what you want an academic director to read. The phrase "continuity across instructor rotations" is intentionally included because it maps directly to the throughput and continuity argument without using those words.</div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" style="border-color:#64748b;">
+    <div class="q-num" style="color:#64748b;">Question 7 of 7</div>
+    <div class="q-text">Would you be willing to have your responses referenced anonymously in a program brief presented to program leadership?</div>
+    <div class="q-note">Anonymous means no name, no position title, no identifying details. Your responses would be cited as "SLT instructor" or similar.</div>
+    <div class="q-type">Multiple choice · Select one</div>
+    <div class="options">
+      <div class="option"><div class="option-dot"></div>Yes — you may reference my responses anonymously</div>
+      <div class="option"><div class="option-dot"></div>Yes — but I would like to review how my responses are used first</div>
+      <div class="option"><div class="option-dot"></div>No — please keep my responses confidential</div>
+    </div>
+  </div>
+
+  <!-- Thank you -->
+  <div class="thankyou">
+    <div class="thankyou-label">Thank you</div>
+    <div class="thankyou-text">Your responses are genuinely helpful. If you have additional thoughts or want to discuss any of this in person, please feel free to reach out. This information will be used to support program planning conversations — not to evaluate individual instructors or students.</div>
+  </div>
+
+  <!-- Sending note -->
+  <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:20px 22px;margin-bottom:16px;">
+    <div style="font-size:10px;font-weight:700;color:#0284c7;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">How to send this — suggested message</div>
+    <div style="font-size:13px;color:#334155;line-height:1.7;font-style:italic;">
+      "Hi — following up on our conversation. I put together a short survey (3–4 minutes) to collect some data before my upcoming conversation with the academic director. Your perspective as someone already using these tools would be really valuable. Completely anonymous if you prefer. Link: [Google Form link]<br><br>Thank you — I appreciate you taking the time."
+    </div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:12px;">Keep it casual. She already said yes. A long formal message will feel heavier than the conversation warranted. Short and direct is right.</div>
+  </div>
+
+  <div class="footer">
+    DLIELC · B10 Practice Platform · Evidence Collection<br>
+    Instructor Survey · April 2026
+  </div>
+
+</div>
+
+
+</body></html>
