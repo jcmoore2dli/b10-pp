@@ -1,9 +1,9 @@
 // B10-PP Scorer Test
-// Tests both PARA and EXT scoring branches through scoreResponse.js
+// Tests PARA and EXT scoring branches through scoreResponse.js
 
 import { scoreResponse } from './services/scoreResponse.js';
 
-// ── TEST 1 — ORI/COR PARAPHRASE ──────────────────────────────
+// ── TEST 1 — ORI/COR PARAPHRASE SCORE 4 ─────────────────────
 const paraTest = {
   taskType: 'PARA',
   passageText: `
@@ -22,7 +22,7 @@ how the brain works.
   `
 };
 
-// ── TEST 2 — EXT COMPREHENSION ───────────────────────────────
+// ── TEST 2 — EXT COMPREHENSION SCORE 4 ──────────────────────
 const extTest = {
   taskType: 'EXT',
   passageText: `
@@ -46,9 +46,44 @@ don't enjoy the exercise.
   }
 };
 
-// ── RUN BOTH TESTS ────────────────────────────────────────────
+// ── TEST 3 — PARA SCORE 3 EXPECTED ──────────────────────────
+const paraTest3 = {
+  taskType: 'PARA',
+  passageText: `
+Scientists have found that sleep deprivation significantly impairs cognitive
+performance. Studies show that people who sleep fewer than six hours per night
+make more errors on attention tasks and have slower reaction times.
+Researchers attribute this to the brain's reduced ability to clear metabolic
+waste during insufficient sleep, which accumulates and disrupts neural function.
+  `,
+  transcript: `
+The passage is about sleep deprivation and how it affects the brain.
+People who don't get enough sleep, less than six hours, make more mistakes
+and have slower reaction times. This happens because of something related
+to waste in the brain that builds up when you don't sleep enough.
+  `
+};
+
+// ── TEST 4 — PARA SCORE 2 EXPECTED ──────────────────────────
+const paraTest4 = {
+  taskType: 'PARA',
+  passageText: `
+Scientists have found that sleep deprivation significantly impairs cognitive
+performance. Studies show that people who sleep fewer than six hours per night
+make more errors on attention tasks and have slower reaction times.
+Researchers attribute this to the brain's reduced ability to clear metabolic
+waste during insufficient sleep, which accumulates and disrupts neural function.
+  `,
+  transcript: `
+The passage talks about sleep and the brain. Not sleeping enough is bad
+for you and can cause problems. Scientists have been studying this topic
+for a long time.
+  `
+};
+
+// ── RUN ALL TESTS ─────────────────────────────────────────────
 async function runTests() {
-  console.log('Running PARA test...\n');
+  console.log('Running PARA Score 4 expected test...\n');
   const paraResult = await scoreResponse(paraTest);
   if (paraResult.error) {
     console.error('PARA test failed:', paraResult.error);
@@ -64,7 +99,7 @@ async function runTests() {
 
   console.log('\n─────────────────────────────────────────\n');
 
-  console.log('Running EXT test...\n');
+  console.log('Running EXT Score 4 expected test...\n');
   const extResult = await scoreResponse(extTest);
   if (extResult.error) {
     console.error('EXT test failed:', extResult.error);
@@ -77,9 +112,36 @@ async function runTests() {
     console.log('Language:   ', extResult.result.language_feedback);
     console.log('Transcript note:', extResult.result.transcript_note || '(none)');
   }
+
+  console.log('\n─────────────────────────────────────────\n');
+
+  console.log('Running PARA Score 3 expected test...\n');
+  const para3Result = await scoreResponse(paraTest3);
+  if (para3Result.error) {
+    console.error('PARA Score 3 test failed:', para3Result.error);
+  } else {
+    console.log('PARA Score 3 Result:');
+    console.log('Score:      ', para3Result.result.score);
+    console.log('Label:      ', para3Result.result.score_label);
+    console.log('Gaps:       ', para3Result.result.gaps);
+  }
+
+  console.log('\n─────────────────────────────────────────\n');
+
+  console.log('Running PARA Score 2 expected test...\n');
+  const para2Result = await scoreResponse(paraTest4);
+  if (para2Result.error) {
+    console.error('PARA Score 2 test failed:', para2Result.error);
+  } else {
+    console.log('PARA Score 2 Result:');
+    console.log('Score:      ', para2Result.result.score);
+    console.log('Label:      ', para2Result.result.score_label);
+    console.log('Gaps:       ', para2Result.result.gaps);
+  }
 }
 
 runTests().catch((error) => {
   console.error('Unhandled error:', error);
   process.exit(1);
 });
+
