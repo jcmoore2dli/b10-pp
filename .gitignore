@@ -1,0 +1,6 @@
+*.odt
+*.env
+.env*
+*api_key*
+*api_code*
+*.log
