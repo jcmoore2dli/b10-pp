@@ -1,0 +1,642 @@
+B10 Practice Platform
+Description Scaffold Configuration System
+Specification Document — v1.3
+Author: Jeff Moore, DLIELC | April 2026 | Status: DRAFT
+Companion: B10-PP Section 8, Prompt 4c — Description Scoring v1.1
+
+================================================================================
+
+REVISION HISTORY
+
+v1.2 → v1.3 (April 2026)
+  - Section 2: Added functional interpretation principle for spatial reference
+    control. Spatial reference evaluated as connected placement, not explicit
+    relational syntax at every move.
+  - Section 4, Layer 1: Disfluency continuum language replaced with
+    governance-confirmed three-level formulation from norming session.
+  - Section 4, Layer 1: Spatial Reference Gate clarified — deliberate spatial
+    resets are positive ILR 2 markers; gate failure requires absence or entire
+    instability, not instability with recovery.
+  - Section 4, Layer 3: Spatial Vocabulary monitor note added — spatial language
+    tokens necessary but not sufficient for gate passage.
+  - Section 8: Norming session status updated with confirmed anchors, open items,
+    and Snorkl validity notes from April 2026 norming session.
+
+================================================================================
+
+1. PURPOSE AND SCOPE
+
+This document specifies the scaffold configuration system for spatial and object
+description tasks in the B10 Practice Platform (B10-PP). The scaffold allows
+instructors to configure AI scoring and feedback focus for individual task
+assignments targeting ILR 1 to ILR 2 speaking proficiency.
+
+Scope: Spatial and object description tasks only. ILR 2 is the performance target.
+ILR 1 is the assumed floor. ILR 3 constructs are explicitly out of scope.
+
+Task definition: The student describes a place (interior or exterior) or object in
+sufficient detail to orient the listener in space. Examples include a room interior,
+a movie theater lobby, a motorcycle, a public park, or a piece of equipment.
+
+PEDAGOGIC RATIONALE: The scaffold serves two functions. For the learner, it
+isolates sub-skills for focused practice — a learner cannot improve everything
+at once, and a tractable target produces faster, more visible gains. For the
+platform, it makes explicit that B10-PP teaches spatial language use in context —
+how to establish a reference framework, how to organize a traversal, how to place
+features in relation to each other and to an anchor point. This is transferable
+language function, not test preparation.
+
+================================================================================
+
+2. DESIGN PRINCIPLES
+
+- Fixed infrastructure and instructor-configurable focus are strictly separated.
+  Construct-critical rules are never instructor-modifiable.
+
+- Primary focus drives feedback priority. The scorer leads with the
+  instructor-selected dimension.
+
+- A monitor is a performance feature that the scoring engine tracks and reports on
+  in feedback output. Monitors do not affect scoring, do not modify the gate
+  criterion, and do not determine the primary feedback focus selected by the
+  instructor. They surface targeted observational data alongside the primary focus
+  feedback. Instructors use monitors to request visibility into specific dimensions
+  without shifting the main feedback target.
+
+- Spatial reference gate is always active and never configurable. Selecting Spatial
+  Reference Control as a primary focus affects feedback emphasis only — not scoring
+  logic. Gate failure dominates feedback regardless of focus selection.
+
+- FUNCTIONAL INTERPRETATION — SPATIAL REFERENCE CONTROL: Spatial reference control
+  is evaluated functionally, not prescriptively. The criterion is whether the
+  listener can build a mental map from what is explicitly stated — not whether the
+  student uses explicit relational syntax at every descriptive move. Connected
+  placement followable from what is explicitly stated constitutes functional spatial
+  reference. Explicit relational syntax at every move (e.g., "to the right of X is
+  Y") is a Score 3 quality marker, not a gate requirement. Two or three unanchored
+  features in an otherwise connected description constitute instability — not gate
+  failure. Gate failure requires spatial reference to be absent or entirely
+  unstable.
+
+- DELIBERATE SPATIAL RESETS: A student who explicitly reorients the listener
+  ("let's go back to the entrance," "returning to the front of the room") is
+  demonstrating active spatial framework management — a positive ILR 2
+  organizational marker. Deliberate resets are not penalized as disorganization.
+
+- Present tense is the expected primary tense for description tasks. Past tense is
+  appropriate only for anecdotal inserts or contextual background. Tense drift
+  across the body of the description is a structural control failure — not a gate
+  criterion.
+
+- Technical expertise about the described subject is not required and is not scored.
+  The threshold is minimal sufficient information to visualize — not exhaustive or
+  expert-level coverage.
+
+- Lexical range is managed through topic domain selection at task design, not
+  through a scaffold focus category.
+
+- Basic Structures monitoring includes only forms that directly support
+  intelligibility at ILR 1-2. Article errors, preposition errors used in non-spatial
+  contexts, and complex clause errors are treated as ILR 3+ concerns out of scope.
+
+- Disfluency monitoring does not change the scoring cap rule. It shifts feedback
+  priority only.
+
+- Scoring outcomes are determined solely by construct criteria and gate rules.
+  Instructor configuration affects feedback only.
+
+================================================================================
+
+3. REDS FRAMEWORK AND SCORING ALIGNMENT
+
+REDS FRAMEWORK — FUNCTIONAL PERFORMANCE STATES
+
+Performance is evaluated using REDS status relative to the task target.
+
+Absent:
+  The target feature is not present.
+
+Not Realized:
+  The target feature is attempted but does not functionally materialize.
+  - attempted but not functional
+  - invoked but not developed
+  - does not carry meaning
+  - requires inference from the listener to complete
+
+Developing:
+  The target feature is functionally present.
+  - functionally present
+  - followable from what is explicitly stated
+  - inconsistent
+  - breaks under pressure or across parts of the response
+
+Sustained:
+  The target feature is controlled across the full response.
+  - controlled
+  - distributed across the response
+  - stable under task demands
+
+--------------------------------------------------------------------------------
+
+SCORING ALIGNMENT — ILR 2 TARGET
+
+Score 3 corresponds to Sustained performance.
+Developing performance does not meet the threshold for Score 3.
+Not Realized performance does not meet the threshold for Score 2.
+
+--------------------------------------------------------------------------------
+
+FUNCTIONAL THRESHOLD
+
+A feature is considered functionally realized when it carries meaning in a way
+that can be followed from what is explicitly stated, without requiring the
+listener to infer missing steps, relationships, or structure.
+
+If a feature is present in form but does not carry meaning (e.g., structures are
+used but do not result in a usable, interpretable outcome), it is classified as
+Not Realized.
+
+================================================================================
+
+4. SCAFFOLD ARCHITECTURE
+
+The scaffold operates across three layers plus a prompt difficulty parameter set
+at task design.
+
+INTERPRETIVE RULE — ROLE TYPES:
+  Always Active: evaluated on every response; cannot be turned off.
+  Primary Focus: selected by instructor; affects feedback priority only.
+  Monitor: optional visibility layer; does not affect scoring or gate logic.
+
+  A dimension may be Always Active and also selectable as Primary Focus.
+  Selection changes feedback emphasis only — not whether the dimension is evaluated.
+
+--------------------------------------------------------------------------------
+LAYER 1 — Fixed Infrastructure — Always Active, Not Instructor-Configurable
+--------------------------------------------------------------------------------
+
+Spatial Reference Gate
+  Spatial orientation framework establishment and maintenance evaluated on every
+  description. Score cap rule never changes regardless of any instructor
+  configuration. Cannot be disabled or adjusted. Gate failure — spatial reference
+  not established or not maintained — caps at Score 1 regardless of all other
+  criteria.
+
+  Gate failure requires spatial reference to be absent or entirely unstable.
+  Instability with recovery (framework partially maintained, breaks under pressure
+  but spatial relationships recoverable) does not constitute gate failure — it is
+  a Score 2 profile.
+
+  Deliberate spatial resets are positive ILR 2 markers and do not constitute
+  disorganization or gate-adjacent instability.
+
+Disfluency Default
+  Disfluency monitored on every description using a three-level continuum.
+  This behavior is always active and is never overridden or replaced by any
+  instructor configuration. Selecting Fluency Focus as a monitor increases
+  feedback priority for disfluency patterns — it does not change monitoring
+  behavior, scoring logic, or cap thresholds.
+
+  Three-level continuum (governance-confirmed, April 2026 norming session):
+    Minimal: Occasional false starts or filled pauses. Does not penalize
+      Score 2 or 3.
+    Moderate: Noticeable false starts, repairs, or pauses distributed across
+      the response, sufficient that a non-sympathetic listener would struggle.
+      Caps at Score 2 regardless of functional criterion performance.
+    Numerous: Pervasive and meaning-impeding. Caps at Score 1 regardless of
+      all other criteria.
+
+  Disfluency metadata (silent pause counts, mean inter-word gap) is passed
+  to the scoring engine alongside the raw transcript. ILR threshold guidance
+  for metadata interpretation is included in Prompt 4c.
+
+  NOTE — TRANSCRIPT-ONLY SCORING LIMITATION: Disfluency evaluation is partial
+  under transcript-only scoring conditions. Text-representable disfluency (false
+  starts, filled pauses, self-corrections) reaches the scoring engine as text
+  tokens. Silent pauses and labored delivery rate require audio-layer metadata.
+  Until the disfluency metadata pipeline is fully validated, transcript-only
+  scoring should be treated as potentially under-detecting disfluency. The
+  disfluency cap rule is always active — detection completeness is the
+  implementation constraint, not the rule itself.
+
+Reference Clarity
+  Subject and referent tracking monitored on every description. Always reported in
+  feedback when breakdown occurs. This evaluation is always active regardless of
+  instructor configuration. Reference Clarity is not selectable as a Layer 3
+  monitor — it is always on. No instructor selection is required or available.
+
+--------------------------------------------------------------------------------
+LAYER 2 — Primary Focus — Instructor Selects One
+--------------------------------------------------------------------------------
+
+Spatial Reference Control
+  Feedback emphasis on whether a spatial orientation framework is established and
+  maintained across the description. Evaluated functionally — the criterion is
+  connected placement followable from what is explicitly stated, not explicit
+  relational syntax at every move. Levels: absent / emerging / sustained.
+  Selecting this focus does not modify the gate criterion or scoring logic. When
+  the gate criterion fails, feedback will prioritize spatial reference control
+  regardless of which primary focus is selected.
+
+  Recommended for: learners whose descriptions read as feature inventories rather
+  than spatial maps; learners who use spatial vocabulary tokens without connecting
+  elements to each other or to a reference point.
+
+Organizational Sequence
+  Focus on logical ordering of detail — general to specific, or consistent spatial
+  traversal (left to right, near to far, exterior to interior). Deliberate spatial
+  resets that explicitly reorient the listener are scored as positive organizational
+  moves, not as disorganization or sequence breaks.
+  Levels: unordered / partially organized / controlled throughout.
+
+  Recommended for: learners whose spatial reference is establishing but whose
+  traversal logic is inconsistent; learners at the Score 2/3 boundary whose
+  primary gap is organizational control rather than spatial reference.
+
+Detail and Coverage
+  Focus on whether major features are present and spatially located with sufficient
+  information for the listener to form a mental image. Threshold: minimal sufficient
+  information to visualize — not exhaustive or expert-level coverage.
+  Levels: key features missing / major features present / complete with spatial
+  relationships.
+
+  Recommended for: learners whose spatial framework and organization are developing
+  but whose descriptions are too thin to support a mental image; learners who
+  establish a good entry point but stop too early.
+
+  NOTE: The Spatial Reference Control levels (Absent / Emerging / Sustained) are
+  descriptive categories for feedback orientation only. They do not modify the gate
+  criterion, alter scoring thresholds, or affect scoring outcomes in any way. The
+  gate rule — spatial reference system not established and maintained = Score 1 —
+  applies on every description regardless of primary focus selection.
+
+  NOTE: Instructor selects one primary focus per task assignment. This selection
+  drives feedback priority — the scorer leads with this dimension in all feedback
+  output.
+
+--------------------------------------------------------------------------------
+LAYER 3 — Optional Monitors — Instructor Selects Any Combination
+--------------------------------------------------------------------------------
+
+Basic Structures
+  Monitors: present tense consistency, subject-verb agreement, basic word order,
+  simple clause construction. Present tense consistency is the primary signal —
+  tense drift from present into past across the body of the description is a
+  structural control failure at ILR 1-2. Article errors, preposition errors in
+  non-spatial contexts, and complex clause errors are excluded as ILR 3+ concerns.
+  Selection increases feedback prominence for these features — it does not activate
+  new scoring criteria.
+
+Spatial Vocabulary
+  Monitors: prepositions of location (next to, in front of, behind, above, below,
+  between, at the corner of), directional language (left, right, toward, away from),
+  relative position markers (near, far, adjacent, opposite).
+  These features are directly observable and teachable at ILR 1-2. Selection
+  increases feedback prominence for spatial vocabulary — it does not affect scoring.
+
+  IMPORTANT INTERPRETIVE NOTE: Spatial language tokens are necessary but not
+  sufficient for spatial reference control. A student who uses spatial prepositions
+  without connecting elements to each other or to an established anchor point has
+  not established a spatial framework — they have produced isolated placement
+  labels. This monitor tracks token presence and accuracy; gate passage requires
+  functional connected placement, not token presence alone.
+
+Fluency Focus
+  Monitors false starts, repetition, and hesitation patterns. Shifts feedback
+  priority toward disfluency patterns. Does NOT change the scoring cap rule —
+  the three-level continuum applies regardless of this setting. Selection increases
+  feedback prominence for disfluency — it does not affect cap thresholds or
+  scoring outcomes.
+
+  NOTE: All three monitors are technically available for simultaneous selection.
+  However, activating all three simultaneously may produce diffuse feedback that
+  reduces instructional clarity. Recommended maximum: two active monitors per
+  assignment.
+
+--------------------------------------------------------------------------------
+PROMPT DIFFICULTY — Set at Task Design Level — Not a Scaffold Category
+--------------------------------------------------------------------------------
+
+Topic Domain
+  Controls description complexity through topic selection:
+  - Standard: interior spaces (a room, a lobby, a store layout)
+  - Slight stretch: objects (a motorcycle, a piece of equipment, a vehicle)
+  - Higher stretch: exterior spaces with multiple reference planes (a public park,
+    a campus, a neighborhood)
+
+  Lexical range is not a scaffold focus category and is not instructor-configurable
+  within the scaffold.
+
+================================================================================
+
+5. CONFIGURATION CONSTRAINTS AND INTERACTION RULES
+
+5.1 Hard Rules
+
+- Layer 1 is always active. No instructor override.
+- Instructor selects one and only one primary focus from Layer 2.
+- Spatial Reference Control selection does not affect scoring or the gate. It
+  increases feedback density and priority for spatial reference issues only.
+- Reference Clarity is always active and always monitored. It is not selectable
+  as a monitor — no instructor action is required or available for this dimension.
+- Scoring outcomes are determined solely by construct criteria and gate rules.
+  Instructor configuration affects feedback only.
+
+5.2 Recommended and Cautioned Pairings
+
+  Organizational Sequence + Detail and Coverage
+    Status: Recommended
+    Note: Most common classroom target — structure and content together. Best
+    pairing for learners at the Score 2/3 boundary whose framework is present
+    but organizational control and coverage need development simultaneously.
+
+  Spatial Reference Control + Spatial Vocabulary monitor
+    Status: Recommended
+    Note: Gate-adjacent focus with targeted vocabulary monitoring. Surfaces
+    whether spatial vocabulary is present (monitor) and whether it is doing
+    connective work (primary focus). High diagnostic value for the Snorkl
+    over-scoring pattern — token presence without connected placement.
+
+  Detail and Coverage + Fluency Focus
+    Status: Recommended
+    Note: Content load and production management together. For learners whose
+    spatial framework is developing but whose descriptions collapse under
+    production pressure.
+
+  Topic Domain (stretch) + Fluency Focus
+    Status: Caution
+    Note: Cognitive load warning displayed; diagnostic use only.
+
+  Cognitive load warning text (displayed at assignment creation):
+  "High domain load and fluency monitoring are both active. Breakdown in this
+  configuration may reflect topic complexity rather than fluency control.
+  Interpret fluency data cautiously."
+
+================================================================================
+
+6. SUBCATEGORY PROGRESSIONS BY LAYER 2 FOCUS
+
+Each primary focus option maps to a four-level REDS progression aligned with
+ILR 1 -> 1+ -> 2 performance criteria.
+
+6.1 Spatial Reference Control
+
+  Absent
+    No spatial orientation framework present. Features listed without location
+    relative to each other or to any reference point. Does not carry meaning as
+    a spatial description. Listener cannot begin to form a mental map. ILR 1.
+
+  Not Realized
+    Spatial framework attempted but does not functionally materialize. Reference
+    point invoked but immediately lost. Spatial relationships stated in isolated
+    instances but do not form a followable system. Spatial language tokens present
+    without connected placement — listener must infer spatial layout from content
+    rather than from explicit description. ILR 1.
+
+  Developing (Emerging)
+    Spatial framework functionally present and followable from what is explicitly
+    stated. Reference point established and generally maintained. Breaks under
+    pressure — framework may be lost in extended portions but spatial relationships
+    are recoverable without inference. Two or three unanchored features in an
+    otherwise connected description constitute instability at this level — not gate
+    failure. ILR 1+.
+
+  Sustained
+    Spatial framework established and maintained with control across the full
+    description. Consistently distributed across all descriptive moves. Stable
+    under task demands. Deliberate spatial resets present where needed. Listener
+    can build a coherent mental map without significant inference. ILR 2.
+
+6.2 Organizational Sequence
+
+  Absent
+    No organizational logic present. Features named without any ordering
+    principle. Does not carry meaning as an organized description. ILR 1.
+
+  Not Realized
+    Organizational logic attempted but does not functionally materialize.
+    General-to-specific or spatial traversal invoked but not developed —
+    listener must infer the intended order. Does not carry meaning as a
+    structured description. ILR 1.
+
+  Developing (Partially Organized)
+    Organizational logic functionally present and followable from what is
+    explicitly stated. General-to-specific or spatial traversal present and
+    recognizable. Inconsistent — breaks under pressure in extended portions
+    but the overall organizational direction is recoverable. ILR 1+.
+
+  Sustained (Controlled Throughout)
+    Organizational logic controlled across the full description. Distributed
+    across all descriptive moves. Transitions stable under task demands.
+    Deliberate spatial resets that reorient the listener are present where
+    needed and are scored as positive organizational control. Listener can
+    follow a clear spatial path without inferring structure. ILR 2.
+
+6.3 Detail and Coverage
+
+  Absent
+    Major features not present. Response does not carry meaning as a description
+    of the named object or place. ILR 1.
+
+  Not Realized
+    Features named but not spatially located. Coverage attempted but does not
+    functionally materialize — features are present in form but do not result
+    in a usable spatial image. Listener must infer location and relationships.
+    ILR 1.
+
+  Developing (Major Features Present)
+    Coverage functionally present and followable from what is explicitly stated.
+    Major features present and some spatial location provided. Inconsistent —
+    some features placed, others floating. Breaks under pressure but a partial
+    mental image is recoverable without inference. ILR 1+.
+
+  Sustained (Complete with Spatial Relationships)
+    Major features present and spatially located throughout. Distributed across
+    the full description. Stable under task demands. Listener can form a coherent
+    mental image without significant inference. ILR 2.
+
+================================================================================
+
+7. OPEN ITEMS AND PHASE 2 DECISIONS
+
+7.1 Spatial Reference Control as Primary Focus — Phase 2 Checkpoint
+
+  Retain in Layer 2 for MVP. After early deployment, evaluate:
+  - Do instructors select it? Or does gate failure already surface it automatically?
+  - Does selecting it produce visibly different feedback output from the default?
+  - Decision rule: If redundant -> retire. If instructors use it meaningfully -> keep.
+
+7.2 Monitor Cap
+
+  No hard cap on simultaneous monitors in MVP. Evaluate in Phase 2:
+  - Does activating all three monitors produce feedback that is too diffuse?
+  - Should a soft limit of two monitors be enforced in instructor guidance?
+
+7.3 Disfluency Cap — STT Pipeline
+
+  The disfluency three-level continuum requires accurate disfluency signal
+  delivery to the scoring engine. The dual-pass STT architecture addresses
+  this as follows:
+
+  Resolved — text-representable disfluency: Deepgram Pass 1 with disfluency
+  preservation enabled captures false starts, filled pauses (uh/um/eh), and
+  self-corrections as text tokens in the raw transcript. These signals reach
+  the scoring engine intact.
+
+  Partially resolved — silent pauses and delivery rate: Deepgram Pass 1
+  word-level timestamps enable computation of inter-word gaps in the
+  ClaudeScorer.js pre-processor. Silent pause counts (>1.5s, >2.5s) and
+  mean inter-word gap are computed and passed to the scoring engine as a
+  DISFLUENCY METADATA block alongside the raw transcript. This closes the
+  pacing gap that transcript text alone cannot capture.
+
+  Residual gap: Labored delivery rate detectable only through sustained
+  listening (not computable from word timestamps alone) remains partially
+  outside automated detection. Monitor in early deployment for cases where
+  audio-perceived pacing would affect scoring but metadata thresholds are
+  not triggered.
+
+  Action: Disfluency metadata pre-processor implemented in ClaudeScorer.js
+  per pipeline architecture v1.1. ILR threshold guidance included in
+  Prompt 4c scoring prompt.
+
+7.4 Spatial Vocabulary Monitor — Preposition Scope
+
+  Spatial Vocabulary monitoring targets prepositions of location and directional
+  language only. General preposition errors (e.g., preposition choice in non-spatial
+  contexts) are excluded as ILR 3+ concerns. If early deployment reveals that the
+  monitor is flagging non-spatial preposition errors, refine the monitor definition
+  in the scoring prompt.
+
+================================================================================
+
+8. NORMING SESSION STATUS
+
+Norming session completed April 2026. Nine transcripts scored across multiple
+place description prompts (doctor's waiting room x3, café x2, museum, grocery
+store x2, fast-food restaurant). Inter-rater comparison with Snorkl AI throughout.
+
+--------------------------------------------------------------------------------
+8.1 Confirmed Anchors
+--------------------------------------------------------------------------------
+
+  Score 3 — Clean perimeter traversal
+    Doctor's waiting room. Entry anchor established at door (12 o'clock reference).
+    Clockwise traversal: desk → pictures → door → sofas → table → TV → window.
+    Each element chained to previous. Framework held from first move to last.
+    Disfluency: none. Strong upper anchor.
+
+  Score 3 — Four-wall geometric scaffold
+    Doctor's waiting room. Room geometry established immediately (four-wall
+    framework). Every element placed relative to geometry. No floaters.
+    Distinct from traversal anchor — student provides room structure before
+    naming elements, giving the listener a geometric container from the start.
+    Disfluency: none.
+
+  Score 3 (transcript) / Score 2 (audio) — Zoom-in with deliberate spatial reset
+    Museum description. Student zooms into souvenir shop detail, then explicitly
+    resets ("let's go back to the entrance") and completes right/left traversal
+    of main hall. Reset is a positive ILR 2 organizational marker — demonstrates
+    active framework management. Held at Score 2 on audio by moderate disfluency
+    cap. Validates disfluency cap as an independent scoring mechanism.
+
+  Score 2/3 Boundary — Functional maintenance with floaters
+    Doctor's waiting room. Spatial language tokens present throughout. Framework
+    functionally present — entry anchor, center reference, corner references, near-
+    desk reference. Two features (TV on wall, table with magazines) unanchored.
+    Partial mental image recoverable. Transcript supports low Score 3; audio
+    disfluency holds at Score 2. Confirmed as Score 2/3 boundary anchor.
+    Key governance note: this case established the functional interpretation
+    standard — spatial language tokens present without full connected placement
+    constitute instability, not gate failure.
+
+  Score 2 — Framework present, coverage too thin to evaluate fully
+    Café description. Entry anchor established with left/right/middle orientation.
+    Framework promising but description stops after three features. Coverage
+    insufficient for Score 3 — partial mental image of entrance zone only.
+    Primary disqualifier: coverage, not spatial reference.
+
+  Score 2 — Traversal logic present, map not connected
+    Grocery store. Entry anchor established. Linear aisle-walk traversal present
+    and recognizable. Framework initiates but elements are placed in sequence
+    without being geometrically connected to each other or to entry anchor.
+    Listener can follow the sequence but cannot place elements spatially.
+    Distinct from Score 2/3 boundary case — organizing principle exists but
+    does not produce a connected map.
+
+  Score 2 — Partial framework, unstable maintenance
+    Fast-food restaurant. Exterior-to-interior transition handled. Interior
+    markers present (straight ahead, right side, middle, left side). Framework
+    initiated but inconsistent — elements appear without connection to each
+    other or to entry anchor. Partial mental image possible. Disfluency
+    consistent with moderate level on transcript; audio likely confirms.
+
+  Score 1 — Spatial reference not established (categorical register)
+    Grocery store. Student describes store using category logic (subcategories,
+    shelf-life comparisons, storage type) without any spatial anchoring. No entry
+    point, no reference frame. Listener cannot determine where anything is.
+    Gate fails. Taxonomic organization ≠ spatial organization.
+
+  Score 1 — Spatial reference not established (attributive register)
+    Café description. Student lists features as attributes of the café (clean,
+    windows, carpet, walls, chairs, plants) without placing the listener in the
+    space. No entry point, no reference frame. "Around the café" is the only
+    spatial marker — exterior/perimeter without an established viewpoint.
+    Gate fails. Attributive description ≠ spatial description.
+    NOTE: Students can fail the gate in different registers — categorical and
+    attributive are two confirmed failure profiles.
+
+--------------------------------------------------------------------------------
+8.2 Open Anchors
+--------------------------------------------------------------------------------
+
+  Score 1 — Disfluency cap (Score 1 level): Not confirmed in norming corpus.
+    Pending STT pipeline deployment. All disfluency cap evidence from this
+    session is at the moderate level (Score 2 cap). A pure Score 1 disfluency
+    case — where spatial and organizational quality would otherwise reach Score 2
+    but pervasive disfluency caps at Score 1 — has not yet been encountered.
+    Monitor early deployment outputs.
+
+--------------------------------------------------------------------------------
+8.3 Snorkl Validity Notes — Description Task
+--------------------------------------------------------------------------------
+
+  SYSTEMATIC OVER-SCORING PATTERN:
+  Snorkl consistently over-scores on description tasks. Root cause: Snorkl
+  credits spatial language token presence as sufficient evidence of spatial
+  reference framework establishment. Token presence is necessary but not
+  sufficient — connected placement is the construct criterion.
+
+  Confirmed case: Transcript 4 (doctor's waiting room, second). Snorkl scored
+  4/4 (Excellent) on a response with genuine spatial floaters and a framework
+  that was functionally maintained but not fully connected. B10-PP Score 2.
+  This is the most significant construct validity divergence in the session.
+
+  DELIBERATE RESET MISPENALTY:
+  Snorkl penalizes deliberate spatial resets as disorganization. Confirmed case:
+  Transcript 3 (museum). Snorkl scored 2/4 citing "jumping around"; B10-PP
+  Score 3 (transcript). The explicit reset ("let's go back to the entrance")
+  is a positive ILR 2 organizational marker under REDS — the student is
+  demonstrating active framework management. Snorkl applies a linear-path
+  standard that penalizes any sequence that is not strictly forward-moving.
+
+  TASK COMPLIANCE BUNDLING:
+  Snorkl feedback referencing task compliance (wrong venue type named, missing
+  section of prompt) should be excluded from score comparison. These penalties
+  are non-construct under REDS. Confirmed instance: Transcript 9 (café vs.
+  fast-food restaurant label).
+
+  FORM PENALTY ON VALID SPATIAL LANGUAGE:
+  Snorkl penalizes minor lexical imprecision in spatial language (e.g., "above
+  this table" for items resting on a table) as a score-affecting error. Under
+  REDS, minor lexical imprecision that does not impede mental map construction
+  is not a scoring factor. Confirmed case: Transcript 5 (museum waiting room).
+
+  RECOMMENDATION: Treat Snorkl 3/4 and 4/4 on description tasks as requiring
+  expert review before confirmation as Score 3 anchors. The over-scoring pattern
+  is systematic, not occasional.
+
+================================================================================
+
+B10-PP Description Scaffold Configuration System — Spec v1.3
+DLIELC — Jeff Moore — April 2026 — DRAFT

@@ -1,0 +1,551 @@
+# B10-PP SCORING PIPELINE ARCHITECTURE
+## Infrastructure and Deployment Documentation
+## Version: 1.4 — April 2026
+## Author: Jeff Moore, DLIELC
+## Status: DRAFT — Pre-implementation
+## Companion documents:
+##   B10-PP Section 8 Prompt 4 (ESO) — ESO Scoring v1.5 Rev.4
+##   B10-PP Section 8 Prompt 4b — Past Tense Narration v1.2
+##   B10-PP Section 8 Prompt 4c — Description Scoring v1.1
+##   B10-PP Section 8 Prompt 4d — Instructions Scoring v1.4
+##   B10-PP UI Copy — Task Family Labeling and Score Interpretation v1.0
+
+---
+
+## VERSION HISTORY
+
+v1.3 → v1.4 (April 2026)
+  - Companion document references updated: Narration v1.0 → v1.2; ESO Rev.3 →
+    Rev.4; Description v1.1 and Instructions v1.4 added as new companion documents.
+  - Construct principle block expanded to include Description and Instructions
+    task families at ILR 2.
+  - Scoring engine routing table updated: Narration → v1.2; Description and
+    Instructions task types added with correct prompt routing.
+  - ClaudeScorer.js routing updated to reflect all four task types.
+  - Score validation updated: Description and Instructions score integer 1–3.
+  - score_label mappings updated: Description and Instructions label sets added.
+  - Narration JSON output schema updated: monitor_notes field added (scaffold
+    integration active in v1.2).
+  - Description and Instructions JSON output schemas added.
+  - Scaffold input block updated: all four task types specify scaffold parameters.
+  - Open items checklist updated: Narration v1.0 references corrected to v1.2;
+    Description and Instructions deployment items added.
+  - taskFamily field updated: DESCRIPTION and INSTRUCTIONS task types added.
+
+v1.2 → v1.3 (April 2026)
+  - Updated to reflect full prompt suite: ESO Prompt 4a v1.5 Rev.3 and
+    Narration Prompt 4b v1.0. Added taskType routing to ClaudeScorer.js.
+    Added taskFamily field to frontend data requirements (LEVEL2/LEVEL3).
+    Updated score_label mappings for both task families. Added UI copy
+    open items to Phase 2A checklist. Updated construct principle to reflect
+    REDS framework at both probe levels.
+
+v1.1 → v1.2 (April 2026)
+  - AssemblyAI moved from default to conditional/optional based on norming
+    evidence. Simplified default pipeline adopted. Architectural invariant
+    made explicit. Pass 2 trigger conditions defined. Score 1 gate retained.
+
+v1.0 → v1.1 (April 2026)
+  - Updated companion document references to v1.3 scoring prompt.
+    Added emergent/sustained control note to validity section.
+
+v1.0 (April 2026)
+  - Initial architecture. Dual-pass STT as default. Score 1 gate. Student/
+    instructor output split. STT validity demonstration case established.
+
+---
+
+## DESIGN PHILOSOPHY
+
+Build for validity first. Optimize for cost later.
+
+This architecture prioritizes scoring construct validity over infrastructure
+efficiency. Cost optimization decisions should be deferred until real usage data
+is available (target: September/October 2026 active deployment).
+
+CORE VALIDITY PRINCIPLE — ARCHITECTURAL INVARIANT:
+The scoring engine receives the raw Deepgram transcript only, on every response,
+without exception. This invariant must be enforced in ClaudeScorer.js and verified
+before deployment. No smoothed or cleaned transcript ever reaches the scoring engine
+under any condition.
+
+CONSTRUCT PRINCIPLE:
+ESO tasks (Level 3 target):
+  Score 2 = Level 3 not functionally present (ILR 2)
+  Score 3 = Level 3 functionally present but inconsistent (ILR 2+)
+  Score 4 = Level 3 sustained and controlled (ILR 3)
+  Primary scoring validity risk zone: 2/3 boundary (reasoning gate).
+
+Narration tasks (Level 2 target):
+  Score 1 = Level 2 not functionally realized (ILR 1)
+  Score 2 = Level 2 developing (ILR 1+)
+  Score 3 = Level 2 sustained (ILR 2)
+  Primary scoring validity risk zone: 1/2 boundary (past tense gate).
+
+Description tasks (Level 2 target):
+  Score 1 = Level 2 not functionally realized (ILR 1)
+  Score 2 = Level 2 developing (ILR 1+)
+  Score 3 = Level 2 sustained (ILR 2)
+  Primary scoring validity risk zone: 1/2 boundary (spatial reference gate).
+
+Instructions tasks (Level 2 target):
+  Score 1 = Level 2 not functionally realized (ILR 1)
+  Score 2 = Level 2 developing (ILR 1+)
+  Score 3 = Level 2 sustained (ILR 2)
+  Primary scoring validity risk zone: 1/2 boundary (sequential logic gate).
+
+Disfluency is criterion-level evidence at all task type boundaries.
+
+---
+
+## ARCHITECTURE REVISION NOTE (v1.1 → v1.2)
+
+v1.1 specified dual-pass STT (Deepgram + AssemblyAI) as default processing for all
+responses. v1.2 revised this based on norming evidence:
+
+Finding 1: In the majority of responses, disfluency does not interfere with scoring.
+Scores are determined primarily by argument structure, causal reasoning, and sustained
+control — not transcription clarity.
+
+Finding 2: Criterion-relevant disfluency (false starts revealing inability to complete
+complex structures) occurs in a minority subset of responses. It is the exception,
+not the rule.
+
+Finding 3: Default dual-pass creates unnecessary architectural complexity and a
+standing risk that a future configuration change could inadvertently route a smoothed
+transcript to the scoring engine — a systematic validity threat.
+
+Decision: AssemblyAI Pass 2 moved from default to conditional/optional.
+The simplified default pipeline is the correct architecture for this construct.
+
+---
+
+## PIPELINE OVERVIEW
+
+DEFAULT PIPELINE (all responses):
+
+  [Student audio recording]
+          |
+          v
+  ┌─────────────────────────────────┐
+  │  STT: Deepgram                  │
+  │  disfluency-preserved           │
+  │  raw transcript output          │
+  └─────────────────────────────────┘
+          |
+          v
+  ┌─────────────────────────────────┐
+  │  SCORING ENGINE                 │
+  │  Claude Sonnet                  │
+  │  task-routed prompt · temp: 0   │
+  │  Input: raw transcript only     │
+  │  Output: full JSON object       │
+  └─────────────────────────────────┘
+          |
+          v
+  ┌─────────────────────────────────┐
+  │  OUTPUT LAYER                   │
+  │  Student view: score ·          │
+  │  score_label · strengths ·      │
+  │  language_feedback ·            │
+  │  transcript_note (if non-empty) │
+  │                                 │
+  │  Instructor view: full JSON ·   │
+  │  gaps · monitor_notes ·         │
+  │  raw transcript                 │
+  └─────────────────────────────────┘
+
+CONDITIONAL PASS 2 (triggered only — see trigger conditions below):
+
+  [Trigger condition met]
+          |
+          v
+  ┌─────────────────────────────────┐
+  │  STT: AssemblyAI                │
+  │  smoothed · readable output     │
+  │  → instructor review only       │
+  │  → NEVER to scoring engine      │
+  └─────────────────────────────────┘
+
+---
+
+## STT LAYER — DETAILED SPECIFICATION
+
+### Default: Deepgram (All Responses — Scoring Input)
+
+Purpose:
+  Produce a raw transcript preserving all disfluency signals relevant to
+  criterion-level scoring. This is the SOLE input to the scoring engine
+  on every response without exception.
+
+Configuration:
+  - Disfluency preservation: ENABLED
+  - Filler word retention (uh, um, eh): ENABLED
+  - False start retention: ENABLED
+  - Smart formatting: DISABLED
+  - Punctuation: ENABLED
+  - Speaker diarization: ENABLED (isolate student speaker before scoring)
+
+Why raw transcript fidelity matters:
+  The rubric at each task type distinguishes emergent from sustained control.
+  A student who initiates a complex structure and cannot complete it produces
+  a false start — evidence of emergent control, not sustained control. If the
+  STT smooths the false start into a completed structure, the scoring engine
+  sees surface competence that does not exist in the student's production.
+
+  This pattern occurs in a minority subset of responses but is diagnostically
+  significant when it does occur — particularly at gate boundaries. The
+  default pipeline preserves this evidence on every response at minimal cost,
+  ensuring it is never lost for the cases where it matters.
+
+Free tier: Deepgram provides 12,000 free minutes/month. Anticipated B10-PP
+usage volumes are expected to remain within this tier through initial deployment.
+
+### Conditional: AssemblyAI (Triggered Only — Not Default)
+
+Purpose:
+  Produce a clean, readable transcript for instructor review or student
+  conference when the raw transcript is insufficient for that purpose.
+  AssemblyAI output is NEVER routed to the scoring engine under any condition.
+
+Trigger conditions:
+  TRIGGER 1 — Non-empty transcript_note:
+    If the scoring engine returns a non-empty transcript_note field,
+    criterion-relevant disfluency has been flagged. Instructor-initiated
+    Pass 2 becomes available for a clean reference transcript to support
+    review and student conference.
+
+  TRIGGER 2 — Instructor manual request:
+    Instructor may request a clean transcript for any response via the
+    instructor dashboard. Pass 2 runs on demand.
+
+  SCORE 1 GATE:
+    Pass 2 is never triggered on Score 1 responses regardless of other
+    conditions. A Score 1 response is too brief, disfluent, or off-topic
+    for a clean transcript to add meaningful value.
+
+Configuration:
+  - Smart formatting: ENABLED
+  - Filler word removal: ENABLED
+  - Punctuation and casing: ENABLED
+  - Speaker diarization: ENABLED
+
+Free tier: AssemblyAI provides comparable free tier. Conditional use further
+reduces expected call volume below default-pass levels.
+
+### STT Validity Demonstration Case
+
+Recorded April 2026. High-disfluency profile. Topic: minimum wage regulation.
+
+This case illustrates why raw transcript fidelity matters even when it is
+not the majority case — and why the transcript_note trigger is the correct
+mechanism for identifying responses where Pass 2 adds value.
+
+RAW (Deepgram — what scoring engine receives):
+
+  "So in my opinion, it depends, uh, on the country and especially on the
+  culture of that country. Because, uh, doing the example of Italy, we already
+  had, uh, we already had the time, uh, in which the... there was a minimum
+  degree, uh, a minimum salary, sorry... for, uh, that was really high for
+  almost, uh, all the people that were working. And it created a huge economical
+  crisis, uh, because, uh, it involved people, uh, to, uh, basically don't work.
+  So, uh, 'cause of this, uh, I would say that, uh, even though many people
+  would consider the idea of introducing a, a minimum, uh, salary or increasing
+  it were, were present, uh, I would say that is not a, a good idea... because,
+  uh, uh, the problem that it creates to Italy, the main problem that it created,
+  uh, to, to our government was, uh, the scarcity of funds, uh, into the... mm,
+  more... eh, into the government's, um (snaps fingers) scarcity of funds, uh,
+  for the governments basically, for all the other expenses."
+
+Scoring engine verdict: Score 2 — Partial
+transcript_note output: "False starts at two critical junctures reveal inability
+to complete initiated complex structures: concessive collapses ('were, were
+present') and institutional framing abandoned twice ('scarcity of funds, uh,
+into the...'). These were factored into the grammatical complexity assessment."
+
+Result: Non-empty transcript_note → Pass 2 available on instructor request.
+
+SMOOTHED (AssemblyAI — what must NEVER reach scoring engine):
+
+  "In my opinion, it depends on the country and especially on the culture of
+  that country. Because doing the example of Italy, we already had a time in
+  which there was a minimum salary that was really high for almost all the
+  people that were working, and it created a huge economic crisis because it
+  involved people to basically not work. So because of this, I would say that
+  even though many people would consider the idea of introducing or increasing
+  a minimum salary, I would say that it is not a good idea, because the main
+  problem that it created to our government was the scarcity of funds for all
+  the other expenses."
+
+Scoring engine verdict on smoothed: borderline Score 2/3.
+Concessive appears to complete. Institutional framing appears to resolve.
+Emergent control evidence erased. Score inflated.
+
+CONCLUSION: The transcript_note trigger correctly identifies this response
+as a candidate for Pass 2. The invariant correctly prevents the smoothed
+transcript from reaching the scorer.
+
+---
+
+## SCORING ENGINE — DETAILED SPECIFICATION
+
+Engine: Anthropic Claude — claude-sonnet-4-20250514
+
+System prompts — routed by taskType:
+  taskType === 'ESO'          → Section 8 Prompt 4 ESO v1.5 Rev.4
+  taskType === 'NARRATION'    → Section 8 Prompt 4b Past Tense Narration v1.2
+  taskType === 'DESCRIPTION'  → Section 8 Prompt 4c Description v1.1
+  taskType === 'INSTRUCTIONS' → Section 8 Prompt 4d Instructions v1.4
+  Deploy full prompt text as system parameter in API call.
+  Do not prepend to user message.
+
+Temperature: 0
+  Scoring must be deterministic. Erratic scores on identical inputs =
+  temperature not set correctly. Verify in ClaudeScorer.js before deployment.
+
+Input:
+  PROMPT DESCRIPTION:
+  {promptDescription}
+
+  SCAFFOLD FOCUS:
+  ESO tasks:
+    focusMode: {focusMode}
+    primaryTarget: {primaryTarget}
+    secondaryTarget: {secondaryTarget}
+  Narration, Description, Instructions tasks:
+    primaryFocus: {primaryFocus}
+    activeMonitors: {activeMonitors}
+
+  STUDENT TRANSCRIPT:
+  {transcript}
+
+  Where {transcript} = Deepgram raw transcript, student speaker only.
+  Speaker diarization must be applied before passing to scorer.
+
+  DISFLUENCY METADATA (Narration, Description, Instructions — passed alongside
+  transcript for silent pause and pacing signals):
+  - Silent pauses >1.5s: {pause_count_1500} (at {pause_timestamps_1500})
+  - Silent pauses >2.5s: {pause_count_2500} (at {pause_timestamps_2500})
+  - Mean inter-word gap: {mean_gap}s
+  - Filled pauses (uh/um/eh): {filled_pause_count}
+
+  NOTE: Disfluency metadata block omitted for ESO tasks. ESO scoring relies
+  on transcript-visible disfluency signals only (false starts, structural
+  collapses). Metadata block active for all ILR 2 task types.
+
+Output: Valid JSON
+
+  ESO tasks:
+  {
+    "score": <1, 2, 3, or 4>,
+    "score_label": "<Insufficient|Partial|Good|Excellent>",
+    "strengths": "<string>",
+    "gaps": "<string>",
+    "scaffold_feedback": "<string — omit if Holistic mode>",
+    "language_feedback": "<string>",
+    "transcript_note": "<string — empty if none>"
+  }
+
+  Narration tasks:
+  {
+    "score": <1, 2, or 3>,
+    "score_label": "<Not functionally realized|Developing|Proficient>",
+    "strengths": "<string>",
+    "gaps": "<string>",
+    "language_feedback": "<string>",
+    "monitor_notes": "<string — empty if no monitors active>",
+    "transcript_note": "<string — empty if none>"
+  }
+
+  Description tasks:
+  {
+    "score": <1, 2, or 3>,
+    "score_label": "<Not yet|Developing|Proficient>",
+    "strengths": "<string>",
+    "gaps": "<string>",
+    "language_feedback": "<string>",
+    "monitor_notes": "<string — empty if no monitors active>",
+    "transcript_note": "<string — empty if none>"
+  }
+
+  Instructions tasks:
+  {
+    "score": <1, 2, or 3>,
+    "score_label": "<Not yet|Developing|Proficient>",
+    "strengths": "<string>",
+    "gaps": "<string>",
+    "language_feedback": "<string>",
+    "monitor_notes": "<string — empty if no monitors active>",
+    "transcript_note": "<string — empty if none>"
+  }
+
+transcript_note field handling:
+  Non-empty → flag in instructor dashboard; make Pass 2 available on request.
+  Empty → no action; Pass 2 not triggered.
+
+Alternate engine: OpenAI via ScoringService.js — one-line swap, no frontend impact.
+
+---
+
+## OUTPUT LAYER — DETAILED SPECIFICATION
+
+Student-facing (B10-PP UI):
+  score · score_label · strengths · language_feedback
+  transcript_note — displayed if non-empty in plain language. Example:
+    "Some hesitations occurred when complex ideas were being expressed.
+    Your score reflects how consistently you were able to complete your
+    sentences and develop your argument."
+
+Instructor-facing (instructor dashboard):
+  Full JSON including gaps field and monitor_notes field
+  Raw Deepgram transcript
+  Pass 2 clean transcript — available on request if transcript_note non-empty,
+  or on manual instructor trigger
+
+---
+
+## SCORING SERVICE — IMPLEMENTATION NOTES
+
+ClaudeScorer.js requirements:
+  1. Temperature = 0 — verify before deployment
+  2. Route to correct system prompt based on taskType:
+     taskType === 'ESO'          → Prompt 4 ESO v1.5 Rev.4
+     taskType === 'NARRATION'    → Prompt 4b Narration v1.2
+     taskType === 'DESCRIPTION'  → Prompt 4c Description v1.1
+     taskType === 'INSTRUCTIONS' → Prompt 4d Instructions v1.4
+  3. Raw Deepgram transcript only as {transcript} — invariant, no exceptions
+  4. Speaker diarization applied before passing to scorer
+  5. ESO tasks: JSON response validated — score must be integer 1–4
+  6. Narration, Description, Instructions tasks: JSON response validated —
+     score must be integer 1–3
+  7. score_label must match score per task-family mapping:
+     ESO:          1=Insufficient · 2=Partial · 3=Good · 4=Excellent
+     Narration:    1=Not functionally realized · 2=Developing · 3=Proficient
+     Description:  1=Not yet · 2=Developing · 3=Proficient
+     Instructions: 1=Not yet · 2=Developing · 3=Proficient
+  8. transcript_note parsed — non-empty value triggers Pass 2 availability flag
+  9. taskFamily field passed to frontend:
+     ESO          → 'LEVEL3'
+     Narration    → 'LEVEL2'
+     Description  → 'LEVEL2'
+     Instructions → 'LEVEL2'
+     (used by UI for score display denominator and contextual line)
+  10. Disfluency metadata pre-processor active for all LEVEL2 task types.
+      Compute from Deepgram word-level timestamps before passing to scorer:
+      - Silent pause counts >1.5s and >2.5s with timestamps
+      - Mean inter-word gap
+      - Filled pause count (uh/um/eh tokens)
+      ESO tasks: metadata block omitted.
+
+ScoringService.js routing:
+  taskType === 'ESO'          → ClaudeScorer.js with Prompt 4 ESO
+  taskType === 'NARRATION'    → ClaudeScorer.js with Prompt 4b
+  taskType === 'DESCRIPTION'  → ClaudeScorer.js with Prompt 4c
+  taskType === 'INSTRUCTIONS' → ClaudeScorer.js with Prompt 4d
+  engine === 'openai'         → OpenAIScorer.js (alternate, any task type)
+
+Pass 2 trigger logic:
+  if (score === 1) → Pass 2 never triggered
+  if (transcript_note !== '') → flag Pass 2 available; trigger on instructor request
+  if (instructor_manual_request) → trigger Pass 2 regardless of transcript_note
+  default → Pass 2 not triggered
+
+---
+
+## COST ARCHITECTURE
+
+Built for validity. Optimize after September/October 2026 deployment data.
+
+Current cost profile:
+  Deepgram (every response):    expected within free tier
+  AssemblyAI (conditional):     triggered subset only — low volume expected
+  Claude API (every response):  dominant cost ~$0.015–0.020/call
+
+The simplified architecture reduces AssemblyAI calls without reducing scoring
+validity. The cost reduction is a secondary benefit of the correct architectural
+decision, not the reason for it.
+
+Cost optimization levers — DO NOT ACTIVATE pre-deployment data:
+  Score 1 gate (implemented) — Pass 2 never triggered on Score 1
+  Session batching — off-peak API calls
+  Caching — identical transcript/prompt pairs
+  Model evaluation — assess Haiku for scoring (requires norming validation first)
+
+---
+
+## OPEN ITEMS — PHASE 2A SPRINT (Week of April 20, 2026)
+
+  SCORING PIPELINE
+  [ ] Implement Deepgram with disfluency preservation config
+  [ ] Implement disfluency metadata pre-processor in ClaudeScorer.js for
+      LEVEL2 task types (pause counts, mean inter-word gap, filled pauses)
+  [ ] Implement transcript_note trigger logic in ScoringService.js
+  [ ] Implement Score 1 gate — Pass 2 never triggered
+  [ ] Implement instructor manual Pass 2 request in dashboard
+  [ ] Implement AssemblyAI as conditional service (not default)
+  [ ] Speaker diarization — isolate student speaker pre-scoring
+  [ ] Verify temperature = 0 in ClaudeScorer.js
+  [ ] Enforce architectural invariant in ClaudeScorer.js:
+      raw transcript only, no exceptions, document in code comments
+  [ ] Validate JSON output parsing and score field type enforcement:
+      ESO tasks: score integer 1–4
+      Narration, Description, Instructions tasks: score integer 1–3
+  [ ] Implement taskType routing in ClaudeScorer.js:
+      ESO          → Prompt 4 ESO v1.5 Rev.4
+      Narration    → Prompt 4b v1.2
+      Description  → Prompt 4c v1.1
+      Instructions → Prompt 4d v1.4
+  [ ] Pass taskFamily to frontend:
+      ESO → 'LEVEL3' · Narration/Description/Instructions → 'LEVEL2'
+
+  PROMPTS
+  [ ] Deploy ESO Prompt 4 v1.5 Rev.4 full text to ClaudeScorer.js
+  [ ] Deploy Narration Prompt 4b v1.2 to ClaudeScorer.js
+  [ ] Deploy Description Prompt 4c v1.1 to ClaudeScorer.js
+  [ ] Deploy Instructions Prompt 4d v1.4 to ClaudeScorer.js
+
+  INSTRUCTOR DASHBOARD
+  [ ] Build instructor dashboard:
+      gaps field · monitor_notes field · raw transcript ·
+      conditional Pass 2 availability flag
+  [ ] Confirm score_label uses task-family label sets:
+      ESO:          Insufficient · Partial · Good · Excellent
+      Narration:    Not functionally realized · Developing · Proficient
+      Description:  Not yet · Developing · Proficient
+      Instructions: Not yet · Developing · Proficient
+
+  UI — TASK FAMILY LABELING AND SCORE INTERPRETATION
+  See: B10-PP_UI_COPY_TASK_FAMILY_SCORE_INTERPRETATION_v1_0
+  [ ] Task queue: add task family label and "Target: X / X" to queue item metadata
+  [ ] Task launch screen: add one-line target statement above record button
+      Level 2: "This is a [narration/description/instructions] task.
+                Your target score is 3 out of 3."
+      Level 3: "This is an opinion task. Your target score is 4 out of 4."
+  [ ] Feedback screen: change score display to X / N format (denominator visible)
+  [ ] Feedback screen: add contextual line beneath score:
+      3/3 and 4/4 → "Target reached"
+      3/4         → "Developing toward target"
+      2/3 and 2/4 → "Developing toward target" / "Not yet at target level"
+      1/3 and 1/4 → "Keep working — target is 3/4"
+  [ ] Onboarding: build orientation screen (one screen, skippable after first view)
+  [ ] Onboarding: add help icon on feedback screen linking back to orientation
+  [ ] QA: verify "Target reached" displays for Score 3/3 and Score 4/4 only
+  [ ] QA: verify "Developing toward target" displays for Score 3/4 (not Score 3/3)
+
+  TESTING AND CALIBRATION
+  [ ] Test with STT validity demonstration case:
+      confirm Deepgram preserves false starts
+      confirm transcript_note triggers Pass 2 availability
+      confirm smoothed transcript never reaches scoring engine
+  [ ] Run geoengineering transcript through ESO v1.5 Rev.4 prompt
+      as first ESO calibration check
+  [ ] Norming sessions completed:
+      ESO v1.5 Rev.4 — norming session completed April 2026 ✓
+      Narration v1.2 — norming session completed April 2026 ✓
+      Description v1.1 — norming session completed April 2026 ✓
+      Instructions v1.4 — norming session completed April 2026 ✓
+
+---
+
+*B10-PP Infrastructure and Deployment Documentation — Scoring Pipeline Architecture
+v1.4 — DLIELC — Jeff Moore — April 2026*

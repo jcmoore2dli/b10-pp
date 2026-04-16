@@ -1,0 +1,719 @@
+B10 Practice Platform
+ESO Scaffold Configuration System
+Specification Document — v1.0
+Author: Jeff Moore, DLIELC | April 2026 | Status: DRAFT
+Companion: B10-PP Section 8, Prompt 4 — ESO Scoring v1.5 Rev.4
+
+================================================================================
+
+1. PURPOSE AND SCOPE
+
+This document specifies the scaffold configuration system for Extended Supported
+Opinion (ESO) tasks in the B10 Practice Platform (B10-PP). The scaffold allows
+instructors to configure AI scoring and feedback focus for individual task
+assignments targeting ILR 2+ to ILR 3 speaking proficiency.
+
+Scope: ESO tasks only. ILR 3 is the performance target. ILR 2 is the assumed
+floor. ILR 2 constructs (basic narrative, description, instruction-giving) are
+explicitly out of scope as scoring criteria.
+
+Task definition: The student states and defends a position on a complex or
+abstract issue — policy debates, competing values, stakeholder implications,
+societal tradeoffs. Examples include government regulation of digital platforms,
+universal basic income, environmental policy, military readiness policy, and
+healthcare access.
+
+PEDAGOGIC RATIONALE: The scaffold serves two functions. For the learner, it
+isolates sub-skills for focused practice — a learner cannot improve everything
+at once, and a tractable target produces faster, more visible gains. For the
+platform, it makes explicit that B10-PP teaches argumentation and reasoning
+language in context — how to construct a position, how to deploy a discourse
+frame, how to realize complex grammatical structures in service of an argument.
+This is transferable language function, not test preparation.
+
+NOTE ON SCOPE DIFFERENCE FROM ILR 2 TASKS: The ESO scaffold operates at a
+higher construct level than the narration, description, and instructions
+scaffolds. The ILR 2 scaffolds isolate sub-skills within a single functional
+task type. The ESO scaffold isolates sub-skills within argumentation and
+academic discourse — a multi-dimensional construct that involves reasoning
+moves, discourse frames, grammatical complexity, and argument structure
+simultaneously. The scaffold architecture reflects this complexity.
+
+================================================================================
+
+2. DESIGN PRINCIPLES
+
+- Fixed infrastructure and instructor-configurable focus are strictly separated.
+  Construct-critical rules are never instructor-modifiable.
+
+- Primary focus drives feedback priority. The scorer leads with the
+  instructor-selected dimension. Scaffold selection affects feedback weighting
+  only — never scoring logic.
+
+- SCAFFOLD INVARIANT: The holistic score is always produced against the full
+  rubric regardless of scaffold selection. Scaffold focus modifies feedback
+  weighting and adds a scaffold_feedback field. It never raises or lowers
+  the holistic score. This invariant is non-negotiable and must be enforced
+  in the scoring prompt and verified in norming.
+
+- The reasoning gate is always active and never configurable. Selecting
+  Argument Structure as a focus mode affects feedback emphasis only — not
+  scoring logic. Gate failure (no developed reasoning move present) produces
+  Score 2 regardless of focus selection.
+
+- Scaffold focus is diagnostic, not punitive. Weak performance on the scaffold
+  target does not lower the holistic score if Level 3 is otherwise functionally
+  present. Strong performance on the scaffold target does not raise the holistic
+  score if Level 3 is not functionally present.
+
+- REDS status is the evaluation framework for scaffold targets. Every scaffold
+  target is evaluated as: Absent / Not Realized / Developing / Sustained.
+  These are not quality grades — they are functional performance states relative
+  to the Level 3 standard.
+
+- Discourse frames and grammar structures are evaluated for functional Level 3
+  realization — not mere presence. A grammar structure that is initiated and
+  abandoned, or present but not carrying a reasoning move, is Not Realized.
+  A discourse frame that is invoked as a label without developed reasoning
+  behind it is Not Realized.
+
+- PISU framework is a student task framework, not a scoring criterion. PISU
+  completion must not function as a proxy for Level 3 status in any scoring
+  field or scaffold feedback. PISU guidance is developmental coaching only
+  and must not appear in the same feedback block as holistic score justification.
+
+- Counterargument is a Score 4 / sustained Level 3 feature. It is not a Score 3
+  requirement and must not function as a limiting factor at Score 3. It must not
+  appear as a scaffold target requirement at the developing level.
+
+- Lexical range is managed through topic domain selection at task design, not
+  through a scaffold focus category.
+
+- Disfluency in ESO tasks is evaluated through transcript-visible signals only
+  — false starts revealing structural breakdown at elevation points. Silent pause
+  metadata is not passed to the ESO scoring engine. Disfluency is not a scoring
+  cap criterion for ESO in the same way it is for ILR 2 tasks — the primary
+  disfluency signal is structural collapse at Level 3 ceiling moments, not
+  delivery rate.
+
+- Scoring outcomes are determined solely by construct criteria and gate rules.
+  Instructor configuration affects feedback only.
+
+================================================================================
+
+3. REDS FRAMEWORK AND SCORING ALIGNMENT
+
+REDS FRAMEWORK — FUNCTIONAL PERFORMANCE STATES
+
+Performance is evaluated using REDS status relative to the Level 3 task target.
+
+Absent:
+  The target feature is not present.
+
+Not Realized:
+  The target feature is attempted but does not functionally materialize.
+  - attempted but not functional
+  - invoked but not developed
+  - does not carry meaning
+  - requires inference from the listener to complete
+  - grammatical structure present but reasoning not developed behind it
+
+Developing:
+  The target feature is functionally present.
+  - functionally present
+  - followable from what is explicitly stated
+  - inconsistent
+  - breaks under pressure or at elevation points
+  - present in some places, absent in others
+
+Sustained:
+  The target feature is controlled across the full response.
+  - controlled and distributed across the response
+  - stable under task demands
+  - present at elevation points, not only in accessible portions
+
+--------------------------------------------------------------------------------
+
+SCORING ALIGNMENT — ILR 3 TARGET
+
+Score 4 corresponds to Sustained performance.
+Score 3 corresponds to Developing performance — Level 3 functionally present
+  but inconsistent. This is the primary instructional target zone.
+Score 2 corresponds to Not Realized or Absent — Level 3 not functionally present.
+Score 1 is reserved for responses too brief, off-topic, or disfluent to evaluate.
+
+Developing performance does not meet the threshold for Score 4.
+Not Realized performance does not meet the threshold for Score 3.
+
+--------------------------------------------------------------------------------
+
+FUNCTIONAL THRESHOLD
+
+A feature is considered functionally realized when it carries meaning in a way
+that can be followed from what is explicitly stated, without requiring the
+listener to supply unstated logical steps on the student's behalf.
+
+If a feature is present in form but does not carry meaning — grammatical structure
+initiated but not completed, reasoning invoked but not developed, discourse frame
+named but not deployed — it is classified as Not Realized.
+
+The distinction between Not Realized and Developing is the primary source of
+scoring error at the 2/3 boundary. A developed reasoning move must be populated
+with enough specificity to be followable. Invocation without population is
+Not Realized regardless of grammatical complexity.
+
+================================================================================
+
+4. SCAFFOLD ARCHITECTURE
+
+NOTE ON ARCHITECTURE DIFFERENCES FROM ILR 2 SCAFFOLDS: The ILR 2 scaffolds
+(narration, description, instructions) follow a three-layer architecture —
+fixed infrastructure, one primary focus, optional monitors. The ESO scaffold
+uses a focus mode architecture that reflects the multi-dimensional nature of
+argumentation. The instructor selects a focus mode, and for two of those modes
+selects a sub-target within that mode. The Combined mode allows simultaneous
+targeting of discourse frame and grammar structure.
+
+INTERPRETIVE RULE — ROLE TYPES:
+  Always Active: evaluated on every response; cannot be turned off.
+  Focus Mode: selected by instructor; affects feedback priority and adds
+    scaffold_feedback field. Never affects scoring logic or holistic score.
+  Sub-Target: selected within Discourse Frame, Grammar Structure, or Combined
+    modes; specifies the particular frame or structure being targeted.
+
+--------------------------------------------------------------------------------
+FIXED INFRASTRUCTURE — Always Active, Not Instructor-Configurable
+--------------------------------------------------------------------------------
+
+Reasoning Gate
+  Level 3 reasoning evaluated on every response. Score cap rule never changes
+  regardless of any instructor configuration. Cannot be disabled or adjusted.
+  Gate failure — no developed reasoning move (speculation, consequence, or
+  relationship) carries meaning in a way that can be followed from what is
+  explicitly stated — caps at Score 2 regardless of all other criteria.
+
+  Reasoning move taxonomy (always evaluated):
+    SPECULATION: projects beyond what is known — hypothesizes about
+      possibilities, future states, or scenarios not yet realized.
+    CONSEQUENCES: traces what follows from a claim — effects, implications,
+      outcomes, or systemic results beyond the first-order statement.
+    RELATIONSHIPS: identifies how two or more things connect — causal,
+      conditional, concessive, comparative, or stakeholder relationships
+      structuring the argument.
+
+  Invocation without development does not clear the gate. A label or partial
+  statement without developed content ("this has consequences," "this affects
+  society") is Not Realized regardless of grammatical complexity.
+
+Level 3 Language and Discourse Baseline
+  All three co-determinative criteria evaluated on every response regardless
+  of focus mode selection: Level 3 reasoning, Level 3 language, Level 3
+  discourse. Absence of Level 3 in any criterion caps the score regardless
+  of strength in others. Absence means no identifiable Level 3 function —
+  not imprecision or partial realization.
+
+Scaffold Invariant Enforcement
+  Holistic score produced against full rubric on every response regardless
+  of focus mode. scaffold_feedback field added when focus mode is not Holistic.
+  Holistic score never modified by scaffold selection.
+
+--------------------------------------------------------------------------------
+FOCUS MODES — Instructor Selects One
+--------------------------------------------------------------------------------
+
+HOLISTIC
+  No scaffold target active. Scorer evaluates all three co-determinative
+  criteria equally. scaffold_feedback field omitted from JSON output.
+  Recommended for: diagnostic assessment, initial placement, and responses
+  where the instructor wants an unweighted holistic evaluation.
+
+ARGUMENT STRUCTURE
+  No sub-target required. Feedback weighted toward the PSU arc:
+    Position — clear stance stated
+    Support — specific evidence or reasoning connected to position
+    Analysis — developed reasoning move drawn from the support
+  Scorer identifies which tier is absent, not realized, developing, or
+  sustained and provides one targeted developmental suggestion for the
+  tier where Level 3 breaks down.
+  Recommended for: learners whose discourse frame and grammar structures
+  are developing but whose overall argument architecture is the primary
+  breakdown point; early ESO practice before frame-specific targeting.
+
+DISCOURSE FRAME
+  Sub-target required: instructor selects one of six frames (see Section 5).
+  Feedback weighted toward whether the student deployed the selected frame
+  as a developed reasoning move — not merely mentioned it.
+  Scorer evaluates the frame for REDS status and provides one targeted
+  developmental suggestion.
+  Recommended for: learners who have argument structure developing but need
+  to build specific reasoning frame repertoire; targeted practice on a
+  frame introduced in class.
+
+GRAMMAR STRUCTURE
+  Sub-target required: instructor selects one of seven structures (see
+  Section 6). Optional secondary target available.
+  Feedback weighted toward whether the selected structure carries a reasoning
+  move and is completed and functional — not merely whether the structure
+  is present.
+  Scorer evaluates the structure for REDS status and provides one targeted
+  developmental suggestion per active target.
+  Recommended for: learners whose reasoning moves are present but whose
+  grammatical realization of those moves is developing; form-focused practice
+  in service of argument function.
+
+COMBINED
+  Two sub-targets required: one discourse frame (primary) + one grammar
+  structure (secondary).
+  Feedback weighted toward discourse frame as primary target; grammar
+  structure as secondary. One developmental suggestion per target.
+  Scorer evaluates both for REDS status.
+  Recommended for: learners at the Score 3/4 boundary whose argument
+  architecture is solid but who need simultaneous development of a specific
+  frame and its grammatical realization; advanced targeted practice.
+  Caution: Combined mode produces the densest feedback. Not recommended
+  for early-stage learners or Score 2 profiles — the dual target may
+  overwhelm rather than focus.
+
+--------------------------------------------------------------------------------
+PROMPT DIFFICULTY — Set at Task Design Level — Not a Scaffold Category
+--------------------------------------------------------------------------------
+
+Topic Domain
+  Controls construct demand through topic selection:
+  - Standard: familiar policy and social issues (education, environment, health)
+  - Slight stretch: governance, civic, or institutional issues requiring
+    stakeholder-level reasoning (regulation, public policy, military readiness)
+  - Higher stretch: abstract or values-based issues requiring sustained
+    Level 3 reasoning across competing frameworks (justice, ethics, sovereignty)
+
+  Lexical range is not a scaffold focus category and is not instructor-
+  configurable within the scaffold.
+
+================================================================================
+
+5. DISCOURSE FRAME SUB-TARGETS
+
+Six frames available for Discourse Frame and Combined modes.
+Each frame is evaluated for Level 3 functional presence using REDS status.
+Level 3 present = frame deployed as a developed reasoning move followable
+from what is explicitly stated. Level 3 not present = frame invoked as a
+label without developed reasoning behind it.
+
+5.1 Trade-offs & Constraints
+  Level 3 present when: argument traces competing priorities with developed
+  consequence or relationship reasoning across short-term/long-term or across
+  stakeholder groups. Genuine tension acknowledged and developed — not one
+  side stated and the other dismissed.
+  Not Realized when: one side stated without developed contrast; competing
+  priorities named but not analyzed.
+  Pedagogic note: The most accessible entry point for Level 3 reasoning at
+  ILR 2+. Trade-off framing is teachable and produces visible gains quickly.
+  Recommended as a first Discourse Frame target for developing learners.
+
+5.2 Scale & Stakeholder
+  Level 3 present when: argument moves between individual and societal level
+  with developed relationship reasoning — names stakeholder groups and connects
+  consequences to each with specificity. Not present when: stays at one scale
+  only, or stakeholder groups named without connecting consequences to them.
+  Pedagogic note: Pairs naturally with Trade-offs & Constraints. Good second
+  target once trade-off framing is developing.
+
+5.3 Causal Systems
+  Level 3 present when: argument traces cause-and-effect chains beyond the
+  first step — consequence reasoning extending at least two steps; unintended
+  consequences acknowledged or projected. Not present when: first-order
+  consequence only, or consequence invoked without development.
+  Pedagogic note: The most demanding frame for most learners. Causal chain
+  reasoning requires sustained vocabulary control at elevation points.
+  Recommended for learners at the Score 3/4 boundary.
+
+5.4 Hypothetical & Conditional
+  Level 3 present when: argument uses developed speculation — if/then reasoning
+  projecting possibilities in functional conditional structures across the
+  argument. Conditional must carry developed consequence or possibility, not
+  merely restate the opening premise in conditional form.
+  Not Realized when: one conditional sentence at opening only; conditional
+  structures initiated and abandoned; conditional carries premise restatement
+  rather than developed projection.
+  Pedagogic note: The most common source of invocation inflation at the 2/3
+  boundary. Grammatically functional conditionals that carry only premise
+  restatement are Not Realized. See ESO scoring prompt named examples.
+
+5.5 Value-based Evaluation
+  Level 3 present when: argument identifies competing values with developed
+  relationship reasoning — tension between values acknowledged and evaluated;
+  does not resolve by dismissing one value entirely.
+  Not present when: one value asserted without engaging tension; competing
+  values named but not analyzed.
+  Pedagogic note: Natural fit for topics with ethical or rights-based
+  dimensions. Pairs well with Grammar Structure: Concession & Contrast.
+
+5.6 Synthesis & Judgment
+  Level 3 present when: argument draws on multiple developed reasoning moves
+  and arrives at a reasoned position that accounts for complexity — closing
+  advances beyond opening position with developed analytical movement.
+  Not present when: closing merely restates opening; synthesis invoked but
+  not developed.
+  Pedagogic note: Score 3/4 boundary target. Requires sustained control
+  across the full response. Not recommended as a first Discourse Frame
+  target. Best deployed after Trade-offs, Scale & Stakeholder, or Causal
+  Systems are developing.
+
+================================================================================
+
+6. GRAMMAR STRUCTURE SUB-TARGETS
+
+Seven structures available for Grammar Structure and Combined modes.
+Each structure is evaluated for Level 3 functional presence — not mere
+presence. A structure that is initiated and abandoned, or present but not
+carrying a reasoning move, is Not Realized.
+
+6.1 Conditional Systems
+  Level 3 present when: if/then constructions carry developed speculation or
+  consequence reasoning; real, unreal, or mixed conditionals sustained across
+  the argument, not limited to opening only. Conditional must carry developed
+  content — not premise restatement.
+  Pairs naturally with: Hypothetical & Conditional frame.
+
+6.2 Concession & Contrast
+  Level 3 present when: although, while, even though — carrying developed
+  relationship reasoning; genuine tension acknowledged; structure completed
+  and the rebuttal or contrast developed with specificity.
+  Not Realized when: concessive structure initiated but rebuttal is bare
+  assertion; one side acknowledged without developed contrast.
+  Pairs naturally with: Trade-offs & Constraints, Value-based Evaluation.
+
+6.3 Relative & Embedded Clauses
+  Level 3 present when: which, that, who clauses carry a reasoning move —
+  extend or qualify a claim in a way that advances the argument. Not merely
+  decorative or additive.
+  Not Realized when: relative clauses present but functioning as description
+  rather than argument extension.
+  Pairs naturally with: Causal Systems, Scale & Stakeholder.
+
+6.4 Modality & Hedging
+  Level 3 present when: may, might, could, arguably — carrying developed
+  speculation; purposeful and distinguishing certain from probable; sustained
+  across speculative moves in the argument.
+  Not Realized when: modal forms used as filler or habit rather than
+  purposeful hedging; not connected to developed speculation.
+  Pairs naturally with: Hypothetical & Conditional frame.
+
+6.5 Nominalization & Abstract Nouns
+  Level 3 present when: verb/adjective → noun conversion carries policy or
+  societal reasoning (implementation, regulation, distribution, deterioration);
+  accurate in form; integrated into developed reasoning moves.
+  Not Realized when: nominalized forms attempted but morphologically broken
+  ("reproductive" for "reproduction"); invoked as vocabulary display without
+  carrying reasoning.
+  Pairs naturally with: Causal Systems, Scale & Stakeholder.
+
+6.6 Passive & Reporting Structures
+  Level 3 present when: passive voice and attributed reporting used
+  purposefully for academic register; carries reasoning forward rather than
+  functioning as avoidance of active construction.
+  Not Realized when: passive used as avoidance without register function;
+  reporting structures present but not advancing the argument.
+  Pairs naturally with: Argument Structure focus mode.
+
+6.7 Parallelism & Coordination
+  Level 3 present when: balanced structures carry comparative or enumerative
+  reasoning; elements grammatically matched; structure carries meaning rather
+  than functioning as mere listing.
+  Not Realized when: parallel structures present but elements unmatched or
+  carrying no comparative/enumerative reasoning.
+  Pairs naturally with: Trade-offs & Constraints, Synthesis & Judgment.
+
+================================================================================
+
+7. CONFIGURATION CONSTRAINTS AND INTERACTION RULES
+
+7.1 Hard Rules
+
+- Fixed infrastructure is always active. No instructor override.
+- Reasoning gate failure caps at Score 2 regardless of focus mode selection.
+- Instructor selects one and only one focus mode per task assignment.
+- Discourse Frame mode requires one sub-target from Section 5.
+- Grammar Structure mode requires one primary sub-target from Section 6;
+  one optional secondary sub-target permitted.
+- Combined mode requires one discourse frame sub-target and one grammar
+  structure sub-target.
+- Holistic mode: scaffold_feedback field omitted entirely from JSON output.
+- Scaffold invariant: holistic score never modified by scaffold selection.
+- PISU guidance must not appear in the same feedback block as holistic score
+  justification. Developmental coaching only.
+- Scoring outcomes are determined solely by construct criteria and gate rules.
+  Instructor configuration affects feedback only.
+
+7.2 Recommended and Cautioned Pairings
+
+  Argument Structure — standalone
+    Status: Recommended for early ESO practice
+    Note: Best starting point before frame-specific targeting. Surfaces which
+    PSU tier is the primary breakdown point without prescribing a specific
+    reasoning frame.
+
+  Discourse Frame: Trade-offs & Constraints + Grammar: Concession & Contrast
+    Status: Recommended
+    Note: Natural construct pairing — trade-off reasoning is most naturally
+    realized through concessive grammatical structures. High alignment between
+    frame and structure targets.
+
+  Discourse Frame: Hypothetical & Conditional + Grammar: Conditional Systems
+    Status: Recommended
+    Note: Direct frame-structure alignment. Surfaces whether the student can
+    realize hypothetical reasoning in functional conditional form.
+
+  Discourse Frame: Causal Systems + Grammar: Relative & Embedded Clauses
+    Status: Recommended
+    Note: Causal chain reasoning is often realized through relative clauses
+    that extend consequence moves. Good pairing for Score 3/4 boundary work.
+
+  Discourse Frame: Scale & Stakeholder + Grammar: Nominalization
+    Status: Recommended
+    Note: Societal-level reasoning typically requires nominalized vocabulary.
+    Pairing surfaces whether vocabulary control supports the scale move.
+
+  Discourse Frame: Synthesis & Judgment + Grammar: Parallelism
+    Status: Recommended for Score 3/4 boundary
+    Note: Advanced pairing. Synthesis reasoning is often realized through
+    balanced comparative structures. For learners with solid Score 3 profiles.
+
+  Combined mode + Topic Domain (higher stretch)
+    Status: Caution
+    Note: Cognitive load warning displayed at assignment creation. Dual
+    scaffold target plus high topic demand may produce breakdown that reflects
+    topic difficulty rather than scaffold target weakness. Diagnostic use only.
+    Cognitive load warning text: "Combined scaffold mode and high topic demand
+    are both active. Breakdown in this configuration may reflect topic
+    complexity rather than control of the targeted frame or structure.
+    Interpret scaffold feedback cautiously."
+
+  Combined mode + Score 2 profile learners
+    Status: Not recommended
+    Note: Combined mode produces the densest feedback. Score 2 learners need
+    first to develop a single reasoning move to functional presence. Dual
+    targeting before Level 3 is functionally present is unlikely to produce
+    actionable gains.
+
+================================================================================
+
+8. SUBCATEGORY PROGRESSIONS BY FOCUS MODE
+
+8.1 Argument Structure Focus
+
+  Absent
+    No identifiable position present. Response consists of restatement of
+    prompt content or disconnected statements. PSU arc not initiated.
+    Level 3 not functionally present. ILR 2.
+
+  Not Realized
+    Position stated but argument does not develop. Support present but not
+    connected to position. Analysis tier invoked but not developed — reasoning
+    move attempted and abandoned. Level 3 not functionally present. ILR 2.
+
+  Developing
+    Position stated and identifiable. Support connected to position. At least
+    one developed reasoning move present in the analysis tier — consequence,
+    speculation, or relationship followable from what is explicitly stated.
+    Breakdown expected at higher demand moments. Level 3 functionally present
+    but inconsistent. ILR 2+.
+
+  Sustained
+    Position stated and maintained without drift. Support developed and
+    connected. Multiple reasoning moves distributed across the response.
+    Argumentative arc advances coherently from warrant to implication.
+    Level 3 sustained and controlled. ILR 3.
+
+8.2 Discourse Frame Focus — General Progression
+
+  Absent
+    Selected frame not present or not attempted. Argument does not deploy
+    the targeted reasoning pattern. ILR 2.
+
+  Not Realized
+    Frame invoked as a label but not developed. Structural markers present
+    (e.g., conditional form, concessive opener) but reasoning behind the
+    structure not populated. Listener must supply logical steps. ILR 2.
+
+  Developing
+    Frame deployed as a developed reasoning move in at least one instance.
+    Followable from what is explicitly stated. Inconsistent — frame present
+    in some portions, absent or Not Realized in others. Breakdown at
+    elevation points expected. ILR 2+.
+
+  Sustained
+    Frame deployed as a developed reasoning move consistently across the
+    response. Distributed and stable under task demands. ILR 3.
+
+  NOTE: Frame-specific Level 3 presence/absence criteria are defined in
+  Section 5 for each of the six frames.
+
+8.3 Grammar Structure Focus — General Progression
+
+  Absent
+    Selected structure not present or not attempted. ILR 2.
+
+  Not Realized
+    Structure initiated but not completed; or present in form but not
+    carrying a reasoning move; or morphologically broken at elevation
+    points. ILR 2.
+
+  Developing
+    Structure present and carrying a reasoning move in at least one instance.
+    Functional — followable from what is explicitly stated. Inconsistent —
+    present in some places, absent or Not Realized in others. ILR 2+.
+
+  Sustained
+    Structure deployed consistently across the response. Load-bearing —
+    carries reasoning moves throughout. Stable under task demands. ILR 3.
+
+  NOTE: Structure-specific Level 3 presence/absence criteria are defined
+  in Section 6 for each of the seven structures.
+
+================================================================================
+
+9. OPEN ITEMS AND PHASE 2 DECISIONS
+
+9.1 Argument Structure Focus — Phase 2 Checkpoint
+
+  Retain in MVP. After early deployment, evaluate:
+  - Is Argument Structure feedback distinct enough from Holistic feedback
+    to justify as a separate focus mode?
+  - Do instructors select it? Or do they move directly to frame/structure
+    targeting?
+  - Decision rule: If redundant with Holistic → retire or merge.
+    If instructors use it to target PSU arc specifically → keep.
+
+9.2 Combined Mode — Monitor Cap
+
+  Combined mode has two active targets by definition. Evaluate in Phase 2:
+  - Does dual-target feedback produce actionable output or diffuse feedback?
+  - Is the discourse frame / grammar structure weighting ratio correct?
+  - Should Combined mode be restricted to Score 3+ profiles only?
+
+9.3 Grammar Structure Secondary Target
+
+  Grammar Structure mode permits one optional secondary target. Evaluate
+  in Phase 2:
+  - Does dual grammar structure targeting produce useful output?
+  - Is this being used? If not, consider retiring the optional secondary
+    slot for Grammar Structure mode (it is required in Combined mode).
+
+9.4 Disfluency at ILR 3
+
+  ESO scoring relies on transcript-visible disfluency signals only. The
+  three-level continuum (Minimal / Moderate / Numerous) that governs ILR 2
+  task scoring is not applied to ESO tasks in the same form. The ESO disfluency
+  signal is structural collapse at ceiling moments — false starts revealing
+  inability to complete Level 3 structures. Monitor in deployment:
+  - Are there ESO responses where delivery-rate disfluency (not structural
+    collapse) is affecting perceived Level 3 presence?
+  - If so, consider whether a moderate disfluency cap at Score 4 (not Score 3)
+    is warranted for ESO tasks.
+
+================================================================================
+
+10. NORMING SESSION STATUS
+
+Norming session completed April 2026. Fifteen transcripts scored across
+multiple ESO topics (healthcare, minimum wage, geoengineering, digital
+platforms, basic income, meat regulation, and others). Inter-rater comparison
+with Snorkl AI throughout.
+
+--------------------------------------------------------------------------------
+10.1 Confirmed Anchors
+--------------------------------------------------------------------------------
+
+  Score 4 — Level 3 Sustained (two confirmed)
+    T5 — Scorer-constructed baseline. Multiple reasoning moves distributed
+    throughout. Language sustained with precision. Discourse advances
+    coherently. No significant breakdown.
+    T13 — Strong Score 4, non-native profile. Consequence and relationship
+    reasoning developed across equity and governance argument. Minor lexical
+    slip does not disqualify — Level 3 sustained throughout.
+
+  Score 3 — Level 3 Developing (six confirmed)
+    T2 — Consequence and relationship reasoning functional in geopolitical
+    argument. Grammar inconsistent but Level 3 structures present.
+    T3 — Intergenerational consequence reasoning functional. Thin but Level 3
+    functionally present. Confirms brevity does not determine score.
+    T8 — Institutional consequence chain developed across multiple moves.
+    Accuracy errors do not cap score.
+    T9 — Societal consequence reasoning functional. Breakdown at elevation
+    points — expected developing profile.
+    T11 — Strongest developing profile. Three developed reasoning points.
+    Wide vocabulary range.
+    T1 — Consequence and relationship reasoning functional. Imprecision and
+    breakdown at elevation points — expected developing profile.
+
+  Score 2 — Level 3 Not Functionally Present (five confirmed)
+    T4 — Assertion and listing. No developed reasoning move.
+    T6 — Reasoning moves attempted but abandoned at elevation points.
+    T7 — Vocabulary collapses at institutional framing moments.
+    T12 — Policy-register vocabulary invoked without developed reasoning.
+    Geoengineering — Complex structures present, reasoning not developed
+    behind them. Primary 2/3 inflation pattern confirmed.
+    Basic Income — High surface consistency. Unreal conditional carries
+    premise restatement only. Productivity chain requires rater-supplied
+    steps. Named anchor for invocation inflation pattern.
+    Meat Regulation — Concessive structure attempted, rebuttal bare
+    assertion. Named anchor for concession-without-development pattern.
+
+--------------------------------------------------------------------------------
+10.2 Key Governance Decisions from Norming
+--------------------------------------------------------------------------------
+
+  INVOCATION INFLATION — PRIMARY VALIDITY RISK:
+  The most significant and recurring scoring error at the 2/3 boundary.
+  Grammatically functional structures (conditionals, concessives) that carry
+  only premise restatement or bare assertion behind them are Not Realized —
+  not Developing. The test is always: can the reasoning be followed from
+  what is explicitly stated without supplying unstated logical steps?
+
+  BREVITY DOES NOT DETERMINE SCORE:
+  Confirmed by T3 (Score 3, brief) vs. T12 (Score 2, brief). A brief response
+  with one genuine developed reasoning move clears Score 3. A brief response
+  with policy vocabulary but no developed reasoning move does not.
+
+  GRAMMATICAL COMPLEXITY ≠ REASONING MOVE:
+  Confirmed by Geoengineering and Basic Income (both Score 2 despite complex
+  structures). Complex grammatical form is necessary but not sufficient for
+  Level 3. The reasoning content behind the structure must be developed.
+
+  ACCURACY ERRORS DO NOT CAP SCORE 3:
+  Confirmed by T8 (Score 3 despite accuracy errors). Accuracy is a Score 3/4
+  discriminator, not a Score 2/3 discriminator. Article control and morphological
+  precision are Score 4 features.
+
+  "SUSTAINED" RESERVED FOR SCORE 4:
+  The REDS term "sustained" must not appear in Score 3 feedback commentary.
+  At Score 3 use "developing," "functional," or "present but inconsistent."
+
+--------------------------------------------------------------------------------
+10.3 Snorkl Validity Notes — ESO Task
+--------------------------------------------------------------------------------
+
+  SCORE LABEL FORMAT: Snorkl uses fractional and quality-gradient labels
+  ("3/4 — Strong", "2/4 — Fair"). B10-PP uses integer + rubric label only
+  ("3 — Good"). Snorkl label format is non-construct — exclude from score
+  comparison. Compare integer scores only.
+
+  TASK COMPLIANCE BUNDLING: Snorkl feedback referencing PISU completion,
+  response length, or missing structural elements as language score factors
+  should be excluded from score comparison. These are non-construct under
+  REDS.
+
+  FLUENCY OVERCREDITING: Snorkl shows a pattern of crediting fluent delivery
+  and extended length as evidence of Level 3 presence. Under REDS, fluency
+  and length are explicitly not scored. A fluent, extended response built on
+  assertion and listing is Score 2.
+
+  RECOMMENDATION: Treat Snorkl 3/4 and 4/4 on ESO tasks as requiring expert
+  review before confirmation as Score 3 or Score 4 anchors. The overcrediting
+  pattern is consistent with Snorkl's behavior on ILR 2 tasks.
+
+================================================================================
+
+B10-PP ESO Scaffold Configuration System — Spec v1.0
+DLIELC — Jeff Moore — April 2026 — DRAFT
