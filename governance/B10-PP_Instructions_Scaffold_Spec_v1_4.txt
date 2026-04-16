@@ -1,0 +1,392 @@
+B10 Practice Platform
+Instructions Scaffold Configuration System
+Specification Document — v1.4
+Author: Jeff Moore, DLIELC | April 2026 | Status: DRAFT
+Companion: B10-PP Section 8, Prompt 4d — Instructions Scoring v1.4
+
+================================================================================
+
+1. PURPOSE AND SCOPE
+
+This document specifies the scaffold configuration system for instruction-giving
+tasks in the B10 Practice Platform (B10-PP). The scaffold allows instructors to
+configure AI scoring and feedback focus for individual task assignments targeting
+ILR 1 to ILR 2 speaking proficiency.
+
+Scope: Instruction-giving tasks only. ILR 2 is the performance target. ILR 1 is
+the assumed floor. ILR 3 constructs are explicitly out of scope.
+
+Task definition: The student gives a cohesive sequence of steps for a familiar or
+routine process in dependency-correct order. Examples include using self-checkout,
+getting a driver's license, making a favorite dish, preparing for a test, or
+enrolling in a course.
+
+PEDAGOGIC RATIONALE: The scaffold serves two functions. For the learner, it
+isolates sub-skills for focused practice — a learner cannot improve everything
+at once, and a tractable target produces faster, more visible gains. For the
+platform, it makes explicit that B10-PP teaches procedural language use in
+context — how to organize a sequence, how to frame steps as directives, how to
+connect moves into a followable discourse. This is transferable language function,
+not test preparation.
+
+================================================================================
+
+2. DESIGN PRINCIPLES
+
+- Fixed infrastructure and instructor-configurable focus are strictly separated.
+  Construct-critical rules are never instructor-modifiable.
+
+- Primary focus drives feedback priority. The scorer leads with the
+  instructor-selected dimension.
+
+- A monitor is a performance feature that the scoring engine tracks and reports
+  on in feedback output. Monitors do not affect scoring, do not modify the gate
+  criterion, and do not determine the primary feedback focus. They surface
+  targeted observational data alongside the primary focus feedback.
+
+- Sequential Logic gate is always active and never configurable. Selecting
+  Process Organization as a primary focus affects feedback emphasis only —
+  not scoring logic. Gate failure dominates feedback regardless of focus
+  selection.
+
+- Present tense and imperative are the expected primary forms for instruction-
+  giving tasks. Directive modals (you need to, you should, you have to) count
+  toward directive function. Past tense appropriate only for anecdotal inserts
+  that frame or motivate an imperative step.
+
+- Technical expertise about the described process is not required and is not
+  scored. Executability is evaluated relative to reasonable familiarity only.
+
+- Lexical range is managed through topic domain selection at task design, not
+  through a scaffold focus category.
+
+- Disfluency monitoring does not change the scoring cap rule. It shifts feedback
+  priority only.
+
+- Scoring outcomes are determined solely by construct criteria and gate rules.
+  Instructor configuration affects feedback only.
+
+================================================================================
+
+3. REDS FRAMEWORK AND SCORING ALIGNMENT
+
+REDS FRAMEWORK — FUNCTIONAL PERFORMANCE STATES
+
+Absent:
+  The target feature is not present.
+
+Not Realized:
+  The target feature is attempted but does not functionally materialize.
+  - attempted but not functional
+  - invoked but not developed
+  - does not carry meaning
+  - requires inference from the listener to complete
+
+Developing:
+  The target feature is functionally present.
+  - functionally present
+  - followable from what is explicitly stated
+  - inconsistent
+  - breaks under pressure or across parts of the response
+
+Sustained:
+  The target feature is controlled across the full response.
+  - controlled
+  - distributed across the response
+  - stable under task demands
+
+--------------------------------------------------------------------------------
+
+SCORING ALIGNMENT — ILR 2 TARGET
+
+Score 3 corresponds to Sustained performance.
+Developing performance does not meet the threshold for Score 3.
+Not Realized performance does not meet the threshold for Score 2.
+
+--------------------------------------------------------------------------------
+
+FUNCTIONAL THRESHOLD
+
+A feature is considered functionally realized when it carries meaning in a way
+that can be followed from what is explicitly stated, without requiring the
+listener to infer missing steps or structure.
+
+================================================================================
+
+4. SCAFFOLD ARCHITECTURE
+
+INTERPRETIVE RULE — ROLE TYPES:
+  Always Active: evaluated on every response; cannot be turned off.
+  Primary Focus: selected by instructor; affects feedback priority only.
+  Monitor: optional visibility layer; does not affect scoring or gate logic.
+
+--------------------------------------------------------------------------------
+LAYER 1 — Fixed Infrastructure — Always Active, Not Instructor-Configurable
+--------------------------------------------------------------------------------
+
+Sequential Logic Gate
+  Dependency-correct sequencing evaluated on every response. Score cap rule
+  never changes regardless of any instructor configuration. Cannot be disabled
+  or adjusted. Gate failure — steps not in dependency-correct order or
+  semantically inconsistent with the named process — caps at Score 1 regardless
+  of all other criteria.
+
+Disfluency Default
+  Disfluency monitored on every response using a three-level continuum.
+  This behavior is always active and is never overridden or replaced by any
+  instructor configuration. Selecting Fluency Focus as a monitor increases
+  feedback priority for disfluency patterns — it does not change monitoring
+  behavior, scoring logic, or cap thresholds.
+
+  Three-level continuum:
+    Minimal: Occasional false starts or filled pauses. Does not penalize
+      Score 2 or 3.
+    Moderate: Noticeable false starts, repairs, or pauses distributed across
+      the response. A sympathetic listener can follow but a non-sympathetic
+      listener would struggle. Caps at Score 2 regardless of functional
+      criterion performance.
+    Numerous: Pervasive false starts or pauses that fragment delivery and
+      impede meaning. Caps at Score 1 regardless of all other criteria.
+
+  Disfluency metadata (silent pause counts, mean inter-word gap) is passed
+  to the scoring engine alongside the raw transcript. ILR threshold guidance
+  for metadata interpretation is included in Prompt 4d.
+
+Directive Function Default
+  Directive function evaluated on every response regardless of primary focus
+  selection. Always reported in feedback when absence or weakness is a scoring
+  factor.
+
+--------------------------------------------------------------------------------
+LAYER 2 — Primary Focus — Instructor Selects One
+--------------------------------------------------------------------------------
+
+Process Organization Focus
+  Feedback emphasis on whether the steps are correct, complete, and in the right
+  order. Targets the full arc of the process — are the right steps present,
+  sequenced correctly, and sufficient for a generally familiar listener to execute
+  without inference? Draws from Sequential Logic (gate) and Step Completeness
+  criteria. When gate fails, feedback prioritizes process organization regardless
+  of focus selection.
+  Levels: unexecutable / partially organized / complete and dependency-correct.
+
+  Recommended for: early-stage learners building process knowledge; learners
+  whose directive language is developing but whose process sequencing is the
+  primary breakdown point.
+
+Directive Language Focus
+  Feedback emphasis on whether the student is operating in directive mode and
+  constructing steps as executable actions. Targets imperative form realization,
+  directive modal use, and the distinction between directive moves and
+  observational or narrative framing. Draws from Directive Function and Formal
+  Control criterion.
+  Levels: absent / developing / sustained norm.
+
+  Recommended for: learners whose process knowledge is solid but who default
+  to descriptive or narrative framing rather than directive construction.
+
+Discourse Cohesion Focus
+  Feedback emphasis on how steps are connected into a followable sequence.
+  Targets signal word use, step-level chaining, and whether the response holds
+  together as a unified discourse rather than a list. Draws from Step Completeness
+  criterion cohesion dimension. Distinct from Process Organization (which targets
+  content correctness) — a response can be correctly organized with weak cohesion,
+  or smoothly connected with organizational gaps.
+  Levels: disconnected / partially connected / controlled throughout.
+
+  Recommended for: learners approaching the Score 2/3 boundary whose process
+  and directive function are developing but whose discourse-level integration
+  is the remaining gap.
+
+  NOTE: Discourse Cohesion is available as Layer 2 primary focus only — not as
+  a Layer 3 monitor. Signal Word Control monitor handles the surface-observable
+  subset of cohesion at the monitor layer.
+
+--------------------------------------------------------------------------------
+LAYER 3 — Optional Monitors — Instructor Selects Any Combination
+--------------------------------------------------------------------------------
+
+Signal Word Control
+  Monitors use and distribution of transition markers (first, next, then, after
+  that, finally, once, before, when). Targets whether signal words are present,
+  whether they are distributed across the full response, and whether they
+  accurately mark step boundaries. Selection increases feedback prominence for
+  signal word patterns — it does not affect scoring.
+
+  Pedagogic note: Signal words are the most immediately teachable and improvable
+  surface feature of instruction-giving. Focused practice on transition markers
+  produces visible gains quickly — high motivational value for L2 learners at
+  the ILR 1+/2 boundary.
+
+Fluency Focus
+  Monitors false starts, repetition, filled pauses, and hesitation patterns.
+  Shifts feedback priority toward disfluency patterns. Does NOT change the
+  scoring cap rule — the three-level continuum applies regardless of this
+  setting. Selection increases feedback prominence for disfluency — it does
+  not affect cap thresholds or scoring outcomes.
+
+Basic Structures
+  Monitors: present tense consistency, imperative morphology (add vs. adding
+  vs. you add), subject-verb agreement, basic word order. These features are
+  directly observable and directly tied to the directive function construct at
+  ILR 1-2. Article errors, preposition errors, and complex clause errors are
+  excluded as ILR 3+ concerns. Selection increases feedback prominence for
+  these features — it does not activate new scoring criteria.
+
+  NOTE: All three monitors are available for simultaneous selection. Activating
+  all three may produce diffuse feedback. Recommended maximum: two active
+  monitors per assignment.
+
+--------------------------------------------------------------------------------
+PROMPT DIFFICULTY — Set at Task Design Level — Not a Scaffold Category
+--------------------------------------------------------------------------------
+
+Topic Domain
+  Controls process complexity through topic selection:
+  - Standard: familiar personal processes (making a dish, preparing for a test,
+    using self-checkout)
+  - Slight stretch: procedural civic or institutional processes (getting a
+    driver's license, opening a bank account, enrolling in a course)
+  - Higher stretch: multi-phase professional or technical processes (filing a
+    government form, applying for a security clearance, conducting a military
+    inspection)
+
+================================================================================
+
+5. CONFIGURATION CONSTRAINTS AND INTERACTION RULES
+
+5.1 Hard Rules
+
+- Layer 1 is always active. No instructor override.
+- Instructor selects one and only one primary focus from Layer 2.
+- Sequential Logic gate failure caps at Score 1 regardless of primary focus
+  selection. Process Organization focus increases feedback density on
+  gate-adjacent issues on passing responses only.
+- Discourse Cohesion is Layer 2 only — not available as a Layer 3 monitor.
+- Scoring outcomes are determined solely by construct criteria and gate rules.
+  Instructor configuration affects feedback only.
+
+5.2 Recommended and Cautioned Pairings
+
+  Process Organization + Signal Word Control
+    Status: Recommended
+    Note: Best pairing for early-stage learners — content correctness and
+    surface cohesion markers together. High actionability.
+
+  Directive Language + Fluency Focus
+    Status: Recommended
+    Note: Production load focus — for learners whose process knowledge is
+    solid but whose directive construction breaks down under fluency pressure.
+
+  Discourse Cohesion + Signal Word Control
+    Status: Recommended
+    Note: Score 2/3 boundary target — discourse integration and its most
+    observable surface marker together.
+
+  Topic Domain (stretch) + Fluency Focus
+    Status: Caution
+    Note: Cognitive load warning displayed; diagnostic use only.
+
+  Cognitive load warning text (displayed at assignment creation):
+  "High domain load and fluency monitoring are both active. Breakdown in this
+  configuration may reflect topic complexity rather than fluency control.
+  Interpret fluency data cautiously."
+
+================================================================================
+
+6. SUBCATEGORY PROGRESSIONS BY LAYER 2 FOCUS
+
+6.1 Process Organization Focus
+
+  Unexecutable
+    Steps missing, out of order, or semantically inconsistent with the named
+    process. A generally familiar listener cannot follow or execute. ILR 1.
+
+  Partially Organized
+    Overall process direction correct. Major steps present. Some ordering gaps
+    or missing steps. Listener can follow with effort and some inference. ILR 1+.
+
+  Complete and Dependency-Correct
+    All major steps present and in dependency-correct sequence. No critical
+    gaps. Listener can execute without inference. ILR 2.
+
+6.2 Directive Language Focus
+
+  Absent
+    Directive function not present or not the tendency. Steps delivered as
+    observations, descriptions, future predictions, or past-tense narrative.
+    Does not function as instruction-giving. ILR 1.
+
+  Developing
+    Directive function the tendency — present in more step positions than absent.
+    Imperative form and/or directive modals present but inconsistent. Non-directive
+    framing in step positions recurring but not dominant. ILR 1+.
+
+  Sustained Norm
+    Directive function the sustained norm across executable steps. Imperative
+    form realized in the clear majority of step positions. Non-imperative forms
+    in functional supporting roles only. ILR 2.
+
+6.3 Discourse Cohesion Focus
+
+  Disconnected
+    Steps listed without connective tissue. No signal words or transitional
+    devices. Response functions as a bare list rather than a connected sequence.
+    ILR 1.
+
+  Partially Connected
+    Some signal words present. Basic transitions mark some step boundaries.
+    Cohesion develops inconsistently — present in some portions, absent in
+    others. Overall sequence direction recoverable. ILR 1+.
+
+  Controlled Throughout
+    Signal words controlled and distributed across the full response. Step-level
+    chaining present. Response holds together as a unified discourse. Listener
+    can follow transitions without inferring connections. ILR 2.
+
+================================================================================
+
+7. NORMING SESSION STATUS
+
+Norming session completed April 2026. Twelve transcripts scored across three
+task prompts (bank account, job interview, study for test, self-checkout x4,
+high-volume schedule). Inter-rater comparison with Snorkl AI throughout.
+
+7.1 Confirmed Anchors
+
+  Score 3 — signal words sparse, step-chaining sufficient (self-checkout)
+  Score 3 — all criteria sustained, signal words controlled (study for test)
+  Score 3 — strong coverage, outcome statements functional (self-checkout)
+  Score 2 — signal words strong, steps partially complete (bank account)
+  Score 2 — macro-sequence followable, directive function not sustained (job interview)
+  Score 2 — future will dominance, scanning phase absent (self-checkout)
+  Score 2 — high content awareness, future will/going to, verbose (self-checkout)
+  Score 2 — functionally Score 3, held at Score 2 by moderate disfluency cap
+  Score 2 — transcript scores 3, audio pacing caps at Score 2 (pipeline validation)
+  Score 2/3 boundary — resolved Score 2 (job interview)
+  Score 1/2 boundary — future will dominant, low directive presence
+  Score 1 — semantic inconsistency gate failure (self-checkout weight device)
+
+7.2 Open Anchors
+
+  Score 1 — disfluency cap (Score 1 level): pending STT pipeline deployment.
+  Moderate disfluency cap (Score 2): confirmed in norming via expert audio
+  judgment; pending automated metadata validation in deployment.
+
+7.3 Snorkl Validity Notes
+
+  Snorkl systematically overcalls at 3/4 and 4/4 on instructions task.
+  Root cause: credits signal word presence and content elaboration as
+  sufficient for Score 3 without requiring sustained directive function.
+  Imperative presence treated as equivalent to imperative as norm. Register
+  sophistication suggestions appear as construct feedback — not valid.
+  Snorkl also shows score drift behavior on Score 1 responses — initial
+  correct gate failure call revised upward after feedback generation.
+  Recommendation: Treat Snorkl 3/4 and 4/4 on instructions as requiring
+  expert review before confirmation as Score 3 anchors. Treat any Snorkl
+  score revision as requiring expert review.
+
+================================================================================
+
+B10-PP Instructions Scaffold Configuration System — Spec v1.4
+DLIELC — Jeff Moore — April 2026 — DRAFT
