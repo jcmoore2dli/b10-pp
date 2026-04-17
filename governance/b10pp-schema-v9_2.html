@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Schema v9.2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8fafc; color: #1e293b; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px 20px; }
+  .wrap { max-width: 740px; margin: 0 auto; }
+
+  .doc-label { font-size: 11px; letter-spacing: 4px; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+  h1 { font-size: 30px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+  .version { font-size: 18px; font-weight: 400; color: #64748b; }
+  .subtitle { font-size: 12px; color: #64748b; margin-bottom: 28px; line-height: 1.6; }
+
+  h2 { font-size: 11px; color: #0284c7; letter-spacing: 3px; text-transform: uppercase; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #bae6fd; font-weight: 700; }
+
+  /* Change log */
+  .change-box { background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+  .change-row { display: flex; gap: 0; border-bottom: 1px solid #f1f5f9; align-items: flex-start; }
+  .change-row:last-child { border-bottom: none; }
+  .change-tag { font-size: 10px; font-weight: 700; padding: 12px 12px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; border-right: 1px solid #e2e8f0; min-width: 90px; text-align: center; }
+  .change-text { font-size: 12px; color: #334155; line-height: 1.6; padding: 11px 14px; }
+  .change-text strong { color: #0f172a; }
+
+  /* Info boxes */
+  .info-box { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; border-left: 4px solid #0284c7; }
+  .info-label { font-size: 10px; letter-spacing: 3px; color: #0284c7; text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+  .info-text { font-size: 13px; color: #334155; line-height: 1.7; }
+  .info-text strong { color: #0f172a; }
+
+  /* Scaffold boxes */
+  .scaffold-grid { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .scaffold-col { flex: 1; min-width: 220px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; }
+  .scaffold-col-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .scaffold-item { font-size: 13px; color: #334155; margin-bottom: 5px; line-height: 1.4; }
+  .scaffold-note { font-size: 11px; color: #94a3b8; margin-top: 10px; font-style: italic; line-height: 1.4; }
+
+  /* Focus modes */
+  .mode-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+  .mode-tag { font-size: 11px; font-weight: 700; color: white; padding: 2px 10px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
+  .mode-text { font-size: 12px; color: #334155; line-height: 1.5; }
+
+  /* Warning box */
+  .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 14px; margin: 10px 0; }
+  .warn-label { font-size: 10px; font-weight: 700; color: #92400e; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .warn-text { font-size: 12px; color: #78350f; line-height: 1.5; }
+
+  /* Rule box */
+  .rule-box { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; border-left: 4px solid #fb7185; }
+  .rule-label { font-size: 10px; font-weight: 700; color: #be123c; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .rule-text { font-size: 13px; color: #334155; line-height: 1.7; }
+  .rule-text strong { color: #0f172a; }
+
+  /* Collection cards */
+  .coll-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
+  .coll-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .coll-name { font-size: 18px; font-weight: 800; font-family: 'Courier New', monospace; }
+  .coll-path { font-size: 11px; color: #94a3b8; font-family: 'Courier New', monospace; margin-bottom: 8px; }
+  .coll-desc { font-size: 12px; color: #475569; margin-bottom: 14px; line-height: 1.5; }
+  .role-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 4px; border: 1px solid; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; font-weight: 600; }
+  td { padding: 8px 0; font-size: 13px; vertical-align: top; border-bottom: 1px solid #f8fafc; }
+  td:first-child { font-weight: 700; font-family: 'Courier New', monospace; padding-right: 16px; min-width: 180px; color: #0f172a; font-size: 12px; }
+  td:nth-child(2) { padding-right: 16px; min-width: 120px; font-size: 12px; }
+  td:nth-child(3) { color: #475569; font-size: 12px; }
+  td.new { color: #0284c7; font-size: 11px; font-weight: 600; }
+  td.optional { color: #d97706; font-size: 11px; font-weight: 600; }
+  td.ext-only { color: #7c3aed; font-size: 11px; font-weight: 600; }
+  td.deferred { color: #94a3b8; font-size: 11px; font-style: italic; }
+  td.level2-only { color: #ea580c; font-size: 11px; font-weight: 600; }
+  td.eso-only { color: #7c3aed; font-size: 11px; font-weight: 600; }
+
+  /* Sub-tables */
+  .sub-table { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-top: 12px; }
+  .sub-label { font-size: 11px; font-weight: 700; color: #0f172a; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+
+  /* Corpus type cards */
+  .corpus-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .corpus-card { flex: 1; min-width: 180px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; border-left: 4px solid; }
+  .corpus-code { font-size: 20px; font-weight: 800; font-family: 'Courier New', monospace; margin-bottom: 4px; }
+  .corpus-name { font-size: 11px; color: #64748b; margin-bottom: 6px; font-family: 'Courier New', monospace; }
+  .corpus-text { font-size: 11px; color: #475569; line-height: 1.5; }
+
+  /* Dashboard spec */
+  .dashboard-tree { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 18px; font-family: 'Courier New', monospace; font-size: 12px; margin-bottom: 12px; line-height: 2; }
+  .dt-parent { color: #0f172a; font-weight: 700; }
+  .dt-child { color: #334155; padding-left: 20px; }
+  .dt-grandchild { color: #475569; padding-left: 40px; }
+  .dt-counts { color: #0284c7; }
+  .dt-gap { color: #be185d; font-size: 11px; }
+
+  /* Design notes */
+  .notes-table { background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+  .note-row { display: flex; border-bottom: 1px solid #f1f5f9; }
+  .note-row:last-child { border-bottom: none; }
+  .note-label { font-size: 12px; font-weight: 700; color: #0f172a; min-width: 190px; flex-shrink: 0; padding: 11px 14px; background: #f8fafc; border-right: 1px solid #e2e8f0; }
+  .note-text { font-size: 12px; color: #334155; line-height: 1.6; padding: 11px 14px; }
+
+  .footer { margin-top: 48px; font-size: 10px; color: #94a3b8; text-align: center; letter-spacing: 2px; line-height: 2.2; border-top: 1px solid #e2e8f0; padding-top: 20px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-label">DLIELC · B10 Practice Platform</div>
+  <h1>Firestore Data Schema <span class="version">v9.2 — Canonical</span></h1>
+  <div class="subtitle">Student-Centric · Scaffold System · Supplemental Pool · Two Tracks · Three Corpus Types · Async Submission Pipeline · 2026–2027</div>
+
+  <!-- V9.2 CHANGES -->
+  <h2>v9.2 Changes — Decision Log</h2>
+  <div class="change-box">
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>/submissions</strong> — New collection. Async submission pipeline record. Client creates with status "queued"; Cloud Function assigns submissionNumber via server-side transaction, processes audio through Deepgram → Claude, writes scored result back. Immutable after creation by client.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>/submissionCounters</strong> — New collection. Server-side transaction counter. Doc ID = {b10Id}_{assignmentId}. Guarantees unique, correctly ordered submissionNumber regardless of concurrent submissions.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>attempts.transcript</strong> — Note updated: "Whisper output" → "Deepgram raw transcript — student speaker only". STT provider locked as Deepgram (Pass 1). AssemblyAI is Pass 2, conditional only.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>Score label sets — system-wide alignment.</strong> LEVEL2 tasks (Narration/Description/Instructions) now use <strong>Insufficient / Partial / Good</strong> (replacing Not functionally realized / Not yet / Developing / Proficient). ESO (LEVEL3) retains Insufficient / Partial / Good / Excellent. Labels are now consistent across all task families. Internal rubric construct language unchanged — "Not functionally realized" retained in scoring prompts as construct statement for scoring agent only.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>attempts</strong> — Added: taskFamily (LEVEL3/LEVEL2), monitor_notes (LEVEL2 only), disfluencyMetadata map (LEVEL2 only), pass2Available boolean.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>Access Control</strong> — Identity model explicitly locked as document-based (/userIndex pattern). Auth custom claims not used. getStudentId() and getStudent() helper functions resolve identity in Firestore rules.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#be123c;background:#fff1f2;border-color:#fecdd3;">FIXED</div>
+      <div class="change-text"><strong>passages.poolType note</strong> — "ORI/EXT/CC" corrected to "ORI/EXT/COR". CC is superseded. COR is canonical.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#be123c;background:#fff1f2;border-color:#fecdd3;">FIXED</div>
+      <div class="change-text"><strong>design notes — MF passage input</strong> — "ORI/CC" corrected to "ORI/COR".</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>ORIENT architectural note</strong> — ORIENT locked constraints documented: CEFR B0–B1 ceiling, 3 fixed patterns only, no MF system, no tier labels. phase = "orientation". Distinct from CORE Tier 0 — must never be conflated.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>CORE tier doctrine</strong> — Canon v3.0 MF ranges documented: Tier 0 = 1–2 MF · Tier 1 = 3–6 MF · Tier 2 = 6–10 MF. Tier defined ONLY by MF count. Structure identical across all tiers. MF audit in progress.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>passages.phase</strong> — enum expanded: "orientation" added for ORI passages. Full sequence: orientation → foundation → bridge → target.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>passages.mfTier</strong> — note updated to reflect Canon v3.0 locked ranges and current MF audit status. CORE passages loaded against intended tier; Firebase updated when revision pass is complete.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#0284c7;background:#eff6ff;border-color:#bfdbfe;">UPDATED</div>
+      <div class="change-text"><strong>ORI corpus card</strong> — updated to reflect orientation role, CEFR B0–B1 ceiling, 3 fixed patterns, mfTier="n/a", phase="orientation".</div>
+    </div>
+  </div>
+
+  <!-- V9.1 CHANGES (preserved) -->
+  <h2>v9.1 Changes — Decision Log</h2>
+  <div class="change-box">
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>passages.poolType</strong> — "main" | "supplemental" | "both". Applies to audio corpus types only (ORI/EXT/COR). Text-prompt tasks are generatively infinite — no pool designation needed or meaningful.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>passages.passageSource</strong> — "b10_curated" | "instructor_created". All current = b10_curated. Instructor-created arrives in Phase 7 plug-and-play module. Field added now to avoid future migration.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>assignments.scaffoldConfig</strong> — optional map for ESOP and hypothesizing. Two-axis system: 6 discourse frames + 7 grammar structures. Four focus modes. Claude gets tech spec. Student gets plain-language cue. PSU always implicitly evaluated — argument_structure mode foregrounds it.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>attempts.scaffoldConfig</strong> — denormalized from assignment. Enables Phase 4 scaffold analytics: frame/structure attempt distribution per student.</div>
+    </div>
+    <div class="change-row">
+      <div class="change-tag" style="color:#16a34a;background:#f0fdf4;border-color:#bbf7d0;">ADDED</div>
+      <div class="change-text"><strong>Student dashboard spec</strong> — hierarchical view of assigned vs. attempted counts by task type, domain, and scaffold focus. Gap between assigned and attempted is as informative as attempts themselves.</div>
+    </div>
+  </div>
+
+  <!-- SCAFFOLD SYSTEM -->
+  <h2>Scaffold System — ESOP and Hypothesizing</h2>
+  <div class="scaffold-grid">
+    <div class="scaffold-col">
+      <div class="scaffold-col-label" style="color:#7c3aed;">Axis 1 — Discourse Frame</div>
+      <div class="scaffold-item"><strong>FRAME_01</strong> · Scale &amp; Stakeholder</div>
+      <div class="scaffold-item"><strong>FRAME_02</strong> · Trade-offs &amp; Constraints</div>
+      <div class="scaffold-item"><strong>FRAME_03</strong> · Causal Systems</div>
+      <div class="scaffold-item"><strong>FRAME_04</strong> · Hypothetical &amp; Conditional</div>
+      <div class="scaffold-item"><strong>FRAME_05</strong> · Value-based Evaluation</div>
+      <div class="scaffold-item"><strong>FRAME_06</strong> · Synthesis &amp; Judgment</div>
+      <div class="scaffold-note">Cognitive operation · topic-independent · max 6 — do not expand without system revision</div>
+    </div>
+    <div class="scaffold-col">
+      <div class="scaffold-col-label" style="color:#be185d;">Axis 2 — Grammar Structure</div>
+      <div class="scaffold-item"><strong>STRUCT_01</strong> · Conditional Systems</div>
+      <div class="scaffold-item"><strong>STRUCT_02</strong> · Concession &amp; Contrast</div>
+      <div class="scaffold-item"><strong>STRUCT_03</strong> · Relative &amp; Embedded Clauses</div>
+      <div class="scaffold-item"><strong>STRUCT_04</strong> · Modality &amp; Hedging</div>
+      <div class="scaffold-item"><strong>STRUCT_05</strong> · Nominalization &amp; Abstract Nouns</div>
+      <div class="scaffold-item"><strong>STRUCT_06</strong> · Passive &amp; Reporting</div>
+      <div class="scaffold-item"><strong>STRUCT_07</strong> · Parallelism &amp; Coordination</div>
+      <div class="scaffold-note">Linguistic form · productive across topics · primary + optional secondary · max 2</div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-label">Four Focus Modes</div>
+    <div class="mode-row"><span class="mode-tag" style="background:#16a34a;">holistic</span><div class="mode-text">Default. Claude evaluates all ESOP dimensions equally. No scaffold shown to student. PSU always implicitly evaluated.</div></div>
+    <div class="mode-row"><span class="mode-tag" style="background:#0284c7;">argument_structure</span><div class="mode-text">Claude foregrounds PSU evaluation: point → support → analysis arc. Plain cue shown to student. No additional selection needed.</div></div>
+    <div class="mode-row"><span class="mode-tag" style="background:#7c3aed;">discourse_frame</span><div class="mode-text">Claude gives primary attention to selected frame. Requires primaryFrame. Holistic evaluation continues alongside.</div></div>
+    <div class="mode-row"><span class="mode-tag" style="background:#be185d;">grammar_structure</span><div class="mode-text">Claude gives primary attention to selected structure. Requires primaryStructure. Holistic evaluation continues alongside.</div></div>
+    <div class="mode-row" style="margin-bottom:0"><span class="mode-tag" style="background:#d97706;">combined</span><div class="mode-text">Claude attends to both selected frame and structure. Requires both. Student sees both plain cues.</div></div>
+  </div>
+
+  <div class="info-box" style="border-left-color:#d97706;background:#fffbeb;">
+    <div class="info-label" style="color:#b45309;">SLT Instructor Access — No Restrictions</div>
+    <div class="info-text">SLT instructors have full library access. <strong>assignmentType = "slt" is a label only</strong> — it does not restrict what they can assign. The supplemental pool (poolType = "supplemental") is additive — more options, not fewer. Students receiving only SLT need unrestricted Track A access. Text-prompt tasks (ESOP, hypothesizing, narration, description, instructions) are generatively infinite — no supplemental pool needed for these.</div>
+  </div>
+
+  <!-- ILR TARGET -->
+  <h2>ILR Target — Canonical Definition</h2>
+  <div class="info-box">
+    <div class="info-label">Critical — ilrTarget has exactly two values: "2" and "3". No "2+" anywhere in the schema.</div>
+    <div class="info-text">2+ is an OPI rating outcome — not a task category. No passage trains "2+ behavior." Passages train level 2 or level 3 tasks. The 2+ rating emerges from a 3-level interview when the student shows a solid level 2 floor but a ceiling at level 3.<br><br>
+    <strong>LEVEL3 tasks (ESO) — 4-point output scale (scores 2–4):</strong> Score 2 = Level 3 not functionally present (ILR 2). Score 3 = Level 3 functionally present but inconsistent (ILR 2+). Score 4 = Level 3 sustained and controlled (ILR 3). Score 1 is defined in the output format but never triggered — Level 2 is assumed as the floor. Scoring decisions are made entirely on the basis of Level 3 status.<br><br>
+    <strong>LEVEL2 tasks (Narration, Description, Instructions) — 3-point output scale (scores 1–3):</strong> Score 1 = Level 2 not functionally realized (ILR 1). Score 2 = Level 2 developing (ILR 1+). Score 3 = Level 2 sustained (ILR 2). Scoring decisions are made on the basis of Level 2 status.<br><br>
+    <strong>mfTier scaffolds within level 3</strong> — all tier 0/1/2 passages are ilrTarget = "3". Track A level 2 task assignments are strategic floor prep for the 3-level interview gateway — not remediation. Most Track A students will never receive them.</div>
+  </div>
+
+  <!-- ORIENT ARCHITECTURE -->
+  <h2>ORIENT — Architectural Position</h2>
+  <div class="info-box">
+    <div class="info-label">Locked — B10 Architecture Canon v3.0</div>
+    <div class="info-text">
+      <strong>ORIENT is the curriculum entry point — not a tier and not part of the CORE lexical calibration system.</strong><br><br>
+      ORIENT passages introduce students to three core ILR-3 discourse patterns using lexically simplified language before full CORE engagement begins. They are brief, structured, and deliberately limited in scope.<br><br>
+      <strong>Hard constraints (non-negotiable):</strong><br>
+      · CEFR B0–B1 lexical ceiling — simpler than even CORE Tier 0<br>
+      · Exactly three patterns only: Trend → Complication → Reassessment · Phenomenon → Explanation → Implication · Example → Reinterpretation → Broader Meaning<br>
+      · One pattern per passage — no blending<br>
+      · No MF system · No tier labels · No EXT/PIL logic<br>
+      · Full ILR-3 discourse structure maintained — only lexical density is simplified<br><br>
+      <strong>phase = "orientation"</strong> · corpusType = "ORI" · mfTier = "n/a"<br><br>
+      ORIENT exists to stabilize discourse recognition prior to lexical calibration. It must never be conflated with CORE Tier 0, which operates under a different system entirely.
+    </div>
+  </div>
+
+  <!-- CORE TIER DOCTRINE -->
+  <h2>CORE — Tier Doctrine</h2>
+  <div class="info-box">
+    <div class="info-label">Locked — B10 Architecture Canon v3.0</div>
+    <div class="info-text">
+      <strong>Tier in CORE is defined ONLY by MF (mid-frequency vocabulary) count. Nothing else.</strong><br><br>
+      Structural abstraction — complex sentences, discourse markers, counter-intuitive element, grammar features — exists at ALL tiers. Tier is not defined by structure. Structure remains identical across Tier 0–2.<br><br>
+      <strong>Tier 0</strong> · MF count: 1–2 maximum · No MF placement requirement · Anglo-Saxon vocabulary preferred · Full discourse structure present · Purpose: pattern exposure with minimal lexical strain · phase = "foundation"<br><br>
+      <strong>Tier 1</strong> · MF count: 3–6 · ≥1 MF item in Sentence 1 · ≥1 MF item in final sentence · phase = "foundation" (Sets 1–4) or "bridge" (Sets 5–7)<br><br>
+      <strong>Tier 2</strong> · MF count: 6–10 · Full lexical density band · phase = "bridge" (Sets 5–7) or "target" (Sets 8–12)<br><br>
+      <strong>MF audit status:</strong> CORE passages are currently loaded against their intended mfTier designation. Canon v3.0 MF audit is in progress — passages being revised to validated ranges. Firebase will be updated when revision pass is complete. Passages are pedagogically functional and have been used in over 900 listens in Snorkl format.
+    </div>
+  </div>
+
+  <!-- EXT SUBTYPE -->
+  <h2>EXT — Subtype, Not Umbrella</h2>
+  <div class="info-box">
+    <div class="info-label">Architectural Position — Locked</div>
+    <div class="info-text"><strong>EXT = one canonized long-form listening family.</strong> EXT ≠ the universal template for all extended listening content. EXT enforces constraints appropriate to its purpose — single controlling idea, counter-intuitive hinge, no lists, hard-gated length bands, strict recovery logic. These constraints are correct for EXT. They do not generalize to all future long-form content.<br><br>Future long-form families may include short lectures, briefings, multi-point discourse, or content with lists and enumeration. These will carry their own corpusType values and metadata fields. Adding a future long-form family requires no refactoring of existing collections — zero impact on EXT documents.</div>
+  </div>
+
+  <!-- ACCESS CONTROL -->
+  <h2>Access Control</h2>
+  <div class="rule-box">
+    <div class="rule-label">Firestore Security Rules — Identity Model</div>
+    <div class="rule-text">
+      <strong>Identity model: document-based — /userIndex pattern (locked for Phase 2A and pilot).</strong> Auth custom claims are NOT used. Identity is resolved by reading /userIndex/{request.auth.uid} to get studentId, then reading /students/{studentId} for authorization decisions. Helper functions getStudentId() and getStudent() implement this in rules.<br><br>
+      <strong>Student lookup:</strong> Any authenticated instructor reads any student by B10 ID — all attempts, notes, assignments, scores, feedback. No class membership required.<br><br>
+      <strong>Passage visibility (students):</strong> Student reads passage only if passage.track == student.track OR passage.track == "both". Enforced at database level, not UI level.<br><br>
+      <strong>Submission rules:</strong> Student can CREATE submission only when b10Id in request matches their own. Student cannot UPDATE any submission doc after creation. Score fields and status are write-protected from the client entirely. Only admin SDK (Cloud Function) can update submission documents.<br><br>
+      <strong>track immutability:</strong> student.track write-protected after creation. Admin override requires non-empty trackOverrideNote.<br><br>
+      <strong>Groups:</strong> Private to owning instructor. Other instructors cannot read another's groups.<br><br>
+      <strong>Notes:</strong> Any instructor who looks up a student may write and read notes. Visible to all instructors who look up that student and to admin.
+    </div>
+  </div>
+
+  <!-- PIPELINE INVARIANT -->
+  <div class="rule-box" style="border-left-color:#7c3aed;background:#faf5ff;border-color:#e9d5ff;">
+    <div class="rule-label" style="color:#6d28d9;">Scoring Pipeline Invariant — Architectural</div>
+    <div class="rule-text" style="color:#334155;">
+      <strong>Raw transcript only reaches the scoring engine — always, without exception.</strong><br><br>
+      STT Pass 1 (Deepgram): disfluency-preserved raw transcript + word-level timestamps. This is the SOLE input to the scoring engine on every response.<br><br>
+      STT Pass 2 (AssemblyAI): smooth, readable transcript for instructor review only. Triggered conditionally — never by default. <strong>Never routed to the scoring engine under any condition.</strong><br><br>
+      Score 1 gate: Pass 2 never triggered on Score 1 responses.<br><br>
+      EVALUATION_POLICY block prepended to every Claude API call. Canonical version in /config/aiPolicy.js.
+    </div>
+  </div>
+
+  <!-- COLLECTIONS -->
+  <h2>Collections</h2>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#0284c7;">/users</div>
+      <span class="role-badge" style="color:#64748b;border-color:#e2e8f0;">All Roles</span>
+    </div>
+    <div class="coll-path">/users/{userId}</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>userId</td><td style="color:#0284c7;">string</td><td>Firebase Auth UID</td></tr>
+      <tr><td>role</td><td style="color:#0284c7;">enum</td><td>"admin" | "instructor" | "student"</td></tr>
+      <tr><td>displayName</td><td style="color:#0284c7;">string</td><td></td></tr>
+      <tr><td>email</td><td style="color:#0284c7;">string</td><td></td></tr>
+      <tr><td>createdAt</td><td style="color:#0284c7;">timestamp</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#0284c7;">/userIndex</div>
+      <span class="role-badge" style="color:#0284c7;border-color:#bae6fd;background:#eff6ff;">System</span>
+    </div>
+    <div class="coll-path">/userIndex/{userId}</div>
+    <div class="coll-desc">Identity resolution bridge. Maps Firebase Auth UID → studentId (B10 ID). Required for document-based Firestore rules. Written at enrollment. Read by getStudentId() helper function in rules.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>studentId</td><td style="color:#0284c7;">string</td><td>B10 ID — resolves to /students/{studentId}</td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card" style="border-left:4px solid #22c55e;">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#16a34a;">/students</div>
+      <span class="role-badge" style="color:#16a34a;border-color:#bbf7d0;background:#f0fdf4;">Primary Unit</span>
+    </div>
+    <div class="coll-path">/students/{studentId}</div>
+    <div class="coll-desc">Primary access point. B10 ID is the canonical lookup key. Track lives here — set at intake, immutable. Student shares B10 ID with any instructor they work with.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>studentId</td><td style="color:#16a34a;">string</td><td>Auto-generated — this IS the B10 ID</td></tr>
+      <tr><td>userId</td><td style="color:#16a34a;">ref → users</td><td>Firebase Auth link</td></tr>
+      <tr><td>displayName</td><td style="color:#16a34a;">string</td><td>First name or preferred name only</td></tr>
+      <tr><td>accessCode</td><td style="color:#16a34a;">string</td><td>Student login code — combined with B10 ID</td></tr>
+      <tr><td>ilrBaseline</td><td style="color:#16a34a;">string</td><td>"2" or "3" — informational only · set at intake</td></tr>
+      <tr><td>track</td><td style="color:#16a34a;">enum</td><td>"A" | "B" · Immutable after creation · write-protected</td></tr>
+      <tr><td>trackAssignedBy</td><td style="color:#16a34a;">ref → users</td><td>Admin who set the track</td></tr>
+      <tr><td>trackOverrideNote</td><td style="color:#16a34a;">string</td><td>Required non-empty if admin overrides track</td></tr>
+      <tr><td>createdAt</td><td style="color:#16a34a;">timestamp</td><td></td></tr>
+      <tr><td>studentSummary</td><td style="color:#16a34a;">string | null</td><td>Claude-generated synthesis of all session notes · on-demand only · cached until instructor clicks Refresh · null until first generated</td></tr>
+      <tr><td>studentSummaryUpdatedAt</td><td style="color:#16a34a;">timestamp | null</td><td>When summary was last generated · shown to instructor so they know how current it is</td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#d97706;">/groups</div>
+      <span class="role-badge" style="color:#d97706;border-color:#fde68a;background:#fffbeb;">Instructor</span>
+    </div>
+    <div class="coll-path">/groups/{groupId}</div>
+    <div class="coll-desc">Instructor-created personal groupings — the "My Classes / My Groups" feature. Private to owning instructor. No admin maintenance. A student can appear in multiple instructors' groups simultaneously.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>groupId</td><td style="color:#d97706;">string</td><td>Auto-generated</td></tr>
+      <tr><td>instructorId</td><td style="color:#d97706;">ref → users</td><td>Owner — only this instructor sees this group</td></tr>
+      <tr><td>groupName</td><td style="color:#d97706;">string</td><td>e.g. "Main Class Spring 26" or "My SLT Students"</td></tr>
+      <tr><td>studentIds</td><td style="color:#d97706;">array</td><td>B10 IDs of students in this group</td></tr>
+      <tr><td>createdAt</td><td style="color:#d97706;">timestamp</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#0284c7;">/notes</div>
+      <span class="role-badge" style="color:#64748b;border-color:#e2e8f0;">Instructor + Admin</span>
+    </div>
+    <div class="coll-path">/notes/{noteId}</div>
+    <div class="coll-desc">Clinical session notes attached to a student by B10 ID. Anonymous by design. Timestamped. Freeform paragraph (3–5 sentences typical). Visible to any instructor who looks up that student.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>noteId</td><td style="color:#0284c7;">string</td><td>Auto-generated</td></tr>
+      <tr><td>studentId</td><td style="color:#0284c7;">ref → students</td><td>B10 ID anchor</td></tr>
+      <tr><td>timestamp</td><td style="color:#0284c7;">timestamp</td><td>When the note was written</td></tr>
+      <tr><td>content</td><td style="color:#0284c7;">string</td><td>Freeform paragraph · no hard limit · anonymous</td></tr>
+      <tr><td>sessionType</td><td style="color:#0284c7;">enum</td><td>"main" | "slt"</td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#7c3aed;">/passages</div>
+      <span class="role-badge" style="color:#7c3aed;border-color:#c4b5fd;background:#faf5ff;">Admin</span>
+    </div>
+    <div class="coll-path">/passages/{passageId}</div>
+    <div class="coll-desc">Admin-managed library. All metadata pre-verified before upload. poolType applies to audio corpus types only. EXT passages carry extBand, lexBand, pilLevel. mfTier = "n/a" for EXT.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>passageId</td><td style="color:#7c3aed;">string</td><td>ORI-XXX-### · EXT-XXX-### · COR-XXX-### · NAR-XXX-### · DESC-XXX-### · SEQ-XXX-###</td></tr>
+      <tr><td>corpusType</td><td style="color:#7c3aed;">enum</td><td>"ORI" | "EXT" | "COR" | "none" — never null</td></tr>
+      <tr><td>taskType</td><td style="color:#7c3aed;">enum</td><td>"paraphrase" | "esop" | "hypothesizing" | "extended_listening" | "narration" | "description" | "instructions"</td></tr>
+      <tr><td>poolType</td><td style="color:#7c3aed;">enum</td><td class="new">NEW v9.1 · "main" | "supplemental" | "both" · Audio corpus (ORI/EXT/COR) only · null for text-prompt tasks</td></tr>
+      <tr><td>passageSource</td><td style="color:#7c3aed;">enum</td><td class="new">NEW v9.1 · "b10_curated" | "instructor_created" · All current = b10_curated</td></tr>
+      <tr><td>track</td><td style="color:#7c3aed;">enum</td><td>"A" | "B" | "both"</td></tr>
+      <tr><td>inputType</td><td style="color:#7c3aed;">enum</td><td>"audio" | "text"</td></tr>
+      <tr><td>ilrTarget</td><td style="color:#7c3aed;">enum</td><td>"2" | "3" only — no "2+"</td></tr>
+      <tr><td>title</td><td style="color:#7c3aed;">string</td><td></td></tr>
+      <tr><td>domain</td><td style="color:#7c3aed;">string</td><td></td></tr>
+      <tr><td>set</td><td style="color:#7c3aed;">string</td><td>e.g. "set_01" — unlimited, no code changes to add new sets</td></tr>
+      <tr><td>phase</td><td style="color:#7c3aed;">enum</td><td>"orientation" | "foundation" | "bridge" | "target" · ORI passages = orientation · CORE Tier 0/1 = foundation · CORE Tier 1/2 = bridge · CORE Tier 2 = target · EXT phase TBD</td></tr>
+      <tr><td>mfTier</td><td style="color:#7c3aed;">enum</td><td>"tier_0" | "tier_1" | "tier_2" | "mixed" | "n/a" — Canon v3.0 locked ranges: Tier 0 = 1–2 MF · Tier 1 = 3–6 MF · Tier 2 = 6–10 MF · "n/a" for EXT and ORI · CORE passages currently loaded against intended tier; MF audit in progress</td></tr>
+      <tr><td>extBand</td><td style="color:#7c3aed;">enum</td><td class="ext-only">EXT only · "EXT-S" | "EXT-M" | "EXT-L"</td></tr>
+      <tr><td>lexBand</td><td style="color:#7c3aed;">enum</td><td class="ext-only">EXT only · "LEX-A" | "LEX-B" · LEX-B + PIL-H invalid</td></tr>
+      <tr><td>pilLevel</td><td style="color:#7c3aed;">enum</td><td class="ext-only">EXT only · "F" | "M" | "H"</td></tr>
+      <tr><td>wordCount</td><td style="color:#7c3aed;">number</td><td>EXT: 120–185 words per band</td></tr>
+      <tr><td>hasNarrativeTwist</td><td style="color:#7c3aed;">boolean</td><td>EXT only</td></tr>
+      <tr><td>audioUrl</td><td style="color:#7c3aed;">string</td><td>Track A only · EXT: Azure-processed MP3s</td></tr>
+      <tr><td>promptText</td><td style="color:#7c3aed;">string</td><td>Track B only</td></tr>
+      <tr><td>transcript</td><td style="color:#7c3aed;">string</td><td>Ground truth · Track A only</td></tr>
+      <tr><td>tags</td><td style="color:#7c3aed;">array</td><td>Instructor menu filtering</td></tr>
+      <tr><td>createdBy</td><td style="color:#7c3aed;">ref → users</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#d97706;">/assignments</div>
+      <span class="role-badge" style="color:#d97706;border-color:#fde68a;background:#fffbeb;">Instructor</span>
+    </div>
+    <div class="coll-path">/assignments/{assignmentId}</div>
+    <div class="coll-desc">Assigned directly to student by B10 ID. assignmentType drives green/yellow queue. scaffoldConfig optional for ESOP and hypothesizing. assignedBy preserves accountability.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>assignmentId</td><td style="color:#d97706;">string</td><td>Auto-generated</td></tr>
+      <tr><td>studentId</td><td style="color:#d97706;">ref → students</td><td>Always present — assigned to student directly by B10 ID</td></tr>
+      <tr><td>passageIds</td><td style="color:#d97706;">array</td><td>Selected from library filtered by poolType, track, corpusType, taskType, ilrTarget, phase, mfTier</td></tr>
+      <tr><td>assignmentType</td><td style="color:#d97706;">enum</td><td class="new">NEW v9.1 · "main" | "slt" · one click before confirming · drives green/yellow indicator</td></tr>
+      <tr><td>assignedBy</td><td style="color:#d97706;">ref → users</td><td>Which instructor — full accountability</td></tr>
+      <tr><td>assignedAt</td><td style="color:#d97706;">timestamp</td><td></td></tr>
+      <tr><td>dueDate</td><td style="color:#d97706;">timestamp</td><td class="optional">★ Optional</td></tr>
+      <tr><td>notes</td><td style="color:#d97706;">string</td><td>Optional note to student with assignment</td></tr>
+      <tr><td>scaffoldConfig</td><td style="color:#d97706;">map</td><td class="new">NEW v9.1 · Optional · ESOP and hypothesizing only · see below</td></tr>
+    </table>
+    <div class="sub-table">
+      <div class="sub-label">↳ scaffoldConfig (map) — ESOP + Hypothesizing · Optional</div>
+      <table>
+        <tr><td>focusArea</td><td style="color:#d97706;">enum</td><td>"holistic" (default) | "argument_structure" | "discourse_frame" | "grammar_structure" | "combined"</td></tr>
+        <tr><td>primaryFrame</td><td style="color:#d97706;">enum</td><td>FRAME_01–06 | null · Required if focusArea includes discourse_frame</td></tr>
+        <tr><td>secondaryFrame</td><td style="color:#d97706;">enum</td><td>FRAME_01–06 | null · Optional</td></tr>
+        <tr><td>primaryStructure</td><td style="color:#d97706;">enum</td><td>STRUCT_01–07 | null · Required if focusArea includes grammar_structure</td></tr>
+        <tr><td>secondaryStructure</td><td style="color:#d97706;">enum</td><td>STRUCT_01–07 | null · Optional</td></tr>
+        <tr><td>studentCueText</td><td style="color:#d97706;">string</td><td>Auto-generated plain language · shown to student · null in holistic mode</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- NEW: /submissions -->
+  <div class="coll-card" style="border-left:4px solid #0891b2;">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#0891b2;">/submissions</div>
+      <span class="role-badge" style="color:#0891b2;border-color:#a5f3fc;background:#ecfeff;">NEW v9.2</span>
+    </div>
+    <div class="coll-path">/submissions/{submissionId}</div>
+    <div class="coll-desc">Async submission pipeline record. Client creates with status "queued" and submissionNumber: 0. Cloud Function (onCreate trigger) assigns real submissionNumber via server-side transaction, processes audio through Deepgram → Claude, writes scored result back. Immutable by client after creation — only admin SDK updates this document.</div>
+    <div class="warn-box">
+      <div class="warn-label">Immutability Rule</div>
+      <div class="warn-text">One learner submission = one immutable submission record. System retries are internal processing events — invisible to this document. Resubmission creates a new document, not a retry of the old one.</div>
+    </div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>submissionId</td><td style="color:#0891b2;">string</td><td>Auto-generated</td></tr>
+      <tr><td>b10Id</td><td style="color:#0891b2;">string</td><td>Student B10 ID — primary lookup key</td></tr>
+      <tr><td>assignmentId</td><td style="color:#0891b2;">ref → assignments</td><td class="optional">★ Optional — null if self-initiated</td></tr>
+      <tr><td>taskType</td><td style="color:#0891b2;">enum</td><td>"ESO" | "NARRATION" | "DESCRIPTION" | "INSTRUCTIONS"</td></tr>
+      <tr><td>taskFamily</td><td style="color:#0891b2;">enum</td><td class="new">NEW v9.2 · "LEVEL3" (ESO) | "LEVEL2" (NAR/DESC/INSTR) · drives score range + UI denominator</td></tr>
+      <tr><td>passageId</td><td style="color:#0891b2;">ref → passages</td><td></td></tr>
+      <tr><td>corpusType</td><td style="color:#0891b2;">enum</td><td>Denormalized from passage</td></tr>
+      <tr><td>audioPath</td><td style="color:#0891b2;">string</td><td>Firebase Storage path: audio/{b10Id}/{submissionId}/</td></tr>
+      <tr><td>audioExpiresAt</td><td style="color:#0891b2;">timestamp</td><td>Track A only · now + 14 days · Cloud Function auto-delete</td></tr>
+      <tr><td>submissionNumber</td><td style="color:#0891b2;">integer</td><td>Client writes 0 as placeholder · server transaction assigns real value before processing begins</td></tr>
+      <tr><td>status</td><td style="color:#0891b2;">enum</td><td>"queued" | "processing" | "complete" | "failed" · write-protected from client after creation</td></tr>
+      <tr><td>transcriptText</td><td style="color:#0891b2;">string</td><td>Deepgram raw transcript — student speaker only · written by Cloud Function</td></tr>
+      <tr><td>score</td><td style="color:#0891b2;">integer</td><td>2–4 (ESO/LEVEL3) · 1–3 (LEVEL2) · written by Cloud Function · ESO Score 1 never used — Level 2 assumed as floor</td></tr>
+      <tr><td>score_label</td><td style="color:#0891b2;">string</td><td>Task-family-specific · see label sets below · written by Cloud Function</td></tr>
+      <tr><td>strengths</td><td style="color:#0891b2;">string</td><td>Student-facing · written by Cloud Function</td></tr>
+      <tr><td>gaps</td><td style="color:#0891b2;">string</td><td>Instructor-facing only · written by Cloud Function</td></tr>
+      <tr><td>language_feedback</td><td style="color:#0891b2;">string</td><td>Student-facing · written by Cloud Function</td></tr>
+      <tr><td>transcript_note</td><td style="color:#0891b2;">string</td><td>Empty string if none · non-empty triggers pass2Available flag</td></tr>
+      <tr><td>monitor_notes</td><td style="color:#0891b2;">string</td><td class="level2-only">LEVEL2 tasks only · empty if no monitors active</td></tr>
+      <tr><td>scaffold_feedback</td><td style="color:#0891b2;">string</td><td class="eso-only">ESO only · omit if holistic mode</td></tr>
+      <tr><td>disfluencyMetadata</td><td style="color:#0891b2;">map</td><td class="level2-only">LEVEL2 tasks only · see sub-map below</td></tr>
+      <tr><td>pass2Available</td><td style="color:#0891b2;">boolean</td><td>true if transcript_note non-empty · enables instructor AssemblyAI request</td></tr>
+      <tr><td>processedAt</td><td style="color:#0891b2;">timestamp</td><td>Written by Cloud Function on complete or failed</td></tr>
+      <tr><td>createdAt</td><td style="color:#0891b2;">timestamp</td><td>Written by client at creation</td></tr>
+    </table>
+    <div class="sub-table">
+      <div class="sub-label">↳ disfluencyMetadata (map) — LEVEL2 tasks only</div>
+      <table>
+        <tr><td>pause_count_1500</td><td style="color:#0891b2;">integer</td><td>Count of silent pauses &gt;1.5s</td></tr>
+        <tr><td>pause_timestamps_1500</td><td style="color:#0891b2;">array</td><td>Timestamps of pauses &gt;1.5s (seconds from start)</td></tr>
+        <tr><td>pause_count_2500</td><td style="color:#0891b2;">integer</td><td>Count of silent pauses &gt;2.5s</td></tr>
+        <tr><td>pause_timestamps_2500</td><td style="color:#0891b2;">array</td><td>Timestamps of pauses &gt;2.5s (seconds from start)</td></tr>
+        <tr><td>mean_gap</td><td style="color:#0891b2;">number</td><td>Mean inter-word gap in seconds</td></tr>
+        <tr><td>filled_pause_count</td><td style="color:#0891b2;">integer</td><td>Count of uh/um/eh tokens in raw transcript</td></tr>
+      </table>
+    </div>
+    <div class="sub-table" style="margin-top:12px;">
+      <div class="sub-label">Score label sets by task family</div>
+      <table>
+        <tr><td colspan="2" style="color:#7c3aed;font-size:11px;font-weight:700;padding:4px 0 8px;">LEVEL3 — ESO · score 2–4 · Score 1 never triggered (Level 2 assumed as floor)</td></tr>
+        <tr><td style="color:#94a3b8;font-style:italic;">1</td><td style="color:#94a3b8;font-style:italic;">Insufficient — defined but never triggered</td></tr>
+        <tr><td>2</td><td style="color:#334155;">Partial</td></tr>
+        <tr><td>3</td><td style="color:#334155;">Good</td></tr>
+        <tr><td>4</td><td style="color:#334155;">Excellent</td></tr>
+        <tr><td colspan="2" style="color:#ea580c;font-size:11px;font-weight:700;padding:8px 0;">LEVEL2 — Narration · score 1–3</td></tr>
+        <tr><td>1</td><td style="color:#334155;">Insufficient</td></tr>
+        <tr><td>2</td><td style="color:#334155;">Partial</td></tr>
+        <tr><td>3</td><td style="color:#334155;">Good</td></tr>
+        <tr><td colspan="2" style="color:#ea580c;font-size:11px;font-weight:700;padding:8px 0;">LEVEL2 — Description · score 1–3</td></tr>
+        <tr><td>1</td><td style="color:#334155;">Insufficient</td></tr>
+        <tr><td>2</td><td style="color:#334155;">Partial</td></tr>
+        <tr><td>3</td><td style="color:#334155;">Good</td></tr>
+        <tr><td colspan="2" style="color:#ea580c;font-size:11px;font-weight:700;padding:8px 0;">LEVEL2 — Instructions · score 1–3</td></tr>
+        <tr><td>1</td><td style="color:#334155;">Insufficient</td></tr>
+        <tr><td>2</td><td style="color:#334155;">Partial</td></tr>
+        <tr><td>3</td><td style="color:#334155;">Good</td></tr>
+        <tr><td colspan="3" style="color:#64748b;font-size:11px;font-style:italic;padding:8px 0;">Note: Internal rubric construct language unchanged — "Not functionally realized" retained in scoring prompts as construct statement for scoring agent. User-facing labels above apply to student display only.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- NEW: /submissionCounters -->
+  <div class="coll-card" style="border-left:4px solid #0891b2;">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#0891b2;">/submissionCounters</div>
+      <span class="role-badge" style="color:#0891b2;border-color:#a5f3fc;background:#ecfeff;">NEW v9.2</span>
+    </div>
+    <div class="coll-path">/submissionCounters/{b10Id}_{assignmentId}</div>
+    <div class="coll-desc">Server-side transaction counter. One document per student+assignment pair. Cloud Function runs a transaction to increment count and write the resulting submissionNumber to the submission document before any processing begins. Client never reads or writes this collection.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>count</td><td style="color:#0891b2;">integer</td><td>Incremented by server transaction on each submission · final value becomes submissionNumber</td></tr>
+    </table>
+  </div>
+
+  <div class="coll-card">
+    <div class="coll-header">
+      <div class="coll-name" style="color:#be185d;">/attempts</div>
+      <span class="role-badge" style="color:#64748b;border-color:#e2e8f0;">All Roles</span>
+    </div>
+    <div class="coll-path">/attempts/{attemptId}</div>
+    <div class="coll-desc">Core performance record — permanent. Anchored to studentId (B10 ID). claudeFeedback addresses all ILR dimensions from Phase 3. scaffoldConfig denormalized for analytics. STT provider updated to Deepgram. Score ranges and labels now task-family-specific.</div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Note</th></tr>
+      <tr><td>attemptId</td><td style="color:#be185d;">string</td><td>Auto-generated</td></tr>
+      <tr><td>studentId</td><td style="color:#be185d;">ref → students</td><td>B10 ID anchor</td></tr>
+      <tr><td>passageId</td><td style="color:#be185d;">ref → passages</td><td></td></tr>
+      <tr><td>corpusType</td><td style="color:#be185d;">enum</td><td>Denormalized from passage</td></tr>
+      <tr><td>taskType</td><td style="color:#be185d;">enum</td><td>Denormalized from passage</td></tr>
+      <tr><td>taskFamily</td><td style="color:#be185d;">enum</td><td class="new">NEW v9.2 · "LEVEL3" (ESO) | "LEVEL2" (NAR/DESC/INSTR) · drives score range + UI denominator</td></tr>
+      <tr><td>track</td><td style="color:#be185d;">enum</td><td>"A" | "B" · Denormalized from student</td></tr>
+      <tr><td>ilrTarget</td><td style="color:#be185d;">enum</td><td>"2" | "3" · Denormalized from passage</td></tr>
+      <tr><td>assignmentType</td><td style="color:#be185d;">enum</td><td class="new">NEW v9.1 · "main" | "slt" | null · Denormalized from assignment</td></tr>
+      <tr><td>assignmentId</td><td style="color:#be185d;">ref</td><td class="optional">★ Optional — null if self-initiated</td></tr>
+      <tr><td>scaffoldConfig</td><td style="color:#be185d;">map</td><td class="new">NEW v9.1 · Denormalized from assignment · null if holistic</td></tr>
+      <tr><td>timestamp</td><td style="color:#be185d;">timestamp</td><td></td></tr>
+      <tr><td>transcript</td><td style="color:#be185d;">string</td><td>Deepgram raw transcript — student speaker only · permanent</td></tr>
+      <tr><td>claudeFeedback</td><td style="color:#be185d;">string</td><td>Full formative feedback · scaffold-aware · permanent</td></tr>
+      <tr><td>strengths</td><td style="color:#be185d;">string</td><td>What the student conveyed accurately — 1-3 sentences · references specific passage content</td></tr>
+      <tr><td>gaps</td><td style="color:#be185d;">string</td><td>What was missing or unclear — instructor-facing · references specific passage content</td></tr>
+      <tr><td>language_feedback</td><td style="color:#be185d;">string</td><td>Specific lexical or structural feedback · null if not applicable</td></tr>
+      <tr><td>transcript_note</td><td style="color:#be185d;">string</td><td>Note if disfluency affected scoring · empty if none</td></tr>
+      <tr><td>monitor_notes</td><td style="color:#be185d;">string</td><td class="level2-only">NEW v9.2 · LEVEL2 tasks only · empty if no monitors active</td></tr>
+      <tr><td>score</td><td style="color:#be185d;">integer</td><td>2–4 (LEVEL3/ESO) · 1–3 (LEVEL2) · ESO Score 1 never used — Level 2 assumed as floor · top-level only · NOT in features map</td></tr>
+      <tr><td>score_label</td><td style="color:#be185d;">string</td><td>Task-family-specific — see label sets in /submissions above</td></tr>
+      <tr><td>disfluencyMetadata</td><td style="color:#be185d;">map</td><td class="level2-only">NEW v9.2 · LEVEL2 tasks only · same structure as /submissions disfluencyMetadata</td></tr>
+      <tr><td>pass2Available</td><td style="color:#be185d;">boolean</td><td class="new">NEW v9.2 · true if transcript_note non-empty</td></tr>
+      <tr><td>features</td><td style="color:#be185d;">map</td><td>MVP: falseStartCount only · analytics layer added Phase 4</td></tr>
+      <tr><td>audioUrl</td><td style="color:#be185d;">string</td><td>Track A only · TTL 2 weeks</td></tr>
+      <tr><td>audioExpiresAt</td><td style="color:#be185d;">timestamp</td><td>Track A only</td></tr>
+    </table>
+    <div class="sub-table">
+      <div class="sub-label">↳ features (map) — populated incrementally by phase</div>
+      <table>
+        <tr><td colspan="3" style="color:#16a34a;font-size:11px;font-weight:700;padding:4px 0 8px;">MVP — Phase 3 · both tracks</td></tr>
+        <tr><td>falseStartCount</td><td style="color:#be185d;">number</td><td>Deepgram disfluency count</td></tr>
+        <tr><td colspan="3" style="color:#d97706;font-size:11px;font-weight:700;padding:8px 0;">Phase 4 — ESOP · MF Analytics · Track A</td></tr>
+        <tr><td>esopComponents</td><td style="color:#be185d;">map</td><td>claim / support / conclusion / connector scores</td></tr>
+        <tr><td>mfVocabUsed</td><td style="color:#be185d;">array</td><td>MF words present in student output</td></tr>
+        <tr><td>mfVocabMissed</td><td style="color:#be185d;">array</td><td>MF words not reproduced</td></tr>
+        <tr><td>discourseMarkers</td><td style="color:#be185d;">array</td><td>Connectors, hedges, attribution</td></tr>
+        <tr><td>hedgingPresent</td><td style="color:#be185d;">boolean</td><td></td></tr>
+        <tr><td colspan="3" style="color:#7c3aed;font-size:11px;font-weight:700;padding:8px 0;">EXT specific · Track A</td></tr>
+        <tr><td>narrativeArcCaptured</td><td style="color:#be185d;">boolean</td><td></td></tr>
+        <tr><td>twistIdentified</td><td style="color:#be185d;">boolean</td><td></td></tr>
+        <tr><td colspan="3" style="color:#d97706;font-size:11px;font-weight:700;padding:8px 0;">Track B specific</td></tr>
+        <tr><td>irregularPastControl</td><td style="color:#be185d;">boolean</td><td>NAR</td></tr>
+        <tr><td>basicStructureControl</td><td style="color:#be185d;">boolean</td><td>NAR</td></tr>
+        <tr><td>spatialMarkersUsed</td><td style="color:#be185d;">array</td><td>DESC</td></tr>
+        <tr><td>listenerOriented</td><td style="color:#be185d;">boolean</td><td>DESC</td></tr>
+        <tr><td>sequentialMarkersUsed</td><td style="color:#be185d;">array</td><td>SEQ</td></tr>
+        <tr><td>stepOrderCorrect</td><td style="color:#be185d;">boolean</td><td>SEQ</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- CORPUS TYPES -->
+  <h2>Corpus Types + Task Types</h2>
+  <div class="corpus-grid">
+    <div class="corpus-card" style="border-left-color:#0284c7;">
+      <div class="corpus-code" style="color:#0284c7;">ORI</div>
+      <div class="corpus-name">ORI-XXX-###</div>
+      <div class="corpus-text">Orientation layer · Track A · phase="orientation" · ilrTarget="3" · CEFR B0–B1 lexical ceiling · 3 fixed discourse patterns only · No MF system · No tier labels · mfTier="n/a" · Full ILR-3 discourse structure maintained · Brief curriculum entry point before CORE engagement · Tasks: paraphrase · esop · hypothesizing</div>
+    </div>
+    <div class="corpus-card" style="border-left-color:#7c3aed;">
+      <div class="corpus-code" style="color:#7c3aed;">EXT</div>
+      <div class="corpus-name">EXT-XXX-###</div>
+      <div class="corpus-text">Extended audio · Track A · ilrTarget="3" · mfTier="n/a" · EXT-SPEC-DELTA v1.3 · Azure MP3s · Task: extended_listening · LEX-B+PIL-H invalid</div>
+    </div>
+    <div class="corpus-card" style="border-left-color:#16a34a;">
+      <div class="corpus-code" style="color:#16a34a;">COR</div>
+      <div class="corpus-name">COR-XXX-###</div>
+      <div class="corpus-text">Comprehension Check · Track A · ilrTarget="3" · corpusType="COR" · 30-point SPEC validation · Comprehension Check task behavior</div>
+    </div>
+    <div class="corpus-card" style="border-left-color:#d97706;">
+      <div class="corpus-code" style="color:#d97706;">none</div>
+      <div class="corpus-name">Text prompts — Track B only</div>
+      <div class="corpus-text">No audio corpus · ilrTarget="2" · Tasks: narration · description · instructions · Never null — always explicit</div>
+    </div>
+  </div>
+
+  <!-- STUDENT DASHBOARD SPEC -->
+  <h2>Student Dashboard — Hierarchical View Spec</h2>
+  <div class="dashboard-tree">
+    <div class="dt-parent">▼ LISTENING PASSAGES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">32 assigned · 28 attempted</span></div>
+    <div class="dt-child">▼ ORI · Original &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">18 assigned · 16 attempted</span></div>
+    <div class="dt-grandchild">Science &amp; Technology &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">7 · 6</span></div>
+    <div class="dt-grandchild">Policy &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">6 · 6</span></div>
+    <div class="dt-child">▼ EXT · Extended &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">10 assigned · 9 attempted</span></div>
+    <div class="dt-child">▼ COR · Core &nbsp;&nbsp;&nbsp;<span class="dt-counts">4 assigned · 3 attempted</span></div>
+    <div class="dt-parent" style="margin-top:8px;">▼ EXTENDED SUPPORTED OPINION &nbsp;<span class="dt-counts">20 assigned · 18 attempted</span></div>
+    <div class="dt-child">▼ Discourse Frame</div>
+    <div class="dt-grandchild">Trade-offs &amp; Constraints &nbsp;&nbsp;&nbsp;<span class="dt-counts">7 · 7</span></div>
+    <div class="dt-grandchild">Causal Systems &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">5 · 4</span></div>
+    <div class="dt-grandchild" style="color:#be185d;">Hypothetical &amp; Conditional &nbsp;<span class="dt-counts">0 · 0 ← not yet assigned</span></div>
+    <div class="dt-child">▼ Grammar Structure</div>
+    <div class="dt-grandchild">Modality &amp; Hedging &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">8 · 8</span></div>
+    <div class="dt-grandchild">Conditionals &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">5 · 4</span></div>
+    <div class="dt-parent" style="margin-top:8px;">▼ HYPOTHESIZING &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">6 assigned · </span><span class="dt-gap">3 attempted ← gap</span></div>
+    <div class="dt-parent">▼ NARRATION &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dt-counts">8 assigned · 8 attempted</span></div>
+  </div>
+  <div style="font-size:11px;color:#64748b;margin-bottom:24px;">Top-level view in Phase 3 · Domain and scaffold drill-down in Phase 4 · No new schema fields needed — aggregated from existing collections</div>
+
+  <!-- DESIGN NOTES -->
+  <h2>Design Notes</h2>
+  <div class="notes-table">
+    <div class="note-row"><div class="note-label">Student-centric model</div><div class="note-text">Student is the primary unit. B10 ID is the access key. Any instructor looks up any student they work with. No class membership, no admin roster, no CUI risk.</div></div>
+    <div class="note-row"><div class="note-label">Identity model</div><div class="note-text">Document-based /userIndex pattern. Auth custom claims not used. Chosen for Phase 2A and pilot: already operational, handles instructor access model cleanly, instant updates on track changes, sufficient performance at pilot scale (50 students).</div></div>
+    <div class="note-row"><div class="note-label">SLT access</div><div class="note-text">Full library — no restrictions. assignmentType = "slt" is a label only. Supplemental pool is additive. Text-prompt tasks are generatively infinite — no supplemental pool needed for these.</div></div>
+    <div class="note-row"><div class="note-label">Scaffold system</div><div class="note-text">Two-axis: 6 discourse frames + 7 grammar structures. Default is holistic. Claude receives technical spec. Student receives plain-language cue only. PSU always implicitly evaluated — argument_structure foregrounds it.</div></div>
+    <div class="note-row"><div class="note-label">claudeFeedback scope</div><div class="note-text">Written to every attempt from Phase 3 launch. Addresses grammar, structure, MF vocab, abstraction, discourse, fluency. Scaffold-aware when scaffoldConfig present. Feedback quality is not deferred. Analytics are.</div></div>
+    <div class="note-row"><div class="note-label">STT provider</div><div class="note-text">Deepgram Pass 1 (default, every response): disfluency-preserved raw transcript with word-level timestamps. AssemblyAI Pass 2 (conditional only): smooth transcript for instructor review. Pass 2 never routed to scoring engine. Score 1 gate: Pass 2 never triggered on Score 1.</div></div>
+    <div class="note-row"><div class="note-label">Score ranges</div><div class="note-text">ESO (LEVEL3): integer 2–4 (Score 1 defined but never triggered — Level 2 assumed as floor). Narration/Description/Instructions (LEVEL2): integer 1–3. taskFamily field drives score validation in ClaudeScorer.js and denominator display in student UI.</div></div>
+    <div class="note-row"><div class="note-label">MF — passage input</div><div class="note-text">Pre-verified externally. Claude does not classify passage vocabulary. mfTier = Canon v3.0 locked ranges on COR (Tier 0: 1–2 · Tier 1: 3–6 · Tier 2: 6–10). ORI: mfTier = "n/a" — no MF system. EXT: mfTier = "n/a" per EXT-SPEC-DELTA v1.3. CORE MF audit in progress — passages being revised to validated ranges.</div></div>
+    <div class="note-row"><div class="note-label">MF — student output</div><div class="note-text">Phase 4 feature. Claude evaluates student transcript against pre-verified lexicon. Populates mfVocabUsed / mfVocabMissed. Claude as rater of student production — not corpus classifier.</div></div>
+    <div class="note-row"><div class="note-label">ILR target values</div><div class="note-text">"2" and "3" only. No "2+". 2+ is an OPI rating outcome. mfTier scaffolds within level 3 — all tier 0/1/2 passages are ilrTarget = "3".</div></div>
+    <div class="note-row"><div class="note-label">EXT subtype</div><div class="note-text">EXT is one canonized long-form family — not the umbrella. Future long-form families carry their own corpus types. Zero refactoring needed to add them.</div></div>
+    <div class="note-row"><div class="note-label">Future task types</div><div class="note-text">reported_speech_2 (ILR 2 · concrete topic) and reported_speech_3 (ILR 3 · abstract topic) are future taskType values. Not yet in enum — added when corpus is ready. No migration needed.</div></div>
+    <div class="note-row"><div class="note-label">Instructor autonomy</div><div class="note-text">Platform informs sessions — never prescribes them. No gates, no alerts, no pressure. If an instructor feels boxed in, they will not use it.</div></div>
+    <div class="note-row"><div class="note-label">Audio TTL</div><div class="note-text">Track A only. Deleted after 2 weeks. Transcript + feedback + features persist permanently.</div></div>
+    <div class="note-row"><div class="note-label">Mobile-first</div><div class="note-text">Full functionality on iPhone and Android. PWA installable. iOS Safari and Android Chrome tested before Phase 3 launch.</div></div>
+    <div class="note-row"><div class="note-label">Session note summary</div><div class="note-text">On-demand only — instructor clicks "Summarize notes" to generate. Claude synthesizes all session notes for that student into 3–5 sentences. Result cached in students.studentSummary until instructor clicks Refresh. Never auto-generates on note write.</div></div>
+    <div class="note-row"><div class="note-label">Privacy / CUI</div><div class="note-text">B10 ID is system-generated — not linked to school ID. Student shares voluntarily. No roster. No sensitive institutional data in the system.</div></div>
+  </div>
+
+  <div class="footer">
+    B10-PP · DLIELC · J. Moore · 2026–2027<br>
+    Schema v9.2 · Student-Centric · Scaffold System · Async Pipeline · Canonical · Locked
+  </div>
+
+</div>
+</body>
+</html>
