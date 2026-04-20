@@ -13,8 +13,11 @@
   },
   "main": "index.js",
   "dependencies": {
-    "firebase-admin": "^13.6.0",
-    "firebase-functions": "^7.0.0"
+    "@anthropic-ai/sdk": "^0.90.0",
+    "@deepgram/sdk": "^3.6.0",
+    "assemblyai": "^4.30.0",
+    "firebase-admin": "^13.8.0",
+    "firebase-functions": "^7.2.5"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.4.1"

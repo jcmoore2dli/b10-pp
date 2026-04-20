@@ -1,0 +1,198 @@
+# B10-PP — Day 3 Implementation Plan
+# Author: Jeff Moore, DLIELC
+# Date: April 10, 2026
+# Status: Ready for execution
+
+---
+
+## PURPOSE
+
+Day 3 moves the scoring engine from a standalone service into a
+structured application layer. The goal is to build the scaffolding
+that will eventually connect to Firebase, the sanitization pipeline,
+and the student-facing interface.
+
+By end of Day 3 you should have:
+- A clean project structure ready for Firebase integration
+- A sanitization stub that can grow into the full two-pass sanitizer
+- A pipeline function that connects sanitization → scoring → output
+- Confidence that the architecture will scale
+
+---
+
+## GOALS
+
+1. Build the basic sanitization stub (sanitizeTranscript.js)
+2. Build the pipeline connector (pipeline.js)
+3. Test the full flow: transcript → sanitize → score → output
+4. Establish the /services folder as the core application layer
+5. Confirm the architecture is Firebase-ready
+
+---
+
+## WHAT YOU ARE NOT DOING ON DAY 3
+
+- Do NOT build Firebase integration yet
+- Do NOT build the UI
+- Do NOT build full two-pass NER sanitization
+- Do NOT add pronunciation or prosody logic
+- Do NOT reorganize docs folders
+
+---
+
+## FILES YOU WILL CREATE
+
+1. services/sanitizeTranscript.js
+   - Stub sanitizer
+   - Removes placeholder patterns ([NAME], [LOCATION] etc.)
+   - Logs what was redacted (category only, not content)
+   - Returns sanitized text and sanitization status
+   - Fail-closed: if sanitization errors, returns failure status
+
+2. services/pipeline.js
+   - Accepts raw transcript, task type, passage, arcAnchor
+   - Calls sanitizeTranscript.js
+   - If sanitization fails, returns error — does NOT call scorer
+   - If sanitization passes, calls scoreResponse.js
+   - Returns structured result object
+
+3. testPipeline.js
+   - Tests full flow end to end
+   - Test A: clean transcript (no redaction needed)
+   - Test B: transcript with mock PII markers
+   - Test C: simulated sanitization failure
+
+---
+
+## STEP BY STEP
+
+### Step 1 — Create sanitizeTranscript.js
+
+Location: services/sanitizeTranscript.js
+
+Purpose:
+- Accept raw transcript text
+- Run pattern matching for known identifier types
+- Replace matches with redaction markers
+- Return:
+  {
+    sanitized: true/false,
+    text: <sanitized transcript text>,
+    redactions: <count of items removed>,
+    error: <null or error message>
+  }
+
+Patterns to catch in stub (rule-based, not NER):
+- Proper name patterns (Captain, Sergeant, Dr., Mr., Mrs.)
+- Country/city references (expand later with NER)
+- Email patterns
+- Unit designators (e.g. 3rd Battalion, 101st)
+
+Fail-closed behavior:
+- If the function throws, return sanitized: false
+- Pipeline must check sanitized status before calling scorer
+
+---
+
+### Step 2 — Create pipeline.js
+
+Location: services/pipeline.js
+
+Purpose:
+- Single entry point for the full evaluation flow
+- Connects sanitization and scoring
+- Returns a normalized result object
+
+Input:
+{
+  taskType: 'PARA' or 'EXT',
+  passageText: string,
+  rawTranscript: string,
+  arcAnchor: object or null
+}
+
+Output (success):
+{
+  status: 'scored',
+  sanitizationPassed: true,
+  redactions: <count>,
+  score: <integer>,
+  score_label: <string>,
+  strengths: <string>,
+  gaps: <string>,
+  language_feedback: <string>,
+  transcript_note: <string>
+}
+
+Output (sanitization failure):
+{
+  status: 'sanitization_failed',
+  sanitizationPassed: false,
+  error: <string>
+}
+
+Output (scoring failure):
+{
+  status: 'scoring_failed',
+  sanitizationPassed: true,
+  error: <string>
+}
+
+---
+
+### Step 3 — Create testPipeline.js
+
+Run three tests:
+
+Test A — Clean transcript
+- No PII markers
+- Expect: sanitizationPassed true, valid score returned
+
+Test B — Transcript with mock PII
+- Include "Sergeant Kim from 3rd Battalion"
+- Expect: sanitizationPassed true, redactions > 0, valid score
+
+Test C — Simulated sanitization failure
+- Force an error condition
+- Expect: status = sanitization_failed, no API call made
+
+---
+
+### Step 4 — Commit and push
+
+git add services/sanitizeTranscript.js services/pipeline.js testPipeline.js
+git commit -m "Add sanitization stub and pipeline connector — full flow confirmed"
+git push
+
+---
+
+## SUCCESS CRITERIA
+
+- Full pipeline runs without errors
+- Sanitization gate blocks scoring when it fails
+- Redaction markers handled correctly by scorer
+- All three test cases pass
+- Repo clean
+
+---
+
+## LOOKING AHEAD — DAY 4
+
+Day 4 will likely be Firebase integration:
+- Connect pipeline output to Firestore
+- Write taskAttempts documents
+- Confirm data model matches governance spec
+- Test that no identity fields are written
+
+---
+
+## MENTAL MODEL
+
+Day 1: Policy + Scoring = AI works
+Day 2: scoreResponse.js = Scoring is reusable
+Day 3: pipeline.js = System has a spine
+Day 4: Firebase = System has a memory
+
+---
+
+END OF DOCUMENT

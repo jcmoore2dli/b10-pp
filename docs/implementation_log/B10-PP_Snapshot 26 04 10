@@ -1,0 +1,22 @@
+Snapshot of work done in this thread (Days 1 & 2):
+Day 1 — April 10, morning
+
+config/aiPolicy.js — behavioral policy block, live in repo
+config/scoringPrompts.js — ORI/COR and EXT prompts extracted from Section 8 v1.4, runtime-ready
+testEvaluation.js — first live API call, Score 4 confirmed
+package.json — ES module configuration
+.gitignore — secrets and logs protected
+API key incident handled — key rotated, push protection confirmed working
+New key secured in ~/.bashrc and biometric vault
+
+Day 2 — April 10, mid-morning
+
+services/scoreResponse.js — reusable scoring service with task routing, validation, error handling
+testScorer.js — four test cases, all score levels confirmed: Score 2, 3, 4 PARA + Score 4 EXT
+Rubric boundaries holding correctly across full range
+
+
+How to start Monday's thread without losing context:
+Create a new chat and open with this prompt:
+
+I am continuing development of the B10 Practice Platform (B10-PP). Days 1 and 2 are complete. The scoring engine is live and confirmed working across all score levels. My repo is at github.com/jcmoore2dli/b10-pp. I have a Day 3 implementation plan. Today we are building the sanitization stub (services/sanitizeTranscript.js), the pipeline connector (services/pipeline.js), and running a three-case pipeline test. Please confirm you are ready to begin Day 3.

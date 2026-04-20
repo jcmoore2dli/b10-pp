@@ -114,12 +114,32 @@ service cloud.firestore {
       return v in ["b10_curated", "instructor_created"];
     }
 
-    function validScore(v) {
-      return v is int && v >= 1 && v <= 4;
+    // LEVEL3 (ESO): 2–4 — Score 1 defined but never triggered
+    function validLevel3Score(v) {
+      return v is int && v >= 2 && v <= 4;
     }
 
-    function validScoreLabel(v) {
-      return v in ["Inaccurate", "Partial", "Good", "Excellent"];
+    // LEVEL2 (Narration/Description/Instructions): 1–3
+    function validLevel2Score(v) {
+      return v is int && v >= 1 && v <= 3;
+    }
+
+    // LEVEL3 score labels (ESO)
+    function validLevel3ScoreLabel(v) {
+      return v in ["Insufficient", "Partial", "Good", "Excellent"];
+    }
+
+    // LEVEL2 score labels (Narration/Description/Instructions)
+    function validLevel2ScoreLabel(v) {
+      return v in ["Insufficient", "Partial", "Good"];
+    }
+
+    function validTaskFamily(v) {
+      return v in ["LEVEL2", "LEVEL3"];
+    }
+
+    function validSubmissionStatus(v) {
+      return v in ["queued", "processing", "complete", "error"];
     }
 
     function validFocusArea(v) {
@@ -165,6 +185,7 @@ service cloud.firestore {
       );
     }
 
+    // ── users ──────────────────────────────────────────────────────────────
     match /users/{userId} {
       allow read: if userExists() && (isAdmin() || request.auth.uid == userId);
       allow create, update, delete: if isAdmin()
@@ -172,11 +193,13 @@ service cloud.firestore {
         && validRole(request.resource.data.role);
     }
 
+    // ── userIndex ──────────────────────────────────────────────────────────
     match /userIndex/{userId} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == userId);
       allow create, update, delete: if isAdmin();
     }
 
+    // ── students ───────────────────────────────────────────────────────────
     match /students/{studentId} {
       allow read: if userExists() && (
         isAdmin() ||
@@ -214,8 +237,10 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ── groups ─────────────────────────────────────────────────────────────
     match /groups/{groupId} {
-      allow read: if isAdmin() || (isInstructor() && resource.data.instructorId == request.auth.uid);
+      allow read: if isAdmin() ||
+        (isInstructor() && resource.data.instructorId == request.auth.uid);
 
       allow create: if isInstructor()
         && request.resource.data.instructorId == request.auth.uid
@@ -226,9 +251,11 @@ service cloud.firestore {
         && resource.data.instructorId == request.auth.uid
         && request.resource.data.instructorId == resource.data.instructorId;
 
-      allow delete: if isInstructor() && resource.data.instructorId == request.auth.uid;
+      allow delete: if isInstructor() &&
+        resource.data.instructorId == request.auth.uid;
     }
 
+    // ── notes ──────────────────────────────────────────────────────────────
     match /notes/{noteId} {
       allow read: if isAdminOrInstructor();
 
@@ -240,6 +267,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ── passages ───────────────────────────────────────────────────────────
     match /passages/{passageId} {
       allow read: if
         isAdmin() ||
@@ -259,11 +287,12 @@ service cloud.firestore {
         && validStudentTrackOrBoth(request.resource.data.track)
         && validInputType(request.resource.data.inputType)
         && validIlrTarget(request.resource.data.ilrTarget)
-        && request.resource.data.passageSource in ["b10_curated", "instructor_created"];
+        && validPassageSource(request.resource.data.passageSource);
 
       allow update, delete: if isAdmin();
     }
 
+    // ── assignments ────────────────────────────────────────────────────────
     match /assignments/{assignmentId} {
       allow read: if
         isAdmin() ||
@@ -287,9 +316,49 @@ service cloud.firestore {
         && validAssignmentType(request.resource.data.assignmentType)
         && validScaffoldConfig(request.resource.data.scaffoldConfig);
 
-      allow delete: if isAdmin() || (isInstructor() && resource.data.assignedBy == request.auth.uid);
+      allow delete: if isAdmin() ||
+        (isInstructor() && resource.data.assignedBy == request.auth.uid);
     }
 
+    // ── submissions ────────────────────────────────────────────────────────
+    // Async pipeline record. Client creates (queued), Cloud Function owns
+    // all subsequent writes. Immutable after creation from client side.
+    match /submissions/{submissionId} {
+      // Student reads own submissions only
+      // Instructors and admins read all
+      allow read: if
+        isAdmin() ||
+        isInstructor() ||
+        (
+          isStudent() &&
+          hasCurrentStudent() &&
+          resource.data.studentId == currentStudentId()
+        );
+
+      // Student creates own submission only
+      // Status must be "queued", submissionNumber must be 0 (server assigns real number)
+      allow create: if
+        isStudent() &&
+        hasCurrentStudent() &&
+        request.resource.data.studentId == currentStudentId() &&
+        request.resource.data.status == "queued" &&
+        request.resource.data.submissionNumber == 0;
+
+      // No client updates ever — Cloud Function uses admin SDK
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // ── submissionCounters ─────────────────────────────────────────────────
+    // Admin SDK only — no client read or write under any condition
+    match /submissionCounters/{counterId} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    // ── attempts ──────────────────────────────────────────────────────────
+    // Permanent performance record. Anchored to studentId.
+    // Written by Cloud Function (admin SDK) after pipeline completes.
     match /attempts/{attemptId} {
       allow read: if
         isAdmin() ||
@@ -300,15 +369,9 @@ service cloud.firestore {
           resource.data.studentId == currentStudentId()
         );
 
-      allow create: if
-        isAdminOrInstructor() ||
-        (
-          isStudent() &&
-          hasCurrentStudent() &&
-          request.resource.data.studentId == currentStudentId()
-        );
-
-      allow update: if isAdmin() || isInstructor();
+      // Cloud Function writes via admin SDK — no client create
+      allow create: if false;
+      allow update: if false;
       allow delete: if isAdmin();
     }
   }
