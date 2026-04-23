@@ -1,32 +1,61 @@
-import { useState } from 'react'
+// src/screens/RecordingScreen.jsx
+//
+// Screen 4 — Recording Screen (Phase 2A)
+//
+// Pipeline:
+//   Record → Stop/Submit → upload audio to Storage (timestamp path)
+//   → create Firestore doc with known audioPath → onSnapshot watches status
+//   → "complete" → navigate to FeedbackScreen
+//
+// ARCHITECTURAL INVARIANTS (enforced here):
+//   - Submit button disabled immediately on tap (double-tap protection)
+//   - Audio uploaded BEFORE Firestore doc created — audioPath always known at creation
+//   - Client never writes score/status fields after doc creation
+//   - submissionNumber: 0 on creation — server assigns via transaction
+//   - One-active-job check runs before upload (UX protection, not atomic)
+//   - Audio blob released after Storage upload — never persisted in state
+//   - Passage text never displayed on this screen
+
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPassageById } from '../data/passages'
 import { useRecorder } from '../hooks/useRecorder'
 import AudioPlayer from '../components/AudioPlayer'
-import { transcribe } from '../services/transcription/WhisperTranscriber'
-import { evaluate } from '../services/scoring/ScoringService'
+import {
+  uploadAudio,
+  createSubmission,
+  checkActiveJob,
+  subscribeToSubmission,
+} from '../services/submissionService'
 
-/**
- * Screen 4 — Recording Screen (Oral Paraphrase)
- *
- * Pipeline: audio → transcript → evaluate() → result → FeedbackScreen
- *
- * Architectural rules enforced:
- *   - Passage text never displayed on this screen
- *   - audioBlob explicitly released after transcription
- *   - ScoringService.evaluate() called — never ClaudeScorer directly
- *   - No re-recording after submission
- */
+// Status messages mapped from Firestore doc status field
+const STATUS_MESSAGES = {
+  queued:     'Response submitted. Preparing evaluation…',
+  processing: 'Evaluating your response…',
+}
 
-// phase: 'idle' | 'recording' | 'analyzing'
 export default function RecordingScreen() {
   const { passageId } = useParams()
-  const navigate = useNavigate()
-  const passage = getPassageById(passageId)
+  const navigate      = useNavigate()
+  const passage       = getPassageById(passageId)
+
   const { isRecording, startRecording, stopRecording, error: recorderError } = useRecorder()
 
-  const [phase, setPhase] = useState('idle')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [phase, setPhase]                 = useState('idle')
+  const [errorMessage, setErrorMessage]   = useState(null)
+  const [statusMessage, setStatusMessage] = useState('')
+  const submittingRef  = useRef(false)   // double-tap guard
+  const unsubscribeRef = useRef(null)    // onSnapshot cleanup
+
+  // Read b10Id from sessionStorage (set by EntryScreen)
+  const b10Id = sessionStorage.getItem('b10pp_student_id') || 'UNKNOWN'
+
+  // Cleanup onSnapshot on unmount
+  useEffect(() => {
+    return () => {
+      if (unsubscribeRef.current) unsubscribeRef.current()
+    }
+  }, [])
 
   if (!passage) {
     return (
@@ -52,39 +81,91 @@ export default function RecordingScreen() {
   }
 
   async function handleStopAndSubmit() {
-    setPhase('analyzing')
+    // Double-tap protection
+    if (submittingRef.current) return
+    submittingRef.current = true
+
+    setPhase('uploading')
+    setStatusMessage('Stopping recording…')
+
     let audioBlob = await stopRecording()
 
     try {
-      const { transcript } = await transcribe(audioBlob)
-      // Explicitly release audio blob — must not persist
-      audioBlob = null
+      // ── One-active-job UX check ───────────────────────────────────────────
+      const assignmentId = passage.passage_id
+      const hasActive = await checkActiveJob(b10Id, assignmentId)
+      if (hasActive) {
+        setErrorMessage('An evaluation is already in progress for this passage. Please wait.')
+        setPhase('idle')
+        submittingRef.current = false
+        audioBlob = null
+        return
+      }
 
-      const result = await evaluate({
-        transcript,
-        passageText: passage.passage_text,
-        passageId: passage.passage_id,
+      // ── Upload audio FIRST — use timestamp path, submissionId not yet known ─
+      // audioPath must be known before creating the Firestore doc so the
+      // Cloud Function trigger can locate the file immediately on creation.
+      setStatusMessage('Uploading audio…')
+      const tempId = `${b10Id}_${Date.now()}`
+      const { audioPath } = await uploadAudio(b10Id, tempId, audioBlob)
+      audioBlob = null  // release — never persist blob in state
+
+      // ── Create Firestore doc with known audioPath ────────────────────────
+      // onCreate trigger fires here. Audio is already in Storage.
+      // Client writes only identity fields + audioPath + status/submissionNumber placeholders.
+      const { submissionId } = await createSubmission({
+        b10Id,
+        assignmentId,
+        taskType:          passage.task_type          || 'NARRATION',
+        passageId:         passage.passage_id,
+        corpusType:        passage.corpus_type        || 'ORI',
+        promptDescription: passage.prompt_description || '',
+        scaffoldConfig:    passage.scaffold_config    || {},
+        audioPath,
       })
 
-      navigate(`/feedback/${passageId}`, {
-        state: {
-          score: result.score,
-          score_label: result.score_label,
-          transcript,
-          strengths: result.strengths,
-          gaps: result.gaps,
-          language_note: result.language_note,
-          passageText: passage.passage_text,
-          passageId: passage.passage_id,
-        },
+      // ── Subscribe to submission doc via onSnapshot ───────────────────────
+      setPhase('evaluating')
+      setStatusMessage(STATUS_MESSAGES.queued)
+
+      unsubscribeRef.current = subscribeToSubmission(submissionId, (data) => {
+        const { status } = data
+
+        if (status === 'queued' || status === 'processing') {
+          setStatusMessage(STATUS_MESSAGES[status] || 'Evaluating your response…')
+          return
+        }
+
+        if (status === 'complete') {
+          if (unsubscribeRef.current) {
+            unsubscribeRef.current()
+            unsubscribeRef.current = null
+          }
+          navigate(`/feedback/${passageId}`, { state: { submissionData: data } })
+          return
+        }
+
+        if (status === 'failed') {
+          if (unsubscribeRef.current) {
+            unsubscribeRef.current()
+            unsubscribeRef.current = null
+          }
+          setErrorMessage('Something went wrong. Please try again.')
+          setPhase('idle')
+          submittingRef.current = false
+        }
       })
+
     } catch (err) {
+      console.error('SUBMIT ERROR:', err.message, err)
       setErrorMessage('Something went wrong. Please try again.')
       setPhase('idle')
+      submittingRef.current = false
+      audioBlob = null
     }
   }
 
-  const isAnalyzing = phase === 'analyzing'
+  const isEvaluating = phase === 'evaluating' || phase === 'uploading'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -115,20 +196,19 @@ export default function RecordingScreen() {
         {/* Task prompt */}
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 w-full text-center">
           <p className="text-blue-900 font-medium text-base leading-relaxed">
-            Listen carefully, then record your paraphrase of the passage.
+            {passage.prompt_description || 'Listen carefully, then record your response.'}
           </p>
         </div>
 
-        {isAnalyzing ? (
-          /* Analyzing state */
+        {isEvaluating ? (
+          /* Uploading / evaluating state */
           <div className="flex flex-col items-center gap-4 py-10">
             <div className="w-12 h-12 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" />
-            <p className="text-gray-600 font-medium">Analyzing your response...</p>
+            <p className="text-gray-600 font-medium text-center">{statusMessage}</p>
           </div>
         ) : (
           <>
-            {/* Replay audio — hidden while recording */}
-            {!isRecording && (
+            {!isRecording && passage.task_type !== 'eso' && (
               <div className="w-full">
                 <AudioPlayer audioSrc={passage.audio_file} />
               </div>

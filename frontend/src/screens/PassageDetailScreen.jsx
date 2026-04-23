@@ -56,7 +56,7 @@ export default function PassageDetailScreen() {
         </button>
         <div>
           <p className="text-white font-bold text-base leading-tight">Passage Detail</p>
-          <p className="text-blue-200 text-xs">Task: Oral Paraphrase</p>
+          <p className="text-blue-200 text-xs">Task: {passage.task_type === 'eso' ? 'Extended Supported Opinion' : 'Oral Paraphrase'}</p>
         </div>
       </header>
 
@@ -83,27 +83,37 @@ export default function PassageDetailScreen() {
 
         {/* Instructions */}
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
-          <p className="text-sm text-blue-800 leading-relaxed">
-            Listen to the passage. You may replay it as many times as you need before beginning.
-            When you are ready, press <strong>Begin Task</strong> to record your paraphrase.
-          </p>
-          <p className="text-xs text-blue-600 mt-2">
-            The passage text will not be shown until after you submit your response.
-          </p>
+          {passage.task_type === 'eso' ? (
+  <p className="text-sm text-blue-800 leading-relaxed font-semibold">
+    {passage.prompt_description}
+  </p>
+) : (
+  <>
+    <p className="text-sm text-blue-800 leading-relaxed">
+      Listen to the passage. You may replay it as many times as you need before beginning.
+      When you are ready, press <strong>Begin Task</strong> to record your paraphrase.
+    </p>
+    <p className="text-xs text-blue-600 mt-2">
+      The passage text will not be shown until after you submit your response.
+    </p>
+  </>
+)}
         </div>
 
         {/* Audio Player */}
-        <AudioPlayer
-          audioSrc={passage.audio_file}
-          onPlayStart={() => setHasEngaged(true)}
+        {passage.task_type !== 'eso' && (
+          <AudioPlayer
+            audioSrc={passage.audio_file}
+            onPlayStart={() => setHasEngaged(true)}
         />
+)}
 
         {/* Begin Task button */}
         <button
           onClick={handleBeginTask}
-          disabled={!hasEngaged}
+          disabled={passage.task_type !== 'eso' && !hasEngaged}
           className="w-full py-4 rounded-xl text-white font-bold text-lg disabled:opacity-40 transition-opacity"
-          style={{ backgroundColor: hasEngaged ? '#1e3a5f' : '#9ca3af' }}
+          style={{ backgroundColor: (passage.task_type === 'eso' || hasEngaged) ? '#1e3a5f' : '#9ca3af' }}
         >
           Begin Task
         </button>

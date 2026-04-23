@@ -1,5 +1,25 @@
 [
   {
+    "passage_id": "COR-SCI-002",
+    "domain": "Science & Behavior",
+    "domain_code": "SCI",
+    "domain_cluster": "S&T",
+    "layer": "CORE",
+    "tier": "T0",
+    "word_count": 82,
+    "ext_band": null,
+    "pil": null,
+    "session_type": "assigned",
+    "set": "S1",
+    "phase": "Foundation",
+    "content_type": "LEG",
+    "task_type": "paraphrase",
+    "prompt_description": "Listen to the passage. Then record a paraphrase in your own words.",
+    "scaffold_config": {},
+    "passage_text": "Late in the day, shoppers often accept poorer deals even when prices stay constant. This occurs because repeated self-control taxes attention, which becomes harder to allocate efficiently over time. After several small judgments, options are compared more quickly, leaving subtle differences unnoticed. However, a brief pause of a few minutes or a snack can restore careful evaluation temporarily. Such anomalies suggest that choice quality depends on recovery cycles, not on willpower alone.",
+    "audio_file": "https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/audio/core/DEMO_R004__COR-SCI-002.mp3"
+  },
+  {
     "passage_id": "COR-HLT-002",
     "domain": "Health & Medicine",
     "domain_code": "HLT",
@@ -14,7 +34,7 @@
     "phase": "Foundation",
     "content_type": "LEG",
     "passage_text": "Researchers have found that the placebo effect depends on real neurological mechanisms operating beneath conscious awareness. Although patients think they are being treated, expectation changes brain signaling and reduces pain. In trials, people given inactive pills still showed improvement over short periods. However, this response relied on brain areas tied to anticipation and emotional regulation. These findings indicate that medical results are shaped not only by drugs but also by mental processes affecting the body.",
-    "audio_file": "/audio/core/COR-HLT-002.mp3"
+    "audio_file": "/b10_practice_platform/audio/core/COR-HLT-002.mp3"
   },
   {
     "passage_id": "COR-ENV-001",
@@ -30,7 +50,7 @@
     "set": "S2",
     "phase": "Foundation",
     "content_type": "LEG",
-    "passage_text": "Scientists studying permafrost thaw in northern Canada have detected methane emissions significantly higher than climate models had predicted. Methane, a greenhouse gas far more potent than carbon dioxide over short time horizons, is being released as previously frozen organic matter decomposes. The researchers warn that if thaw rates continue at their current pace, this so-called permafrost carbon feedback could contribute an additional half degree of warming by the end of the century — an outcome that current international climate agreements do not account for.",
+    "passage_text": "Scientists studying permafrost thaw in northern Canada have detected methane emissions significantly higher than climate models had predicted. Methane, a greenhouse gas far more potent than carbon dioxide over short time horizons, is being released as previously frozen organic matter decomposes. The researchers warn that if thaw rates continue at their current pace, this so-called permafrost carbon feedback could contribute an additional half degree of warming by the end of the century \u2014 an outcome that current international climate agreements do not account for.",
     "audio_file": "/audio/core/COR-ENV-001.mp3"
   },
   {
@@ -47,7 +67,31 @@
     "set": null,
     "phase": null,
     "content_type": "ESO",
-    "passage_text": "A comprehensive review of participatory governance initiatives across forty-three countries has found that community-led decision-making processes consistently produce higher rates of policy compliance and long-term stakeholder satisfaction than top-down administrative approaches. The review, commissioned by an international development organization, examined programs ranging from neighborhood infrastructure projects to national budget consultations. In each case, communities that had meaningful input into decisions affecting them were more likely to support implementation, maintain shared infrastructure, and report trust in local institutions. However, the review also identified a recurring challenge: without deliberate design features to lower barriers to participation — such as accessible meeting times, multilingual materials, and childcare provisions — participatory processes systematically underrepresent lower-income households, younger residents, and non-dominant language communities. Researchers concluded that participatory governance is not inherently inclusive and requires continuous structural attention to equity if its stated benefits are to be realized across entire communities rather than the most engaged segments only.",
+    "passage_text": "A comprehensive review of participatory governance initiatives across forty-three countries has found that community-led decision-making processes consistently produce higher rates of policy compliance and long-term stakeholder satisfaction than top-down administrative approaches. The review, commissioned by an international development organization, examined programs ranging from neighborhood infrastructure projects to national budget consultations. In each case, communities that had meaningful input into decisions affecting them were more likely to support implementation, maintain shared infrastructure, and report trust in local institutions. However, the review also identified a recurring challenge: without deliberate design features to lower barriers to participation \u2014 such as accessible meeting times, multilingual materials, and childcare provisions \u2014 participatory processes systematically underrepresent lower-income households, younger residents, and non-dominant language communities. Researchers concluded that participatory governance is not inherently inclusive and requires continuous structural attention to equity if its stated benefits are to be realized across entire communities rather than the most engaged segments only.",
     "audio_file": "/audio/ext/EXT-GOV-001.mp3"
+  },
+  {
+    "passage_id": "ESO-WRK-007",
+    "domain": "Labor & Employment",
+    "domain_code": "WRK",
+    "domain_cluster": "W&E",
+    "layer": "ESO",
+    "tier": null,
+    "word_count": null,
+    "ext_band": null,
+    "pil": null,
+    "session_type": "assigned",
+    "set": "S1",
+    "phase": "Foundation",
+    "content_type": "ESO",
+    "task_type": "eso",
+    "prompt_description": "Should a four-day work week be adopted as national labor policy?",
+    "scaffold_config": {
+      "focusArea": "Holistic",
+      "primaryFrame": "none",
+      "secondaryFrame": "none"
+    },
+    "passage_text": null,
+    "audio_file": null
   }
 ]
