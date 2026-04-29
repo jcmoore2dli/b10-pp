@@ -1,0 +1,458 @@
+B10-PP — STATE OF THE PROJECT
+Continuation Document for New Claude Sessions
+As of April 29, 2026 — Post-Week 1 Auth Sprint
+
+HOW TO USE THIS FILE:
+Copy the entire contents and paste into a new Claude session before
+starting any B10-PP work. This orients the session to all decisions
+made through April 29, 2026. Do not start B10-PP sessions without
+this context loaded.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 1 — PROJECT IDENTITY
+════════════════════════════════════════════════════════════════════════
+
+Project:      B10 Practice Platform (B10-PP)
+Developer:    J. Moore · GS-11 ESL instructor and OPI rater · DLIELC · San Antonio TX
+Purpose:      AI-assisted ILR proficiency practice for military English learners.
+              Two tracks. Formative practice tool only — not an official ILR assessment.
+Stack:        React + Vite · Firebase (Firestore, Storage, Cloud Functions)
+              Deepgram STT (Pass 1) · AssemblyAI STT (Pass 2, conditional)
+              Anthropic Claude API (scoring engine)
+GitHub:       github.com/jcmoore2dli/b10-pp
+Dev machine:  Dell Linux Mint · username jcmoore2
+              Project path: ~/b10_corpus/b10_practice_platform/
+              Frontend path: ~/b10_corpus/b10_practice_platform/frontend/src/
+Bandwidth:    Apr 27 – Jun 26: max 12 hrs/week (some weeks up to 15)
+              Jul 2 – Jul 20:  ANNUAL LEAVE — zero availability
+              Jul 21 – Jul 31: resuming, pilot prep
+Current phase: Phase 2A COMPLETE · Phase 2B COMPLETE (merged) · Phase 3 IN PROGRESS
+               Week 1 Auth COMPLETE · Week 2 Enrollment NEXT
+Pilot target:  Mid-August to Early September 2026 (revised — see Section 4)
+Scoring spec:  B10 4-point rubric · Section 8 governance
+               ESO (LEVEL3): score integer 1–4
+               NARRATION/DESCRIPTION/INSTRUCTIONS (LEVEL2): score integer 1–3
+               No ILR labels in student-facing feedback — OUT OF SCOPE, always
+
+════════════════════════════════════════════════════════════════════════
+SECTION 2 — SPRINT AUDIT: WHAT WAS COMPLETED
+════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────
+APRIL 20–24 SPRINT (Phase 2A + 2B — previously documented)
+────────────────────────────────────────────────────────────────────────
+
+HARD GATES — ALL CLEARED:
+  Monday:    Security foundation + Cloud Functions deployed ✓
+  Tuesday:   Real scored result in logs (Deepgram + Claude) ✓
+  Wednesday: Full submission lifecycle queued → processing → complete ✓
+  Thursday:  Student can record, submit, and see scored feedback ✓
+  Friday:    Supervisor brief delivered — demo successful ✓
+
+Cloud Functions (functions/index.js):
+  onSubmissionCreated  — Firestore onCreate trigger, calls processSubmission()
+  requeueSubmission    — Admin callable, clears doc, reruns pipeline
+  requestPass2         — Instructor/admin callable, calls runPass2()
+
+  processSubmission() — 14-step shared pipeline:
+    Step 1:  Counter transaction → server-side submissionNumber assignment
+    Step 2:  Status → "processing"
+    Step 3:  Audio fetch from Firebase Storage
+    Step 4+5: Deepgram STT → raw transcript + words[] (disfluency preserved)
+    Step 6:  Disfluency pre-processor (LEVEL2 tasks only)
+    Step 7+8: EVALUATION_POLICY injection + Claude prompt routing by taskType
+    Step 9+10: Claude scoring → JSON parse + validate
+    Step 11: pass2Available flag logic
+    Step 12+13: All result fields written → status "complete"
+    Step 14: Error → status "failed"
+  Retry wrapper: 3 attempts, 2s/4s/8s backoff on Deepgram + Claude
+
+  runPass2() — AssemblyAI clean transcript for instructor review only
+    Score 1 gate enforced (hard block, defense in depth)
+    Output written ONLY to transcriptClean — NEVER reaches scoring engine
+
+STT Modules:
+  functions/lib/deepgramSTT.js  — Pass 1 (disfluency preserved, speaker isolation)
+  functions/lib/claudeScorer.js — Scoring engine, prompt routing, disfluency metadata
+
+Scoring prompts live in claudeScorer.js:
+  ESO_PROMPT          (LEVEL3, 4-point scale, REDS framework)
+  NARRATION_PROMPT    (LEVEL2, 3-point scale)
+  DESCRIPTION_PROMPT  (LEVEL2, 3-point scale)
+  INSTRUCTIONS_PROMPT (LEVEL2, 3-point scale)
+
+  TODO (deferred to Phase 3):
+    PARAPHRASE_PROMPT
+    EXTENDED_LISTENING_PROMPT
+
+Frontend (React + Vite):
+  firebase.js           — Firebase client SDK singleton (Firestore, Storage, Functions, Auth)
+  submissionService.js  — uploadAudio(), createSubmission(), subscribeToSubmission()
+  RecordingScreen.jsx   — MediaRecorder → Storage upload → Firestore create → onSnapshot
+  FeedbackScreen.jsx    — X/N score display, contextual line, Schema v3 field names
+
+Schema v3 field names in production (submission doc):
+  transcriptText     (raw Deepgram — invariant preserved)
+  transcriptClean    (AssemblyAI Pass 2, instructor only)
+  processedAt        (not completedAt)
+  disfluencyMetadata (LEVEL2 only)
+  pass2Available     (bool)
+  pass2Status        (queued/processing/complete/failed)
+  submissionNumber   (server-assigned via transaction)
+
+────────────────────────────────────────────────────────────────────────
+APRIL 27–29 — WEEK 1 AUTH SPRINT (Phase 3 Week 1)
+────────────────────────────────────────────────────────────────────────
+
+All Week 1 gates cleared in 2 days (Apr 27–28). Student auth flow
+completed Apr 29. Full Week 1 scope done ahead of schedule.
+
+WHAT WAS BUILT:
+
+Firebase Auth:
+  - Email/password auth enabled in Firebase Console
+  - Auth method decision locked: email/password only
+    Anonymous and phone auth ruled out permanently
+
+Frontend — new files:
+  frontend/src/context/AuthContext.jsx
+    - onAuthStateChanged listener
+    - currentUser + claims state
+    - refreshClaims() — forces token refresh after setStudentClaims returns
+    - AuthProvider wraps entire app
+    - useAuth() hook exports currentUser, claims, refreshClaims
+  frontend/src/screens/LoginScreen.jsx
+    - Email/password sign-in UI
+    - signInWithEmailAndPassword → AuthContext handles transition
+
+Frontend — modified files:
+  frontend/src/services/firebase.js
+    - Added: import { getAuth } from 'firebase/auth'
+    - Added: export const auth = getAuth(app)
+  frontend/src/App.jsx
+    - BrowserRouter moved outside AuthProvider (fixes useNavigate context)
+    - AuthProvider wraps AppInner
+    - AppInner gates on currentUser — shows LoginScreen if not signed in
+    - entered state (bool) gates /passages route — redirects to / if false
+    - Routes use full paths (/b10_practice_platform/...) — no basename
+  frontend/src/screens/EntryScreen.jsx
+    - Student ID field REMOVED — b10Id comes from claims only, never user input
+    - Access code field retained — stored in sessionStorage for passage routing
+    - onEnter() prop from App.jsx sets entered state + triggers navigation
+    - useAuth() imported — claims available for future use
+  frontend/src/screens/PassageMenuScreen.jsx
+    - Reads b10Id from claims (useAuth) instead of sessionStorage
+    - Sign out button added to header
+    - handleSignOut: clears sessionStorage + signOut(auth) + redirects to /b10_practice_platform/
+
+Cloud Functions — new function:
+  setStudentClaims (callable, admin-only)
+    - Sets { b10Id, role, groupId } as custom claims via Admin SDK
+    - Caller must have role: "admin" in their own claims
+    - Validates role is one of: student, instructor, admin
+    - Deployed to us-central1
+
+Security Rules:
+  firestore.rules — RESTORED from "if true" to claims-based auth
+    - isAdmin(), isInstructor(), isStudent() now read from
+      request.auth.token.role (custom claims) NOT from /users collection
+    - /submissions read: admin/instructor see all; student sees own b10Id only
+    - /submissions create: student only, b10Id must match claim,
+      status must be "queued", submissionNumber must be 0
+    - userExists() function removed — replaced by claims checks
+  storage.rules — RESTORED from "if true" to auth-scoped
+    - read: request.auth != null
+    - write: request.auth != null AND request.auth.token.b10Id != null
+
+Scripts:
+  scripts/setAdminClaims.js — one-time bootstrap script
+    Sets admin claims on test user UID
+    Requires firebase/service-account.json (gitignored)
+
+Security:
+  firebase/service-account.json — added to .gitignore
+    NEVER commit this file
+
+Test user provisioned:
+  Email: jcmoore2@outlook.com
+  Claims: { b10Id: "ADMIN001", role: "admin", groupId: "DLIELC" }
+  UID: saved locally — needed for admin operations
+
+PRE-PILOT GATES STATUS (updated):
+  AUTH-1:  COMPLETE — Firestore rules restored, claims-based ✓
+  AUTH-2:  COMPLETE — Storage rules restored, auth-scoped ✓
+  AUTH-3:  COMPLETE — Student auth flow wired, sessionStorage placeholder removed ✓
+  ENROLL:  OPEN — Week 2
+  ASSIGN:  OPEN — Week 4
+  AUDIO:   OPEN — Week 3
+  PROMPTS: OPEN — Week 3
+  MOBILE:  OPEN — Week 5
+  DASH:    OPEN — Week 4
+  BUDGET:  OPEN — Week 5
+
+════════════════════════════════════════════════════════════════════════
+SECTION 3 — DO NOT REOPEN THESE DECISIONS
+════════════════════════════════════════════════════════════════════════
+
+These are locked. Do not revisit without explicit instruction from J. Moore.
+
+ILR target values: "2" and "3" only. No "2+" anywhere in schema.
+Score field ESO: integer 1–4. LEVEL2: integer 1–3. Not ILR levels.
+ILR labels in student feedback: Out of scope. Never.
+corpusType "CC": It is "COR". Do not reintroduce "CC".
+Track on /students: immutable after creation. trackOverrideNote required for override.
+PSU as scaffold axis: Not selectable. Always implicit. argument_structure foregrounds it.
+MF vocab in scaffold system: Not included. Phase 4 evaluation layer only.
+Auto-generated note summary: On-demand only. Never on note write.
+EXT as umbrella: EXT is a subtype. One canonized long-form family.
+STT Pass 1: Deepgram (disfluency preserved). NOT Whisper. NOT AssemblyAI.
+STT Pass 2: AssemblyAI (conditional, instructor-facing only). NOT scoring engine input.
+Scoring engine: Claude Sonnet, temperature = 0. Non-negotiable.
+Raw transcript: NEVER smoothed before reaching scoring engine.
+submissionNumber: Server-side transaction only. Client always writes 0.
+Score 1 + Pass 2: Permanently incompatible. Hard block in code.
+
+Auth method: Email/password only. Anonymous and phone auth ruled out.
+Entry flow (Option C): Access code only on EntryScreen. b10Id always
+  comes from custom claims — never from user input. Student never types
+  their own ID. Access code validation deferred to Week 2 enrollment flow.
+b10Id is a backend pseudonym: Students never see or type it. Instructors
+  use it as a lookup key. Like a medical record number — internal only.
+Instructor student lookup: Two paths — (1) by name/email for discovery,
+  (2) by b10Id for fast instructor-to-instructor hand-off (e.g. SLT teacher).
+  Both paths return the same student record view. Build in Week 4 dashboard.
+Role authority: Custom claims are the single source of truth for role.
+  The /users collection is NOT used for role checks in Firestore rules.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 3B — KNOWN ISSUES AND TECHNICAL DEBT
+════════════════════════════════════════════════════════════════════════
+
+These are not blockers but must be addressed before or during pilot.
+
+ISSUE-1 (HIGH): AuthContext Vite Fast Refresh incompatibility
+  During heavy file editing sessions, Vite HMR invalidates the AuthContext
+  component tree. Symptom: buttons stop responding with no console errors.
+  Root cause: useAuth() hook and AuthProvider exported from same file.
+  Fix: Split into separate files —
+    AuthContext.js   — context object only
+    AuthProvider.jsx — provider component
+    useAuth.js       — hook only
+  This fully resolves HMR fragility. Schedule: early Week 2.
+  Workaround: full dev server restart + hard browser refresh (Ctrl+Shift+R)
+
+ISSUE-2 (MEDIUM): requeueSubmission + requestPass2 role checks use /users
+  These two Cloud Functions check role by reading from /users collection,
+  which does not exist in the current architecture. They should check
+  request.auth.token.role (custom claims) instead.
+  Fix: Update both functions in functions/index.js before pilot.
+  Schedule: Week 2 or Week 3.
+
+ISSUE-3 (LOW): entered state resets on every sign-in
+  AppInner uses React state (entered: bool) to gate /passages route.
+  This resets to false on every sign-in, always showing EntryScreen first.
+  This is CORRECT behavior for now but is held together by state +
+  sessionStorage rather than a single source of truth.
+  Fix: Clean up when enrollment flow is built in Week 2.
+
+ISSUE-4 (LOW): Dev URL must include trailing slash
+  Always use: http://localhost:5173/b10_practice_platform/
+  Without trailing slash, router fails to match routes.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 4 — PHASE 3 ROADMAP: APRIL 29 → PILOT
+════════════════════════════════════════════════════════════════════════
+
+BANDWIDTH CONSTRAINTS:
+  Apr 27 – Jun 26:  Max 12 hrs/week (~10 realistic average)
+  Jul 2  – Jul 20:  ZERO — annual leave
+  Jul 21 – Jul 31:  Resuming (~10 hrs available)
+  Total available Apr 27 – Jul 31: ~110–120 hrs
+
+PHASE 3 CORE MVP REQUIREMENTS (what must be done before first live student):
+  A. Auth + security (pre-pilot gate — non-negotiable) ✓ COMPLETE
+  B. Student enrollment + access code flow
+  C. Instructor dashboard (basic — B10 ID lookup, attempt history, assign)
+  D. Passage corpus audio upload (COR passages minimum)
+  E. passages.json fields completed (task_type, prompt_description)
+  F. Paraphrase scoring prompt (Track A MVP task)
+  G. Mobile audio UX tested and passing
+  H. End-to-end pilot test with real instructor + real student
+
+PILOT SCOPE (minimum viable):
+  1 instructor · 3–5 students · COR passages only · paraphrase task only
+  Narration (Track B) optional if time allows
+  Goal: confirm pipeline works under real conditions, collect feedback
+
+────────────────────────────────────────────────────────────────────────
+WEEK-BY-WEEK SCHEDULE
+────────────────────────────────────────────────────────────────────────
+
+WEEK 1 — Apr 27–May 2 (12 hrs) — COMPLETE ✓
+Focus: Auth foundation
+  ✓ Firebase Auth setup — email/password chosen and enabled
+  ✓ Custom claims architecture (b10Id, role, groupId)
+  ✓ Restore Firestore security rules (claims-based)
+  ✓ Restore Storage security rules (auth-scoped)
+  ✓ Student auth flow: EntryScreen wired, sessionStorage placeholder removed
+  ✓ setStudentClaims Cloud Function deployed
+  ✓ service-account.json gitignored
+  Deliverable: Authenticated user can reach the app ✓
+
+WEEK 2 — May 5–9 (12 hrs)
+Focus: Enrollment + access code
+  PRIORITY 0: Fix AuthContext Fast Refresh issue (ISSUE-1 above)
+  PRIORITY 1: Fix requeueSubmission + requestPass2 role checks (ISSUE-2)
+  - Instructor creates access code → students join by code
+  - b10Id assigned on enrollment via setStudentClaims
+  - /students collection provisioned correctly
+  - EntryScreen validates real access code
+  Deliverable: Student enters access code, gets real b10Id, pipeline runs authenticated
+
+WEEK 3 — May 12–16 (12 hrs)
+Focus: Passage corpus + prompt wiring
+  - Upload COR audio files to Firebase Storage
+  - Complete passages.json: task_type, prompt_description, corpus_type fields
+  - Wire passage fields to RecordingScreen (task_type routing, prompt display)
+  - Paraphrase scoring prompt written + wired in claudeScorer.js
+  Deliverable: Real COR passage plays, student records paraphrase, scores correctly
+
+WEEK 4 — May 19–23 (12 hrs)
+Focus: Instructor dashboard (Phase 1 — basic)
+  - Student lookup: by name/email (discovery) AND by b10Id (hand-off)
+  - Attempt history view (score, score_label, processedAt)
+  - Assign passage to student
+  - Assigned Set tab functional on student side
+  Deliverable: Instructor can look up student, see attempts, make assignment
+
+WEEK 5 — May 26–30 (12 hrs)
+Focus: Mobile UX + reliability
+  - iOS Safari audio recording test + fixes
+  - Android Chrome audio recording test + fixes
+  - PWA manifest verified
+  - Budget alerts set (Firebase + Anthropic)
+  - Double-tap, network interruption, retry edge cases tested
+  Deliverable: Full flow tested on real mobile device
+
+WEEK 6 — Jun 2–6 (12 hrs)
+Focus: Track B (Narration) + polish
+  - Narration task wired end-to-end (prompt display, scoring, feedback)
+  - FeedbackScreen polish (edge cases, empty field handling)
+  - Passage menu: "Assigned Set" fully functional
+  - Error states reviewed and handled gracefully
+  Deliverable: Track B student can complete narration task
+
+WEEK 7 — Jun 9–13 (12 hrs)
+Focus: Pre-pilot dry run
+  - Full end-to-end test as instructor + as student (separate sessions)
+  - requeueSubmission tested on real stuck doc
+  - requestPass2 tested on eligible submission
+  - All pre-pilot gates verified:
+      AUTH-1 ✓, AUTH-2 ✓, AUTH-3 ✓, ENROLL, ASSIGN, AUDIO, PROMPTS, MOBILE
+  Deliverable: All pre-pilot gates cleared
+
+WEEK 8 — Jun 16–20 (12 hrs)
+Focus: Pilot logistics + instructor onboarding
+  - Pilot instructor briefed and trained (1 session)
+  - 3–5 pilot students enrolled with real b10Ids
+  - Passage assignments made for pilot group
+  - Monitoring plan in place (Firestore console, function logs)
+  Deliverable: Pilot group enrolled and ready
+
+WEEK 9 — Jun 23–26 (partial, ~8 hrs)
+Focus: Soft launch buffer
+  - Pilot begins (instructor-supervised, limited scope)
+  - Bug fixes from first real use
+  - Document observed issues
+  Deliverable: Pilot running, first real student attempts logged
+
+WEEKS 10–11 — Jul 2–20: ANNUAL LEAVE — NO WORK
+
+WEEK 12 — Jul 21–25 (~10 hrs)
+Focus: Return + pilot review
+  - Review all pilot attempt data accumulated during leave
+  - Identify scoring anomalies, pipeline failures, UX pain points
+  - Prioritize fixes
+  Deliverable: Pilot review complete, priority fix list locked
+
+WEEK 13 — Jul 28–31 (~10 hrs)
+Focus: Pilot fixes + S2 prep
+  - Address highest-priority pilot findings
+  - Draft pilot data summary for supervisor (S2 ask)
+  - Platform stable for continued use
+  Deliverable: Pilot Phase 1 complete, S2 ask ready
+
+────────────────────────────────────────────────────────────────────────
+PILOT TARGET DATE: Week of June 23, 2026 (soft launch)
+Full pilot running: June 23 – July 1, then resumes July 21
+────────────────────────────────────────────────────────────────────────
+
+REALISM ASSESSMENT:
+Week 1 completed in 2 days — schedule is ahead. Buffer absorbed the
+auth troubleshooting in the student flow (last hour of Apr 29).
+
+RISK FACTORS (updated):
+  HIGH:   AuthContext HMR fragility — must fix early Week 2 before
+          adding more complexity on top of it
+  MEDIUM: iOS Safari MediaRecorder behavior is historically problematic
+          May require audio format conversion layer
+  LOW:    Passage corpus upload is mechanical — low risk
+  LOW:    requeueSubmission + requestPass2 role check fix is straightforward
+
+IF SCHEDULE SLIPS:
+  Acceptable slip: Push soft launch to Jul 21 (Week 12) after leave
+  This makes pilot target early August — still ahead of Sep deadline
+  Non-negotiable: Do NOT launch pilot before all AUTH gates are cleared
+
+────────────────────────────────────────────────────────────────────────
+RECOMMENDED PILOT TARGET (REVISED):
+  Week 1 on schedule → June 23 soft launch remains achievable
+  If auth or mobile causes >1 week slip → August 4 soft launch
+  Hard deadline for supervisor S2 ask: pilot data in hand by Sep 1
+────────────────────────────────────────────────────────────────────────
+
+════════════════════════════════════════════════════════════════════════
+SECTION 5 — SCHEMA QUICK REFERENCE (v3 — production)
+════════════════════════════════════════════════════════════════════════
+
+/submissions (client creates queued doc, pipeline writes everything else)
+  b10Id · assignmentId · taskType · taskFamily · passageId · corpusType
+  audioPath · status (queued/processing/complete/failed)
+  submissionNumber (0 at creation, server assigns real number)
+  transcriptText (raw Deepgram — invariant)
+  transcriptClean (AssemblyAI Pass 2, instructor only)
+  score · score_label · strengths · gaps · language_feedback
+  transcript_note · monitor_notes (LEVEL2) · scaffold_feedback (ESO)
+  disfluencyMetadata (LEVEL2 only) · pass2Available · pass2Status
+  processedAt · createdAt · errorMessage · errorAt
+
+/submissionCounters
+  Doc ID: {b10Id}_{assignmentId}
+  count: N (server-side only — client never reads or writes)
+
+/students (provisioned on enrollment — Week 2)
+  b10Id · groupId · role · track · ilrBaseline
+  trackOverrideNote (required if track changes)
+
+════════════════════════════════════════════════════════════════════════
+SECTION 6 — STRATEGIC CONTEXT (UNCHANGED FROM APR 7)
+════════════════════════════════════════════════════════════════════════
+
+FOUR MEETINGS:
+  Meeting 1: COMPLETE — Supervisor demo Apr 24 · brief delivered · no ask
+  Meeting 2: S1 ask — protected fall time block (schedule after pilot)
+  Meeting 3: Pilot results · S2 via supervisor to budget authority
+  Meeting 4: S3 — formal adoption · budget authority directly
+
+THREE ASKS IN SEQUENCE:
+  S1 — Protected time (4 weeks fall 2026) — supervisor can authorize directly
+  S2 — Purchase card (~$176/year at Phase 3) — below $10K threshold
+  S3 — Formal program adoption — after pilot data exists
+
+COST AT PHASE 3 (50 students): ~$176/year · $3.52/student
+
+════════════════════════════════════════════════════════════════════════
+END OF STATE OF PROJECT DOCUMENT
+B10-PP · DLIELC · J. Moore · April 29, 2026
+Share with any new Claude session before starting B10-PP work.
+════════════════════════════════════════════════════════════════════════

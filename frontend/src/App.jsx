@@ -1,34 +1,41 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './context/AuthContext'
+import LoginScreen from './screens/LoginScreen'
 import EntryScreen from './screens/EntryScreen'
 import PassageMenuScreen from './screens/PassageMenuScreen'
 import PassageDetailScreen from './screens/PassageDetailScreen'
 import RecordingScreen from './screens/RecordingScreen'
 import FeedbackScreen from './screens/FeedbackScreen'
 
-/**
- * B10 Practice Platform — App Router
- *
- * Route structure:
- *   /                       → Entry Screen (access code + student ID)
- *   /passages               → Passage Menu (assigned set + browse library)
- *   /passage/:passageId     → Passage Detail (audio player + Begin Task)
- *   /record/:passageId      → Recording Screen (stub in Phase 1)
- *   /feedback/:passageId    → Feedback Screen (stub in Phase 1)
- *
- * Base path: /b10_practice_platform/ (GitHub Pages deployment)
- */
+function AppInner() {
+  const { currentUser } = useAuth()
+  const [entered, setEntered] = useState(false)
+
+  if (!currentUser) return <LoginScreen />
+
+  return (
+    <Routes>
+      <Route path="/b10_practice_platform/" element={
+        <EntryScreen onEnter={() => setEntered(true)} />
+      } />
+      <Route path="/b10_practice_platform/passages" element={
+        entered ? <PassageMenuScreen /> : <Navigate to="/b10_practice_platform/" replace />
+      } />
+      <Route path="/b10_practice_platform/passage/:passageId" element={<PassageDetailScreen />} />
+      <Route path="/b10_practice_platform/record/:passageId" element={<RecordingScreen />} />
+      <Route path="/b10_practice_platform/feedback/:passageId" element={<FeedbackScreen />} />
+      <Route path="*" element={<Navigate to="/b10_practice_platform/" replace />} />
+    </Routes>
+  )
+}
+
 export default function App() {
   return (
-    <BrowserRouter basename="/b10_practice_platform">
-      <Routes>
-        <Route path="/" element={<EntryScreen />} />
-        <Route path="/passages" element={<PassageMenuScreen />} />
-        <Route path="/passage/:passageId" element={<PassageDetailScreen />} />
-        <Route path="/record/:passageId" element={<RecordingScreen />} />
-        <Route path="/feedback/:passageId" element={<FeedbackScreen />} />
-        {/* Catch-all → entry */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppInner />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

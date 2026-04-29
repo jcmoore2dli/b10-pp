@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { signOut } from 'firebase/auth'
 import { passages } from '../data/passages'
+import { auth } from '../services/firebase'
+import { useAuth } from '../context/AuthContext'
 
 /**
  * Screen 2 — Passage Menu
@@ -38,8 +41,15 @@ export default function PassageMenuScreen() {
   const [clusterFilter, setClusterFilter] = useState('ALL')
   const [layerFilter, setLayerFilter] = useState('ALL')
 
-  const studentId = sessionStorage.getItem('b10pp_student_id') || 'Student'
+  const { claims } = useAuth()
+  const b10Id = claims?.b10Id || '—'
   const accessCode = sessionStorage.getItem('b10pp_access_code') || '—'
+
+  async function handleSignOut() {
+    sessionStorage.clear()
+    await signOut(auth)
+    window.location.href = '/b10_practice_platform/'
+  }
 
   const assignedPassages = PLACEHOLDER_ASSIGNED_IDS
     .map((id) => passages.find((p) => p.passage_id === id))
@@ -64,13 +74,21 @@ export default function PassageMenuScreen() {
       >
         <div>
           <p className="text-white font-bold text-lg leading-tight">B10-PP</p>
-          <p className="text-blue-200 text-xs">{studentId} · {accessCode}</p>
+          <p className="text-blue-200 text-xs">{b10Id} · {accessCode}</p>
         </div>
-        <div
-          className="text-xs font-semibold px-2 py-1 rounded"
-          style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}
-        >
-          PASSAGE MENU
+        <div className="flex items-center gap-2">
+          <div
+            className="text-xs font-semibold px-2 py-1 rounded"
+            style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}
+          >
+            PASSAGE MENU
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="text-xs text-blue-200 underline"
+          >
+            Sign out
+          </button>
         </div>
       </header>
 

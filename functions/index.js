@@ -536,3 +536,39 @@ exports.requestPass2 = onCall(
     return { success: true, submissionId };
   }
 );
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: setStudentClaims
+//
+// Admin-only. Sets custom claims { b10Id, role, groupId } on a Firebase Auth user.
+// Must be called server-side — client forces token refresh after this returns.
+//
+// INVARIANT: Only admin role may set claims. Never callable by students.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.setStudentClaims = onCall(async (request) => {
+  // ── Auth check ────────────────────────────────────────────────────────────
+  const callerUid = request.auth?.uid;
+  if (!callerUid) throw new HttpsError("unauthenticated", "Must be signed in.");
+
+  // ── Caller must be admin (checked via existing claims) ───────────────────
+  const callerToken = request.auth?.token;
+  if (callerToken?.role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin role required.");
+  }
+
+  // ── Input validation ──────────────────────────────────────────────────────
+  const { uid, b10Id, role, groupId } = request.data;
+  if (!uid || !b10Id || !role || !groupId) {
+    throw new HttpsError("invalid-argument", "uid, b10Id, role, and groupId are required.");
+  }
+  if (!["student", "instructor", "admin"].includes(role)) {
+    throw new HttpsError("invalid-argument", `Invalid role: ${role}`);
+  }
+
+  // ── Set claims via Admin SDK ──────────────────────────────────────────────
+  await admin.auth().setCustomUserClaims(uid, { b10Id, role, groupId });
+
+  logger.info("setStudentClaims: claims set", { uid, b10Id, role, groupId, callerUid });
+
+  return { success: true, uid, b10Id, role, groupId };
+});

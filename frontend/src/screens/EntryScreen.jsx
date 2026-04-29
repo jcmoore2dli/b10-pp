@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 /**
  * Screen 1 — Entry Screen
@@ -7,38 +8,28 @@ import { useNavigate } from 'react-router-dom'
  *
  * Collects:
  *   - Access code (instructor-issued routing key)
- *   - Student name or ID
  *
- * Phase 1: No real access code validation — any non-empty code routes to
- * the passage menu with full passage library. Placeholder behavior only.
+ * Phase 2A: b10Id comes from auth claims — student never types their own ID.
+ * Access code stored in sessionStorage for passage routing.
+ * Real access code validation deferred to Week 2 (enrollment flow).
  */
-export default function EntryScreen() {
+export default function EntryScreen({ onEnter }) {
+  const { claims } = useAuth()
   const navigate = useNavigate()
   const [accessCode, setAccessCode] = useState('')
-  const [studentId, setStudentId] = useState('')
   const [error, setError] = useState('')
 
   function handleSubmit(e) {
-    e.preventDefault()
+    if (e?.preventDefault) e.preventDefault()
     setError('')
-
     const code = accessCode.trim().toUpperCase()
-    const name = studentId.trim()
-
     if (!code) {
       setError('Please enter your access code.')
       return
     }
-    if (!name) {
-      setError('Please enter your name or student ID.')
-      return
-    }
-
-    // Phase 1: store in sessionStorage as placeholder; no real validation
     sessionStorage.setItem('b10pp_access_code', code)
-    sessionStorage.setItem('b10pp_student_id', name)
-
-    navigate('/passages')
+    onEnter()
+    navigate('/b10_practice_platform/passages')
   }
 
   return (
@@ -74,21 +65,6 @@ export default function EntryScreen() {
           <p className="text-xs text-gray-400">Provided by your instructor</p>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="student-id" className="text-sm font-semibold text-gray-700">
-            Name or Student ID
-          </label>
-          <input
-            id="student-id"
-            type="text"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            placeholder="e.g., Smith, John or 123456"
-            autoComplete="name"
-            className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
         {error && (
           <p role="alert" className="text-red-600 text-sm font-medium">
             {error}
@@ -96,7 +72,8 @@ export default function EntryScreen() {
         )}
 
         <button
-          type="submit"
+          type="button"
+          onClick={handleSubmit}
           className="w-full py-3 rounded-xl text-white font-semibold text-base mt-1"
           style={{ backgroundColor: '#1e3a5f' }}
         >
@@ -105,7 +82,7 @@ export default function EntryScreen() {
       </form>
 
       <p className="mt-8 text-xs text-gray-400 text-center max-w-xs">
-        No account or password required. Your access code is provided by your instructor.
+        Your access code is provided by your instructor.
       </p>
     </div>
   )

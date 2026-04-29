@@ -5,3 +5,4 @@
 *api_code*
 *.log
 functions/.secret.local
+firebase/service-account.json

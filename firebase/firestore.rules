@@ -18,28 +18,16 @@ service cloud.firestore {
       return /databases/$(database)/documents/userIndex/$(uid);
     }
 
-    function userExists() {
-      return signedIn() && exists(userPath(request.auth.uid));
-    }
-
-    function userDoc() {
-      return get(userPath(request.auth.uid)).data;
-    }
-
-    function role() {
-      return userDoc().role;
-    }
-
     function isAdmin() {
-      return userExists() && role() == "admin";
+      return signedIn() && request.auth.token.role == "admin";
     }
 
     function isInstructor() {
-      return userExists() && role() == "instructor";
+      return signedIn() && request.auth.token.role == "instructor";
     }
 
     function isStudent() {
-      return userExists() && role() == "student";
+      return signedIn() && request.auth.token.role == "student";
     }
 
     function isAdminOrInstructor() {
@@ -187,7 +175,7 @@ service cloud.firestore {
 
     // ── users ──────────────────────────────────────────────────────────────
     match /users/{userId} {
-      allow read: if userExists() && (isAdmin() || request.auth.uid == userId);
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == userId);
       allow create, update, delete: if isAdmin()
         && request.resource.data.userId == userId
         && validRole(request.resource.data.role);
@@ -201,7 +189,7 @@ service cloud.firestore {
 
     // ── students ───────────────────────────────────────────────────────────
     match /students/{studentId} {
-      allow read: if userExists() && (
+      allow read: if signedIn() && (
         isAdmin() ||
         isInstructor() ||
         (isStudent() && hasCurrentStudent() && currentStudentId() == studentId)
@@ -326,11 +314,17 @@ service cloud.firestore {
     match /submissions/{submissionId} {
       // Student reads own submissions only
       // Instructors and admins read all
-      allow read: if true;
+      allow read: if isAdmin() || isInstructor() ||
+        (isStudent() && request.auth.token.b10Id != null &&
+         resource.data.b10Id == request.auth.token.b10Id);
 
       // Student creates own submission only
       // Status must be "queued", submissionNumber must be 0 (server assigns real number)
-      allow create: if true;
+      allow create: if isStudent()
+        && request.auth.token.b10Id != null
+        && request.resource.data.b10Id == request.auth.token.b10Id
+        && request.resource.data.status == "queued"
+        && request.resource.data.submissionNumber == 0;
 
       // No client updates ever — Cloud Function uses admin SDK
       allow update: if false;
