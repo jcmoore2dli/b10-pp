@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './context/AuthContext'
+import { AuthProvider } from './context/AuthProvider'
+import { useAuth } from './context/useAuth'
 import LoginScreen from './screens/LoginScreen'
 import EntryScreen from './screens/EntryScreen'
 import PassageMenuScreen from './screens/PassageMenuScreen'

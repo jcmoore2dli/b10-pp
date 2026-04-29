@@ -321,8 +321,8 @@ exports.requeueSubmission = onCall(
     const uid = request.auth?.uid;
     if (!uid) throw new HttpsError("unauthenticated", "Must be signed in.");
 
-    const userSnap = await db.collection("users").doc(uid).get();
-    if (!userSnap.exists || userSnap.data()?.role !== "admin") {
+    const callerRole = request.auth?.token?.role;
+    if (callerRole !== "admin") {
       throw new HttpsError("permission-denied", "Admin role required.");
     }
 
@@ -494,9 +494,8 @@ exports.requestPass2 = onCall(
     const uid = request.auth?.uid;
     if (!uid) throw new HttpsError("unauthenticated", "Must be signed in.");
 
-    const userSnap = await db.collection("users").doc(uid).get();
-    const role = userSnap.exists ? userSnap.data()?.role : null;
-    if (!["instructor", "admin"].includes(role)) {
+    const callerRole = request.auth?.token?.role;
+    if (!["instructor", "admin"].includes(callerRole)) {
       throw new HttpsError("permission-denied", "Instructor or admin role required.");
     }
 
@@ -571,4 +570,92 @@ exports.setStudentClaims = onCall(async (request) => {
   logger.info("setStudentClaims: claims set", { uid, b10Id, role, groupId, callerUid });
 
   return { success: true, uid, b10Id, role, groupId };
+});
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: enrollStudent
+//
+// Called by client (EntryScreen) after student signs in.
+// Validates access code, assigns b10Id, creates /students doc,
+// sets custom claims { b10Id, role, groupId } on student's Auth account.
+//
+// Access code format: YY-NNN (e.g., 26-001)
+// b10Id format: YY-NNN-S (e.g., 26-001-1)
+// Default track: B · Default ilrBaseline: 3
+//
+// INVARIANT: b10Id assignment uses Firestore transaction — no duplicates.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.enrollStudent = onCall(async (request) => {
+  // ── Auth check ────────────────────────────────────────────────────────────
+  const uid = request.auth?.uid;
+  if (!uid) throw new HttpsError("unauthenticated", "Must be signed in.");
+
+  // ── Input validation ──────────────────────────────────────────────────────
+  const { accessCode } = request.data;
+  if (!accessCode || typeof accessCode !== "string") {
+    throw new HttpsError("invalid-argument", "accessCode required.");
+  }
+
+  const code = accessCode.trim().toUpperCase().replace(/\s/g, "");
+
+  // ── Check if student is already enrolled ─────────────────────────────────
+  const existingSnap = await db.collection("students")
+    .where("uid", "==", uid)
+    .limit(1)
+    .get();
+  if (!existingSnap.empty) {
+    const existing = existingSnap.docs[0].data();
+    logger.info("enrollStudent: already enrolled", { uid, b10Id: existing.b10Id });
+    return { success: true, b10Id: existing.b10Id, alreadyEnrolled: true };
+  }
+
+  // ── Validate access code ──────────────────────────────────────────────────
+  const codeRef = db.collection("accessCodes").doc(code);
+  const codeSnap = await codeRef.get();
+  if (!codeSnap.exists) {
+    throw new HttpsError("not-found", "Access code not found.");
+  }
+  const codeData = codeSnap.data();
+  if (!codeData.active) {
+    throw new HttpsError("failed-precondition", "Access code is no longer active.");
+  }
+
+  const { groupId } = codeData;
+
+  // ── Transaction: assign b10Id ─────────────────────────────────────────────
+  let b10Id;
+  try {
+    b10Id = await db.runTransaction(async (tx) => {
+      const freshSnap = await tx.get(codeRef);
+      const count = freshSnap.data().enrolledCount || 0;
+      const newCount = count + 1;
+      const newB10Id = `${code}-${newCount}`;
+
+      tx.update(codeRef, { enrolledCount: newCount });
+      tx.set(db.collection("students").doc(newB10Id), {
+        b10Id:        newB10Id,
+        uid:          uid,
+        groupId:      groupId,
+        accessCode:   code,
+        track:        "B",
+        ilrBaseline:  "3",
+        createdAt:    admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return newB10Id;
+    });
+  } catch (err) {
+    logger.error("enrollStudent: transaction failed", { uid, code, error: err.message });
+    throw new HttpsError("internal", `Enrollment transaction failed: ${err.message}`);
+  }
+
+  // ── Set custom claims ─────────────────────────────────────────────────────
+  await admin.auth().setCustomUserClaims(uid, {
+    b10Id,
+    role:    "student",
+    groupId,
+  });
+
+  logger.info("enrollStudent: complete", { uid, b10Id, groupId, accessCode: code });
+
+  return { success: true, b10Id, alreadyEnrolled: false };
 });

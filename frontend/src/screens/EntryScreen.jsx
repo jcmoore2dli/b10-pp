@@ -1,35 +1,58 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { httpsCallable } from 'firebase/functions'
+import { useAuth } from '../context/useAuth'
+import { functions } from '../services/firebase'
 
 /**
  * Screen 1 — Entry Screen
  * Spec §3.2, §4.5
  *
- * Collects:
- *   - Access code (instructor-issued routing key)
- *
- * Phase 2A: b10Id comes from auth claims — student never types their own ID.
- * Access code stored in sessionStorage for passage routing.
- * Real access code validation deferred to Week 2 (enrollment flow).
+ * Collects access code, calls enrollStudent Cloud Function.
+ * On success: claims are set, onEnter() triggers route to passages.
+ * b10Id always comes from claims — never from user input.
  */
 export default function EntryScreen({ onEnter }) {
-  const { claims } = useAuth()
+  const { refreshClaims } = useAuth()
   const navigate = useNavigate()
   const [accessCode, setAccessCode] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     if (e?.preventDefault) e.preventDefault()
-    setError('')
+    setError(null)
+
     const code = accessCode.trim().toUpperCase()
     if (!code) {
       setError('Please enter your access code.')
       return
     }
-    sessionStorage.setItem('b10pp_access_code', code)
-    onEnter()
-    navigate('/b10_practice_platform/passages')
+
+    setLoading(true)
+    try {
+      const enrollStudent = httpsCallable(functions, 'enrollStudent')
+      const result = await enrollStudent({ accessCode: code })
+
+      if (result.data.success) {
+        // Force token refresh so new claims are available immediately
+        await refreshClaims()
+        sessionStorage.setItem('b10pp_access_code', code)
+        onEnter()
+        navigate('/b10_practice_platform/passages')
+      }
+    } catch (err) {
+      const msg = err?.message || 'Enrollment failed. Please check your access code.'
+      if (msg.includes('not-found')) {
+        setError('Access code not found. Please check with your instructor.')
+      } else if (msg.includes('no longer active')) {
+        setError('This access code is no longer active.')
+      } else {
+        setError(msg)
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -57,10 +80,11 @@ export default function EntryScreen({ onEnter }) {
             type="text"
             value={accessCode}
             onChange={(e) => setAccessCode(e.target.value)}
-            placeholder="e.g., ALPHA03"
+            placeholder="e.g., 26-001"
             autoComplete="off"
             autoCapitalize="characters"
             className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={loading}
           />
           <p className="text-xs text-gray-400">Provided by your instructor</p>
         </div>
@@ -74,10 +98,11 @@ export default function EntryScreen({ onEnter }) {
         <button
           type="button"
           onClick={handleSubmit}
+          disabled={loading}
           className="w-full py-3 rounded-xl text-white font-semibold text-base mt-1"
-          style={{ backgroundColor: '#1e3a5f' }}
+          style={{ backgroundColor: loading ? '#7a9bbf' : '#1e3a5f' }}
         >
-          Begin
+          {loading ? 'Enrolling…' : 'Begin'}
         </button>
       </form>
 
