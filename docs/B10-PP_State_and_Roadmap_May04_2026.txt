@@ -1,0 +1,589 @@
+B10-PP — STATE OF THE PROJECT
+Continuation Document for New Claude Sessions
+As of May 4, 2026 — Post-Week 2 Enrollment Sprint
+
+HOW TO USE THIS FILE:
+Copy the entire contents and paste into a new Claude session before
+starting any B10-PP work. This orients the session to all decisions
+made through May 4, 2026. Do not start B10-PP sessions without
+this context loaded.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 1 — PROJECT IDENTITY
+════════════════════════════════════════════════════════════════════════
+
+Project:      B10 Practice Platform (B10-PP)
+Developer:    J. Moore · GS-11 ESL instructor and OPI rater · DLIELC · San Antonio TX
+Purpose:      AI-assisted ILR proficiency practice for military English learners.
+              Two tracks. Formative practice tool only — not an official ILR assessment.
+Stack:        React + Vite · Firebase (Firestore, Storage, Cloud Functions)
+              Deepgram STT (Pass 1) · AssemblyAI STT (Pass 2, conditional)
+              Anthropic Claude API (scoring engine)
+GitHub:       github.com/jcmoore2dli/b10-pp
+Dev machine:  Dell Linux Mint · username jcmoore2
+              Project path: ~/b10_corpus/b10_practice_platform/
+              Frontend path: ~/b10_corpus/b10_practice_platform/frontend/src/
+Bandwidth:    Apr 27 – Jun 26: max 12 hrs/week (some weeks up to 15)
+              Jul 2 – Jul 20:  ANNUAL LEAVE — zero availability
+              Jul 21 – Jul 31: resuming, pilot prep
+Current phase: Phase 2A COMPLETE · Phase 2B COMPLETE · Phase 3 IN PROGRESS
+               Week 1 Auth COMPLETE · Week 2 Enrollment COMPLETE (ahead of schedule)
+               Week 3 Passage corpus + prompt wiring NEXT
+Pilot target:  Mid-August to Early September 2026 (on track)
+Scoring spec:  B10 4-point rubric · Section 8 governance
+               ESO (LEVEL3): score integer 1–4
+               NARRATION/DESCRIPTION/INSTRUCTIONS (LEVEL2): score integer 1–3
+               No ILR labels in student-facing feedback — OUT OF SCOPE, always
+
+════════════════════════════════════════════════════════════════════════
+SECTION 2 — SPRINT AUDIT: WHAT WAS COMPLETED
+════════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────────────
+APRIL 20–24 SPRINT (Phase 2A + 2B — previously documented)
+────────────────────────────────────────────────────────────────────────
+
+HARD GATES — ALL CLEARED:
+  Monday:    Security foundation + Cloud Functions deployed ✓
+  Tuesday:   Real scored result in logs (Deepgram + Claude) ✓
+  Wednesday: Full submission lifecycle queued → processing → complete ✓
+  Thursday:  Student can record, submit, and see scored feedback ✓
+  Friday:    Supervisor brief delivered — demo successful ✓
+
+Cloud Functions (functions/index.js):
+  onSubmissionCreated  — Firestore onCreate trigger, calls processSubmission()
+  requeueSubmission    — Admin callable, clears doc, reruns pipeline
+  requestPass2         — Instructor/admin callable, calls runPass2()
+
+  processSubmission() — 14-step shared pipeline:
+    Step 1:  Counter transaction → server-side submissionNumber assignment
+    Step 2:  Status → "processing"
+    Step 3:  Audio fetch from Firebase Storage
+    Step 4+5: Deepgram STT → raw transcript + words[] (disfluency preserved)
+    Step 6:  Disfluency pre-processor (LEVEL2 tasks only)
+    Step 7+8: EVALUATION_POLICY injection + Claude prompt routing by taskType
+    Step 9+10: Claude scoring → JSON parse + validate
+    Step 11: pass2Available flag logic
+    Step 12+13: All result fields written → status "complete"
+    Step 14: Error → status "failed"
+  Retry wrapper: 3 attempts, 2s/4s/8s backoff on Deepgram + Claude
+
+  runPass2() — AssemblyAI clean transcript for instructor review only
+    Score 1 gate enforced (hard block, defense in depth)
+    Output written ONLY to transcriptClean — NEVER reaches scoring engine
+
+STT Modules:
+  functions/lib/deepgramSTT.js  — Pass 1 (disfluency preserved, speaker isolation)
+  functions/lib/claudeScorer.js — Scoring engine, prompt routing, disfluency metadata
+
+Scoring prompts live in claudeScorer.js:
+  ESO_PROMPT          (LEVEL3, 4-point scale, REDS framework)
+  NARRATION_PROMPT    (LEVEL2, 3-point scale)
+  DESCRIPTION_PROMPT  (LEVEL2, 3-point scale)
+  INSTRUCTIONS_PROMPT (LEVEL2, 3-point scale)
+
+  TODO (deferred to Phase 3):
+    PARAPHRASE_PROMPT
+    EXTENDED_LISTENING_PROMPT
+
+Frontend (React + Vite):
+  firebase.js           — Firebase client SDK singleton (Firestore, Storage, Functions, Auth)
+  submissionService.js  — uploadAudio(), createSubmission(), subscribeToSubmission()
+  RecordingScreen.jsx   — MediaRecorder → Storage upload → Firestore create → onSnapshot
+  FeedbackScreen.jsx    — X/N score display, contextual line, Schema v3 field names
+
+Schema v3 field names in production (submission doc):
+  transcriptText     (raw Deepgram — invariant preserved)
+  transcriptClean    (AssemblyAI Pass 2, instructor only)
+  processedAt        (not completedAt)
+  disfluencyMetadata (LEVEL2 only)
+  pass2Available     (bool)
+  pass2Status        (queued/processing/complete/failed)
+  submissionNumber   (server-assigned via transaction)
+
+────────────────────────────────────────────────────────────────────────
+APRIL 27–29 — WEEK 1 AUTH SPRINT (Phase 3 Week 1) — COMPLETE ✓
+────────────────────────────────────────────────────────────────────────
+
+All Week 1 gates cleared in 2 days (Apr 27–28). Student auth flow
+completed Apr 29. Full Week 1 scope done ahead of schedule.
+
+WHAT WAS BUILT:
+
+Firebase Auth:
+  - Email/password auth enabled in Firebase Console
+  - Auth method decision locked: email/password only
+    Anonymous and phone auth ruled out permanently
+
+Frontend — new files:
+  frontend/src/context/AuthContext.js   — context object only (split for HMR fix)
+  frontend/src/context/AuthProvider.jsx — provider component
+  frontend/src/context/useAuth.js       — hook only
+    - onAuthStateChanged listener
+    - currentUser + claims state
+    - refreshClaims() — forces token refresh after setStudentClaims returns
+    - AuthProvider wraps entire app
+    - useAuth() hook exports currentUser, claims, refreshClaims
+  frontend/src/screens/LoginScreen.jsx
+    - Email/password sign-in UI
+    - signInWithEmailAndPassword → AuthContext handles transition
+
+Frontend — modified files:
+  frontend/src/services/firebase.js
+    - Added: import { getAuth } from 'firebase/auth'
+    - Added: export const auth = getAuth(app)
+  frontend/src/App.jsx
+    - BrowserRouter moved outside AuthProvider (fixes useNavigate context)
+    - AuthProvider wraps AppInner
+    - AppInner gates on currentUser — shows LoginScreen if not signed in
+    - entered state (bool) gates /passages route — redirects to / if false
+    - Routes use full paths (/b10_practice_platform/...) — no basename
+  frontend/src/screens/EntryScreen.jsx
+    - Student ID field REMOVED — b10Id comes from claims only, never user input
+    - Access code field retained — calls enrollStudent Cloud Function
+    - onEnter() prop from App.jsx sets entered state + triggers navigation
+    - refreshClaims() called after enrollment so new claims are immediate
+  frontend/src/screens/PassageMenuScreen.jsx
+    - Reads b10Id from claims (useAuth) instead of sessionStorage
+    - Sign out button added to header
+    - handleSignOut: clears sessionStorage + signOut(auth) + redirects to /b10_practice_platform/
+
+Cloud Functions — new functions (Week 1):
+  setStudentClaims (callable, admin-only)
+    - Sets { b10Id, role, groupId } as custom claims via Admin SDK
+    - Caller must have role: "admin" in their own claims
+    - Validates role is one of: student, instructor, admin
+    - Deployed to us-central1
+
+Security Rules:
+  firestore.rules — RESTORED from "if true" to claims-based auth
+    - isAdmin(), isInstructor(), isStudent() now read from
+      request.auth.token.role (custom claims) NOT from /users collection
+    - /submissions read: admin/instructor see all; student sees own b10Id only
+    - /submissions create: student only, b10Id must match claim,
+      status must be "queued", submissionNumber must be 0
+    - userExists() function removed — replaced by claims checks
+  storage.rules — RESTORED from "if true" to auth-scoped
+    - read: request.auth != null
+    - write: request.auth != null AND request.auth.token.b10Id != null
+
+Scripts:
+  scripts/setAdminClaims.js — one-time bootstrap script
+    Sets admin claims on test user UID
+    Requires firebase/service-account.json (gitignored)
+
+Security:
+  firebase/service-account.json — added to .gitignore
+    NEVER commit this file
+
+Test user provisioned:
+  Email: jcmoore2@outlook.com
+  Claims: { b10Id: "ADMIN001", role: "admin", groupId: "DLIELC" }
+  UID: saved locally — needed for admin operations
+
+────────────────────────────────────────────────────────────────────────
+APRIL 29 – MAY 2 — WEEK 2 ENROLLMENT SPRINT — COMPLETE ✓
+────────────────────────────────────────────────────────────────────────
+
+Week 2 completed in 1 day (Apr 29). Two weeks of roadmap work done
+in three days total. Schedule is significantly ahead.
+
+WHAT WAS BUILT:
+
+Technical debt resolved:
+  ISSUE-1 RESOLVED: AuthContext split into three files (AuthContext.js,
+    AuthProvider.jsx, useAuth.js) — Vite Fast Refresh incompatibility fixed.
+    Buttons-stop-responding bug eliminated. All imports updated across app.
+  ISSUE-2 RESOLVED: requeueSubmission + requestPass2 role checks updated.
+    Both functions now check request.auth.token.role (custom claims)
+    instead of reading from /users collection (which does not exist).
+
+Cloud Functions — new function (Week 2):
+  enrollStudent (callable, open to authenticated users)
+    - Receives { accessCode } from client (EntryScreen)
+    - Validates access code exists in /accessCodes and is active
+    - Checks if student already enrolled (returns existing b10Id if so)
+    - Firestore transaction: increments enrolledCount, assigns b10Id
+    - b10Id format: {accessCode}-{sequence} e.g. 26-001-1, 26-001-2
+    - Creates /students doc with b10Id, uid, groupId, accessCode,
+      track: "B", ilrBaseline: "3", createdAt
+    - Sets custom claims { b10Id, role: "student", groupId } via Admin SDK
+    - Returns { success, b10Id, alreadyEnrolled }
+    - Deployed to us-central1
+
+Firestore — new collection:
+  /accessCodes
+    Doc ID: access code string (e.g., "26-001")
+    Fields: code, groupId, instructorUid, enrolledCount (int64),
+            active (bool), createdAt (timestamp)
+  Test access code created manually: 26-001 (DLIELC, active: true)
+
+Firestore — new collection (auto-created on enrollment):
+  /students
+    Doc ID: b10Id (e.g., "26-001-1")
+    Fields: b10Id, uid, groupId, accessCode, track, ilrBaseline, createdAt
+  Test enrollment confirmed: 26-001-1 created successfully ✓
+
+Frontend — modified files:
+  frontend/src/screens/EntryScreen.jsx
+    - Now calls enrollStudent Cloud Function with access code
+    - Shows "Enrolling..." loading state during call
+    - Handles error cases: not-found, inactive code, generic errors
+    - Calls refreshClaims() after enrollment — new b10Id in token immediately
+    - Placeholder hint updated from "ALPHA03" to "26-001"
+
+End-to-end enrollment test PASSED:
+  - Signed in as test user
+  - Entered access code 26-001
+  - enrollStudent called, transaction ran, enrolledCount incremented to 1
+  - /students/26-001-1 doc created with all correct fields
+  - Custom claims updated, token refreshed
+  - Header showed "26-001-1 · 26-001" confirming b10Id from claims ✓
+
+PRE-PILOT GATES STATUS (updated):
+  AUTH-1:  COMPLETE — Firestore rules restored, claims-based ✓
+  AUTH-2:  COMPLETE — Storage rules restored, auth-scoped ✓
+  AUTH-3:  COMPLETE — Student auth flow wired, sessionStorage placeholder removed ✓
+  ENROLL:  PARTIAL — enrollStudent function works; still needed:
+           - "already enrolled" routing (bypass EntryScreen on re-login)
+           - Firestore rules for /accessCodes and /students
+           - Instructor access code creation interface
+  ASSIGN:  OPEN — Week 4
+  AUDIO:   OPEN — Week 3
+  PROMPTS: OPEN — Week 3
+  MOBILE:  OPEN — Week 5
+  DASH:    OPEN — Week 4
+  BUDGET:  OPEN — Week 5
+
+════════════════════════════════════════════════════════════════════════
+SECTION 3 — DO NOT REOPEN THESE DECISIONS
+════════════════════════════════════════════════════════════════════════
+
+These are locked. Do not revisit without explicit instruction from J. Moore.
+
+ILR target values: "2" and "3" only. No "2+" anywhere in schema.
+Score field ESO: integer 1–4. LEVEL2: integer 1–3. Not ILR levels.
+ILR labels in student feedback: Out of scope. Never.
+corpusType "CC": It is "COR". Do not reintroduce "CC".
+Track on /students: immutable after creation. trackOverrideNote required for override.
+PSU as scaffold axis: Not selectable. Always implicit. argument_structure foregrounds it.
+MF vocab in scaffold system: Not included. Phase 4 evaluation layer only.
+Auto-generated note summary: On-demand only. Never on note write.
+EXT as umbrella: EXT is a subtype. One canonized long-form family.
+STT Pass 1: Deepgram (disfluency preserved). NOT Whisper. NOT AssemblyAI.
+STT Pass 2: AssemblyAI (conditional, instructor-facing only). NOT scoring engine input.
+Scoring engine: Claude Sonnet, temperature = 0. Non-negotiable.
+Raw transcript: NEVER smoothed before reaching scoring engine.
+submissionNumber: Server-side transaction only. Client always writes 0.
+Score 1 + Pass 2: Permanently incompatible. Hard block in code.
+
+Auth method: Email/password only. Anonymous and phone auth ruled out.
+Entry flow (Option C): Access code only on EntryScreen. b10Id always
+  comes from custom claims — never from user input. Student never types
+  their own ID.
+b10Id is a backend pseudonym: Students never see or type it. Instructors
+  use it as a lookup key. Like a medical record number — internal only.
+b10Id format: {accessCode}-{sequence} e.g. 26-001-1, 26-001-2, 26-001-15
+  Access code uses leading zeros (26-001) for sort/readability.
+  Student sequence number has no leading zeros (1, 2, 15, not 001).
+Access code format: YY-NNN (e.g., 26-001, 26-002)
+  System auto-increments per year. Up to 999 codes per year.
+  Single code — instructor distributes, student types directly.
+  No separate PIN layer (revisit only if scaling requires it).
+Default enrollment track/baseline: track "B", ilrBaseline "3".
+  Instructor changes individually if needed after enrollment.
+Instructor student lookup: Two paths — (1) by name/email for discovery,
+  (2) by b10Id for fast instructor-to-instructor hand-off (e.g. SLT teacher).
+  Both paths return the same student record view. Build in Week 4 dashboard.
+Role authority: Custom claims are the single source of truth for role.
+  The /users collection is NOT used for role checks anywhere.
+Instructor provisioning: Admin (J. Moore) creates instructor Firebase Auth
+  accounts manually and sets claims via setStudentClaims or setAdminClaims
+  script. Instructors never self-register.
+Scoring rubrics: DO NOT MODIFY without Director approval. Hard-won over
+  1.5–2 weeks of iteration. Any grammar/quality fix goes through the
+  post-generation validation layer (see Section 3B), not the rubrics.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 3B — KNOWN ISSUES AND TECHNICAL DEBT
+════════════════════════════════════════════════════════════════════════
+
+ISSUE-1: RESOLVED ✓ — AuthContext Vite Fast Refresh incompatibility fixed.
+ISSUE-2: RESOLVED ✓ — requeueSubmission + requestPass2 role checks fixed.
+
+ISSUE-3 (LOW): entered state resets on every sign-in
+  AppInner uses React state (entered: bool) to gate /passages route.
+  Resets to false on sign-in — student always hits EntryScreen first.
+  CORRECT behavior for now (forces re-enrollment check via enrollStudent).
+  Will resolve naturally when "already enrolled" routing is built.
+  Fix: Week 3 — check claims for existing b10Id on sign-in, skip EntryScreen.
+
+ISSUE-4 (LOW): Dev URL must include trailing slash
+  Always use: http://localhost:5173/b10_practice_platform/
+  Without trailing slash, router fails to match routes.
+
+ISSUE-5 (MEDIUM): Firestore rules for /accessCodes and /students not yet written
+  Currently no rules protecting these collections.
+  Must add before pilot — students should not be able to read/write
+  other students' records or manipulate access codes.
+  Fix: Week 3 alongside enrollment flow cleanup.
+
+ISSUE-6 (MEDIUM): Feedback grammar quality risk
+  During supervisor demo, Claude-generated feedback contained minor
+  grammatical errors in student-facing text. Cannot touch scoring rubrics
+  (too risky — hard-won). Solution: post-generation validation pass.
+  A second lightweight Claude call reviews strengths, gaps, language_feedback
+  fields for grammatical errors before writing to Firestore.
+  Added between Step 10 (scoring) and Step 12 (write results) in pipeline.
+  Fix: Pre-pilot — schedule Week 3 or Week 4.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 4 — PHASE 3 ROADMAP: MAY 4 → PILOT
+════════════════════════════════════════════════════════════════════════
+
+BANDWIDTH CONSTRAINTS:
+  May 4 – Jun 26:   Max 12 hrs/week (~10 realistic average)
+  Jul 2  – Jul 20:  ZERO — annual leave
+  Jul 21 – Jul 31:  Resuming (~10 hrs available)
+  Total remaining May 4 – Jul 31: ~100–110 hrs
+
+PHASE 3 CORE MVP REQUIREMENTS:
+  A. Auth + security ✓ COMPLETE
+  B. Student enrollment + access code flow — PARTIAL (core works, cleanup needed)
+  C. Instructor dashboard (basic — B10 ID lookup, attempt history, assign)
+  D. Passage corpus audio upload (COR passages minimum)
+  E. passages.json fields completed (task_type, prompt_description)
+  F. Paraphrase scoring prompt (Track A MVP task)
+  G. Mobile audio UX tested and passing
+  H. End-to-end pilot test with real instructor + real student
+
+PILOT SCOPE (minimum viable):
+  1 instructor · 3–5 students · COR passages only · paraphrase task only
+  Narration (Track B) optional if time allows
+  Goal: confirm pipeline works under real conditions, collect feedback
+
+────────────────────────────────────────────────────────────────────────
+WEEK-BY-WEEK SCHEDULE (updated May 4)
+────────────────────────────────────────────────────────────────────────
+
+WEEK 1 — Apr 27–May 2 — COMPLETE ✓
+WEEK 2 — May 5–9 — COMPLETE ✓ (finished Apr 29, 1 day ahead)
+
+WEEK 3 — May 12–16 (12 hrs)
+Focus: Enrollment cleanup + passage corpus + prompt wiring
+  CARRY-OVER FROM WEEK 2:
+  - "Already enrolled" routing — check claims on sign-in, bypass EntryScreen
+  - Firestore rules for /accessCodes and /students (ISSUE-5)
+  - Instructor access code creation interface (basic form)
+  NEW WEEK 3 WORK:
+  - Post-generation grammar validation layer (ISSUE-6)
+  - Upload COR audio files to Firebase Storage
+  - Complete passages.json: task_type, prompt_description, corpus_type fields
+  - Wire passage fields to RecordingScreen (task_type routing, prompt display)
+  - Paraphrase scoring prompt written + wired in claudeScorer.js
+  Deliverable: Real COR passage plays, student records paraphrase, scores correctly
+
+WEEK 4 — May 19–23 (12 hrs)
+Focus: Instructor dashboard (Phase 1 — basic)
+  - Student lookup: by name/email (discovery) AND by b10Id (hand-off)
+  - Attempt history view (score, score_label, processedAt)
+  - Assign passage to student
+  - Assigned Set tab functional on student side
+  Deliverable: Instructor can look up student, see attempts, make assignment
+
+WEEK 5 — May 26–30 (12 hrs)
+Focus: Mobile UX + reliability
+  - iOS Safari audio recording test + fixes
+  - Android Chrome audio recording test + fixes
+  - PWA manifest verified
+  - Budget alerts set (Firebase + Anthropic)
+  - Double-tap, network interruption, retry edge cases tested
+  Deliverable: Full flow tested on real mobile device
+
+WEEK 6 — Jun 2–6 (12 hrs)
+Focus: Track B (Narration) + polish
+  - Narration task wired end-to-end (prompt display, scoring, feedback)
+  - FeedbackScreen polish (edge cases, empty field handling)
+  - Passage menu: "Assigned Set" fully functional
+  - Error states reviewed and handled gracefully
+  Deliverable: Track B student can complete narration task
+
+WEEK 7 — Jun 9–13 (12 hrs)
+Focus: Pre-pilot dry run
+  - Full end-to-end test as instructor + as student (separate sessions)
+  - requeueSubmission tested on real stuck doc
+  - requestPass2 tested on eligible submission
+  - All pre-pilot gates verified:
+      AUTH-1 ✓, AUTH-2 ✓, AUTH-3 ✓, ENROLL, ASSIGN, AUDIO, PROMPTS, MOBILE
+  Deliverable: All pre-pilot gates cleared
+
+WEEK 8 — Jun 16–20 (12 hrs)
+Focus: Pilot logistics + instructor onboarding
+  - Pilot instructor briefed and trained (1 session)
+  - 3–5 pilot students enrolled with real b10Ids
+  - Passage assignments made for pilot group
+  - Monitoring plan in place (Firestore console, function logs)
+  Deliverable: Pilot group enrolled and ready
+
+WEEK 9 — Jun 23–26 (partial, ~8 hrs)
+Focus: Soft launch buffer
+  - Pilot begins (instructor-supervised, limited scope)
+  - Bug fixes from first real use
+  - Document observed issues
+  Deliverable: Pilot running, first real student attempts logged
+
+WEEKS 10–11 — Jul 2–20: ANNUAL LEAVE — NO WORK
+
+WEEK 12 — Jul 21–25 (~10 hrs)
+Focus: Return + pilot review
+  - Review all pilot attempt data accumulated during leave
+  - Identify scoring anomalies, pipeline failures, UX pain points
+  - Prioritize fixes
+  Deliverable: Pilot review complete, priority fix list locked
+
+WEEK 13 — Jul 28–31 (~10 hrs)
+Focus: Pilot fixes + S2 prep
+  - Address highest-priority pilot findings
+  - Draft pilot data summary for supervisor (S2 ask)
+  - Platform stable for continued use
+  Deliverable: Pilot Phase 1 complete, S2 ask ready
+
+────────────────────────────────────────────────────────────────────────
+PILOT TARGET DATE: Week of June 23, 2026 (soft launch)
+Full pilot running: June 23 – July 1, then resumes July 21
+────────────────────────────────────────────────────────────────────────
+
+REALISM ASSESSMENT:
+Two weeks of roadmap work completed in 3 days. Schedule is ahead by
+approximately one full week. This buffer is valuable — do not spend it
+on scope creep. Reserve it for Week 5 mobile testing (historically risky)
+and Week 7 dry run.
+
+RISK FACTORS (updated):
+  MEDIUM: iOS Safari MediaRecorder behavior is historically problematic
+          May require audio format conversion layer
+  MEDIUM: Week 3 is now carrying Week 2 cleanup + full corpus work —
+          monitor scope carefully, don't let it bloat
+  LOW:    Passage corpus upload is mechanical — low risk
+  LOW:    Grammar validation layer is additive, rubrics untouched
+
+IF SCHEDULE SLIPS:
+  Acceptable slip: Push soft launch to Jul 21 (Week 12) after leave
+  This makes pilot target early August — still ahead of Sep deadline
+  Non-negotiable: Do NOT launch pilot before all AUTH gates are cleared
+
+────────────────────────────────────────────────────────────────────────
+RECOMMENDED PILOT TARGET:
+  Current pace → June 23 soft launch remains achievable
+  If mobile causes >1 week slip → August 4 soft launch
+  Hard deadline for supervisor S2 ask: pilot data in hand by Sep 1
+────────────────────────────────────────────────────────────────────────
+
+════════════════════════════════════════════════════════════════════════
+SECTION 5 — SCHEMA QUICK REFERENCE (v3 — production)
+════════════════════════════════════════════════════════════════════════
+
+/submissions (client creates queued doc, pipeline writes everything else)
+  b10Id · assignmentId · taskType · taskFamily · passageId · corpusType
+  audioPath · status (queued/processing/complete/failed)
+  submissionNumber (0 at creation, server assigns real number)
+  transcriptText (raw Deepgram — invariant)
+  transcriptClean (AssemblyAI Pass 2, instructor only)
+  score · score_label · strengths · gaps · language_feedback
+  transcript_note · monitor_notes (LEVEL2) · scaffold_feedback (ESO)
+  disfluencyMetadata (LEVEL2 only) · pass2Available · pass2Status
+  processedAt · createdAt · errorMessage · errorAt
+
+/submissionCounters
+  Doc ID: {b10Id}_{assignmentId}
+  count: N (server-side only — client never reads or writes)
+
+/accessCodes
+  Doc ID: access code string (e.g., "26-001")
+  code · groupId · instructorUid · enrolledCount (int64) · active (bool) · createdAt
+  Test record: 26-001 (DLIELC, active: true, enrolledCount: 1)
+
+/students
+  Doc ID: b10Id (e.g., "26-001-1")
+  b10Id · uid · groupId · accessCode · track · ilrBaseline · createdAt
+  Test record: 26-001-1 (track: B, ilrBaseline: 3, uid: test user UID)
+
+════════════════════════════════════════════════════════════════════════
+SECTION 6 — STRATEGIC CONTEXT
+════════════════════════════════════════════════════════════════════════
+
+FOUR MEETINGS:
+  Meeting 1: COMPLETE — Supervisor demo Apr 24 · brief delivered · no ask
+  Meeting 2: S1 ask — protected fall time block (schedule after pilot)
+  Meeting 3: Pilot results · S2 via supervisor to budget authority
+  Meeting 4: S3 — formal adoption · budget authority directly
+
+THREE ASKS IN SEQUENCE:
+  S1 — Protected time (4 weeks fall 2026) — supervisor can authorize directly
+  S2 — Purchase card (~$176/year at Phase 3) — below $10K threshold
+  S3 — Formal program adoption — after pilot data exists
+
+COST AT PHASE 3 (50 students): ~$176/year · $3.52/student
+
+════════════════════════════════════════════════════════════════════════
+SECTION 7 — STRATEGIC VISION (POST-PILOT ROADMAP)
+════════════════════════════════════════════════════════════════════════
+
+These are confirmed strategic directions, not current build items.
+Capture here so they are not lost. Sequence TBD after pilot data exists.
+
+ITEM 1: Two-tier feedback system
+  Current: Rating feedback only (concise, score-anchored, immediate)
+  Future: On-demand extended feedback button on FeedbackScreen
+    - Student taps "Get detailed feedback" after seeing score
+    - Second Claude call with different prompt — warmer tone, specific
+      language examples, encouragement framing, actionable suggestions
+    - Not a re-score — deeper read of same transcript
+    - Implemented as new callable (requestDetailedFeedback), similar to
+      requestPass2 architecture
+    - Addresses student discouragement at lower score bands
+    - Strategic value: separates "machine rated me" from "machine helps me"
+      — stronger instructor buy-in argument
+  Schedule: After pilot baseline established. Pre-S3 argument.
+
+ITEM 2: Post-generation grammar validation layer (ISSUE-6 — pre-pilot)
+  During supervisor demo, feedback text contained minor grammatical errors.
+  Cannot touch scoring rubrics (too risky). Solution: additive validation pass.
+  Architecture: After Step 10 (Claude scoring), before Step 12 (write results),
+    a second lightweight Claude call reviews strengths, gaps, language_feedback
+    for grammatical errors and corrects them before Firestore write.
+  Prompt: "Review these feedback strings for grammatical errors. Correct
+    any errors. Return corrected versions in same JSON structure. Do not
+    change meaning or tone."
+  Adds ~2-3 seconds latency. Acceptable for formative tool.
+  Rubrics untouched — zero scoring risk.
+  Schedule: Week 3 or Week 4 — pre-pilot required.
+
+ITEM 3: AESOP-B10 independent practice sequence
+  Concept: A standalone 8-week discourse frame learning sequence built
+    entirely inside B10-PP, mapping directly onto the AESOP course structure.
+  Structure:
+    - 8 weeks × 5 days = 40 lesson nodes
+    - Each node has a reasoning target (e.g., W3-D2 = causal chain extension)
+    - Each node maps to specific B10 task types (paraphrase, ESO, counter,
+      hypothetical)
+    - Each node has its own MF vocabulary cluster and grammar focus
+    - Intro video per week frames the discourse target before practice
+    - Students work through independently — no instructor required for practice
+  Strategic value:
+    - Does not depend on curriculum adoption — builds regardless
+    - Gives B10-PP a complete pedagogical backbone beyond "practice tool"
+    - Strongest possible S3 argument — not just a tool, a full instructional
+      sequence with measurable ILR 2+ → 3 outcomes
+    - Pilot data feeds directly into the adoption argument
+  Discourse frames: W1 Scale/Stakeholders → W2 Trade-offs → W3 Causal Systems
+    → W4 Hypothetical → W5 Values/Bias → W6 Synthesis/Judgment →
+    W7 Systems Description → W8 Integrated Multi-Frame
+  Sequence in roadmap: After ESO, before pronunciation work (TBD)
+  Schedule: Post-pilot, likely late 2026 or early 2027.
+
+════════════════════════════════════════════════════════════════════════
+END OF STATE OF PROJECT DOCUMENT
+B10-PP · DLIELC · J. Moore · May 4, 2026
+Share with any new Claude session before starting B10-PP work.
+════════════════════════════════════════════════════════════════════════
