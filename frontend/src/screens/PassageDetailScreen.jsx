@@ -26,7 +26,7 @@ export default function PassageDetailScreen() {
         <div className="text-center">
           <p className="text-red-600 font-semibold mb-2">Passage not found.</p>
           <button
-            onClick={() => navigate('/passages')}
+            onClick={() => navigate('/b10_practice_platform/passages')}
             className="text-blue-700 underline text-sm"
           >
             Return to passage menu
@@ -37,7 +37,7 @@ export default function PassageDetailScreen() {
   }
 
   function handleBeginTask() {
-    navigate(`/record/${passage.passage_id}`)
+    navigate(`/b10_practice_platform/record/${passage.passage_id}`)
   }
 
   return (
@@ -48,7 +48,7 @@ export default function PassageDetailScreen() {
         style={{ backgroundColor: '#1e3a5f' }}
       >
         <button
-          onClick={() => navigate('/passages')}
+          onClick={() => navigate('/b10_practice_platform/passages')}
           className="text-blue-200 hover:text-white p-1 -ml-1 rounded"
           aria-label="Return to passage menu"
         >

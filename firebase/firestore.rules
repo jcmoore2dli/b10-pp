@@ -192,7 +192,7 @@ service cloud.firestore {
       allow read: if signedIn() && (
         isAdmin() ||
         isInstructor() ||
-        (isStudent() && hasCurrentStudent() && currentStudentId() == studentId)
+        (isStudent() && request.auth.token.b10Id == studentId)
       );
 
       allow create: if isAdmin()
@@ -320,7 +320,7 @@ service cloud.firestore {
 
       // Student creates own submission only
       // Status must be "queued", submissionNumber must be 0 (server assigns real number)
-      allow create: if isStudent()
+      allow create: if (isStudent() || isAdmin())
         && request.auth.token.b10Id != null
         && request.resource.data.b10Id == request.auth.token.b10Id
         && request.resource.data.status == "queued"
@@ -337,6 +337,14 @@ service cloud.firestore {
       allow read: if false;
       allow write: if false;
     }
+
+// ── accessCodes ────────────────────────────────────────────────────────
+// Admin manages. Students never read or write.
+// Instructors read-only in Week 4 dashboard.
+match /accessCodes/{codeId} {
+  allow read: if isAdmin();
+  allow create, update, delete: if isAdmin();
+}
 
     // ── attempts ──────────────────────────────────────────────────────────
     // Permanent performance record. Anchored to studentId.

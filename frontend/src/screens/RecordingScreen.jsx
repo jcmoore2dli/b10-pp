@@ -18,6 +18,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../context/useAuth'
 import { getPassageById } from '../data/passages'
 import { useRecorder } from '../hooks/useRecorder'
 import AudioPlayer from '../components/AudioPlayer'
@@ -48,7 +49,8 @@ export default function RecordingScreen() {
   const unsubscribeRef = useRef(null)    // onSnapshot cleanup
 
   // Read b10Id from sessionStorage (set by EntryScreen)
-  const b10Id = sessionStorage.getItem('b10pp_student_id') || 'UNKNOWN'
+  const { claims } = useAuth()
+  const b10Id = claims?.b10Id || 'UNKNOWN'
 
   // Cleanup onSnapshot on unmount
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function RecordingScreen() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-red-600 font-semibold mb-2">Passage not found.</p>
-          <button onClick={() => navigate('/passages')} className="text-blue-700 underline text-sm">
+          <button onClick={() => navigate('/b10_practice_platform/passages')} className="text-blue-700 underline text-sm">
             Return to passage menu
           </button>
         </div>
@@ -141,7 +143,7 @@ export default function RecordingScreen() {
             unsubscribeRef.current()
             unsubscribeRef.current = null
           }
-          navigate(`/feedback/${passageId}`, { state: { submissionData: data } })
+          navigate(`/b10_practice_platform/feedback/${passageId}`, { state: { submissionData: data } })
           return
         }
 
@@ -173,7 +175,7 @@ export default function RecordingScreen() {
       <header className="px-4 py-4 flex items-center gap-3" style={{ backgroundColor: '#1e3a5f' }}>
         {phase === 'idle' && (
           <button
-            onClick={() => navigate(`/passage/${passageId}`)}
+            onClick={() => navigate(`/b10_practice_platform/passage/${passageId}`)}
             className="text-blue-200 hover:text-white p-1 -ml-1 rounded"
             aria-label="Back to passage detail"
           >

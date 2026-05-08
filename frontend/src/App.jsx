@@ -8,9 +8,10 @@ import PassageMenuScreen from './screens/PassageMenuScreen'
 import PassageDetailScreen from './screens/PassageDetailScreen'
 import RecordingScreen from './screens/RecordingScreen'
 import FeedbackScreen from './screens/FeedbackScreen'
+import AdminScreen from './screens/AdminScreen'
 
 function AppInner() {
-  const { currentUser } = useAuth()
+  const { currentUser, claims } = useAuth()
   const [entered, setEntered] = useState(false)
 
   if (!currentUser) return <LoginScreen />
@@ -18,14 +19,23 @@ function AppInner() {
   return (
     <Routes>
       <Route path="/b10_practice_platform/" element={
-        <EntryScreen onEnter={() => setEntered(true)} />
+        entered || claims?.b10Id
+          ? <Navigate to="/b10_practice_platform/passages" replace />
+          : <EntryScreen onEnter={() => setEntered(true)} />
       } />
       <Route path="/b10_practice_platform/passages" element={
-        entered ? <PassageMenuScreen /> : <Navigate to="/b10_practice_platform/" replace />
+        entered || claims?.b10Id
+          ? <PassageMenuScreen />
+          : <Navigate to="/b10_practice_platform/" replace />
       } />
       <Route path="/b10_practice_platform/passage/:passageId" element={<PassageDetailScreen />} />
       <Route path="/b10_practice_platform/record/:passageId" element={<RecordingScreen />} />
       <Route path="/b10_practice_platform/feedback/:passageId" element={<FeedbackScreen />} />
+      <Route path="/b10_practice_platform/admin" element={
+        claims?.role === 'admin'
+          ? <AdminScreen />
+          : <Navigate to="/b10_practice_platform/passages" replace />
+      } />
       <Route path="*" element={<Navigate to="/b10_practice_platform/" replace />} />
     </Routes>
   )

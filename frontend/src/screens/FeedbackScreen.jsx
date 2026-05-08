@@ -55,7 +55,7 @@ export default function FeedbackScreen() {
         <div className="text-center">
           <p className="text-gray-600 mb-3">No feedback data found.</p>
           <button
-            onClick={() => navigate('/passages')}
+            onClick={() => navigate('/b10_practice_platform/passages')}
             className="text-blue-700 underline text-sm"
           >
             Return to passage menu
@@ -82,7 +82,7 @@ export default function FeedbackScreen() {
   const isLowScore     = score <= 1
 
   function handleRetry() {
-    navigate(`/record/${passageId}`)
+    navigate(`/b10_practice_platform/record/${passageId}`)
   }
 
   return (
@@ -158,7 +158,7 @@ export default function FeedbackScreen() {
           </button>
 
           <button
-            onClick={() => navigate('/passages')}
+            onClick={() => navigate('/b10_practice_platform/passages')}
             className="w-full py-4 rounded-xl font-semibold text-white text-base"
             style={{ backgroundColor: '#6b7280' }}
           >

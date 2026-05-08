@@ -62,7 +62,7 @@ export default function PassageMenuScreen() {
   })
 
   function handleSelectPassage(passage) {
-    navigate(`/passage/${passage.passage_id}`)
+    navigate(`/b10_practice_platform/passage/${passage.passage_id}`)
   }
 
   return (
@@ -83,12 +83,20 @@ export default function PassageMenuScreen() {
           >
             PASSAGE MENU
           </div>
-          <button
-            onClick={handleSignOut}
-            className="text-xs text-blue-200 underline"
-          >
-            Sign out
-          </button>
+          {claims?.role === 'admin' && (
+            <button
+              onClick={() => navigate('/b10_practice_platform/admin')}
+              className="text-xs text-blue-200 underline"
+            >
+              Admin
+            </button>
+         )}
+            <button
+              onClick={handleSignOut}
+              className="text-xs text-blue-200 underline"
+            >
+              Sign out
+            </button>
         </div>
       </header>
 

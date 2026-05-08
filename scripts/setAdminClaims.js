@@ -9,7 +9,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const UID = "1vKUesFxdPfUI95cp9KEJsD5aaJ2";
+const UID = "9PqEMgVeEuQk5Jme9xv7XgHJ5JX2";
 
 async function run() {
   await admin.auth().setCustomUserClaims(UID, {
