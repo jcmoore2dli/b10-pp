@@ -14,6 +14,7 @@
     "phase": "Foundation",
     "content_type": "LEG",
     "task_type": "paraphrase",
+    "corpus_type": "COR",
     "prompt_description": "Listen to the passage. Then record a paraphrase in your own words.",
     "scaffold_config": {},
     "passage_text": "Late in the day, shoppers often accept poorer deals even when prices stay constant. This occurs because repeated self-control taxes attention, which becomes harder to allocate efficiently over time. After several small judgments, options are compared more quickly, leaving subtle differences unnoticed. However, a brief pause of a few minutes or a snack can restore careful evaluation temporarily. Such anomalies suggest that choice quality depends on recovery cycles, not on willpower alone.",
@@ -33,8 +34,12 @@
     "set": "S2",
     "phase": "Foundation",
     "content_type": "LEG",
+    "task_type": "paraphrase",
+    "corpus_type": "COR",
+    "prompt_description": "Listen to the passage. Then record a paraphrase in your own words.",
+    "scaffold_config": {},
     "passage_text": "Researchers have found that the placebo effect depends on real neurological mechanisms operating beneath conscious awareness. Although patients think they are being treated, expectation changes brain signaling and reduces pain. In trials, people given inactive pills still showed improvement over short periods. However, this response relied on brain areas tied to anticipation and emotional regulation. These findings indicate that medical results are shaped not only by drugs but also by mental processes affecting the body.",
-    "audio_file": "/b10_practice_platform/audio/core/COR-HLT-002.mp3"
+    "audio_file": "https://firebasestorage.googleapis.com/v0/b/b10-practice-platform.firebasestorage.app/o/audio%2Fcore%2FCOR-HLT-002.mp3?alt=media&token=75b51488-5b44-4520-a330-f9cab8a4945e"
   },
   {
     "passage_id": "COR-ENV-001",
@@ -50,8 +55,12 @@
     "set": "S2",
     "phase": "Foundation",
     "content_type": "LEG",
-    "passage_text": "Scientists studying permafrost thaw in northern Canada have detected methane emissions significantly higher than climate models had predicted. Methane, a greenhouse gas far more potent than carbon dioxide over short time horizons, is being released as previously frozen organic matter decomposes. The researchers warn that if thaw rates continue at their current pace, this so-called permafrost carbon feedback could contribute an additional half degree of warming by the end of the century \u2014 an outcome that current international climate agreements do not account for.",
-    "audio_file": "/audio/core/COR-ENV-001.mp3"
+    "task_type": "paraphrase",
+    "corpus_type": "COR",
+    "prompt_description": "Listen to the passage. Then record a paraphrase in your own words.",
+    "scaffold_config": {},
+    "passage_text": "Scientists studying permafrost thaw in northern Canada have detected methane emissions significantly higher than climate models had predicted. Methane, a greenhouse gas far more potent than carbon dioxide over short time horizons, is being released as previously frozen organic matter decomposes. The researchers warn that if thaw rates continue at their current pace, this so-called permafrost carbon feedback could contribute an additional half degree of warming by the end of the century — an outcome that current international climate agreements do not account for.",
+    "audio_file": "https://firebasestorage.googleapis.com/v0/b/b10-practice-platform.firebasestorage.app/o/audio%2Fcore%2FCOR-ENV-001.mp3?alt=media&token=0a1eae87-7e41-4f04-93e9-0f393c8a66be"
   },
   {
     "passage_id": "EXT-GOV-001",
@@ -67,8 +76,12 @@
     "set": null,
     "phase": null,
     "content_type": "ESO",
-    "passage_text": "A comprehensive review of participatory governance initiatives across forty-three countries has found that community-led decision-making processes consistently produce higher rates of policy compliance and long-term stakeholder satisfaction than top-down administrative approaches. The review, commissioned by an international development organization, examined programs ranging from neighborhood infrastructure projects to national budget consultations. In each case, communities that had meaningful input into decisions affecting them were more likely to support implementation, maintain shared infrastructure, and report trust in local institutions. However, the review also identified a recurring challenge: without deliberate design features to lower barriers to participation \u2014 such as accessible meeting times, multilingual materials, and childcare provisions \u2014 participatory processes systematically underrepresent lower-income households, younger residents, and non-dominant language communities. Researchers concluded that participatory governance is not inherently inclusive and requires continuous structural attention to equity if its stated benefits are to be realized across entire communities rather than the most engaged segments only.",
-    "audio_file": "/audio/ext/EXT-GOV-001.mp3"
+    "task_type": "extended_listening",
+    "corpus_type": "EXT",
+    "prompt_description": "Listen to the passage. Then record your response identifying the main argument and its implications.",
+    "scaffold_config": {},
+    "passage_text": "A comprehensive review of participatory governance initiatives across forty-three countries has found that community-led decision-making processes consistently produce higher rates of policy compliance and long-term stakeholder satisfaction than top-down administrative approaches. The review, commissioned by an international development organization, examined programs ranging from neighborhood infrastructure projects to national budget consultations. In each case, communities that had meaningful input into decisions affecting them were more likely to support implementation, maintain shared infrastructure, and report trust in local institutions. However, the review also identified a recurring challenge: without deliberate design features to lower barriers to participation — such as accessible meeting times, multilingual materials, and childcare provisions — participatory processes systematically underrepresent lower-income households, younger residents, and non-dominant language communities. Researchers concluded that participatory governance is not inherently inclusive and requires continuous structural attention to equity if its stated benefits are to be realized across entire communities rather than the most engaged segments only.",
+    "audio_file": "https://firebasestorage.googleapis.com/v0/b/b10-practice-platform.firebasestorage.app/o/audio%2Fext%2FEXT-GOV-001.mp3?alt=media&token=f3f55348-425a-4d2d-8d16-935ba58843ee"
   },
   {
     "passage_id": "ESO-WRK-007",
@@ -85,6 +98,7 @@
     "phase": "Foundation",
     "content_type": "ESO",
     "task_type": "eso",
+    "corpus_type": "none",
     "prompt_description": "Should a four-day work week be adopted as national labor policy?",
     "scaffold_config": {
       "focusArea": "Holistic",
