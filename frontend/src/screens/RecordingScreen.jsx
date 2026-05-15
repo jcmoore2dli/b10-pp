@@ -131,6 +131,8 @@ export default function RecordingScreen() {
       setStatusMessage(STATUS_MESSAGES.queued)
 
       unsubscribeRef.current = subscribeToSubmission(submissionId, (data) => {
+       
+        console.log('onSnapshot update received:', data.status, data)
         const { status } = data
 
         if (status === 'queued' || status === 'processing') {

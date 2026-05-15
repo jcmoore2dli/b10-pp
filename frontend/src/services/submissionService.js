@@ -98,9 +98,15 @@ export async function createSubmission({
 //   "failed"     → errorMessage field set — show retry
 export function subscribeToSubmission(submissionId, onUpdate) {
   const docRef = doc(db, 'submissions', submissionId)
-  return onSnapshot(docRef, (snap) => {
+  return onSnapshot(docRef, 
+  (snap) => {
     if (snap.exists()) {
       onUpdate(snap.data())
     }
-  })
+  },
+  (error) => {
+    console.error('onSnapshot error:', error.code, error.message)
+    onUpdate({ status: 'failed', errorMessage: error.message })
+  }
+)
 }
