@@ -20,7 +20,7 @@ const { defineSecret }          = require("firebase-functions/params");
 const logger                    = require("firebase-functions/logger");
 const admin                     = require("firebase-admin");
 const { transcribeAudio }       = require("./lib/deepgramSTT");
-const { scoreTranscript, computeDisfluencyMetadata } = require("./lib/claudeScorer");
+const { scoreTranscript, computeDisfluencyMetadata, validateFeedbackGrammar } = require("./lib/claudeScorer");
 
 // ── Secrets ───────────────────────────────────────────────────────────────────
 const DEEPGRAM_API_KEY   = defineSecret("DEEPGRAM_API_KEY");
@@ -239,6 +239,16 @@ async function processSubmission(submissionId) {
     const transcriptNote = scoreResult.transcript_note || "";
     const pass2Available = scoreResult.score !== 1 && transcriptNote !== "";
 
+    // ── Step 11b: Grammar validation pass ──────────────────────────────────
+    const validatedFeedback = await validateFeedbackGrammar(
+      ANTHROPIC_API_KEY.value(),
+      {
+        strengths:         scoreResult.strengths         || "",
+        gaps:              scoreResult.gaps              || "",
+        language_feedback: scoreResult.language_feedback || "",
+      }
+    );
+    logger.info("processSubmission: grammar validation complete", { submissionId });
     // ── Step 12 + 13: Write result fields ────────────────────────────────
     const resultFields = {
       status:            "complete",
@@ -247,9 +257,9 @@ async function processSubmission(submissionId) {
       transcriptText:    transcript,
       score:             scoreResult.score,
       score_label:       scoreResult.score_label,
-      strengths:         scoreResult.strengths         || "",
-      gaps:              scoreResult.gaps              || "",
-      language_feedback: scoreResult.language_feedback || "",
+      strengths:         validatedFeedback.strengths,
+      gaps:              validatedFeedback.gaps,
+      language_feedback: validatedFeedback.language_feedback,
       transcript_note:   transcriptNote,
       pass2Available,
     };

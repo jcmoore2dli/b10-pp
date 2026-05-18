@@ -625,5 +625,42 @@ async function scoreTranscript(apiKey, taskType, params) {
 
   return result;
 }
+// ── Grammar validation pass ────────────────────────────────────────────────
+// Lightweight second Claude call that reviews student-facing feedback fields
+// for grammatical errors and corrects them before Firestore write.
+// Does NOT touch score, score_label, or transcript_note.
+// Adds ~2-3 seconds latency. Acceptable for formative tool.
 
-module.exports = { scoreTranscript, computeDisfluencyMetadata };
+async function validateFeedbackGrammar(apiKey, fields) {
+  const client = new Anthropic({ apiKey });
+  const prompt = `Review the following feedback strings for grammatical errors. Correct any errors. Return corrected versions in the same JSON structure. Do not change meaning, tone, or content. Return valid JSON only. No backticks, markdown, or text outside JSON.
+
+{
+  "strengths": ${JSON.stringify(fields.strengths || "")},
+  "gaps": ${JSON.stringify(fields.gaps || "")},
+  "language_feedback": ${JSON.stringify(fields.language_feedback || "")}
+}`;
+
+  const response = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    temperature: 0,
+    messages: [{ role: "user", content: prompt }],
+  });
+
+  const raw = response.content[0]?.text || "";
+  const cleaned = raw.replace(/```json|```/g, "").trim();
+
+  try {
+    const result = JSON.parse(cleaned);
+    return {
+      strengths:         result.strengths         || fields.strengths,
+      gaps:              result.gaps              || fields.gaps,
+      language_feedback: result.language_feedback || fields.language_feedback,
+    };
+  } catch (e) {
+    // If parsing fails, return original fields unchanged
+    return fields;
+  }
+}
+module.exports = { scoreTranscript, computeDisfluencyMetadata, validateFeedbackGrammar };
