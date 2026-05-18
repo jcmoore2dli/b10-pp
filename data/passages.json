@@ -65,7 +65,7 @@
     "corpus_type": "COR",
     "prompt_description": "Listen to the passage. Then record a paraphrase in your own words.",
     "scaffold_config": {},
-    "passage_text": "Scientists studying permafrost thaw in northern Canada have detected methane emissions significantly higher than climate models had predicted. Methane, a greenhouse gas far more potent than carbon dioxide over short time horizons, is being released as previously frozen organic matter decomposes. The researchers warn that if thaw rates continue at their current pace, this so-called permafrost carbon feedback could contribute an additional half degree of warming by the end of the century — an outcome that current international climate agreements do not account for.",
+    "passage_text": "Urban heat islands are often blamed on dense concrete, but vegetation coverage plays a less obvious and frequently misunderstood planning role. This is because cooling appears only after greenery reaches a clear threshold, due to combined shading and evaporation that operate at scale. Below that level, small plantings create little temperature change. Additionally, scattered trees can slow airflow and retain warmth. These patterns show that limited greening may fail to reduce urban heat.",
     "audio_file": "https://firebasestorage.googleapis.com/v0/b/b10-practice-platform.firebasestorage.app/o/audio%2Fcore%2FCOR-ENV-001.mp3?alt=media&token=0a1eae87-7e41-4f04-93e9-0f393c8a66be"
   },
   {
