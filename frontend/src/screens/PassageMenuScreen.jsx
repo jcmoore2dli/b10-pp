@@ -91,6 +91,14 @@ export default function PassageMenuScreen() {
               Admin
             </button>
          )}
+          {(claims?.role === 'admin' || claims?.role === 'instructor') && (
+            <button
+              onClick={() => navigate('/b10_practice_platform/instructor')}
+              className="text-xs text-blue-200 underline"
+            >
+              Dashboard
+            </button>
+          )}
             <button
               onClick={handleSignOut}
               className="text-xs text-blue-200 underline"

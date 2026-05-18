@@ -9,12 +9,15 @@ import PassageDetailScreen from './screens/PassageDetailScreen'
 import RecordingScreen from './screens/RecordingScreen'
 import FeedbackScreen from './screens/FeedbackScreen'
 import AdminScreen from './screens/AdminScreen'
+import InstructorDashboardScreen from './screens/InstructorDashboardScreen'
 
 function AppInner() {
   const { currentUser, claims } = useAuth()
   const [entered, setEntered] = useState(false)
 
   if (!currentUser) return <LoginScreen />
+
+  const isInstructorOrAdmin = claims?.role === 'instructor' || claims?.role === 'admin'
 
   return (
     <Routes>
@@ -34,6 +37,11 @@ function AppInner() {
       <Route path="/b10_practice_platform/admin" element={
         claims?.role === 'admin'
           ? <AdminScreen />
+          : <Navigate to="/b10_practice_platform/passages" replace />
+      } />
+      <Route path="/b10_practice_platform/instructor" element={
+        isInstructorOrAdmin
+          ? <InstructorDashboardScreen />
           : <Navigate to="/b10_practice_platform/passages" replace />
       } />
       <Route path="*" element={<Navigate to="/b10_practice_platform/" replace />} />
