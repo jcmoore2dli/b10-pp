@@ -20,5 +20,19 @@
       "enabled": true,
       "port": 4000
     }
+  },
+  "hosting": {
+    "public": "hosting",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/b10_practice_platform/!(assets)**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
