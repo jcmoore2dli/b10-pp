@@ -262,11 +262,7 @@ service cloud.firestore {
         isInstructor() ||
         (
           isStudent() &&
-          hasCurrentStudent() &&
-          (
-            resource.data.track == currentStudent().track ||
-            resource.data.track == "both"
-          )
+          request.auth.token.b10Id != null
         );
 
       allow create: if isAdmin()
@@ -287,8 +283,8 @@ service cloud.firestore {
         isInstructor() ||
         (
           isStudent() &&
-          hasCurrentStudent() &&
-          resource.data.studentId == currentStudentId()
+          request.auth.token.b10Id != null &&
+          resource.data.studentId == request.auth.token.b10Id
         );
 
       allow create: if isAdminOrInstructor()
@@ -355,8 +351,8 @@ match /accessCodes/{codeId} {
         isInstructor() ||
         (
           isStudent() &&
-          hasCurrentStudent() &&
-          resource.data.studentId == currentStudentId()
+          request.auth.token.b10Id != null &&
+          resource.data.studentId == request.auth.token.b10Id
         );
 
       // Cloud Function writes via admin SDK — no client create

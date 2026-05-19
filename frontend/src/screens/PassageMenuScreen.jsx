@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { passages } from '../data/passages'
-import { auth } from '../services/firebase'
+import { auth, db } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
+import { collection, query, where, getDocs } from 'firebase/firestore'
 
 /**
  * Screen 2 — Passage Menu
@@ -28,12 +29,7 @@ const DOMAIN_CLUSTER_LABELS = {
 
 const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT']
 
-// Phase 1 placeholder: hardcoded assigned set
-const PLACEHOLDER_ASSIGNED_IDS = [
-  'B10-COR-HLT-001',
-  'B10-COR-GOV-001',
-  'B10-COR-TEC-001',
-]
+
 
 export default function PassageMenuScreen() {
   const navigate = useNavigate()
@@ -44,6 +40,27 @@ export default function PassageMenuScreen() {
   const { claims } = useAuth()
   const b10Id = claims?.b10Id || '—'
   const accessCode = sessionStorage.getItem('b10pp_access_code') || '—'
+  const [assignedPassages, setAssignedPassages] = useState([])
+
+  useEffect(() => {
+    async function loadAssigned() {
+      if (!b10Id || b10Id === '—') return
+      try {
+        const snap = await getDocs(
+          query(collection(db, 'assignments'), where('studentId', '==', b10Id))
+        )
+        const passageIds = snap.docs.flatMap(d => d.data().passageIds || [])
+        const unique = [...new Set(passageIds)]
+        const assigned = unique
+          .map(id => passages.find(p => p.passage_id === id))
+          .filter(Boolean)
+        setAssignedPassages(assigned)
+      } catch (err) {
+        console.error('Failed to load assignments:', err)
+      }
+    }
+    loadAssigned()
+  }, [b10Id])
 
   async function handleSignOut() {
     sessionStorage.clear()
@@ -51,9 +68,7 @@ export default function PassageMenuScreen() {
     window.location.href = '/b10_practice_platform/'
   }
 
-  const assignedPassages = PLACEHOLDER_ASSIGNED_IDS
-    .map((id) => passages.find((p) => p.passage_id === id))
-    .filter(Boolean)
+
 
   const browsePassages = passages.filter((p) => {
     if (clusterFilter !== 'ALL' && p.domain_cluster !== clusterFilter) return false

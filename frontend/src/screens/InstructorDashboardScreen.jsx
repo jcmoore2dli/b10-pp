@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import {
-  collection, query, where, getDocs, orderBy
+  collection, query, where, getDocs, orderBy, addDoc, serverTimestamp
 } from 'firebase/firestore'
 import { db, auth } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
+import { passages } from '../data/passages'
 
 const SCORE_COLORS = {
   4: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
@@ -37,17 +38,46 @@ function taskTypeLabel(taskType) {
   return labels[taskType] || taskType
 }
 
-function AttemptHistory({ b10Id, attempts, onBack }) {
+function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
+  const [showAssign, setShowAssign] = useState(false)
+  const [assigning, setAssigning] = useState(false)
+  const [assignError, setAssignError] = useState(null)
+  const [assignSuccess, setAssignSuccess] = useState(null)
+  const [selectedPassageId, setSelectedPassageId] = useState('')
+
   const totalAttempts = attempts.length
   const lastAttempt = attempts[0]
   const lastPractice = lastAttempt ? formatDate(lastAttempt.processedAt) : '—'
 
+  const assignablePassages = passages.filter(p => p.task_type && p.audio_file || p.task_type === 'eso')
+
+  async function handleAssign() {
+    if (!selectedPassageId) { setAssignError('Please select a passage.'); return }
+    setAssigning(true)
+    setAssignError(null)
+    setAssignSuccess(null)
+    try {
+      await addDoc(collection(db, 'assignments'), {
+        studentId:      b10Id,
+        assignmentType: 'main',
+        assignedBy:     currentUser.uid,
+        passageIds:     [selectedPassageId],
+        scaffoldConfig: null,
+        assignedAt:     serverTimestamp(),
+      })
+      setAssignSuccess(`Assigned ${selectedPassageId} to ${b10Id}`)
+      setSelectedPassageId('')
+      setShowAssign(false)
+    } catch (err) {
+      setAssignError('Assignment failed: ' + err.message)
+    } finally {
+      setAssigning(false)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
-      <button
-        onClick={onBack}
-        className="flex items-center gap-1 text-sm text-blue-700 font-semibold self-start"
-      >
+      <button onClick={onBack} className="flex items-center gap-1 text-sm text-blue-700 font-semibold self-start">
         ← Back
       </button>
       <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-center justify-between">
@@ -73,6 +103,48 @@ function AttemptHistory({ b10Id, attempts, onBack }) {
           </p>
         </div>
       </div>
+
+      {/* Assign passage */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Assign Passage</p>
+          <button
+            onClick={() => { setShowAssign(!showAssign); setAssignError(null); setAssignSuccess(null) }}
+            className="text-xs font-semibold text-blue-700 underline"
+          >
+            {showAssign ? 'Cancel' : '+ Assign'}
+          </button>
+        </div>
+        {assignSuccess && <p className="text-green-600 text-sm mb-2">{assignSuccess}</p>}
+        {showAssign && (
+          <div className="flex flex-col gap-3">
+            <select
+              value={selectedPassageId}
+              onChange={e => setSelectedPassageId(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={assigning}
+            >
+              <option value="">Select a passage…</option>
+              {assignablePassages.map(p => (
+                <option key={p.passage_id} value={p.passage_id}>
+                  {p.passage_id} — {taskTypeLabel(p.task_type)}
+                </option>
+              ))}
+            </select>
+            {assignError && <p className="text-red-600 text-sm">{assignError}</p>}
+            <button
+              onClick={handleAssign}
+              disabled={assigning}
+              className="w-full py-2 rounded-lg text-white text-sm font-semibold"
+              style={{ backgroundColor: assigning ? '#7a9bbf' : '#1e3a5f' }}
+            >
+              {assigning ? 'Assigning…' : 'Confirm Assignment'}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Attempt history */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
           Attempt History ({totalAttempts})
@@ -93,12 +165,8 @@ function AttemptHistory({ b10Id, attempts, onBack }) {
                     <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
                   </div>
                   <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
-                    <p className={`text-sm font-black leading-none ${colors.text}`}>
-                      {attempt.score}/{scoreMax}
-                    </p>
-                    <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>
-                      {attempt.score_label?.slice(0, 4)}
-                    </p>
+                    <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
+                    <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
                   </div>
                 </div>
               )
@@ -138,11 +206,7 @@ export default function InstructorDashboardScreen() {
           query(collection(db, 'accessCodes'), where('instructorUid', '==', currentUser.uid))
         )
         const codes = codesSnap.docs.map(d => d.data().code)
-        if (codes.length === 0) {
-          setStudents([])
-          setRosterLoading(false)
-          return
-        }
+        if (codes.length === 0) { setStudents([]); setRosterLoading(false); return }
         const studentsSnap = await getDocs(
           query(collection(db, 'students'), where('accessCode', 'in', codes))
         )
@@ -200,9 +264,7 @@ export default function InstructorDashboardScreen() {
           <p className="text-blue-200 text-xs">{claims?.b10Id} · {claims?.role}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-xs font-semibold px-2 py-1 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>
-            DASHBOARD
-          </div>
+          <div className="text-xs font-semibold px-2 py-1 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>DASHBOARD</div>
           {claims?.role === 'admin' && (
             <button onClick={() => navigate('/b10_practice_platform/admin')} className="text-xs text-blue-200 underline">Admin</button>
           )}
@@ -283,7 +345,12 @@ export default function InstructorDashboardScreen() {
         )}
 
         {view === 'detail' && selectedStudent && (
-          <AttemptHistory b10Id={selectedStudent.b10Id} attempts={selectedStudent.attempts} onBack={() => setView('roster')} />
+          <AttemptHistory
+            b10Id={selectedStudent.b10Id}
+            attempts={selectedStudent.attempts}
+            onBack={() => setView('roster')}
+            currentUser={currentUser}
+          />
         )}
 
         {view === 'lookup' && (
@@ -312,7 +379,12 @@ export default function InstructorDashboardScreen() {
               {lookupError && <p className="text-red-600 text-sm mt-2">{lookupError}</p>}
             </div>
             {lookupResult && (
-              <AttemptHistory b10Id={lookupResult.b10Id} attempts={lookupResult.attempts} onBack={() => setLookupResult(null)} />
+              <AttemptHistory
+                b10Id={lookupResult.b10Id}
+                attempts={lookupResult.attempts}
+                onBack={() => setLookupResult(null)}
+                currentUser={currentUser}
+              />
             )}
           </>
         )}
