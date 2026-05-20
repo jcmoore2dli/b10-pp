@@ -9,14 +9,12 @@
 // the raw transcript for LEVEL2 task types only.
 //
 // ROUTING TABLE (current):
-//   ESO          → ESO_PROMPT (Prompt 4 v1.5 Rev.4)
-//   NARRATION    → NARRATION_PROMPT (Prompt 4b v1.3)
-//   DESCRIPTION  → DESCRIPTION_PROMPT (Prompt 4c v1.2)
-//   INSTRUCTIONS → INSTRUCTIONS_PROMPT (Prompt 4d v1.5)
-//   PARAPHRASE   → PARAPHRASE_PROMPT (B10_PP_Section8_Scoring_Prompts_v1.5)
-//
-// TODO (Week 4/5):
-//   EXTENDED_LISTENING → EXTENDED_LISTENING_PROMPT (pending norming)
+//   ESO                → ESO_PROMPT (Prompt 4 v1.5 Rev.4)
+//   NARRATION          → NARRATION_PROMPT (Prompt 4b v1.3)
+//   DESCRIPTION        → DESCRIPTION_PROMPT (Prompt 4c v1.2)
+//   INSTRUCTIONS       → INSTRUCTIONS_PROMPT (Prompt 4d v1.5)
+//   PARAPHRASE         → PARAPHRASE_PROMPT (B10_PP_Section8_Scoring_Prompts_v1.5)
+//   EXTENDED_LISTENING → EXTENDED_LISTENING_PROMPT (v1.0 — wired Week 6, norming deferred)
 
 "use strict";
 
@@ -418,10 +416,71 @@ PASSAGE TEXT:
 STUDENT TRANSCRIPT:
 {transcript}`;
 
+const EXTENDED_LISTENING_PROMPT = `You are a scoring engine for the B10 Practice Platform, an English language proficiency practice platform used by international military personnel. Your task is to score a student's spoken response to an extended listening task.
+
+TASK DESCRIPTION:
+The student listened to a passage up to 3 times, then recorded themselves explaining:
+"What does the passage say is actually happening, and why is that different from what people commonly assume?"
+
+PASSAGE TEXT:
+{passageText}
+
+ARC ANCHOR:
+Common assumption: {commonAssumption}
+Actual mechanism: {actualMechanism}
+
+STUDENT TRANSCRIPT:
+{transcript}
+
+SCORING RUBRIC:
+
+Score 4 — Excellent
+The response:
+- Clearly conveys the passage's central claim, including how the actual mechanism differs from the common assumption
+- Accurately expresses the key causal or explanatory relationships that carry the passage's reasoning arc
+- Includes all essential explanatory logic connecting the assumption to the actual mechanism
+- Presents the ideas coherently without distortion
+
+Score 3 — Good (Meets Expectation)
+The response meets ALL of the following:
+- Conveys the general direction of the passage's argument, including at least partial recognition that the common assumption is incomplete or challenged
+- Includes at least one accurate causal or explanatory relationship from the passage's reasoning
+- Shows overall accurate understanding even if the contrast between assumption and actual mechanism is not fully articulated
+- Is coherent and does not distort meaning
+- Demonstrates substantial but incomplete coverage of the passage's logic
+
+CRITICAL BOUNDARY — Score 3 vs. Score 2:
+A response that accurately restates the common assumption WITHOUT recognizing that the passage challenges, complicates, or redirects it does NOT meet Score 3. Such a response demonstrates topic identification, not arc comprehension, and must be scored 2 regardless of coherence or detail.
+
+Score 2 — Partial (Developing)
+The response:
+- Identifies the topic or restates the common assumption without recognizing the passage's actual argument
+- OR mentions isolated details without connecting them to the passage's reasoning arc
+- Does not clearly convey how the actual mechanism differs from what is commonly assumed
+- Shows partial comprehension of content but not of the passage's explanatory structure
+- Lacks a coherent explanation of the passage's logic
+
+Score 1 — Insufficient
+The response misrepresents the meaning, introduces major errors, or shows minimal comprehension.
+
+SCORING INSTRUCTIONS:
+- Assign a single integer score: 1, 2, 3, or 4
+- Base your score on comprehension of the reasoning arc, not on grammar or fluency
+- The critical test: did the student recognize that the passage challenges the common assumption and explain the actual mechanism?
+- A fluent, well-organized response that only restates the common assumption must score 2
+- Do not reward detail recall that is disconnected from the arc
+
+OUTPUT FORMAT — Return valid JSON only. No backticks, markdown, or text outside JSON.
+{
+  "score": <integer 1-4>,
+  "score_label": "<Insufficient | Developing | Good | Excellent>",
+  "strengths": "<one or two sentences about what the student conveyed accurately>",
+  "gaps": "<one or two sentences about what was missing or incorrect>",
+  "language_feedback": "<one sentence on a specific language feature — grammar, vocabulary, fluency, or organization>",
+  "transcript_note": "<flag any transcription anomalies that may have affected scoring, or empty string if none>"
+}`;
+
 // ── Disfluency metadata pre-processor ─────────────────────────────────────
-// Computes pause counts, mean inter-word gap, and filled pause count
-// from Deepgram word-level timestamps. LEVEL2 tasks only.
-// ESO tasks: metadata block omitted per pipeline architecture invariant.
 
 function computeDisfluencyMetadata(words) {
   if (!words || words.length === 0) {
@@ -550,7 +609,15 @@ function buildPrompt(taskType, params) {
       .replace("{transcript}", transcript);
   }
 
-  throw new Error(`Unknown taskType: ${taskType}. Supported: ESO, NARRATION, DESCRIPTION, INSTRUCTIONS, PARAPHRASE.`);
+  if (type === "EXTENDED_LISTENING") {
+    return EXTENDED_LISTENING_PROMPT
+      .replace("{passageText}", params.passageText || "")
+      .replace("{commonAssumption}", params.commonAssumption || "")
+      .replace("{actualMechanism}", params.actualMechanism || "")
+      .replace("{transcript}", transcript);
+  }
+
+  throw new Error(`Unknown taskType: ${taskType}. Supported: ESO, NARRATION, DESCRIPTION, INSTRUCTIONS, PARAPHRASE, EXTENDED_LISTENING.`);
 }
 
 // ── Score validator ────────────────────────────────────────────────────────
@@ -560,18 +627,19 @@ function validateScore(taskType, score) {
   if (type === "ESO") {
     return Number.isInteger(score) && score >= 2 && score <= 4;
   }
-  if (type === "PARAPHRASE") {
+  if (type === "PARAPHRASE" || type === "EXTENDED_LISTENING") {
     return Number.isInteger(score) && score >= 1 && score <= 4;
   }
   return Number.isInteger(score) && score >= 1 && score <= 3;
 }
 
 const VALID_LABELS = {
-  ESO:          { 2: "Partial", 3: "Good", 4: "Excellent" },
-  NARRATION:    { 1: "Insufficient", 2: "Partial", 3: "Good" },
-  DESCRIPTION:  { 1: "Insufficient", 2: "Partial", 3: "Good" },
-  INSTRUCTIONS: { 1: "Insufficient", 2: "Partial", 3: "Good" },
-  PARAPHRASE:   { 1: "Insufficient", 2: "Partial", 3: "Good", 4: "Excellent" },
+  ESO:                { 2: "Partial", 3: "Good", 4: "Excellent" },
+  NARRATION:          { 1: "Insufficient", 2: "Partial", 3: "Good" },
+  DESCRIPTION:        { 1: "Insufficient", 2: "Partial", 3: "Good" },
+  INSTRUCTIONS:       { 1: "Insufficient", 2: "Partial", 3: "Good" },
+  PARAPHRASE:         { 1: "Insufficient", 2: "Partial", 3: "Good", 4: "Excellent" },
+  EXTENDED_LISTENING: { 1: "Insufficient", 2: "Developing", 3: "Good", 4: "Excellent" },
 };
 
 function validateScoreLabel(taskType, score, label) {
@@ -625,11 +693,8 @@ async function scoreTranscript(apiKey, taskType, params) {
 
   return result;
 }
+
 // ── Grammar validation pass ────────────────────────────────────────────────
-// Lightweight second Claude call that reviews student-facing feedback fields
-// for grammatical errors and corrects them before Firestore write.
-// Does NOT touch score, score_label, or transcript_note.
-// Adds ~2-3 seconds latency. Acceptable for formative tool.
 
 async function validateFeedbackGrammar(apiKey, fields) {
   const client = new Anthropic({ apiKey });
@@ -659,8 +724,8 @@ async function validateFeedbackGrammar(apiKey, fields) {
       language_feedback: result.language_feedback || fields.language_feedback,
     };
   } catch (e) {
-    // If parsing fails, return original fields unchanged
     return fields;
   }
 }
+
 module.exports = { scoreTranscript, computeDisfluencyMetadata, validateFeedbackGrammar };

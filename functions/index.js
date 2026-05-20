@@ -164,7 +164,7 @@ async function processSubmission(submissionId) {
 
     // ── Step 6: Disfluency pre-processor (LEVEL2 tasks only) ─────────────
     const type       = (taskType || "").toUpperCase();
-    const taskFamily = ["ESO", "PARAPHRASE"].includes(type) ? "LEVEL3" : "LEVEL2";
+    const taskFamily = ["ESO", "PARAPHRASE", "EXTENDED_LISTENING"].includes(type) ? "LEVEL3" : "LEVEL2";
     const isLevel2   = taskFamily === "LEVEL2";
 
     let disfluencyMetadata = null;
@@ -669,3 +669,4 @@ exports.enrollStudent = onCall(async (request) => {
 
   return { success: true, b10Id, alreadyEnrolled: false };
 });
+
