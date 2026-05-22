@@ -39,11 +39,20 @@ function normalizePassage(doc) {
  */
 
 const DOMAIN_CLUSTER_LABELS = {
-  'L&W': 'Learning & Work',
-  'H&E': 'Health & Environment',
-  'G&S': 'Governance & Society',
-  'T&S': 'Technology & Science',
-  'C&B': 'Culture & Behavior',
+  'EDU': 'Education',
+  'WRK': 'Labor & Work',
+  'ECN': 'Economics',
+  'GOV': 'Governance',
+  'HLT': 'Health & Medicine',
+  'TEC': 'Technology',
+  'ENV': 'Environment',
+  'JUS': 'Justice & Rights',
+  'INT': 'International',
+  'CUL': 'Culture',
+  'SOC': 'Social Systems',
+  'SCI': 'Science',
+  'BIO': 'Biology',
+  'PHY': 'Physics',
 }
 
 const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT']
