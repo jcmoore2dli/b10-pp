@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AudioPlayer from '../components/AudioPlayer'
-import { getPassageById } from '../data/passages'
+import { db } from '../services/firebase'
+import { doc, getDoc } from 'firebase/firestore'
+import { getDownloadURL, ref } from 'firebase/storage'
+import { storage } from '../services/firebase'
 
 /**
  * Screen 3 — Passage Detail
  * Spec §3.4, §6.5
  *
+ * - Fetches passage from Firestore by document ID
  * - Displays passage metadata (ID, domain, layer, tier)
  * - Audio player: Play / Pause / Replay — no seek bar, no autoplay
  * - "Begin Task" button activates after student has engaged with audio
@@ -15,10 +19,60 @@ import { getPassageById } from '../data/passages'
 export default function PassageDetailScreen() {
   const { passageId } = useParams()
   const navigate = useNavigate()
-  const passage = getPassageById(passageId)
-
-  // "Begin Task" unlocks after the student presses Play at least once
+  const [passage, setPassage] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [audioUrl, setAudioUrl] = useState(null)
   const [hasEngaged, setHasEngaged] = useState(false)
+
+  useEffect(() => {
+    async function loadPassage() {
+      setLoading(true)
+      try {
+        const docSnap = await getDoc(doc(db, 'passages', passageId))
+        if (docSnap.exists()) {
+          const d = docSnap.data()
+          // Normalize Firestore fields to UI shape
+          const normalized = {
+            passage_id:     d.passageId || passageId,
+            domain:         d.domain || passageId,
+            layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : 'ORIENT',
+            tier:           d.tier != null ? `Tier ${d.tier}` : null,
+            domain_cluster: d.domain || '',
+            task_type:      (d.taskType || 'PARAPHRASE').toLowerCase(),
+            ext_band:       d.ext_band || null,
+            pil:            d.pil || null,
+            audioPath:      d.audioPath || null,
+            passageText:    d.passageText || '',
+            esoQuestionId:  d.esoQuestionId || null,
+            set:            d.set || null,
+          }
+          setPassage(normalized)
+          // Fetch audio URL from Firebase Storage
+          if (normalized.audioPath) {
+            try {
+              const url = await getDownloadURL(ref(storage, normalized.audioPath))
+              setAudioUrl(url)
+            } catch (e) {
+              console.error('Audio fetch failed:', e)
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load passage:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadPassage()
+  }, [passageId])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" />
+      </div>
+    )
+  }
 
   if (!passage) {
     return (
@@ -40,6 +94,8 @@ export default function PassageDetailScreen() {
     navigate(`/b10_practice_platform/record/${passage.passage_id}`)
   }
 
+  const isEso = passage.task_type === 'eso'
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top bar */}
@@ -56,7 +112,7 @@ export default function PassageDetailScreen() {
         </button>
         <div>
           <p className="text-white font-bold text-base leading-tight">Passage Detail</p>
-          <p className="text-blue-200 text-xs">Task: {passage.task_type === 'eso' ? 'Extended Supported Opinion' : 'Oral Paraphrase'}</p>
+          <p className="text-blue-200 text-xs">Task: {isEso ? 'Extended Supported Opinion' : 'Oral Paraphrase'}</p>
         </div>
       </header>
 
@@ -65,7 +121,6 @@ export default function PassageDetailScreen() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <p className="text-xs font-mono text-gray-400 mb-1">{passage.passage_id}</p>
           <h2 className="text-xl font-bold text-gray-900 mb-3">{passage.domain}</h2>
-
           <div className="flex flex-wrap gap-2">
             <MetaBadge label="Layer" value={passage.layer} />
             {passage.layer === 'CORE' && passage.tier && (
@@ -83,42 +138,42 @@ export default function PassageDetailScreen() {
 
         {/* Instructions */}
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
-          {passage.task_type === 'eso' ? (
-  <p className="text-sm text-blue-800 leading-relaxed font-semibold">
-    {passage.prompt_description}
-  </p>
-) : (
-  <>
-    <p className="text-sm text-blue-800 leading-relaxed">
-      Listen to the passage. You may replay it as many times as you need before beginning.
-      When you are ready, press <strong>Begin Task</strong> to record your paraphrase.
-    </p>
-    <p className="text-xs text-blue-600 mt-2">
-      The passage text will not be shown until after you submit your response.
-    </p>
-  </>
-)}
+          {isEso ? (
+            <p className="text-sm text-blue-800 leading-relaxed font-semibold">
+              {passage.prompt_description}
+            </p>
+          ) : (
+            <>
+              <p className="text-sm text-blue-800 leading-relaxed">
+                Listen to the passage. You may replay it as many times as you need before beginning.
+                When you are ready, press <strong>Begin Task</strong> to record your paraphrase.
+              </p>
+              <p className="text-xs text-blue-600 mt-2">
+                The passage text will not be shown until after you submit your response.
+              </p>
+            </>
+          )}
         </div>
 
         {/* Audio Player */}
-        {passage.task_type !== 'eso' && (
+        {!isEso && (
           <AudioPlayer
-            audioSrc={passage.audio_file}
+            audioSrc={audioUrl}
             onPlayStart={() => setHasEngaged(true)}
-        />
-)}
+          />
+        )}
 
         {/* Begin Task button */}
         <button
           onClick={handleBeginTask}
-          disabled={passage.task_type !== 'eso' && !hasEngaged}
+          disabled={!isEso && !hasEngaged}
           className="w-full py-4 rounded-xl text-white font-bold text-lg disabled:opacity-40 transition-opacity"
-          style={{ backgroundColor: (passage.task_type === 'eso' || hasEngaged) ? '#1e3a5f' : '#9ca3af' }}
+          style={{ backgroundColor: (isEso || hasEngaged) ? '#1e3a5f' : '#9ca3af' }}
         >
           Begin Task
         </button>
 
-        {!hasEngaged && (
+        {!hasEngaged && !isEso && (
           <p className="text-center text-xs text-gray-400 -mt-4">
             Play the audio above to enable this button
           </p>
