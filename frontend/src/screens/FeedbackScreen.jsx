@@ -67,7 +67,7 @@ export default function FeedbackScreen() {
 
   const {
     score,
-    score_label,
+    score_label = 'Scored',
     taskFamily,
     strengths,
     gaps,

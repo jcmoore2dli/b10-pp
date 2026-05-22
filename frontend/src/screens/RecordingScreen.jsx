@@ -130,7 +130,19 @@ export default function RecordingScreen() {
       setPhase('evaluating')
       setStatusMessage(STATUS_MESSAGES.queued)
 
+      // ── 45-second timeout guard ─────────────────────────────────────────
+      const timeoutId = setTimeout(() => {
+        if (unsubscribeRef.current) {
+          unsubscribeRef.current()
+          unsubscribeRef.current = null
+        }
+        setErrorMessage('Evaluation timed out. Please check your connection and try again.')
+        setPhase('idle')
+        submittingRef.current = false
+      }, 45000)
+
       unsubscribeRef.current = subscribeToSubmission(submissionId, (data) => {
+        clearTimeout(timeoutId)
        
         const { status } = data
 
