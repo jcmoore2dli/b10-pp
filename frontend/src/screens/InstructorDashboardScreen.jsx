@@ -4,7 +4,8 @@ import { signOut } from 'firebase/auth'
 import {
   collection, query, where, getDocs, orderBy, addDoc, serverTimestamp
 } from 'firebase/firestore'
-import { db, auth } from '../services/firebase'
+import { db, auth, storage } from '../services/firebase'
+import { ref, getDownloadURL } from 'firebase/storage'
 import { useAuth } from '../context/useAuth'
 import { passages } from '../data/passages'
 
@@ -38,7 +39,71 @@ function taskTypeLabel(taskType) {
   return labels[taskType] || taskType
 }
 
+
+// Singleton audio manager — only one recording plays at a time
+const audioManager = {
+  current: null,
+  stop() {
+    if (this.current) {
+      this.current.pause()
+      this.current.currentTime = 0
+      this.current = null
+    }
+  }
+}
+
+function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
+  const [url, setUrl] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const playing = playingId === attemptId
+
+  async function handlePlay() {
+    if (playing) {
+      audioManager.stop()
+      setPlayingId(null)
+      return
+    }
+    audioManager.stop()
+    setPlayingId(attemptId)
+    try {
+      setLoading(true)
+      let downloadUrl = url
+      if (!downloadUrl) {
+        const storageRef = ref(storage, audioPath)
+        downloadUrl = await getDownloadURL(storageRef)
+        setUrl(downloadUrl)
+      }
+      const audio = new Audio(downloadUrl)
+      audioManager.current = audio
+      audio.onended = () => setPlayingId(null)
+      audio.play()
+    } catch (err) {
+      console.error('Audio fetch failed:', err)
+      setPlayingId(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handlePlay}
+      disabled={loading}
+      className="text-xs px-2 py-1 rounded-lg border font-semibold shrink-0"
+      style={{
+        borderColor: playing ? '#c0392b' : '#1e3a5f',
+        color: playing ? '#c0392b' : '#1e3a5f',
+        backgroundColor: 'white',
+      }}
+    >
+      {loading ? '…' : playing ? '■ Stop' : '▶ Play'}
+    </button>
+  )
+}
+
+
 function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
+  const [playingId, setPlayingId] = useState(null)
   const [showAssign, setShowAssign] = useState(false)
   const [assigning, setAssigning] = useState(false)
   const [assignError, setAssignError] = useState(null)
@@ -164,9 +229,12 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
                   </div>
-                  <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
-                    <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
-                    <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {attempt.audioPath && <AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} />}
+                    <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
+                      <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
+                      <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
+                    </div>
                   </div>
                 </div>
               )
