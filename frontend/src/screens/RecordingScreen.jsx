@@ -19,9 +19,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/useAuth'
-import { getPassageById } from '../data/passages'
 import { useRecorder } from '../hooks/useRecorder'
 import AudioPlayer from '../components/AudioPlayer'
+import { db, storage } from '../services/firebase'
+import { doc, getDoc } from 'firebase/firestore'
+import { ref, getDownloadURL } from 'firebase/storage'
 import {
   uploadAudio,
   createSubmission,
@@ -38,7 +40,9 @@ const STATUS_MESSAGES = {
 export default function RecordingScreen() {
   const { passageId } = useParams()
   const navigate      = useNavigate()
-  const passage       = getPassageById(passageId)
+  const [passage, setPassage]             = useState(null)
+  const [audioUrl, setAudioUrl]           = useState(null)
+  const [passageLoading, setPassageLoading] = useState(true)
 
   const { isRecording, startRecording, stopRecording, error: recorderError } = useRecorder()
 
@@ -47,6 +51,42 @@ export default function RecordingScreen() {
   const [statusMessage, setStatusMessage] = useState('')
   const submittingRef  = useRef(false)   // double-tap guard
   const unsubscribeRef = useRef(null)    // onSnapshot cleanup
+
+  useEffect(() => {
+    async function loadPassage() {
+      setPassageLoading(true)
+      try {
+        const docSnap = await getDoc(doc(db, 'passages', passageId))
+        if (docSnap.exists()) {
+          const d = docSnap.data()
+          const normalized = {
+            passage_id:          d.passageId || passageId,
+            task_type:           (d.taskType || 'PARAPHRASE').toLowerCase(),
+            corpus_type:         d.corpusType || 'COR',
+            prompt_description:  d.taskType === 'EXTENDED_LISTENING'
+              ? 'Listen to the passage up to 3 times. Then record yourself explaining: what does the passage say is actually happening, and why is that different from what people commonly assume?'
+              : d.promptDescription || 'Listen carefully, then record your paraphrase.',
+            scaffold_config:     d.scaffoldConfig || {},
+            audioPath:           d.audioPath || null,
+          }
+          setPassage(normalized)
+          if (normalized.audioPath) {
+            try {
+              const url = await getDownloadURL(ref(storage, normalized.audioPath))
+              setAudioUrl(url)
+            } catch (e) {
+              console.error('Audio fetch failed:', e)
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load passage:', err)
+      } finally {
+        setPassageLoading(false)
+      }
+    }
+    loadPassage()
+  }, [passageId])
 
   // Read b10Id from sessionStorage (set by EntryScreen)
   const { claims } = useAuth()
@@ -58,6 +98,14 @@ export default function RecordingScreen() {
       if (unsubscribeRef.current) unsubscribeRef.current()
     }
   }, [])
+
+  if (passageLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" />
+      </div>
+    )
+  }
 
   if (!passage) {
     return (
@@ -225,7 +273,7 @@ export default function RecordingScreen() {
           <>
             {!isRecording && passage.task_type !== 'eso' && (
               <div className="w-full">
-                <AudioPlayer audioSrc={passage.audio_file} />
+                <AudioPlayer audioSrc={audioUrl} />
               </div>
             )}
 
