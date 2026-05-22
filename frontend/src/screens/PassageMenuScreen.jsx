@@ -1,10 +1,29 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
-import { passages } from '../data/passages'
 import { auth, db } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore'
+
+// Normalize Firestore passage doc to UI shape
+function normalizePassage(doc) {
+  const d = doc.data ? doc.data() : doc
+  const id = d.passageId || doc.id
+  return {
+    passage_id:     id,
+    domain:         d.domain || id,
+    layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : 'ORIENT',
+    tier:           d.tier != null ? `Tier ${d.tier}` : null,
+    domain_cluster: d.domain || '',
+    set:            d.set || null,
+    taskType:       d.taskType || 'PARAPHRASE',
+    passageText:    d.passageText || '',
+    audioPath:      d.audioPath || null,
+    esoQuestionId:  d.esoQuestionId || null,
+    ext_band:       d.ext_band || null,
+    pil_level:      d.pil || null,
+  }
+}
 
 /**
  * Screen 2 — Passage Menu
@@ -41,6 +60,8 @@ export default function PassageMenuScreen() {
   const b10Id = claims?.b10Id || '—'
   const accessCode = sessionStorage.getItem('b10pp_access_code') || '—'
   const [assignedPassages, setAssignedPassages] = useState([])
+  const [allPassages, setAllPassages] = useState([])
+  const [passagesLoading, setPassagesLoading] = useState(true)
 
   useEffect(() => {
     async function loadAssigned() {
@@ -51,16 +72,42 @@ export default function PassageMenuScreen() {
         )
         const passageIds = snap.docs.flatMap(d => d.data().passageIds || [])
         const unique = [...new Set(passageIds)]
-        const assigned = unique
-          .map(id => passages.find(p => p.passage_id === id))
-          .filter(Boolean)
-        setAssignedPassages(assigned)
+        // Fetch passage docs from Firestore by document ID
+        const { doc, getDoc } = await import('firebase/firestore')
+        const assignedDocs = await Promise.all(
+          unique.map(async (id) => {
+            try {
+              const docSnap = await getDoc(doc(db, 'passages', id))
+              if (docSnap.exists()) return normalizePassage(docSnap)
+              return null
+            } catch { return null }
+          })
+        )
+        setAssignedPassages(assignedDocs.filter(Boolean))
       } catch (err) {
         console.error('Failed to load assignments:', err)
       }
     }
     loadAssigned()
   }, [b10Id])
+
+  useEffect(() => {
+    async function loadAllPassages() {
+      setPassagesLoading(true)
+      try {
+        const snap = await getDocs(
+          collection(db, 'passages')
+        )
+        const normalized = snap.docs.map(doc => normalizePassage(doc))
+        setAllPassages(normalized)
+      } catch (err) {
+        console.error('Failed to load passages:', err)
+      } finally {
+        setPassagesLoading(false)
+      }
+    }
+    loadAllPassages()
+  }, [])
 
   async function handleSignOut() {
     sessionStorage.clear()
@@ -70,7 +117,7 @@ export default function PassageMenuScreen() {
 
 
 
-  const browsePassages = passages.filter((p) => {
+  const browsePassages = allPassages.filter((p) => {
     if (clusterFilter !== 'ALL' && p.domain_cluster !== clusterFilter) return false
     if (layerFilter !== 'ALL' && p.layer !== layerFilter) return false
     return true
