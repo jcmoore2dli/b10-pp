@@ -12,7 +12,7 @@ function normalizePassage(doc) {
   return {
     passage_id:     id,
     domain:         d.domain || id,
-    layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : 'ORIENT',
+    layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : d.corpusType === 'ESO' ? 'ESO' : 'ORIENT',
     tier:           d.tier != null ? `Tier ${d.tier}` : null,
     domain_cluster: d.domain || '',
     set:            d.set || null,
@@ -55,7 +55,7 @@ const DOMAIN_CLUSTER_LABELS = {
   'PHY': 'Physics',
 }
 
-const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT']
+const LAYER_ORDER = ['CORE', 'EXT', 'ESO']
 
 
 
