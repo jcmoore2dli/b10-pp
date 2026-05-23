@@ -3,15 +3,17 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import fs from 'fs'
 
+const certExists = fs.existsSync('./localhost+2-key.pem')
+
 // https://vite.dev/config/
 export default defineConfig({
   base: '/b10_practice_platform/',
   server: {
     host: '0.0.0.0',
-    https: {
+    https: certExists ? {
       key: fs.readFileSync('./localhost+2-key.pem'),
       cert: fs.readFileSync('./localhost+2.pem'),
-    },
+    } : false,
   },
   plugins: [
     react(),
