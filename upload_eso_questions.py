@@ -43,16 +43,16 @@ ESO_QUESTIONS = {
     'WRK-012': {'question': 'Should governments raise the minimum wage to ensure a living standard?', 'domain': 'WRK', 'algorithm': 'A02'},
     'WRK-015': {'question': 'Should the retirement age be raised?', 'domain': 'WRK', 'algorithm': 'A02'},
     # ECN — Economic Systems
-    'ECN-008': {'question': 'Should gig workers be classified as employees with full benefits?', 'domain': 'ECN', 'algorithm': 'A02'},
-    'ECN-012': {'question': 'Should predatory lending be more strictly regulated?', 'domain': 'ECN', 'algorithm': 'A02'},
+    'ECN-008': {'question': 'Should workers in app-based or platform jobs be classified as employees with full benefits?', 'domain': 'ECN', 'algorithm': 'A02'},
+    'ECN-012': {'question': 'Should governments do more to protect consumers from high-interest loans and exploitative lending practices?', 'domain': 'ECN', 'algorithm': 'A02'},
     'ECN-018': {'question': 'Should subscription pricing models be regulated to protect consumers?', 'domain': 'ECN', 'algorithm': 'A02'},
     # GOV — Governance & Civic Life
     'GOV-003': {'question': 'Should voting be mandatory for all citizens?', 'domain': 'GOV', 'algorithm': 'A02'},
     'GOV-008': {'question': 'Should campaign contributions be limited by law?', 'domain': 'GOV', 'algorithm': 'A02'},
     'GOV-012': {'question': 'Should there be term limits for legislators?', 'domain': 'GOV', 'algorithm': 'A02'},
-    'GOV-015': {'question': 'Should gerrymandering be prohibited by law?', 'domain': 'GOV', 'algorithm': 'A02'},
+    'GOV-015': {'question': 'Should the practice of manipulating electoral district boundaries for political advantage be prohibited by law?', 'domain': 'GOV', 'algorithm': 'A02'},
     'GOV-018': {'question': 'Should lobbying be more strictly regulated?', 'domain': 'GOV', 'algorithm': 'A02'},
-    'GOV-022': {'question': 'Should whistleblower protections be expanded?', 'domain': 'GOV', 'algorithm': 'A02'},
+    'GOV-022': {'question': 'Should employees who report government or corporate wrongdoing receive stronger legal protections?', 'domain': 'GOV', 'algorithm': 'A02'},
     'GOV-025': {'question': 'Should political advertising be regulated?', 'domain': 'GOV', 'algorithm': 'A02'},
     # HLT — Health & Medicine
     'HLT-005': {'question': 'Should sugary drinks be taxed to discourage unhealthy consumption?', 'domain': 'HLT', 'algorithm': 'A02'},
@@ -69,7 +69,7 @@ ESO_QUESTIONS = {
     'TEC-003': {'question': 'Should social media have age restrictions for minors?', 'domain': 'TEC', 'algorithm': 'A02'},
     'TEC-008': {'question': 'Should facial recognition technology be banned in public spaces?', 'domain': 'TEC', 'algorithm': 'A02'},
     'TEC-012': {'question': 'Should AI-generated content be labeled as such?', 'domain': 'TEC', 'algorithm': 'A02'},
-    'TEC-015': {'question': 'Should encryption backdoors be mandated for law enforcement?', 'domain': 'TEC', 'algorithm': 'A02'},
+    'TEC-015': {'question': 'Should technology companies be required to give law enforcement access to encrypted devices and communications?', 'domain': 'TEC', 'algorithm': 'A02'},
     'TEC-018': {'question': 'Should autonomous vehicles be allowed on public roads?', 'domain': 'TEC', 'algorithm': 'A02'},
     'TEC-022': {'question': 'Should data brokers be regulated to protect consumer privacy?', 'domain': 'TEC', 'algorithm': 'A02'},
     'TEC-025': {'question': 'Should genetic engineering of humans be permitted?', 'domain': 'TEC', 'algorithm': 'A02'},
@@ -84,7 +84,7 @@ ESO_QUESTIONS = {
     'ENV-018': {'question': 'Should water usage be rationed during shortages?', 'domain': 'ENV', 'algorithm': 'A02'},
     # JUS — Justice & Rights
     'JUS-003': {'question': 'Should the death penalty be abolished?', 'domain': 'JUS', 'algorithm': 'A02'},
-    'JUS-005': {'question': 'Should cash bail be eliminated?', 'domain': 'JUS', 'algorithm': 'A02'},
+    'JUS-005': {'question': 'Should defendants be released before trial based on risk assessment rather than ability to pay?', 'domain': 'JUS', 'algorithm': 'A02'},
     'JUS-008': {'question': 'Should marijuana possession be decriminalized?', 'domain': 'JUS', 'algorithm': 'A02'},
     'JUS-015': {'question': 'Should restorative justice programs replace traditional incarceration?', 'domain': 'JUS', 'algorithm': 'A08'},
     # INT — International Systems
