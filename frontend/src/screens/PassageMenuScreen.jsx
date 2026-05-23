@@ -15,6 +15,7 @@ function normalizePassage(doc) {
     layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : d.corpusType === 'ESO' ? 'ESO' : 'ORIENT',
     tier:           d.tier != null ? `Tier ${d.tier}` : null,
     domain_cluster: d.domain || '',
+    question:       d.question || null,
     set:            d.set || null,
     taskType:       d.taskType || 'PARAPHRASE',
     passageText:    d.passageText || '',
@@ -61,7 +62,7 @@ const LAYER_ORDER = ['CORE', 'EXT', 'ESO']
 
 export default function PassageMenuScreen() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('assigned')
+  const [activeTab, setActiveTab] = useState(() => sessionStorage.getItem('b10pp_active_tab') || 'assigned')
   const [clusterFilter, setClusterFilter] = useState('ALL')
   const [layerFilter, setLayerFilter] = useState('ALL')
 
@@ -133,6 +134,7 @@ export default function PassageMenuScreen() {
   })
 
   function handleSelectPassage(passage) {
+    sessionStorage.setItem('b10pp_active_tab', activeTab)
     navigate(`/b10_practice_platform/passage/${passage.passage_id}`)
   }
 
@@ -307,7 +309,7 @@ function PassageCard({ passage, onSelect, status }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <p className="text-xs font-mono text-gray-400 mb-1">{passage.passage_id}</p>
-          <p className="font-semibold text-gray-900 text-sm leading-snug">{passage.domain}</p>
+          <p className="font-semibold text-gray-900 text-sm leading-snug">{passage.layer === 'ESO' && passage.question ? passage.question : passage.domain}</p>
           <div className="flex flex-wrap gap-1 mt-2">
             <LayerBadge layer={passage.layer} />
             {passage.layer === 'CORE' && passage.tier && (

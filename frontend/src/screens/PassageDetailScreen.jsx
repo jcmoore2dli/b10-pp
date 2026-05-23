@@ -35,9 +35,10 @@ export default function PassageDetailScreen() {
           const normalized = {
             passage_id:     d.passageId || passageId,
             domain:         d.domain || passageId,
-            layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : 'ORIENT',
+            layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : d.corpusType === 'ESO' ? 'ESO' : 'ORIENT',
             tier:           d.tier != null ? `Tier ${d.tier}` : null,
             domain_cluster: d.domain || '',
+            question:       d.question || null,
             task_type:      (d.taskType || 'PARAPHRASE').toLowerCase(),
             ext_band:       d.ext_band || null,
             pil:            d.pil || null,
@@ -112,7 +113,7 @@ export default function PassageDetailScreen() {
         </button>
         <div>
           <p className="text-white font-bold text-base leading-tight">Passage Detail</p>
-          <p className="text-blue-200 text-xs">Task: {isEso ? 'Extended Supported Opinion' : 'Oral Paraphrase'}</p>
+          <p className="text-blue-200 text-xs">Task: {isEso ? 'Extended Supported Opinion' : passage.layer === 'EXT' ? 'Extended Listening' : 'Oral Paraphrase'}</p>
         </div>
       </header>
 
@@ -120,7 +121,7 @@ export default function PassageDetailScreen() {
         {/* Passage metadata card */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <p className="text-xs font-mono text-gray-400 mb-1">{passage.passage_id}</p>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">{passage.domain}</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-3">{passage.layer === 'ESO' && passage.question ? passage.question : passage.domain}</h2>
           <div className="flex flex-wrap gap-2">
             <MetaBadge label="Layer" value={passage.layer} />
             {passage.layer === 'CORE' && passage.tier && (
