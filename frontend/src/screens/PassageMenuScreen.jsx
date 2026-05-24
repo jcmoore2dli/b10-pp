@@ -56,7 +56,7 @@ const DOMAIN_CLUSTER_LABELS = {
   'PHY': 'Physics',
 }
 
-const LAYER_ORDER = ['CORE', 'EXT', 'ESO']
+const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT', 'ESO']
 
 
 
