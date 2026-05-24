@@ -273,7 +273,7 @@ export default function RecordingScreen() {
           </div>
         ) : (
           <>
-            {!isRecording && passage.task_type !== 'eso' && (
+            {!isRecording && passage.task_type !== 'eso' && !['narration','description','instructions'].includes(passage.task_type) && (
               <div className="w-full">
                 <AudioPlayer audioSrc={audioUrl} />
               </div>
