@@ -96,6 +96,7 @@ export default function PassageDetailScreen() {
   }
 
   const isEso = passage.task_type === 'eso'
+  const isSpeaking = ['NAR','DES','INS'].includes(passage.layer)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -146,18 +147,22 @@ export default function PassageDetailScreen() {
           ) : (
             <>
               <p className="text-sm text-blue-800 leading-relaxed">
-                Listen to the passage. You may replay it as many times as you need before beginning.
-                When you are ready, press <strong>Begin Task</strong> to record your paraphrase.
+                {['NAR','DES','INS'].includes(passage.layer)
+                  ? 'Record yourself speaking on this topic. When you are ready, press Begin Task to start recording.'
+                  : 'Listen to the passage. You may replay it as many times as you need before beginning. When you are ready, press Begin Task to record your paraphrase.'
+                }
               </p>
-              <p className="text-xs text-blue-600 mt-2">
-                The passage text will not be shown until after you submit your response.
-              </p>
+              {!['NAR','DES','INS'].includes(passage.layer) && (
+                <p className="text-xs text-blue-600 mt-2">
+                  The passage text will not be shown until after you submit your response.
+                </p>
+              )}
             </>
           )}
         </div>
 
         {/* Audio Player */}
-        {!isEso && (
+        {!isEso && !isSpeaking && (
           <AudioPlayer
             audioSrc={audioUrl}
             onPlayStart={() => setHasEngaged(true)}
@@ -167,14 +172,14 @@ export default function PassageDetailScreen() {
         {/* Begin Task button */}
         <button
           onClick={handleBeginTask}
-          disabled={!isEso && !hasEngaged}
+          disabled={!isEso && !isSpeaking && !hasEngaged}
           className="w-full py-4 rounded-xl text-white font-bold text-lg disabled:opacity-40 transition-opacity"
-          style={{ backgroundColor: (isEso || hasEngaged) ? '#1e3a5f' : '#9ca3af' }}
+          style={{ backgroundColor: (isEso || isSpeaking || hasEngaged) ? '#1e3a5f' : '#9ca3af' }}
         >
           Begin Task
         </button>
 
-        {!hasEngaged && !isEso && (
+        {!hasEngaged && !isEso && !isSpeaking && (
           <p className="text-center text-xs text-gray-400 -mt-4">
             Play the audio above to enable this button
           </p>
