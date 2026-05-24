@@ -12,7 +12,7 @@ function normalizePassage(doc) {
   return {
     passage_id:     id,
     domain:         d.domain || id,
-    layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : d.corpusType === 'ESO' ? 'ESO' : 'ORIENT',
+    layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : d.corpusType === 'ESO' ? 'ESO' : d.corpusType === 'NAR' ? 'NAR' : d.corpusType === 'DES' ? 'DES' : d.corpusType === 'INS' ? 'INS' : 'ORIENT',
     tier:           d.tier != null ? `Tier ${d.tier}` : null,
     domain_cluster: d.domain || '',
     question:       d.question || null,
@@ -56,7 +56,7 @@ const DOMAIN_CLUSTER_LABELS = {
   'PHY': 'Physics',
 }
 
-const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT', 'ESO']
+const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT', 'ESO', 'NAR', 'DES', 'INS']
 
 
 
@@ -348,6 +348,10 @@ function LayerBadge({ layer }) {
     ORIENT: 'bg-green-50 text-green-700',
     CORE: 'bg-blue-50 text-blue-700',
     EXT: 'bg-purple-50 text-purple-700',
+    ESO: 'bg-yellow-50 text-yellow-700',
+    NAR: 'bg-orange-50 text-orange-700',
+    DES: 'bg-teal-50 text-teal-700',
+    INS: 'bg-rose-50 text-rose-700',
   }
   return (
     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${config[layer] || 'bg-gray-100 text-gray-600'}`}>

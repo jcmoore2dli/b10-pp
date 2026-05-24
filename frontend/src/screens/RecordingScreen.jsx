@@ -65,6 +65,8 @@ export default function RecordingScreen() {
             corpus_type:         d.corpusType || 'COR',
             prompt_description:  d.taskType === 'EXTENDED_LISTENING'
               ? 'Listen to the passage up to 3 times. Then record yourself explaining: what does the passage say is actually happening, and why is that different from what people commonly assume?'
+              : ['NARRATION','DESCRIPTION','INSTRUCTIONS'].includes(d.taskType)
+              ? 'Record yourself speaking on this topic.'
               : d.promptDescription || 'Listen carefully, then record your paraphrase.',
             scaffold_config:     d.scaffoldConfig || {},
             audioPath:           d.audioPath || null,
