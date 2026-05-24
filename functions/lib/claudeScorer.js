@@ -173,12 +173,15 @@ disconnected statements; or vocabulary inadequate; or too brief to evaluate.
 TIEBREAK: Assign lower score unless all criteria for higher score clearly met.
 
 OUTPUT FORMAT — Return valid JSON only. No backticks, markdown, or text outside JSON.
+
+PLAIN LANGUAGE REQUIREMENT: All student-facing fields (strengths, gaps, language_feedback) must be written in plain, everyday English that an intermediate English learner can understand. Never use linguistic or academic terminology such as: directive function, dependency-correct, sequential logic, cohesion, referential continuity, metalinguistic, anaphoric, discourse markers, register, construct, or similar terms. Explain what the student did and what to improve using simple, direct language — as if speaking to the student face to face. Use the student's own words where possible.
+
 {
   "score": <1, 2, or 3>,
   "score_label": "<Insufficient | Partial | Good>",
-  "strengths": "<lead with primary focus dimension, cite specific evidence>",
-  "gaps": "<which criterion lacks Level 2 presence and how>",
-  "language_feedback": "<holistic summary with one actionable suggestion>",
+  "strengths": "<What the student did well — use plain language, cite specific examples from what they said>",
+  "gaps": "<What was missing or needs improvement — explain clearly in plain everyday English, no technical terms>",
+  "language_feedback": "<Holistic summary in plain language with one concrete, actionable suggestion the student can apply immediately>",
   "monitor_notes": "<active monitor observations only — empty string if none>",
   "transcript_note": "<disfluency affecting scoring — empty string if none>"
 }
@@ -255,12 +258,15 @@ disfluency; or major features absent; or attribute list without spatial placemen
 TIEBREAK: Assign lower score unless all criteria for higher score clearly met.
 
 OUTPUT FORMAT — Return valid JSON only. No backticks, markdown, or text outside JSON.
+
+PLAIN LANGUAGE REQUIREMENT: All student-facing fields (strengths, gaps, language_feedback) must be written in plain, everyday English that an intermediate English learner can understand. Never use linguistic or academic terminology such as: directive function, dependency-correct, sequential logic, cohesion, referential continuity, metalinguistic, anaphoric, discourse markers, register, construct, or similar terms. Explain what the student did and what to improve using simple, direct language — as if speaking to the student face to face. Use the student's own words where possible.
+
 {
   "score": <1, 2, or 3>,
   "score_label": "<Insufficient | Partial | Good>",
-  "strengths": "<lead with primary focus dimension, cite specific evidence>",
-  "gaps": "<which criterion lacks Level 2 presence and how>",
-  "language_feedback": "<holistic summary with one actionable suggestion>",
+  "strengths": "<What the student did well — use plain language, cite specific examples from what they said>",
+  "gaps": "<What was missing or needs improvement — explain clearly in plain everyday English, no technical terms>",
+  "language_feedback": "<Holistic summary in plain language with one concrete, actionable suggestion the student can apply immediately>",
   "monitor_notes": "<active monitor observations only — empty string if none>",
   "transcript_note": "<disfluency affecting scoring — empty string if none>"
 }
@@ -334,12 +340,15 @@ narration replacing directive moves.
 TIEBREAK: Assign lower score unless all criteria for higher score clearly met.
 
 OUTPUT FORMAT — Return valid JSON only. No backticks, markdown, or text outside JSON.
+
+PLAIN LANGUAGE REQUIREMENT: All student-facing fields (strengths, gaps, language_feedback) must be written in plain, everyday English that an intermediate English learner can understand. Never use linguistic or academic terminology such as: directive function, dependency-correct, sequential logic, cohesion, referential continuity, metalinguistic, anaphoric, discourse markers, register, construct, or similar terms. Explain what the student did and what to improve using simple, direct language — as if speaking to the student face to face. Use the student's own words where possible.
+
 {
   "score": <1, 2, or 3>,
   "score_label": "<Insufficient | Partial | Good>",
-  "strengths": "<lead with primary focus dimension, cite specific evidence>",
-  "gaps": "<which criterion lacks Level 2 presence and how>",
-  "language_feedback": "<holistic summary with one actionable suggestion>",
+  "strengths": "<What the student did well — use plain language, cite specific examples from what they said>",
+  "gaps": "<What was missing or needs improvement — explain clearly in plain everyday English, no technical terms>",
+  "language_feedback": "<Holistic summary in plain language with one concrete, actionable suggestion the student can apply immediately>",
   "monitor_notes": "<active monitor observations only — empty string if none>",
   "transcript_note": "<disfluency affecting scoring — empty string if none>"
 }
