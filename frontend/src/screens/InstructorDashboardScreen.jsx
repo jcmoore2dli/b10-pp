@@ -7,7 +7,6 @@ import {
 import { db, auth, storage } from '../services/firebase'
 import { ref, getDownloadURL } from 'firebase/storage'
 import { useAuth } from '../context/useAuth'
-import { passages } from '../data/passages'
 
 const SCORE_COLORS = {
   4: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
@@ -114,7 +113,23 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const lastAttempt = attempts[0]
   const lastPractice = lastAttempt ? formatDate(lastAttempt.processedAt) : '—'
 
-  const assignablePassages = passages.filter(p => p.task_type && p.audio_file || p.task_type === 'eso')
+  const [assignablePassages, setAssignablePassages] = useState([])
+  const [loadingPassages, setLoadingPassages] = useState(false)
+
+  useEffect(() => {
+    if (!showAssign || assignablePassages.length > 0) return
+    setLoadingPassages(true)
+    getDocs(collection(db, 'passages'))
+      .then(snap => {
+        const list = snap.docs
+          .map(d => d.data())
+          .filter(p => p.status === 'active')
+          .sort((a, b) => a.passageId.localeCompare(b.passageId))
+        setAssignablePassages(list)
+      })
+      .catch(err => setAssignError('Failed to load passages: ' + err.message))
+      .finally(() => setLoadingPassages(false))
+  }, [showAssign])
 
   async function handleAssign() {
     if (!selectedPassageId) { setAssignError('Please select a passage.'); return }
@@ -190,11 +205,14 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
               disabled={assigning}
             >
               <option value="">Select a passage…</option>
-              {assignablePassages.map(p => (
-                <option key={p.passage_id} value={p.passage_id}>
-                  {p.passage_id} — {taskTypeLabel(p.task_type)}
-                </option>
-              ))}
+              {loadingPassages
+                ? <option disabled>Loading passages…</option>
+                : assignablePassages.map(p => (
+                  <option key={p.passageId} value={p.passageId}>
+                    {p.passageId} — {p.taskType}
+                  </option>
+                ))
+              }
             </select>
             {assignError && <p className="text-red-600 text-sm">{assignError}</p>}
             <button
