@@ -14,7 +14,7 @@ function normalizePassage(doc) {
     domain:         d.domain || id,
     layer:          d.corpusType === 'COR' ? 'CORE' : d.corpusType === 'EXT' ? 'EXT' : d.corpusType === 'ESO' ? 'ESO' : d.corpusType === 'NAR' ? 'NAR' : d.corpusType === 'DES' ? 'DES' : d.corpusType === 'INS' ? 'INS' : 'ORIENT',
     tier:           d.tier != null ? `Tier ${d.tier}` : null,
-    domain_cluster: d.domain || '',
+    domain_cluster: d.corpusType === 'NAR' ? (d.category || d.domain || '') : d.domain || '',
     question:       d.question || null,
     set:            d.set || null,
     taskType:       d.taskType || 'PARAPHRASE',
