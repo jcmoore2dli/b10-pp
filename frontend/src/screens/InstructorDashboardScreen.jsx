@@ -266,7 +266,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                     })
                     .map(p => (
                       <option key={p.passageId} value={p.passageId}>
-                        {p.passageId} — {p.taskType}
+                        {p.passageId} — {p.question ? p.question.split(' ').slice(0,6).join(' ') + '…' : p.domain || p.taskType}
                       </option>
                     ))
               }
