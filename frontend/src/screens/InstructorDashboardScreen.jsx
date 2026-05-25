@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import {
-  collection, query, where, getDocs, orderBy, addDoc, serverTimestamp
+  collection, query, where, getDocs, orderBy, addDoc, serverTimestamp, deleteDoc, doc
 } from 'firebase/firestore'
 import { db, auth, storage } from '../services/firebase'
 import { ref, getDownloadURL } from 'firebase/storage'
@@ -116,6 +116,36 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [assignablePassages, setAssignablePassages] = useState([])
   const [loadingPassages, setLoadingPassages] = useState(false)
 
+  // Assignment history state
+  const [assignmentHistory, setAssignmentHistory] = useState([])
+  const [loadingAssignments, setLoadingAssignments] = useState(true)
+  const [assignmentError, setAssignmentError] = useState(null)
+
+  useEffect(() => {
+    setLoadingAssignments(true)
+    setAssignmentError(null)
+    getDocs(
+      query(collection(db, 'assignments'), where('studentId', '==', b10Id), orderBy('assignedAt', 'desc'))
+    )
+      .then(snap => {
+        setAssignmentHistory(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+      })
+      .catch(err => {
+        setAssignmentError(err.message)
+      })
+      .finally(() => setLoadingAssignments(false))
+  }, [b10Id])
+
+  async function handleDeleteAssignment(assignmentId) {
+    if (!window.confirm('Remove this assignment?')) return
+    try {
+      await deleteDoc(doc(db, 'assignments', assignmentId))
+      setAssignmentHistory(prev => prev.filter(a => a.id !== assignmentId))
+    } catch (err) {
+      console.error('Failed to delete assignment:', err)
+    }
+  }
+
   useEffect(() => {
     if (!showAssign || assignablePassages.length > 0) return
     setLoadingPassages(true)
@@ -223,6 +253,56 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
             >
               {assigning ? 'Assigning…' : 'Confirm Assignment'}
             </button>
+          </div>
+        )}
+      </div>
+
+      {/* Assignment history */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
+          Assigned Passages ({assignmentHistory.length})
+        </p>
+        {loadingAssignments ? (
+          <div className="flex justify-center py-4">
+            <div className="w-6 h-6 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" />
+          </div>
+        ) : assignmentError ? (
+          <p className="text-red-600 text-sm text-center py-4 break-all">{assignmentError}</p>
+        ) : assignmentHistory.length === 0 ? (
+          <p className="text-gray-400 text-sm text-center py-4">No passages assigned yet.</p>
+        ) : (
+          <div className="flex flex-col divide-y divide-gray-100">
+            {assignmentHistory.map(assignment => {
+              const attemptedPassageIds = new Set(attempts.map(a => a.passageId))
+              const passageIds = assignment.passageIds || []
+              return passageIds.map(pid => {
+                const attempted = attemptedPassageIds.has(pid)
+                return (
+                  <div key={assignment.id + pid} className="flex items-center justify-between py-3 gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 font-mono">{pid}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">Assigned {formatDate(assignment.assignedAt)}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                        attempted
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {attempted ? '✓ Attempted' : 'Pending'}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteAssignment(assignment.id)}
+                        className="text-gray-300 hover:text-red-500 text-base leading-none px-1"
+                        title="Remove assignment"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                )
+              })
+            })}
           </div>
         )}
       </div>
