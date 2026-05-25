@@ -10,3 +10,4 @@ frontend/localhost+2*.pem
 hosting/
 .firebase/
 service-account.json
+key/
