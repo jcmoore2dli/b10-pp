@@ -108,6 +108,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [assignError, setAssignError] = useState(null)
   const [assignSuccess, setAssignSuccess] = useState(null)
   const [selectedPassageId, setSelectedPassageId] = useState('')
+  const [layerFilter, setLayerFilter] = useState('ALL')
 
   const totalAttempts = attempts.length
   const lastAttempt = attempts[0]
@@ -228,6 +229,23 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
         {assignSuccess && <p className="text-green-600 text-sm mb-2">{assignSuccess}</p>}
         {showAssign && (
           <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap gap-1 mb-1">
+              {['ALL','ORIENT','CORE','EXT','ESO','NAR','DES','INS'].map(layer => (
+                <button
+                  key={layer}
+                  onClick={() => { setLayerFilter(layer); setSelectedPassageId('') }}
+                  className="text-xs px-2 py-1 rounded-full font-semibold border transition-colors"
+                  style={{
+                    backgroundColor: layerFilter === layer ? '#1e3a5f' : 'white',
+                    color: layerFilter === layer ? 'white' : '#1e3a5f',
+                    borderColor: '#1e3a5f',
+                  }}
+                  disabled={assigning}
+                >
+                  {layer}
+                </button>
+              ))}
+            </div>
             <select
               value={selectedPassageId}
               onChange={e => setSelectedPassageId(e.target.value)}
@@ -237,11 +255,20 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
               <option value="">Select a passage…</option>
               {loadingPassages
                 ? <option disabled>Loading passages…</option>
-                : assignablePassages.map(p => (
-                  <option key={p.passageId} value={p.passageId}>
-                    {p.passageId} — {p.taskType}
-                  </option>
-                ))
+                : assignablePassages
+                    .filter(p => {
+                      if (layerFilter === 'ALL') return true
+                      const map = {
+                        ORIENT: 'ORI', CORE: 'COR', EXT: 'EXT',
+                        ESO: 'ESO', NAR: 'NAR', DES: 'DES', INS: 'INS'
+                      }
+                      return p.corpusType === map[layerFilter]
+                    })
+                    .map(p => (
+                      <option key={p.passageId} value={p.passageId}>
+                        {p.passageId} — {p.taskType}
+                      </option>
+                    ))
               }
             </select>
             {assignError && <p className="text-red-600 text-sm">{assignError}</p>}

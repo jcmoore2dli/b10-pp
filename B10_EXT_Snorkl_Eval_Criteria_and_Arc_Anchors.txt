@@ -1,0 +1,426 @@
+B10 EXT — SNORKL EVALUATION CRITERIA, ARC ANCHORS & LISTENING INSTRUCTIONS
+Version: 1.0 | February 2026
+================================================================
+
+================================================================
+PART 1: LISTENING INSTRUCTIONS (FINAL)
+================================================================
+
+RECOMMENDED FRAMING:
+
+  "Listen to the passage no more than 3 times. Then record
+   yourself explaining: What does the passage say is actually
+   happening, and why is that different from what people
+   commonly assume?"
+
+REVISION NOTES FROM DRAFT:
+
+The original draft read: "...explaining the main argument —
+what does the passage say is really happening, and how is
+that different from what most people would expect?"
+
+Three refinements:
+
+1. "main argument" removed from the surface prompt.
+   Rationale: ILR-2 learners may interpret "argument" as
+   debate/disagreement rather than "claim." The construct
+   is better served by the follow-up question doing the work.
+   The term "argument" appeared in the README rationale for
+   instructor understanding; it should not face the student.
+
+2. "really happening" → "actually happening"
+   Rationale: "really" can sound colloquial or emphatic in
+   ways that prime students to look for drama. "Actually"
+   is more neutral and closer to academic register, matching
+   the passage tone students will hear.
+
+3. "most people would expect" → "people commonly assume"
+   Rationale: "commonly assume" is more precise. It points
+   students toward the setup portion of every passage (the
+   obvious/expected explanation) without implying that the
+   passage is about public opinion. "Expect" can be read as
+   prediction; "assume" better captures the baseline belief
+   that the passage challenges.
+
+================================================================
+PART 2: EXT EVALUATION CRITERIA TEMPLATE
+================================================================
+
+INSTRUCTIONS FOR USE:
+Copy this template for each Snorkl EXT item. Replace the two
+bracketed fields [OBVIOUS EXPLANATION] and [ACTUAL MECHANISM]
+with the Arc_Anchor values from the lookup table in Part 3.
+All other language remains identical across all items.
+
+--- BEGIN TEMPLATE ---
+
+ANSWER / EVALUATION CRITERIA
+
+Arc_Anchor for this passage:
+• Common assumption: [OBVIOUS EXPLANATION]
+• Actual mechanism: [ACTUAL MECHANISM]
+
+Score 4 — Excellent
+The paraphrase:
+• clearly conveys the passage's central claim, including
+  how the actual mechanism differs from the common assumption;
+• accurately expresses the key causal or explanatory
+  relationships that carry the passage's reasoning arc;
+• includes all essential explanatory logic connecting the
+  assumption to the actual mechanism;
+• and presents the ideas coherently without distortion.
+
+Score 3 — Good (Meets Expectation)
+A Score 3 response must meet ALL of the following:
+• Conveys the general direction of the passage's argument,
+  including at least partial recognition that the common
+  assumption is incomplete or challenged;
+• Includes at least one accurate causal or explanatory
+  relationship from the passage's reasoning;
+• Shows overall accurate understanding even if the contrast
+  between assumption and actual mechanism is not fully
+  articulated;
+• Is coherent and does not distort meaning;
+• Demonstrates substantial but incomplete coverage of the
+  passage's logic.
+
+CRITICAL BOUNDARY — Score 3 vs. Score 2:
+A response that accurately restates the common assumption
+(the expected/obvious explanation) WITHOUT recognizing that
+the passage challenges, complicates, or redirects it does
+NOT meet Score 3. Such a response demonstrates topic
+identification, not arc comprehension, and should be scored
+as a 2 regardless of coherence or detail.
+
+Score 2 — Partial (Developing)
+A Score 2 response:
+• Identifies the topic or restates the common assumption
+  without recognizing the passage's actual argument;
+• OR mentions isolated details without connecting them to
+  the passage's reasoning arc;
+• Does not clearly convey how the actual mechanism differs
+  from what is commonly assumed;
+• Shows partial comprehension of content but not of the
+  passage's explanatory structure;
+• Lacks a coherent explanation of the passage's logic.
+
+Score 1 — Inaccurate
+The response misrepresents the meaning, introduces major
+errors, or shows minimal comprehension.
+
+--- END TEMPLATE ---
+
+================================================================
+PART 3: ARC ANCHOR LOOKUP TABLE (Passages 1–72)
+================================================================
+
+NOTE: Passage 53 (EXT-5A-04) appears to begin mid-sentence
+in the source data ("capped at a fixed percentage..."). This
+may be a truncation error. Arc Anchor is derived from
+available text but should be verified against the full passage.
+
+--------------------------------------------------
+1. EXT-1A-01 | ALG-01
+Common assumption: New treatments produce real physical improvement that patients can feel
+Actual mechanism: The brain's neuroplasticity creates reinforcement loops of expectation that generate perceived relief independent of therapeutic effect
+
+2. EXT-CUL-001 | ALG-04
+Common assumption: Media companies shape public opinion through intentional editorial control
+Actual mechanism: Economic incentives — advertising markets, revenue optimization, and economies of scale — narrow viewpoint diversity indirectly
+
+3. EXT-3A-03 | ALG-09
+Common assumption: Prairie dog alarm calls demonstrate complex, language-like animal communication
+Actual mechanism: Researchers project human linguistic categories onto learned acoustic patterns shaped by reinforcement, not symbolic intent
+
+4. EXT-CUL-007 | ALG-04
+Common assumption: Cultural diplomacy is a symbolic exercise with no measurable impact
+Actual mechanism: Repeated interpersonal contact through sustained programs gradually builds trust, familiarity, and perceptions of legitimacy over time
+
+5. EXT-4A-01 | ALG-04
+Common assumption: Added nitrogen improves plant productivity by removing a growth constraint
+Actual mechanism: Excess nitrogen disrupts underground cooperative systems, favoring fast-growing species while weakening long-term ecosystem resilience
+
+6. EXT-EDU-002 | ALG-04
+Common assumption: Mixed outcomes in inclusive classrooms result from poor instructional quality
+Actual mechanism: Structural factors — intermittent support staff, rigid curriculum pacing, and resource coordination gaps — shape everyday learning conditions
+
+7. EXT-4B-02 | ALG-03
+Common assumption: Freelance work offers greater personal freedom and flexibility
+Actual mechanism: Without automatic enrollment, employer matching, and payroll deductions, freelancers systematically underparticipate in retirement savings
+
+8. EXT-EDU-008 | ALG-04
+Common assumption: Legacy admissions persist because universities value tradition or privilege
+Actual mechanism: Legacy applicants support predictable enrollment yield, donation pipelines, and revenue planning, embedding the practice in administrative routine
+
+9. EXT-5B-01 | ALG-03
+Common assumption: Remote work's rise is driven by employee preferences and better technology
+Actual mechanism: Commercial real estate systems — long-term leases, valuation models, and financing structures — adjust far slower than work habits, masking economic impact
+
+10. EXT-ENV-004 | ALG-04
+Common assumption: Uneven climate agreement compliance reflects national reluctance or bad faith
+Actual mechanism: Nationally determined targets, weak enforcement, and misalignment between short-term political costs and long-term global benefits drive inconsistency
+
+11. EXT-6A-03 | ALG-04
+Common assumption: Uneven participation in flexible work reflects individual motivation or commitment
+Actual mechanism: Informal coordination, spontaneous discussions, and daily proximity gradually concentrate opportunity among those physically present
+
+12. EXT-GOV-006 | ALG-04
+Common assumption: Corporate lobbying is simply firms protecting their immediate economic interests
+Actual mechanism: Lobbying functions as information transmission — legislators depend on specialized corporate input due to time constraints and technical uncertainty
+
+13. EXT-6B-01 | ALG-04
+Common assumption: Night shift health problems result from sleeping fewer hours than the body needs
+Actual mechanism: Circadian misalignment keeps internal biological rhythms timed to daytime despite schedule changes, accumulating stress rather than adapting
+
+14. EXT-HLT-003 | ALG-04
+Common assumption: Private insurance alongside universal healthcare is simply consumer choice
+Actual mechanism: Parallel insurance markets sort risk, drain public system participation, and concentrate complex cases in public providers through structural incentives
+
+15. EXT-6B-02 | ALG-03
+Common assumption: Digitizing public records is a straightforward upgrade improving access and preservation
+Actual mechanism: Digital records require continuous active maintenance; without sustained funding, they degrade faster than stable physical archives
+
+16. EXT-INT-007 | ALG-03
+Common assumption: Orbital debris growth is caused by the rapid increase in commercial launches
+Actual mechanism: The absence of binding global disposal rules and shared liability frameworks allows debris to accumulate regardless of launch frequency
+
+17. EXT-6B-03 | ALG-09
+Common assumption: Wage-prestige alignment is a simple lag where pay is slow to catch up with changing job demands
+Actual mechanism: Prestige functions as a durable signaling shortcut that employers and institutions continue relying on, resisting revision even when contradicted by evidence
+
+18. EXT-JUS-007 | ALG-03
+Common assumption: Declining use of capital punishment reflects a straightforward moral transition driven by public attitudes
+Actual mechanism: Expanded evidentiary standards, prolonged appeals, and procedural complexity make execution slower and less predictable, reducing use through institutional friction
+
+19. EXT-1A-02 | ALG-01
+Common assumption: People replace formal clubs with informal or online social connections
+Actual mechanism: Clubs functioned as training spaces for civic skills; their decline erodes capacity for group participation, creating a self-reinforcing withdrawal cycle
+
+20. EXT-CUL-002 | ALG-04
+Common assumption: Increased arts funding produces broadly distributed cultural impact
+Actual mechanism: Allocation mechanisms favor established institutions with professional grant-writing capacity, concentrating support away from local or emerging groups
+
+21. EXT-3A-04 | ALG-09
+Common assumption: Childcare affordability primarily affects whether parents can work
+Actual mechanism: Fixed childcare costs function like capital lock-in constraints from labor economics, tightening employment decisions and quietly eroding job quality and mobility
+
+22. EXT-ECN-001 | ALG-03
+Common assumption: Direct cash transfers stimulate quick consumer spending and economic recovery
+Actual mechanism: Recipients often save transfers or pay down debt rather than spending them, producing slower and less predictable effects on aggregate growth
+
+23. EXT-4A-04 | ALG-03
+Common assumption: Hydrogen fuel is a practical clean energy substitute because of its high energy content by weight
+Actual mechanism: Hydrogen's low volumetric density creates storage, transport, and infrastructure challenges that advance slower than the chemistry
+
+24. EXT-EDU-004 | ALG-04
+Common assumption: Public funding for private schools expands parental choice and competition
+Actual mechanism: Stable public revenue causes private schools to mirror public system behaviors, reducing distinctiveness while diluting budgets for higher-need schools
+
+25. EXT-4B-03 | ALG-04
+Common assumption: Peatland drainage is a reversible land-use choice that can be undone by rewetting
+Actual mechanism: Drainage structurally degrades peat, shrinking layers and weakening water retention, locking in long-term carbon loss that rewetting cannot reverse
+
+26. EXT-EDU-009 | ALG-07
+Common assumption: Low community college completion rates reflect student unpreparedness or lack of personal discipline
+Actual mechanism: Lower per-student funding, open-access mandates, and part-time enrollment patterns create structural conditions that constrain persistence regardless of effort
+
+27. EXT-5B-02 | ALG-03
+Common assumption: Expanding citizen science participation produces broader and more reliable datasets
+Actual mechanism: Rising submission volume overwhelms verification systems, narrowing what can be reliably confirmed and reshaping the knowledge citizen science can support
+
+28. EXT-ENV-005 | ALG-04
+Common assumption: Uneven treaty compliance reflects weak political will or stated ambition
+Actual mechanism: Self-reporting frameworks, diplomatic consensus norms, and lack of formal consequences allow states to signal cooperation while delaying costly reforms
+
+29. EXT-6A-04 | ALG-06
+Common assumption: Skills-based hiring removes credential bias and surfaces job-relevant ability
+Actual mechanism: Signaling pressure migrates to new markers (portfolios, certifications, assessments), re-sorting candidates along less visible dimensions like preparation access
+
+30. EXT-GOV-007 | ALG-04
+Common assumption: Emergency powers are temporary responses to crisis that end when danger passes
+Actual mechanism: Officials grow accustomed to faster procedures, courts and public grow tolerant, and reversal requires sustained political effort — so powers persist through habit
+
+31. EXT-6B-04 | ALG-07
+Common assumption: Innovation slows in established companies because of leadership caution or team complacency
+Actual mechanism: Performance evaluation systems and near-term reward structures gradually channel effort toward measurable, low-risk initiatives, narrowing what gets proposed
+
+32. EXT-HLT-004 | ALG-04
+Common assumption: Rural hospital closures are driven by declining populations and limited tax bases
+Actual mechanism: Patients increasingly travel to urban centers for care and continue routine visits there out of familiarity, steadily draining the local volume that sustains budgets
+
+33. EXT-6B-05 | ALG-04
+Common assumption: Biochar stores carbon stably for centuries based on laboratory evidence
+Actual mechanism: Field conditions — variable moisture, microbial activity, and repeated wetting-drying cycles — degrade biochar faster than controlled lab settings predict
+
+34. EXT-INT-009 | ALG-09
+Common assumption: Treaty effectiveness depends on ambitious headline targets
+Actual mechanism: Enforcement design — credible, predictable penalties — shapes routine government budgeting behavior, paralleling compliance dynamics studied in behavioral economics
+
+35. EXT-5A-01 | ALG-03
+Common assumption: Vertical farming reduces environmental impact through local, controlled production
+Actual mechanism: Continuous artificial lighting and climate regulation demand substantial electricity, shifting energy costs upstream to regional grids
+
+36. EXT-JUS-009 | ALG-07
+Common assumption: Housing insecurity is primarily caused by insufficient housing supply
+Actual mechanism: Income volatility among gig and contract workers, combined with rigid payment schedules and automatic penalties, drives instability independent of unit availability
+
+37. EXT-1A-04 | ALG-01
+Common assumption: Stress reliably impairs cognitive performance, especially under threat
+Actual mechanism: Brief, predictable threat exposure heightens attention and sharpens memory consolidation, enhancing learning rather than suppressing it
+
+38. EXT-CUL-003 | ALG-04
+Common assumption: Overcrowding at cultural sites results from inherent popularity of famous landmarks
+Actual mechanism: Digital platforms concentrate attention on narrow sets of destinations, and local businesses adapt to predictable flows, reinforcing crowding through collective habit
+
+39. EXT-3A-05 | ALG-09
+Common assumption: Agricultural runoff is a physical pollution problem studied through environmental science
+Actual mechanism: The delayed visibility of runoff damage mirrors time-discounting patterns from behavioral economics, where future costs are systematically undervalued
+
+40. EXT-ECN-002 | ALG-03
+Common assumption: Higher tax rates on top earners will reliably generate proportional revenue increases
+Actual mechanism: Affluent households adjust investment timing, compensation structure, and residency, narrowing the taxable base and complicating revenue projections
+
+41. EXT-4A-05 | ALG-01
+Common assumption: Repeated sauna use builds physical resilience and toughness over time
+Actual mechanism: Perception of fatigue and warning signals shifts alongside the stress response, so what feels like growing toughness may partly reflect dulled warning signals
+
+42. EXT-EDU-007 | ALG-04
+Common assumption: Tuition increases are driven solely by budget shortfalls when public funding drops
+Actual mechanism: Families interpret higher prices as prestige signals, and growing administrative structures create fixed costs, embedding upward pricing as institutional behavior
+
+43. EXT-4B-04 | ALG-04
+Common assumption: Term limits reduce career entrenchment and encourage fresh legislative perspectives
+Actual mechanism: Forced turnover removes accumulated tacit knowledge — procedural, negotiation, policy — shifting real authority to unelected permanent staff and external advisers
+
+44. EXT-EDU-010 | ALG-04
+Common assumption: Student loan debt is a private financial obligation affecting individual graduates
+Actual mechanism: Debt functions as a long-term incentive structure that shapes which careers graduates consider financially viable, steering talent away from public service
+
+45. EXT-5B-03 | ALG-03
+Common assumption: Hybrid work popularity reflects successful flexibility that satisfies employees
+Actual mechanism: Coordination costs — duplicated meetings, structured updates replacing spontaneous exchanges — accumulate gradually, slowing timelines even when satisfaction stays high
+
+46. EXT-ENV-006 | ALG-07
+Common assumption: Fossil fuel subsidies persist because policymakers resist environmental regulation
+Actual mechanism: Subsidies endure because withdrawal triggers immediate, visible price shocks that voters attribute to government competence, creating electoral risk
+
+47. EXT-6A-05 | ALG-03
+Common assumption: Advances in materials science and geological modeling can ensure nuclear waste containment across millennia
+Actual mechanism: Human oversight institutions operate on election cycles and career spans, creating a temporal mismatch where physical infrastructure outlasts interpretive and maintenance capacity
+
+48. EXT-GOV-001 | ALG-09
+Common assumption: Low voter turnout reflects civic apathy or declining trust in democracy
+Actual mechanism: Voting competes with employment obligations; behavioral economics shows participation responds to structured time allocation and scheduling architecture, not motivation alone
+
+49. EXT-5A-02 | ALG-04
+Common assumption: Probiotic supplements improve gut health by adding beneficial bacteria
+Actual mechanism: The existing gut ecosystem resists new arrivals through colonization resistance, so supplemented strains typically pass through without durable settlement
+
+50. EXT-HLT-006 | ALG-04
+Common assumption: Restricting undocumented residents' healthcare access reduces public expenditure
+Actual mechanism: Excluded individuals delay care until conditions become acute, shifting costs to more expensive emergency departments and weakening preventive public health networks
+
+51. EXT-5A-03 | ALG-09
+Common assumption: Elephant behaviors near deceased herd members indicate grief-like emotional states
+Actual mechanism: Observers project human emotional categories onto animal behavior; the interpretive lens, not the data, drives conclusions about mourning
+
+52. EXT-INT-001 | ALG-04
+Common assumption: Defense spending reflects deliberate strategic calculation that can be capped by fiscal rules
+Actual mechanism: Multi-year contracts, alliance obligations, and public risk perception shaped by media cycles drive spending through structural momentum and behavioral responses to threat
+
+53. EXT-5A-04 | ALG-04 [NOTE: SOURCE TEXT APPEARS TRUNCATED — VERIFY]
+Common assumption: A fixed spending cap will discipline defense budgets through simple numerical limits
+Actual mechanism: Governments adjust definitions, pass supplemental appropriations, and shift categories to maintain strategic priorities without formally breaching the cap
+
+54. EXT-JUS-001 | ALG-07
+Common assumption: Private prisons are contracted simply to manage incarceration more efficiently
+Actual mechanism: Minimum-bed guarantees and per-inmate payment structures create routine incentives to maintain occupancy and cut rehabilitation services whose benefits fall outside reporting cycles
+
+55. EXT-1A-05 | ALG-01
+Common assumption: Digital surveillance of employees produces genuine, sustained productivity gains
+Actual mechanism: Employees adapt visible behaviors to match monitored metrics while neglecting less observable but essential tasks, creating the appearance of productivity without substance
+
+56. EXT-CUL-004 | ALG-04
+Common assumption: Museums retain colonial-era artifacts based on legal ownership claims
+Actual mechanism: Retention is sustained by reputation management, donor expectations, institutional identity, and the symbolic authority that major collections confer in the global cultural economy
+
+57. EXT-3B-01 | ALG-03
+Common assumption: Larger training sets and bigger model size produce robustly reliable deep learning performance
+Actual mechanism: Small, carefully designed input changes can cause confident misclassifications, revealing that routine benchmark success does not ensure dependable behavior under unusual conditions
+
+58. EXT-ECN-003 | ALG-09
+Common assumption: Higher inheritance tax rates will automatically redistribute wealth and narrow inequality
+Actual mechanism: High-net-worth households reorganize assets through trusts, staged transfers, and cross-border arrangements, generating anticipatory adaptation that moderates distributive effect
+
+59. EXT-3B-02 | ALG-04
+Common assumption: Ranked-choice voting primarily reduces negative campaigning
+Actual mechanism: The system reshapes strategic behavior — candidates moderate positions, coordinate endorsements, and compete for second-preference votes, sometimes narrowing strategic variation
+
+60. EXT-ECN-004 | ALG-09
+Common assumption: Sugar taxes reduce consumption through direct price increases
+Actual mechanism: Small price changes interrupt habitual purchasing routines, opening space for new habits that persist even after prices stabilize — working through behavioral repetition, not financial strain
+
+61. EXT-3B-04 | ALG-04
+Common assumption: Intermittent fasting activates cellular repair processes that support long-term health
+Actual mechanism: Lab findings under strict controlled conditions are extended into broad lifestyle advice without matching evidence of durable clinical benefit across varied individual responses
+
+62. EXT-ENV-007 | ALG-04
+Common assumption: Fossil fuel subsidies persist because of political reluctance to act on climate
+Actual mechanism: Consumer routines, household budgets, and distribution systems have been built around cheap fuel, making price increases feel like immediate personal losses that politicians avoid
+
+63. EXT-3B-05 | ALG-09
+Common assumption: Crow tool use in laboratory tasks demonstrates abstract, domain-general intelligence
+Actual mechanism: These behaviors may reflect specialized ecological foraging pressures rather than generalized reasoning — strong performance in constrained tasks does not confirm broad intelligence
+
+64. EXT-GOV-002 | ALG-04
+Common assumption: Rising election costs are driven by expensive media markets and competitive races
+Actual mechanism: Donors and campaigns redirect funds through affiliated committees and informal networks when limits tighten, reorganizing influence channels rather than reducing their scale
+
+65. EXT-5A-05 | ALG-04
+Common assumption: Seagrass restoration dependably stores atmospheric carbon long-term
+Actual mechanism: Carbon permanence depends on surrounding ecological stability — storms, dredging, warming, and nutrient runoff can re-release stored carbon, making gains conditional
+
+66. EXT-HLT-007 | ALG-07
+Common assumption: Lower telemedicine reimbursement rates reflect clinical doubts about virtual care quality
+Actual mechanism: Inherited payment structures, billing codes, and legacy contracts anchor in-person valuation, guiding institutional behavior regardless of patient outcome evidence
+
+67. EXT-5B-04 | ALG-03
+Common assumption: Expanding recycling collection and participation increases plastic recovery rates
+Actual mechanism: Contamination thresholds at processing facilities mean more material often leads to more rejected batches, quietly straining the system expanded access was meant to support
+
+68. EXT-INT-002 | ALG-04
+Common assumption: Compulsory military service proposals are driven by defense preparedness and deterrence
+Actual mechanism: Volunteer enlistment declines when civilian labor markets improve, creating practical personnel shortfalls rooted in ordinary career and life-planning decisions
+
+69. EXT-5B-05 | ALG-09
+Common assumption: Social prescribing programs reduce healthcare service use by offering non-medical alternatives
+Actual mechanism: Lowered access barriers increase willingness to seek additional support, echoing rebound effects in subscription services where easier entry expands rather than contains demand
+
+70. EXT-JUS-002 | ALG-07
+Common assumption: Police body cameras spread in response to public outrage over misconduct
+Actual mechanism: Adoption timelines align more closely with insurer liability recalculations, digital infrastructure upgrades, and accumulated workflow efficiency gains than with public controversy
+
+71. EXT-6A-01 | ALG-03
+Common assumption: Parrot vocal flexibility suggests language-like cognitive abilities shared with humans
+Actual mechanism: Vocal mimicry and human language rely on different learning pressures and neural organization; similar surface behavior does not indicate equivalent mental structure
+
+72. EXT-JUS-004 | ALG-01
+Common assumption: Cash bail systems ensure defendants return for scheduled court appearances
+Actual mechanism: The system sorts people by short-term access to cash rather than measured risk, generating cascading consequences — lost wages, housing instability, plea pressure — for those who cannot pay
+
+================================================================
+PART 4: DATA NOTE
+================================================================
+
+Passage 53 (EXT-5A-04): The exported text begins mid-sentence
+("capped at a fixed percentage of national income..."). This
+appears to be a truncation error in the Notion export or the
+EXT_Passage property field. The arc anchor above is derived
+from available text but should be verified once the full
+passage is confirmed. Passage 52 (EXT-INT-001) covers closely
+related subject matter (defense spending caps); confirm these
+are intended as distinct items.
+
+================================================================
+END OF DOCUMENT
+================================================================

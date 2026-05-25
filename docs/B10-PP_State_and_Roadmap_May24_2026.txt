@@ -1,0 +1,322 @@
+B10-PP — STATE OF THE PROJECT
+Continuation Document for New Claude Sessions
+As of May 24, 2026 — Post-Week 9 Sunday Home Sprint
+
+HOW TO USE THIS FILE:
+Copy the entire contents and paste into a new Claude session before
+starting any B10-PP work. This orients the session to all decisions
+made through May 24, 2026. Do not start B10-PP sessions without
+this context loaded.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 1 — PROJECT IDENTITY
+════════════════════════════════════════════════════════════════════════
+
+Project:      B10 Practice Platform (B10-PP)
+Developer:    J. Moore · GS-11 ESL instructor and OPI rater · DLIELC · San Antonio TX
+Purpose:      AI-assisted ILR proficiency practice for military English learners.
+              Two tracks. Formative practice tool only — not an official ILR assessment.
+Stack:        React + Vite · Firebase (Firestore, Storage, Cloud Functions, Hosting)
+              Deepgram STT (Pass 1) · AssemblyAI STT (Pass 2, conditional)
+              Anthropic Claude API (scoring engine)
+GitHub:       github.com/jcmoore2dli/b10-pp
+Work machine: Dell Linux Mint · username jcmoore2
+              Project path: ~/b10_corpus/b10_practice_platform
+Home machine: Dell Linux Mint · username moore
+              Project path: ~/b10_corpus/b10_practice_platform
+              SSH auth configured for GitHub (no password prompts)
+              firebase-admin installed
+              service-account.json at: ~/b10_corpus/b10_practice_platform/service-account.json
+              vite.config.js: HTTPS cert conditional (works on both machines)
+              Dev server: http://localhost:5173/b10_practice_platform/
+              hosting/ folder: ~/b10_corpus/b10_practice_platform/hosting/b10_practice_platform/
+                (created manually — not in git)
+IMPORTANT:    Always run `git pull origin main` before starting work on either machine
+
+Live URL:      https://b10-practice-platform.web.app/b10_practice_platform/
+Deploy cmd:    cd ~/b10_corpus/b10_practice_platform/frontend && npm run deploy
+
+Pilot target:  Week of August 2026 (revised — J. Moore in Orlando June 27–July 1,
+               vacation through ~July 21)
+Current phase: Week 9 COMPLETE
+
+════════════════════════════════════════════════════════════════════════
+SECTION 2 — WHAT WAS COMPLETED (Weeks 1–9)
+════════════════════════════════════════════════════════════════════════
+
+WEEKS 1–8: See prior state docs for full detail.
+Summary: Full platform built, 120 COR + 60 ESO uploaded, all screens
+on Firestore, end-to-end scoring verified for PARAPHRASE, ESO, EXT.
+
+────────────────────────────────────────────────────────────────────────
+WEEK 9 — May 23–24, 2026 (HOME SPRINT — COMPLETE)
+────────────────────────────────────────────────────────────────────────
+
+EXT CORPUS UPLOAD ✅
+  71 EXT passages uploaded to Firestore + Firebase Storage
+  Script: upload_ext_corpus.py (in repo docs/)
+  Storage path: audio/corpus/EXT/{passageId}.mp3
+  All arc anchor fields (commonAssumption, actualMechanism) populated
+  Passage text from Canonized_Notion_A.CSV
+
+ORIENT CORPUS UPLOAD ✅
+  18 ORIENT passages uploaded to Firestore + Firebase Storage
+  Script: upload_orient_corpus.py (in repo root)
+  CSV: docs/b10_orient.csv
+  Storage path: audio/corpus/ORI/{passageId}.mp3
+  corpusType: 'ORI', taskType: 'PARAPHRASE'
+  OR-15-PHY confirmed and MP3 generated (was mislabeled OR-14-ENV)
+
+NAR/DES/INS SPEAKING PROMPTS UPLOAD ✅
+  109 NARRATION prompts (corpusType: 'NAR', taskType: 'NARRATION')
+  76 DESCRIPTION prompts (corpusType: 'DES', taskType: 'DESCRIPTION')
+  88 INSTRUCTIONS prompts (corpusType: 'INS', taskType: 'INSTRUCTIONS')
+  Script: upload_speaking_prompts.py (in repo root)
+  No audio files — speaking prompts only
+  Filtering criteria applied (sensitivity, cultural accessibility,
+    lexical ceiling, US-specificity, construct validity)
+  All INS prompts use 'Explain' lead verb (not 'Describe') to
+    prevent register confusion with DES task type
+
+BROWSE LIBRARY UI UPDATES ✅
+  LAYER_ORDER updated: ['ORIENT', 'CORE', 'EXT', 'ESO', 'NAR', 'DES', 'INS']
+  corpusType mapping updated in PassageMenuScreen + PassageDetailScreen
+  LayerBadge colors added for ESO, NAR, DES, INS
+  NAR card title shows prompt question text (not domain abbreviation)
+  NAR cluster badge shows full category name (e.g. "Problem-Solving & Challenges")
+  DES/INS card title shows prompt question text
+
+PASSAGE DETAIL + RECORDING SCREEN UPDATES ✅
+  Task label updated for NAR/DES/INS
+  Instruction text: "Record yourself speaking on this topic" for NAR/DES/INS
+  "Passage text will not be shown" note hidden for NAR/DES/INS
+  Audio player hidden for NAR/DES/INS (no MP3)
+  Begin Task button active without audio engagement for NAR/DES/INS
+  RecordingScreen: audio player hidden for NAR/DES/INS task types
+
+INSTRUCTOR ASSIGNMENT DROPDOWN FIX ✅
+  Dropdown now fetches all active passages from Firestore /passages
+  Replaces legacy static passages.json (5 items)
+  Reloads after each assignment
+
+SCORING PROMPT UPDATES ✅
+  Section 8 v1.5 added to repo (Score 1 label: 'Inaccurate' → 'Insufficient')
+  NARRATION v1.3, DESCRIPTION v1.2, INSTRUCTIONS v1.5 added to repo docs/
+  Plain language requirement added to all three speaking prompt output fields
+    in claudeScorer.js — no metalinguistic terminology in student-facing fields
+  End-to-end scoring verified for NAR (3/3), DES (3/3), INS (3/3 and 2/3)
+
+GOVERNANCE DOCS COMMITTED ✅
+  docs/B10_PP_Section8_Scoring_Prompts_v1.5.md
+  docs/B10-PP_SECTION_8_PROMPT_4b_NARRATION_v1_3.txt
+  docs/B10-PP_Description_Scoring_Prompt_4c_v1_2.txt
+  docs/B10-PP_Instructions_Scoring_Prompt_4d_v1_5.txt
+
+════════════════════════════════════════════════════════════════════════
+SECTION 3 — NEXT SESSION PRIORITIES
+════════════════════════════════════════════════════════════════════════
+
+IMMEDIATE — TOP PRIORITY (next session):
+  1. Assignment History View (PRE-PILOT HARD GATE)
+     - Per-student view in InstructorDashboardScreen showing all
+       assignments from Firestore /assignments
+     - Each entry shows: passageId, assignedAt, attempted (yes/no)
+       cross-referenced against /submissions
+     - Required before pilot — without it instructor has no visibility
+       into what has been assigned or completed per student
+     - Located: InstructorDashboardScreen.jsx → AttemptHistory component
+
+BEFORE PILOT:
+  2. Pilot student access codes (3–5 students)
+  3. Instructor accounts set up
+  4. Smoke test on pilot device set
+  5. Passage assignments for pilot students
+  6. Pilot teacher orientation
+
+SHOULD DO BEFORE PILOT:
+  7. Add layer filter to instructor assignment dropdown
+     (currently shows all 543 passages — instructor needs to filter
+     by NAR/DES/INS/COR/EXT/ESO/ORIENT when assigning)
+
+POST-PILOT:
+  - Scaffold configuration UI for NAR/DES/INS (primaryFocus, activeMonitors)
+  - Track B scoring prompt refinements based on pilot data
+  - Bundle/set assignment
+  - Sorting categories in assignment dropdown
+  - Admin passage management UI
+
+════════════════════════════════════════════════════════════════════════
+SECTION 4 — DO NOT REOPEN THESE DECISIONS
+════════════════════════════════════════════════════════════════════════
+
+ILR labels in student feedback: Out of scope. Never.
+corpusType "CC": It is "COR". Do not reintroduce.
+Scoring engine: Claude Sonnet, temperature = 0. Non-negotiable.
+Raw transcript: NEVER smoothed before scoring engine.
+submissionNumber: Server-side only. Client always writes 0.
+Auth method: Email/password only.
+Passage data source: Firestore /passages. Static passages.json is legacy.
+  Do NOT reintroduce static passage imports in any screen.
+EXT arc anchor fields: REQUIRED on every EXT passage doc. Never omit.
+hosting/ folder: Build artifact. Never commit to git.
+Bulk set assignment: Post-pilot.
+Bundle assignment: Post-pilot.
+Set-based Browse Library navigation: Post-pilot.
+NARRATION/DESCRIPTION/INSTRUCTIONS: NOW IN PILOT SCOPE (decision reversed
+  May 24, 2026 — all three task types live, scored, and verified).
+ILR construct clarification (locked May 24, 2026):
+  ILR-2 tasks: NARRATION, DESCRIPTION, INSTRUCTIONS (3-point scale)
+  ILR-3 tasks: ORIENT/CORE (PARAPHRASE), EXT (EXTENDED_LISTENING), ESO
+  1+ and 2+ are REDS outcome descriptors, not platform targets.
+  Platform targets: ILR 2 (NAR/DES/INS) and ILR 3 (PARAPHRASE/EXT/ESO).
+
+════════════════════════════════════════════════════════════════════════
+SECTION 5 — CORPUS STATUS
+════════════════════════════════════════════════════════════════════════
+
+ORIENT CORPUS — COMPLETE ✅
+  18 passages in Firestore + Firebase Storage
+  audio/corpus/ORI/{passageId}.mp3
+  corpusType: 'ORI', taskType: 'PARAPHRASE'
+
+COR CORPUS — COMPLETE ✅
+  120 passages in Firestore + Firebase Storage
+  audio/corpus/COR/{passageId}.mp3
+
+EXT CORPUS — COMPLETE ✅
+  72 passages total (71 uploaded + EXT-GOV-001 previously live)
+  audio/corpus/EXT/{passageId}.mp3
+  All arc anchor fields populated
+
+ESO QUESTIONS — COMPLETE ✅
+  60 [CURR] questions in Firestore
+  6 revised for cultural accessibility (May 23)
+
+NAR PROMPTS — COMPLETE ✅
+  109 prompts in Firestore
+  corpusType: 'NAR', taskType: 'NARRATION'
+  No audio files
+
+DES PROMPTS — COMPLETE ✅
+  76 prompts in Firestore
+  corpusType: 'DES', taskType: 'DESCRIPTION'
+  No audio files
+
+INS PROMPTS — COMPLETE ✅
+  88 prompts in Firestore
+  corpusType: 'INS', taskType: 'INSTRUCTIONS'
+  No audio files — all prompts use 'Explain' lead verb
+
+TOTAL LIVE: 543 passages/prompts
+
+════════════════════════════════════════════════════════════════════════
+SECTION 6 — FIRESTORE PASSAGE SCHEMA
+════════════════════════════════════════════════════════════════════════
+
+COR passages:
+  passageId, passageText, taskType: 'PARAPHRASE', corpusType: 'COR'
+  set (int), tier (int), domain, algorithm, source (ESO/LEG)
+  esoQuestionId (string or null), wordCount, audioPath, status
+
+ORI passages:
+  passageId, passageText, taskType: 'PARAPHRASE', corpusType: 'ORI'
+  wordCount, algorithm, audioPath, status
+
+EXT passages:
+  passageId, passageText, taskType: 'EXTENDED_LISTENING', corpusType: 'EXT'
+  commonAssumption, actualMechanism (REQUIRED — arc anchor fields)
+  audioPath, status
+
+ESO questions:
+  passageId, taskType: 'ESO', corpusType: 'ESO'
+  domain, algorithm, question, promptDescription
+  status: 'active', curr: true
+
+NAR prompts:
+  passageId, taskType: 'NARRATION', corpusType: 'NAR'
+  domain, category, question, promptDescription, status: 'active'
+
+DES prompts:
+  passageId, taskType: 'DESCRIPTION', corpusType: 'DES'
+  domain, question, promptDescription, status: 'active'
+
+INS prompts:
+  passageId, taskType: 'INSTRUCTIONS', corpusType: 'INS'
+  domain, question, promptDescription, status: 'active'
+
+════════════════════════════════════════════════════════════════════════
+SECTION 7 — KEY FILE LOCATIONS (HOME MACHINE)
+════════════════════════════════════════════════════════════════════════
+
+Upload scripts:
+  ~/b10_corpus/b10_practice_platform/upload_cor_corpus.py
+  ~/b10_corpus/b10_practice_platform/upload_eso_questions.py
+  ~/b10_corpus/b10_practice_platform/upload_ext_corpus.py
+  ~/b10_corpus/b10_practice_platform/upload_orient_corpus.py
+  ~/b10_corpus/b10_practice_platform/upload_speaking_prompts.py
+
+CSVs:
+  ~/b10_corpus/b10_practice_platform/Canonized_Notion_A.CSV (EXT passage text)
+  ~/b10_corpus/b10_practice_platform/docs/b10_orient.csv (ORIENT passages)
+
+Audio files:
+  ~/b10_corpus/b10_practice_platform/audio/core/ (120 COR MP3s)
+  ~/b10_corpus/b10_practice_platform/audio/ext/ (74 files)
+  ~/Documents/OPI SLT/B10 Project/B10 Azure/output_mp3_orient/ (18 ORIENT MP3s)
+
+Arc anchor file:
+  ~/b10_corpus/b10_practice_platform/B10_EXT_Snorkl_Eval_Criteria_and_Arc_Anchors.txt
+
+Service account:
+  ~/b10_corpus/b10_practice_platform/service-account.json
+
+Governance docs (repo):
+  docs/B10_PP_Section8_Scoring_Prompts_v1.5.md (canonical — supersedes v1.4)
+  docs/B10-PP_SECTION_8_PROMPT_4b_NARRATION_v1_3.txt
+  docs/B10-PP_Description_Scoring_Prompt_4c_v1_2.txt
+  docs/B10-PP_Instructions_Scoring_Prompt_4d_v1_5.txt
+
+════════════════════════════════════════════════════════════════════════
+SECTION 8 — SCORING ARCHITECTURE
+════════════════════════════════════════════════════════════════════════
+
+Cloud Function routing (claudeScorer.js):
+  ESO                → ESO_PROMPT (Prompt 4 v1.5 Rev.4) — 4-point scale (2–4)
+  NARRATION          → NARRATION_PROMPT (4b v1.3) — 3-point scale (1–3)
+  DESCRIPTION        → DESCRIPTION_PROMPT (4c v1.2) — 3-point scale (1–3)
+  INSTRUCTIONS       → INSTRUCTIONS_PROMPT (4d v1.5) — 3-point scale (1–3)
+  PARAPHRASE         → PARAPHRASE_PROMPT (v1.5) — 4-point scale (1–4)
+  EXTENDED_LISTENING → EXTENDED_LISTENING_PROMPT — 4-point scale (1–4)
+
+Plain language requirement active in NAR/DES/INS output fields.
+Disfluency metadata injected for NAR/DES/INS (pause counts, mean gap).
+Temperature: 0 on all scoring calls.
+Primary engine: claude-sonnet-4-6
+Alternate engine: OpenAI via ScoringService.js (one-line swap)
+
+════════════════════════════════════════════════════════════════════════
+SECTION 9 — STRATEGIC CONTEXT
+════════════════════════════════════════════════════════════════════════
+
+FOUR MEETINGS:
+  Meeting 1: COMPLETE — Supervisor + Chief demo May 2026 ✅
+  Meeting 2: S1 ask — protected fall time block (after pilot)
+  Meeting 3: Pilot results → S2 budget ask
+  Meeting 4: S3 — formal adoption
+
+PILOT:
+  Target: August 2026 (revised from June 23)
+  Scope: ~50 students, full corpus live (ILR-2 + ILR-3 tasks)
+  In-service training presentation on B10 ecosystem at pilot launch
+
+COST:
+  Per attempt: ~$0.009
+  Anthropic credits: check current balance before next session
+  Firebase: $10 budget alert set
+  Snorkl: expires July 2026 — do not renew
+
+════════════════════════════════════════════════════════════════════════
+END OF STATE OF PROJECT DOCUMENT
+B10-PP · DLIELC · J. Moore · May 24, 2026
+Share with any new Claude session before starting B10-PP work.
+════════════════════════════════════════════════════════════════════════

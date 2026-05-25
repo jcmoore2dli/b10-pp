@@ -1,0 +1,215 @@
+B10-PP — STATE OF THE PROJECT
+Continuation Document for New Claude Sessions
+As of May 23, 2026 — Post-Week 9 Home Sprint
+
+HOW TO USE THIS FILE:
+Copy the entire contents and paste into a new Claude session before
+starting any B10-PP work. This orients the session to all decisions
+made through May 23, 2026. Do not start B10-PP sessions without
+this context loaded.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 1 — PROJECT IDENTITY
+════════════════════════════════════════════════════════════════════════
+
+Project:      B10 Practice Platform (B10-PP)
+Developer:    J. Moore · GS-11 ESL instructor and OPI rater · DLIELC · San Antonio TX
+Purpose:      AI-assisted ILR proficiency practice for military English learners.
+              Two tracks. Formative practice tool only — not an official ILR assessment.
+Stack:        React + Vite · Firebase (Firestore, Storage, Cloud Functions, Hosting)
+              Deepgram STT (Pass 1) · AssemblyAI STT (Pass 2, conditional)
+              Anthropic Claude API (scoring engine)
+GitHub:       github.com/jcmoore2dli/b10-pp
+Work machine: Dell Linux Mint · username jcmoore2
+              Project path: ~/b10_corpus/b10_practice_platform
+Home machine: Dell Linux Mint · username moore
+              Project path: ~/b10_corpus/b10_practice_platform
+              SSH auth configured for GitHub (no password prompts)
+              firebase-admin installed
+              service-account.json at: ~/b10_corpus/b10_practice_platform/service-account.json
+              vite.config.js: HTTPS cert conditional (works on both machines)
+              Dev server: http://localhost:5173/b10_practice_platform/
+              hosting/ folder: ~/b10_corpus/b10_practice_platform/hosting/b10_practice_platform/
+                (created manually — not in git)
+IMPORTANT:    Always run `git pull origin main` before starting work on either machine
+
+Live URL:      https://b10-practice-platform.web.app/b10_practice_platform/
+Deploy cmd:    cd ~/b10_corpus/b10_practice_platform/frontend && npm run deploy
+
+Pilot target:  Week of June 23, 2026 (soft launch — ON TRACK)
+Current phase: Week 9 IN PROGRESS
+
+════════════════════════════════════════════════════════════════════════
+SECTION 2 — WHAT WAS COMPLETED (Weeks 1–9)
+════════════════════════════════════════════════════════════════════════
+
+WEEKS 1–8: See prior state docs for full detail.
+Summary: Full platform built, 120 COR + 60 ESO uploaded, all screens
+on Firestore, end-to-end scoring verified for PARAPHRASE, ESO, EXT.
+
+────────────────────────────────────────────────────────────────────────
+WEEK 9 HOME SPRINT — May 23, 2026
+────────────────────────────────────────────────────────────────────────
+
+ESO QUESTION REVISIONS (6 questions updated for cultural accessibility):
+  ECN-008: 'Should workers in app-based or platform jobs be classified
+    as employees with full benefits?'
+  TEC-015: 'Should technology companies be required to give law
+    enforcement access to encrypted devices and communications?'
+  ECN-012: 'Should governments do more to protect consumers from
+    high-interest loans and exploitative lending practices?'
+  GOV-015: 'Should the practice of manipulating electoral district
+    boundaries for political advantage be prohibited by law?'
+  JUS-005: 'Should defendants be released before trial based on risk
+    assessment rather than ability to pay?'
+  GOV-022: 'Should employees who report government or corporate
+    wrongdoing receive stronger legal protections?'
+  Updated in: Firestore /passages docs + upload_eso_questions.py script
+  Committed: "Week 9: Revise 6 ESO questions for cultural accessibility"
+
+ESO UI FIXES (PassageMenuScreen + PassageDetailScreen):
+  PassageCard: shows question text as title for ESO passages
+  PassageDetailScreen: layer shows ESO (not ORIENT)
+  PassageDetailScreen: question text shown as page title
+  Browse Library tab restored on back navigation (sessionStorage)
+  Committed: "Week 9: ESO question text on cards, fix layer labels,
+    restore Browse Library tab on back"
+
+EXT CORPUS PREP (ready for upload — next session):
+  74 audio files in ~/b10_corpus/b10_practice_platform/audio/ext/
+    (prefixes stripped: R###__ removed)
+  3 non-corpus files present (skip in upload script):
+    B10_001.mp3, EXT-TEST-01.mp3 — test files
+    EXT-GOV-001.mp3 — already uploaded to Firebase
+  Arc anchor file: ~/b10_corpus/b10_practice_platform/
+    B10_EXT_Snorkl_Eval_Criteria_and_Arc_Anchors.txt
+  71 new passages to upload (72 total minus EXT-GOV-001 already live)
+  firebase-admin installed on home machine ✅
+  service-account.json in place ✅
+
+════════════════════════════════════════════════════════════════════════
+SECTION 3 — NEXT SESSION PRIORITIES
+════════════════════════════════════════════════════════════════════════
+
+IMMEDIATE (next session — home machine):
+  1. Build upload_ext_corpus.py script
+     - Read arc anchor file for commonAssumption + actualMechanism
+     - Match passage IDs to audio filenames
+     - Upload 71 EXT passages to Firebase Storage + Firestore
+     - Skip: B10_001.mp3, EXT-TEST-01.mp3, EXT-GOV-001.mp3
+
+  2. Instructor assignment dropdown fix (Week 9 carry-over)
+     - Currently shows old static passages (5 items)
+     - Needs to fetch from Firestore /passages
+     - Located: InstructorDashboardScreen.jsx → AttemptHistory → handleAssign
+
+WEEK 9 REMAINING (before pilot):
+  3. Create pilot student access codes (3-5 students)
+  4. Instructor accounts set up
+  5. Pilot teacher orientation
+  6. Final smoke test on pilot device set
+  7. Passage assignments for pilot students
+
+════════════════════════════════════════════════════════════════════════
+SECTION 4 — DO NOT REOPEN THESE DECISIONS
+════════════════════════════════════════════════════════════════════════
+
+ILR labels in student feedback: Out of scope. Never.
+corpusType "CC": It is "COR". Do not reintroduce.
+Scoring engine: Claude Sonnet, temperature = 0. Non-negotiable.
+Raw transcript: NEVER smoothed before scoring engine.
+submissionNumber: Server-side only. Client always writes 0.
+Auth method: Email/password only.
+Passage data source: Firestore /passages. Static passages.json is legacy.
+  Do NOT reintroduce static passage imports in any screen.
+EXT arc anchor fields: REQUIRED on every EXT passage doc. Never omit.
+hosting/ folder: Build artifact. Never commit to git.
+Bulk set assignment: Post-pilot.
+Bundle assignment: Post-pilot.
+Set-based Browse Library navigation: Post-pilot.
+NARRATION/DESCRIPTION/INSTRUCTIONS: Not pilot scope.
+
+════════════════════════════════════════════════════════════════════════
+SECTION 5 — CORPUS STATUS
+════════════════════════════════════════════════════════════════════════
+
+COR CORPUS — COMPLETE ✅
+  120 passages in Firestore + Firebase Storage
+  audio/corpus/COR/{passageId}.mp3
+
+ESO QUESTIONS — COMPLETE ✅
+  60 [CURR] questions in Firestore
+  6 revised for cultural accessibility (May 23)
+
+EXT CORPUS — IN PROGRESS
+  72 passages total
+  1 live: EXT-GOV-001 (Firestore + Firebase Storage)
+  71 ready to upload: audio files on home machine, prefixes stripped
+  Arc anchor file on home machine
+  Upload script: TO BE BUILT next session
+  Firebase Storage path will be: audio/corpus/EXT/{passageId}.mp3
+
+════════════════════════════════════════════════════════════════════════
+SECTION 6 — FIRESTORE PASSAGE SCHEMA
+════════════════════════════════════════════════════════════════════════
+
+COR passages:
+  passageId, passageText, taskType: 'PARAPHRASE', corpusType: 'COR'
+  set (int), tier (int), domain, algorithm, source (ESO/LEG)
+  esoQuestionId (string or null), wordCount, audioPath, status
+
+EXT passages:
+  passageId, passageText, taskType: 'EXTENDED_LISTENING', corpusType: 'EXT'
+  commonAssumption, actualMechanism (REQUIRED — arc anchor fields)
+  audioPath, status
+  (ext_band, pil, bucket, lex if available)
+
+ESO questions:
+  passageId, taskType: 'ESO', corpusType: 'ESO'
+  domain, algorithm, question, promptDescription
+  status: 'active', curr: true
+
+Total live: 120 COR + 1 EXT + 60 ESO = 181 passages
+
+════════════════════════════════════════════════════════════════════════
+SECTION 7 — KEY FILE LOCATIONS (HOME MACHINE)
+════════════════════════════════════════════════════════════════════════
+
+Upload scripts:
+  ~/b10_corpus/b10_practice_platform/upload_cor_corpus.py
+  ~/b10_corpus/b10_practice_platform/upload_eso_questions.py
+  ~/b10_corpus/b10_practice_platform/B10PP_A.csv
+
+Audio files:
+  ~/b10_corpus/b10_practice_platform/audio/core/ (120 COR MP3s)
+  ~/b10_corpus/b10_practice_platform/audio/ext/ (74 files, prefixes stripped)
+
+Arc anchor file:
+  ~/b10_corpus/b10_practice_platform/B10_EXT_Snorkl_Eval_Criteria_and_Arc_Anchors.txt
+
+Service account:
+  ~/b10_corpus/b10_practice_platform/service-account.json
+
+════════════════════════════════════════════════════════════════════════
+SECTION 8 — STRATEGIC CONTEXT
+════════════════════════════════════════════════════════════════════════
+
+FOUR MEETINGS:
+  Meeting 1: COMPLETE — Supervisor + Chief demo May 2026 ✅
+  Meeting 2: S1 ask — protected fall time block (after pilot)
+  Meeting 3: Pilot results → S2 budget ask
+  Meeting 4: S3 — formal adoption
+
+COST:
+  Per attempt: ~$0.009
+  Anthropic credits: ~$19.50 remaining
+  Firebase: $10 budget alert set
+  Snorkl: expires July 2026 — do not renew
+
+PILOT TARGET: June 23, 2026 — ON TRACK
+
+════════════════════════════════════════════════════════════════════════
+END OF STATE OF PROJECT DOCUMENT
+B10-PP · DLIELC · J. Moore · May 23, 2026
+Share with any new Claude session before starting B10-PP work.
+════════════════════════════════════════════════════════════════════════
