@@ -22,6 +22,7 @@ const admin                     = require("firebase-admin");
 const { transcribeAudio }       = require("./lib/deepgramSTT");
 const { scoreTranscript, computeDisfluencyMetadata, validateFeedbackGrammar } = require("./lib/claudeScorer");
 
+
 // ── Secrets ───────────────────────────────────────────────────────────────────
 const DEEPGRAM_API_KEY   = defineSecret("DEEPGRAM_API_KEY");
 const ASSEMBLYAI_API_KEY = defineSecret("ASSEMBLYAI_API_KEY");
@@ -149,6 +150,8 @@ async function processSubmission(submissionId) {
     const mimeType = audioPath.endsWith(".mp4") ? "audio/mp4"
                    : audioPath.endsWith(".wav") ? "audio/wav"
                    : "audio/webm";
+
+
 
     // ── Step 4 + 5: Deepgram STT ──────────────────────────────────────────
     logger.info("processSubmission: calling Deepgram", { submissionId });
