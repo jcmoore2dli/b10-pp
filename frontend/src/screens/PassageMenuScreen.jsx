@@ -83,17 +83,29 @@ export default function PassageMenuScreen() {
       if (!b10Id || b10Id === '—') return
       try {
         const snap = await getDocs(
-          query(collection(db, 'assignments'), where('studentId', '==', b10Id))
+          query(collection(db, 'assignments'), where('studentId', '==', b10Id), orderBy('assignedAt', 'desc'))
         )
-        const passageIds = snap.docs.flatMap(d => d.data().passageIds || [])
-        const unique = [...new Set(passageIds)]
+        // Build map: passageId -> most recent scaffoldConfig
+        const scaffoldMap = {}
+        snap.docs.forEach(d => {
+          const data = d.data()
+          const pids = data.passageIds || []
+          pids.forEach(pid => {
+            if (!scaffoldMap[pid]) scaffoldMap[pid] = data.scaffoldConfig || null
+          })
+        })
+        const unique = Object.keys(scaffoldMap)
         // Fetch passage docs from Firestore by document ID
         const { doc, getDoc } = await import('firebase/firestore')
         const assignedDocs = await Promise.all(
           unique.map(async (id) => {
             try {
               const docSnap = await getDoc(doc(db, 'passages', id))
-              if (docSnap.exists()) return normalizePassage(docSnap)
+              if (docSnap.exists()) {
+                const normalized = normalizePassage(docSnap)
+                normalized.scaffoldConfig = scaffoldMap[id]
+                return normalized
+              }
               return null
             } catch { return null }
           })
@@ -161,6 +173,11 @@ export default function PassageMenuScreen() {
 
   function handleSelectPassage(passage) {
     sessionStorage.setItem('b10pp_active_tab', activeTab)
+    if (passage.scaffoldConfig) {
+      sessionStorage.setItem('b10pp_scaffold', JSON.stringify(passage.scaffoldConfig))
+    } else {
+      sessionStorage.removeItem('b10pp_scaffold')
+    }
     navigate(`/b10_practice_platform/passage/${passage.passage_id}`)
   }
 
@@ -347,7 +364,12 @@ function PassageCard({ passage, onSelect, status }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-mono text-gray-400 mb-1">{passage.passage_id}</p>
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-xs font-mono text-gray-400">{passage.passage_id}</p>
+            {passage.scaffoldConfig && passage.scaffoldConfig.focusArea && passage.scaffoldConfig.focusArea !== 'holistic' && (
+              <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>Focused</span>
+            )}
+          </div>
           <p className="font-semibold text-gray-900 text-sm leading-snug">{(['ESO','NAR','DES','INS'].includes(passage.layer) && passage.question) ? passage.question : passage.domain}</p>
           <div className="flex flex-wrap gap-1 mt-2">
             <LayerBadge layer={passage.layer} />

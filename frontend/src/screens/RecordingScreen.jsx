@@ -46,6 +46,48 @@ export default function RecordingScreen() {
 
   const { isRecording, startRecording, stopRecording, error: recorderError } = useRecorder()
 
+  const SCAFFOLD_CUES = {
+    'argument_structure': 'Focus: Make your point clearly, support it with a reason, then explain the broader significance.',
+    'discourse_frame': {
+      'FRAME_01': 'Focus: Consider both individual and societal levels. Shift between different groups affected.',
+      'FRAME_02': 'Focus: Consider both short-term and long-term effects, costs, benefits, and unintended consequences.',
+      'FRAME_03': 'Focus: Trace cause-and-effect relationships. Explain what leads to what and why.',
+      'FRAME_04': 'Focus: Reason about possibilities and outcomes. Use if/then thinking to project what could happen.',
+      'FRAME_05': 'Focus: Evaluate based on values and principles. Consider what is fair, right, or just.',
+      'FRAME_06': 'Focus: Bring together different perspectives and make a reasoned overall judgment.',
+    },
+    'grammar_structure': {
+      'STRUCT_01': 'Language focus: Use conditional structures — if/then, would, could — to express conditions and outcomes.',
+      'STRUCT_02': 'Language focus: Use contrast and concession — although, however, even though, while — to show both sides.',
+      'STRUCT_03': 'Language focus: Use relative clauses — who, which, that — to add detail and specify.',
+      'STRUCT_04': 'Language focus: Use hedging language — may, might, could, it appears, arguably — to express uncertainty.',
+      'STRUCT_05': 'Language focus: Use noun forms of verbs — development, reduction, implementation — for precision.',
+      'STRUCT_06': 'Language focus: Use passive voice and reporting verbs — it is argued, research shows — to report and analyze.',
+      'STRUCT_07': 'Language focus: Use parallel structure — similar grammatical forms — to list and compare clearly.',
+    },
+    'combined': null,
+  }
+
+  function getScaffoldCue() {
+    try {
+      const raw = sessionStorage.getItem('b10pp_scaffold')
+      if (!raw) return null
+      const sc = JSON.parse(raw)
+      if (!sc || sc.focusArea === 'holistic') return null
+      if (sc.focusArea === 'argument_structure') return SCAFFOLD_CUES.argument_structure
+      if (sc.focusArea === 'discourse_frame') return SCAFFOLD_CUES.discourse_frame[sc.primaryFrame] || null
+      if (sc.focusArea === 'grammar_structure') return SCAFFOLD_CUES.grammar_structure[sc.primaryStructure] || null
+      if (sc.focusArea === 'combined') {
+        const df = sc.primaryFrame ? SCAFFOLD_CUES.discourse_frame[sc.primaryFrame] : null
+        const gs = sc.primaryStructure ? SCAFFOLD_CUES.grammar_structure[sc.primaryStructure] : null
+        if (df && gs) return df + ' ' + gs
+        return df || gs || null
+      }
+      return null
+    } catch { return null }
+  }
+  const scaffoldCue = getScaffoldCue()
+
   const [phase, setPhase]                 = useState('idle')
   const [errorMessage, setErrorMessage]   = useState(null)
   const [statusMessage, setStatusMessage] = useState('')
@@ -264,6 +306,13 @@ export default function RecordingScreen() {
             {passage.prompt_description || 'Listen carefully, then record your response.'}
           </p>
         </div>
+        {/* Scaffold cue */}
+        {scaffoldCue && (
+          <div className="w-full rounded-xl p-4 border" style={{ backgroundColor: '#fffbeb', borderColor: '#c8a84b' }}>
+            <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: '#92640a' }}>Speaking Focus</p>
+            <p className="text-sm leading-relaxed" style={{ color: '#78350f' }}>{scaffoldCue}</p>
+          </div>
+        )}
 
         {isEvaluating ? (
           /* Uploading / evaluating state */
