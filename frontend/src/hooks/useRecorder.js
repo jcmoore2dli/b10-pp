@@ -21,11 +21,12 @@ export function useRecorder() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       // Negotiate best supported format — mp4 for iOS Safari, webm for Chrome
-      const mimeType = MediaRecorder.isTypeSupported('audio/mp4')
-        ? 'audio/mp4'
-        : MediaRecorder.isTypeSupported('audio/webm')
-        ? 'audio/webm'
-        : ''
+      const mimeType =
+        MediaRecorder.isTypeSupported('audio/mp4;codecs=mp4a.40.2') ? 'audio/mp4;codecs=mp4a.40.2' :
+        MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' :
+        MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' :
+        MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' :
+        ''
       const mediaRecorder = mimeType
         ? new MediaRecorder(stream, { mimeType })
         : new MediaRecorder(stream)
@@ -58,8 +59,9 @@ export function useRecorder() {
       }
 
       mediaRecorder.onstop = () => {
-        const mimeType = mediaRecorder.mimeType || 'audio/webm'
-        const blob = new Blob(chunksRef.current, { type: mimeType })
+        const rawMime = mediaRecorder.mimeType || 'audio/webm'
+      const baseType = rawMime.split(';')[0]
+      const blob = new Blob(chunksRef.current, { type: baseType })
         // Release mic tracks
         mediaRecorder.stream.getTracks().forEach((t) => t.stop())
         mediaRecorderRef.current = null
