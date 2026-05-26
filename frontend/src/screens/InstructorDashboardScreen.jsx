@@ -197,6 +197,11 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [selectedPassageId, setSelectedPassageId] = useState('')
   const [layerFilter, setLayerFilter] = useState('ALL')
   const [selectedBundle, setSelectedBundle] = useState('')
+  const [scaffoldOpen, setScaffoldOpen] = useState(false)
+  const [focusArea, setFocusArea] = useState('Holistic')
+  const [primaryFrame, setPrimaryFrame] = useState('')
+  const [secondaryFrame, setSecondaryFrame] = useState('')
+  const [primaryStructure, setPrimaryStructure] = useState('')
 
   const totalAttempts = attempts.length
   const lastAttempt = attempts[0]
@@ -284,18 +289,49 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
         setAssignmentRefresh(r => r + 1)
       } else {
         if (!selectedPassageId) { setAssignError('Please select a passage.'); setAssigning(false); return }
+        const FOCUS_MAP = {
+          'Holistic': 'holistic', 'Argument structure': 'argument_structure',
+          'Discourse frame': 'discourse_frame', 'Grammar structure': 'grammar_structure',
+          'Combined': 'combined'
+        }
+        const FRAME_MAP = {
+          'Scale & Stakeholder': 'FRAME_01', 'Trade-offs & Constraints': 'FRAME_02',
+          'Causal Systems': 'FRAME_03', 'Hypothetical & Conditional': 'FRAME_04',
+          'Value-based Evaluation': 'FRAME_05', 'Synthesis & Judgment': 'FRAME_06'
+        }
+        const STRUCT_MAP = {
+          'Conditional Structures': 'STRUCT_01', 'Concession & Contrast': 'STRUCT_02',
+          'Relative Clauses': 'STRUCT_03', 'Modality & Hedging': 'STRUCT_04',
+          'Nominalization': 'STRUCT_05', 'Passive & Reporting': 'STRUCT_06',
+          'Parallelism': 'STRUCT_07'
+        }
+        const scaffoldConfig = layerFilter === 'ESO' && focusArea !== 'Holistic'
+          ? {
+              focusArea: FOCUS_MAP[focusArea] || 'holistic',
+              primaryFrame: FRAME_MAP[primaryFrame] || null,
+              secondaryFrame: FRAME_MAP[secondaryFrame] || null,
+              primaryStructure: STRUCT_MAP[primaryStructure] || null,
+              secondaryStructure: null,
+              studentCueText: '',
+            }
+          : null
         await addDoc(collection(db, 'assignments'), {
           studentId:      b10Id,
           assignmentType: 'main',
           assignedBy:     currentUser.uid,
           passageIds:     [selectedPassageId],
-          scaffoldConfig: null,
+          scaffoldConfig,
           assignedAt:     serverTimestamp(),
         })
         setAssignSuccess(`Assigned ${selectedPassageId} to ${b10Id}`)
         setSelectedPassageId('')
         setShowAssign(false)
         setAssignmentRefresh(r => r + 1)
+        setScaffoldOpen(false)
+        setFocusArea('Holistic')
+        setPrimaryFrame('')
+        setSecondaryFrame('')
+        setPrimaryStructure('')
       }
     } catch (err) {
       setAssignError('Assignment failed: ' + err.message)
@@ -409,6 +445,130 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                 }
               </select>
             )}
+            {/* Scaffold config — ESO only */}
+            {layerFilter === 'ESO' && selectedPassageId && (
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setScaffoldOpen(!scaffoldOpen)}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 text-left"
+                  type="button"
+                >
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Scaffold Focus (optional)</p>
+                  <span className="text-gray-400 text-xs">{scaffoldOpen ? '▲' : '▼'}</span>
+                </button>
+                {scaffoldOpen && (
+                  <div className="p-3 flex flex-col gap-3">
+                    <div>
+                      <p className="text-xs text-gray-400 font-semibold mb-2">What should Claude focus on?</p>
+                      <div className="flex flex-wrap gap-1">
+                        {['Holistic','Argument structure','Discourse frame','Grammar structure','Combined'].map(opt => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => {
+                              setFocusArea(opt)
+                              if (opt !== 'Discourse frame' && opt !== 'Combined') { setPrimaryFrame(''); setSecondaryFrame('') }
+                              if (opt !== 'Grammar structure' && opt !== 'Combined') { setPrimaryStructure('') }
+                            }}
+                            className="text-xs px-2 py-1 rounded-full border font-semibold transition-colors"
+                            style={{
+                              backgroundColor: focusArea === opt ? '#1e3a5f' : 'white',
+                              color: focusArea === opt ? 'white' : '#1e3a5f',
+                              borderColor: '#1e3a5f',
+                            }}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {focusArea === 'Argument structure' && (
+                      <div className="bg-blue-50 rounded-lg px-3 py-2">
+                        <p className="text-xs text-blue-700 font-semibold mb-1">PSU Arc</p>
+                        <p className="text-xs text-blue-600">Claude will foreground the Point → Support → Universal analysis arc in feedback. No sub-selection needed.</p>
+                      </div>
+                    )}
+
+                    {(focusArea === 'Discourse frame' || focusArea === 'Combined') && (
+                      <>
+                        <div>
+                          <p className="text-xs text-gray-400 font-semibold mb-2">Primary discourse frame</p>
+                          <div className="flex flex-wrap gap-1">
+                            {['Scale & Stakeholder','Trade-offs & Constraints','Causal Systems','Hypothetical & Conditional','Value-based Evaluation','Synthesis & Judgment'].map(frame => (
+                              <button
+                                key={frame}
+                                type="button"
+                                onClick={() => setPrimaryFrame(primaryFrame === frame ? '' : frame)}
+                                className="text-xs px-2 py-1 rounded-full border font-semibold transition-colors"
+                                style={{
+                                  backgroundColor: primaryFrame === frame ? '#c8a84b' : 'white',
+                                  color: '#1e3a5f',
+                                  borderColor: '#c8a84b',
+                                }}
+                              >
+                                {frame}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        {focusArea === 'Discourse frame' && (
+                          <div>
+                            <p className="text-xs text-gray-400 font-semibold mb-2">Secondary frame (optional)</p>
+                            <div className="flex flex-wrap gap-1">
+                              {['Scale & Stakeholder','Trade-offs & Constraints','Causal Systems','Hypothetical & Conditional','Value-based Evaluation','Synthesis & Judgment'].filter(f => f !== primaryFrame).map(frame => (
+                                <button
+                                  key={frame}
+                                  type="button"
+                                  onClick={() => setSecondaryFrame(secondaryFrame === frame ? '' : frame)}
+                                  className="text-xs px-2 py-1 rounded-full border font-semibold transition-colors"
+                                  style={{
+                                    backgroundColor: secondaryFrame === frame ? '#7a9bbf' : 'white',
+                                    color: secondaryFrame === frame ? 'white' : '#64748b',
+                                    borderColor: '#94a3b8',
+                                  }}
+                                >
+                                  {frame}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {(focusArea === 'Grammar structure' || focusArea === 'Combined') && (
+                      <div>
+                        <p className="text-xs text-gray-400 font-semibold mb-2">Grammar structure</p>
+                        <div className="flex flex-wrap gap-1">
+                          {['Conditional Structures','Concession & Contrast','Relative Clauses','Modality & Hedging','Nominalization','Passive & Reporting','Parallelism'].map(struct => (
+                            <button
+                              key={struct}
+                              type="button"
+                              onClick={() => setPrimaryStructure(primaryStructure === struct ? '' : struct)}
+                              className="text-xs px-2 py-1 rounded-full border font-semibold transition-colors"
+                              style={{
+                                backgroundColor: primaryStructure === struct ? '#1e3a5f' : 'white',
+                                color: primaryStructure === struct ? 'white' : '#64748b',
+                                borderColor: '#64748b',
+                              }}
+                            >
+                              {struct}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {focusArea !== 'Holistic' && (
+                      <p className="text-xs text-blue-600 bg-blue-50 rounded px-2 py-1">
+                        Scaffold is diagnostic only — score is always holistic.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             {assignError && <p className="text-red-600 text-sm">{assignError}</p>}
             <button
               onClick={handleAssign}
@@ -440,6 +600,16 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
             {assignmentHistory.map(assignment => {
               const attemptedPassageIds = new Set(attempts.map(a => a.passageId))
               const passageIds = assignment.passageIds || []
+              const SCAFFOLD_ABBREV = {
+                'holistic': null,
+                'argument_structure': 'ARG',
+                'discourse_frame': 'DFr',
+                'grammar_structure': 'GRA',
+                'combined': 'CMB',
+              }
+              const scaffoldBadge = assignment.scaffoldConfig
+                ? SCAFFOLD_ABBREV[assignment.scaffoldConfig.focusArea] || null
+                : null
               return passageIds.map(pid => {
                 const attempted = attemptedPassageIds.has(pid)
                 return (
@@ -449,6 +619,12 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                       <p className="text-xs text-gray-400 mt-0.5">Assigned {formatDate(assignment.assignedAt)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
+                      {scaffoldBadge && (
+                        <span className="text-xs font-bold px-2 py-1 rounded-full shrink-0"
+                          style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>
+                          {scaffoldBadge}
+                        </span>
+                      )}
                       <span className={`text-xs font-bold px-2 py-1 rounded-full ${
                         attempted
                           ? 'bg-green-100 text-green-700'
