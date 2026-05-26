@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import {
@@ -54,15 +54,25 @@ const audioManager = {
 function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
   const [url, setUrl] = useState(null)
   const [loading, setLoading] = useState(false)
+  const audioRef = useRef(null)
   const playing = playingId === attemptId
+
+  useEffect(() => {
+    if (!playing && audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+  }, [playing])
 
   async function handlePlay() {
     if (playing) {
-      audioManager.stop()
       setPlayingId(null)
       return
     }
-    audioManager.stop()
+    if (audioManager.current && audioManager.current !== audioRef.current) {
+      audioManager.current.pause()
+      audioManager.current.currentTime = 0
+    }
     setPlayingId(attemptId)
     try {
       setLoading(true)
@@ -72,10 +82,12 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
         downloadUrl = await getDownloadURL(storageRef)
         setUrl(downloadUrl)
       }
-      const audio = new Audio(downloadUrl)
-      audioManager.current = audio
-      audio.onended = () => setPlayingId(null)
-      audio.play()
+      const audioEl = audioRef.current
+      audioEl.src = downloadUrl
+      audioEl.load()
+      audioManager.current = audioEl
+      audioEl.onended = () => setPlayingId(null)
+      await audioEl.play()
     } catch (err) {
       console.error('Audio fetch failed:', err)
       setPlayingId(null)
@@ -85,18 +97,21 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
   }
 
   return (
-    <button
-      onClick={handlePlay}
-      disabled={loading}
-      className="text-xs px-2 py-1 rounded-lg border font-semibold shrink-0"
-      style={{
-        borderColor: playing ? '#c0392b' : '#1e3a5f',
-        color: playing ? '#c0392b' : '#1e3a5f',
-        backgroundColor: 'white',
-      }}
-    >
-      {loading ? '…' : playing ? '■ Stop' : '▶ Play'}
-    </button>
+    <span>
+      <audio ref={audioRef} playsInline preload="none" />
+      <button
+        onClick={handlePlay}
+        disabled={loading}
+        className="text-xs px-2 py-1 rounded-lg border font-semibold shrink-0"
+        style={{
+          borderColor: playing ? '#c0392b' : '#1e3a5f',
+          color: playing ? '#c0392b' : '#1e3a5f',
+          backgroundColor: 'white',
+        }}
+      >
+        {loading ? 'Loading' : playing ? 'Stop' : 'Play'}
+      </button>
+    </span>
   )
 }
 
