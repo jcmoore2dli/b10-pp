@@ -103,6 +103,8 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
 
 function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [playingId, setPlayingId] = useState(null)
+  const [expandedAttemptId, setExpandedAttemptId] = useState(null)
+  const [showScoringNotes, setShowScoringNotes] = useState({})
   const [showAssign, setShowAssign] = useState(false)
   const [assigning, setAssigning] = useState(false)
   const [assignError, setAssignError] = useState(null)
@@ -346,21 +348,87 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
             {attempts.map(attempt => {
               const colors = SCORE_COLORS[attempt.score] || SCORE_COLORS[1]
               const scoreMax = attempt.taskFamily === 'LEVEL3' ? 4 : 3
+              const isExpanded = expandedAttemptId === attempt.id
+              const scoringNotesOpen = showScoringNotes[attempt.id] || false
               return (
-                <div key={attempt.id} className="flex items-center justify-between py-3 gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900">
-                      {taskTypeLabel(attempt.taskType)} · {attempt.passageId}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {attempt.audioPath && <AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} />}
-                    <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
-                      <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
-                      <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
+                <div key={attempt.id} className="flex flex-col border-b border-gray-100 last:border-0">
+                  {/* Row header — tappable */}
+                  <button
+                    onClick={() => setExpandedAttemptId(isExpanded ? null : attempt.id)}
+                    className="flex items-center justify-between py-3 gap-3 w-full text-left"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900">
+                        {taskTypeLabel(attempt.taskType)} · {attempt.passageId}
+                        <span className="ml-2 text-gray-300 text-xs">{isExpanded ? '▲' : '▼'}</span>
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
                     </div>
-                  </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {attempt.audioPath && <AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} />}
+                      <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
+                        <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
+                        <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Expanded detail panel */}
+                  {isExpanded && (
+                    <div className="pb-4 flex flex-col gap-4">
+
+                      {/* Transcript */}
+                      {attempt.transcriptText && (
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Transcript</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{attempt.transcriptText}</p>
+                        </div>
+                      )}
+
+                      {/* Strengths */}
+                      {attempt.strengths && (
+                        <div className="bg-green-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Strengths</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{attempt.strengths}</p>
+                        </div>
+                      )}
+
+                      {/* Gaps */}
+                      {attempt.gaps && (
+                        <div className="bg-yellow-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-yellow-600 uppercase tracking-wide mb-1">Gaps</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{attempt.gaps}</p>
+                        </div>
+                      )}
+
+                      {/* Language Feedback */}
+                      {attempt.language_feedback && (
+                        <div className="bg-blue-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Language Feedback</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{attempt.language_feedback}</p>
+                        </div>
+                      )}
+
+                      {/* Scoring Notes — collapsible */}
+                      {attempt.monitor_notes && (
+                        <div className="border border-gray-200 rounded-lg overflow-hidden">
+                          <button
+                            onClick={() => setShowScoringNotes(prev => ({ ...prev, [attempt.id]: !prev[attempt.id] }))}
+                            className="w-full flex items-center justify-between px-3 py-2 bg-gray-100"
+                          >
+                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Scoring Notes</p>
+                            <span className="text-gray-400 text-xs">{scoringNotesOpen ? '▲' : '▼'}</span>
+                          </button>
+                          {scoringNotesOpen && (
+                            <div className="px-3 py-3 bg-white">
+                              <p className="text-xs text-gray-600 leading-relaxed font-mono">{attempt.monitor_notes}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                    </div>
+                  )}
                 </div>
               )
             })}
