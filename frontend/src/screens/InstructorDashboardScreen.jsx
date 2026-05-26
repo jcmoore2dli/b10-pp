@@ -54,6 +54,7 @@ const audioManager = {
 function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
   const [url, setUrl] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [audioError, setAudioError] = useState(null)
   const audioRef = useRef(null)
   const playing = playingId === attemptId
 
@@ -90,6 +91,7 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
       await audioEl.play()
     } catch (err) {
       console.error('Audio fetch failed:', err)
+      setAudioError(err.message || err.name || 'Unknown error')
       setPlayingId(null)
     } finally {
       setLoading(false)
@@ -99,6 +101,7 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
   return (
     <span>
       <audio ref={audioRef} playsInline preload="none" />
+      {audioError && <p style={{color:'red',fontSize:'10px'}}>{audioError}</p>}
       <button
         onClick={handlePlay}
         disabled={loading}
