@@ -8,6 +8,69 @@ import { db, auth, storage } from '../services/firebase'
 import { ref, getDownloadURL } from 'firebase/storage'
 import { useAuth } from '../context/useAuth'
 
+const BUNDLE_MAP = [
+  { set: 1, day: 1, leg: 'COR-ECN-002', cor: 'COR-EDU-001', eso: 'EDU-001', q: 'Should standardized testing be eliminated as the main tool for academic assessment?' },
+  { set: 1, day: 2, leg: 'COR-ECN-010', cor: 'COR-EDU-006', eso: 'EDU-006', q: 'Should financial literacy be a required subject in school curricula?' },
+  { set: 1, day: 3, leg: 'COR-SCI-002', cor: 'COR-EDU-015', eso: 'EDU-015', q: 'Should governments provide financial incentives to address teacher shortages?' },
+  { set: 1, day: 4, leg: 'COR-SCI-010', cor: 'COR-WRK-003', eso: 'WRK-003', q: 'Should workers have the legal right to disconnect from work communications outside working hours?' },
+  { set: 1, day: 5, leg: 'COR-SCI-013', cor: 'COR-WRK-007', eso: 'WRK-007', q: 'Should a four-day work week be adopted as national labor policy?' },
+  { set: 2, day: 1, leg: 'COR-BIO-008', cor: 'COR-ENV-008', eso: 'ENV-008', q: 'Should single-use plastics be banned?' },
+  { set: 2, day: 2, leg: 'COR-BIO-011', cor: 'COR-ENV-015', eso: 'ENV-015', q: 'Should nuclear energy be expanded as part of climate policy?' },
+  { set: 2, day: 3, leg: 'COR-ENV-001', cor: 'COR-HLT-005', eso: 'HLT-005', q: 'Should sugary drinks be taxed to discourage unhealthy consumption?' },
+  { set: 2, day: 4, leg: 'COR-HLT-002', cor: 'COR-HLT-012', eso: 'HLT-012', q: 'Should vaccinations be mandatory for all schoolchildren?' },
+  { set: 2, day: 5, leg: 'COR-HLT-009', cor: 'COR-HLT-022', eso: 'HLT-022', q: 'Should healthcare be provided universally to all citizens?' },
+  { set: 3, day: 1, leg: 'COR-ECN-003', cor: 'COR-GOV-003', eso: 'GOV-003', q: 'Should voting be mandatory for all citizens?' },
+  { set: 3, day: 2, leg: 'COR-SOC-003', cor: 'COR-GOV-012', eso: 'GOV-012', q: 'Should there be term limits for legislators?' },
+  { set: 3, day: 3, leg: 'COR-SOC-005', cor: 'COR-INT-004', eso: 'INT-004', q: 'Should countries accept more refugees?' },
+  { set: 3, day: 4, leg: 'COR-SOC-007', cor: 'COR-JUS-003', eso: 'JUS-003', q: 'Should the death penalty be abolished?' },
+  { set: 3, day: 5, leg: 'COR-SOC-008', cor: 'COR-JUS-008', eso: 'JUS-008', q: 'Should marijuana possession be decriminalized?' },
+  { set: 4, day: 1, leg: 'COR-PHY-003', cor: 'COR-ECN-008', eso: 'ECN-008', q: 'Should workers in app-based or platform jobs be classified as employees?' },
+  { set: 4, day: 2, leg: 'COR-PHY-006', cor: 'COR-TEC-003', eso: 'TEC-003', q: 'Should social media have age restrictions for minors?' },
+  { set: 4, day: 3, leg: 'COR-TEC-006', cor: 'COR-TEC-012', eso: 'TEC-012', q: 'Should AI-generated content be labeled as such?' },
+  { set: 4, day: 4, leg: 'COR-TEC-007', cor: 'COR-TEC-018', eso: 'TEC-018', q: 'Should autonomous vehicles be allowed on public roads?' },
+  { set: 4, day: 5, leg: 'COR-TEC-009', cor: 'COR-TEC-025', eso: 'TEC-025', q: 'Should genetic engineering of humans be permitted?' },
+  { set: 5, day: 1, leg: 'COR-BIO-001', cor: 'COR-CUL-005', eso: 'CUL-005', q: 'Should cultural appropriation be regulated?' },
+  { set: 5, day: 2, leg: 'COR-ECN-006', cor: 'COR-EDU-003', eso: 'EDU-003', q: 'Should college education be free for all students?' },
+  { set: 5, day: 3, leg: 'COR-ENV-006', cor: 'COR-GOV-008', eso: 'GOV-008', q: 'Should campaign contributions be limited by law?' },
+  { set: 5, day: 4, leg: 'COR-SCI-004', cor: 'COR-HLT-008', eso: 'HLT-008', q: 'Should organ donation be opt-out by default?' },
+  { set: 5, day: 5, leg: 'COR-SOC-001', cor: 'COR-TEC-008', eso: 'TEC-008', q: 'Should facial recognition technology be banned in public spaces?' },
+  { set: 6, day: 1, leg: 'COR-BIO-007', cor: 'COR-ENV-003', eso: 'ENV-003', q: 'Should carbon taxes be implemented to address climate change?' },
+  { set: 6, day: 2, leg: 'COR-HLT-004', cor: 'COR-HLT-018', eso: 'HLT-018', q: 'Should processed foods carry warning labels?' },
+  { set: 6, day: 3, leg: 'COR-PHY-007', cor: 'COR-INT-006', eso: 'INT-006', q: 'Should refugee integration programs be expanded?' },
+  { set: 6, day: 4, leg: 'COR-SCI-008', cor: 'COR-INT-008', eso: 'INT-008', q: 'Should international trade agreements prioritize labor standards?' },
+  { set: 6, day: 5, leg: 'COR-TEC-011', cor: 'COR-WRK-012', eso: 'WRK-012', q: 'Should governments raise the minimum wage to ensure a living wage?' },
+  { set: 7, day: 1, leg: 'COR-BIO-006', cor: 'COR-EDU-012', eso: 'EDU-012', q: 'Should schools teach critical media literacy as a required subject?' },
+  { set: 7, day: 2, leg: 'COR-ECN-005', cor: 'COR-GOV-018', eso: 'GOV-018', q: 'Should lobbying be more strictly regulated?' },
+  { set: 7, day: 3, leg: 'COR-ENV-013', cor: 'COR-HLT-025', eso: 'HLT-025', q: 'Should alternative medicine be regulated for safety?' },
+  { set: 7, day: 4, leg: 'COR-HLT-006', cor: 'COR-SOC-010', eso: 'SOC-010', q: 'Should social media platforms be required to moderate harmful content?' },
+  { set: 7, day: 5, leg: 'COR-SCI-006', cor: 'COR-TEC-022', eso: 'TEC-022', q: 'Should data brokers be regulated to protect consumer privacy?' },
+  { set: 8, day: 1, leg: 'COR-ECN-009', cor: 'COR-EDU-005', eso: 'EDU-005', q: 'Should vocational education be expanded in secondary schools?' },
+  { set: 8, day: 2, leg: 'COR-ECN-015', cor: 'COR-EDU-018', eso: 'EDU-018', q: 'Should teacher salaries be significantly increased?' },
+  { set: 8, day: 3, leg: 'COR-SCI-003', cor: 'COR-EDU-022', eso: 'EDU-022', q: 'Should class sizes be reduced in public schools?' },
+  { set: 8, day: 4, leg: 'COR-SCI-009', cor: 'COR-WRK-008', eso: 'WRK-008', q: 'Should parental leave be significantly extended?' },
+  { set: 8, day: 5, leg: 'COR-SCI-014', cor: 'COR-WRK-015', eso: 'WRK-015', q: 'Should the retirement age be raised?' },
+  { set: 9, day: 1, leg: 'COR-BIO-002', cor: 'COR-ENV-012', eso: 'ENV-012', q: 'Should deforestation be banned globally?' },
+  { set: 9, day: 2, leg: 'COR-BIO-003', cor: 'COR-ENV-018', eso: 'ENV-018', q: 'Should water usage be rationed during shortages?' },
+  { set: 9, day: 3, leg: 'COR-ENV-007', cor: 'COR-HLT-015', eso: 'HLT-015', q: 'Should pharmaceutical advertising to consumers be restricted?' },
+  { set: 9, day: 4, leg: 'COR-HLT-003', cor: 'COR-HLT-028', eso: 'HLT-028', q: 'Should mental health services be significantly expanded?' },
+  { set: 9, day: 5, leg: 'COR-HLT-010', cor: 'COR-HLT-032', eso: 'HLT-032', q: 'Should end-of-life care decision-making be expanded for patients?' },
+  { set: 10, day: 1, leg: 'COR-ECN-001', cor: 'COR-GOV-015', eso: 'GOV-015', q: 'Should the practice of manipulating electoral district boundaries for political advantage be prohibited?' },
+  { set: 10, day: 2, leg: 'COR-SOC-002', cor: 'COR-GOV-022', eso: 'GOV-022', q: 'Should employees who report government or corporate wrongdoing receive stronger legal protections?' },
+  { set: 10, day: 3, leg: 'COR-SOC-006', cor: 'COR-INT-012', eso: 'INT-012', q: 'Should sanctions be used as a foreign policy tool?' },
+  { set: 10, day: 4, leg: 'COR-SOC-009', cor: 'COR-JUS-005', eso: 'JUS-005', q: 'Should defendants be released before trial based on risk assessments?' },
+  { set: 10, day: 5, leg: 'COR-SOC-012', cor: 'COR-JUS-015', eso: 'JUS-015', q: 'Should restorative justice programs replace traditional incarceration?' },
+  { set: 11, day: 1, leg: 'COR-PHY-001', cor: 'COR-ECN-012', eso: 'ECN-012', q: 'Should governments do more to protect consumers from high-interest lending?' },
+  { set: 11, day: 2, leg: 'COR-PHY-012', cor: 'COR-ECN-018', eso: 'ECN-018', q: 'Should subscription pricing models be regulated to protect consumers?' },
+  { set: 11, day: 3, leg: 'COR-TEC-002', cor: 'COR-TEC-015', eso: 'TEC-015', q: 'Should technology companies be required to give law enforcement access to encrypted data?' },
+  { set: 11, day: 4, leg: 'COR-TEC-010', cor: 'COR-TEC-028', eso: 'TEC-028', q: 'Should space resources be privately owned?' },
+  { set: 11, day: 5, leg: 'COR-TEC-014', cor: 'COR-TEC-032', eso: 'TEC-032', q: 'Should brain-computer interfaces be regulated?' },
+  { set: 12, day: 1, leg: 'COR-BIO-013', cor: 'COR-CUL-012', eso: 'CUL-012', q: 'Should cultural heritage sites be protected from development?' },
+  { set: 12, day: 2, leg: 'COR-ECN-004', cor: 'COR-EDU-025', eso: 'EDU-025', q: 'Should arts education be mandatory in all schools?' },
+  { set: 12, day: 3, leg: 'COR-ENV-002', cor: 'COR-GOV-025', eso: 'GOV-025', q: 'Should political advertising be regulated?' },
+  { set: 12, day: 4, leg: 'COR-PHY-015', cor: 'COR-HLT-020', eso: 'HLT-020', q: 'Should prescription drug prices be regulated by government?' },
+  { set: 12, day: 5, leg: 'COR-SCI-007', cor: 'COR-TEC-035', eso: 'TEC-035', q: 'Should algorithmic hiring be regulated to prevent bias?' },
+]
+
 const SCORE_COLORS = {
   4: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
   3: { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-200' },
@@ -133,6 +196,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [assignSuccess, setAssignSuccess] = useState(null)
   const [selectedPassageId, setSelectedPassageId] = useState('')
   const [layerFilter, setLayerFilter] = useState('ALL')
+  const [selectedBundle, setSelectedBundle] = useState('')
 
   const totalAttempts = attempts.length
   const lastAttempt = attempts[0]
@@ -145,6 +209,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [assignmentHistory, setAssignmentHistory] = useState([])
   const [loadingAssignments, setLoadingAssignments] = useState(true)
   const [assignmentError, setAssignmentError] = useState(null)
+  const [assignmentRefresh, setAssignmentRefresh] = useState(0)
 
   useEffect(() => {
     setLoadingAssignments(true)
@@ -159,7 +224,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
         setAssignmentError(err.message)
       })
       .finally(() => setLoadingAssignments(false))
-  }, [b10Id])
+  }, [b10Id, assignmentRefresh])
 
   async function handleDeleteAssignment(assignmentId) {
     if (!window.confirm('Remove this assignment?')) return
@@ -187,22 +252,51 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   }, [showAssign])
 
   async function handleAssign() {
-    if (!selectedPassageId) { setAssignError('Please select a passage.'); return }
     setAssigning(true)
     setAssignError(null)
     setAssignSuccess(null)
     try {
-      await addDoc(collection(db, 'assignments'), {
-        studentId:      b10Id,
-        assignmentType: 'main',
-        assignedBy:     currentUser.uid,
-        passageIds:     [selectedPassageId],
-        scaffoldConfig: null,
-        assignedAt:     serverTimestamp(),
-      })
-      setAssignSuccess(`Assigned ${selectedPassageId} to ${b10Id}`)
-      setSelectedPassageId('')
-      setShowAssign(false)
+      if (layerFilter === 'BUNDLE') {
+        if (!selectedBundle) { setAssignError('Please select a bundle.'); setAssigning(false); return }
+        const bundle = BUNDLE_MAP.find(b => `S${b.set}.${b.day}` === selectedBundle)
+        if (!bundle) { setAssignError('Bundle not found.'); setAssigning(false); return }
+        // Assign all 3 items
+        await Promise.all([
+          addDoc(collection(db, 'assignments'), {
+            studentId: b10Id, assignmentType: 'main', assignedBy: currentUser.uid,
+            passageIds: [bundle.leg], scaffoldConfig: null, assignedAt: serverTimestamp(),
+            bundleId: selectedBundle,
+          }),
+          addDoc(collection(db, 'assignments'), {
+            studentId: b10Id, assignmentType: 'main', assignedBy: currentUser.uid,
+            passageIds: [bundle.cor], scaffoldConfig: null, assignedAt: serverTimestamp(),
+            bundleId: selectedBundle,
+          }),
+          addDoc(collection(db, 'assignments'), {
+            studentId: b10Id, assignmentType: 'main', assignedBy: currentUser.uid,
+            passageIds: [bundle.eso], scaffoldConfig: null, assignedAt: serverTimestamp(),
+            bundleId: selectedBundle,
+          }),
+        ])
+        setAssignSuccess(`Assigned bundle ${selectedBundle} (3 passages) to ${b10Id}`)
+        setSelectedBundle('')
+        setShowAssign(false)
+        setAssignmentRefresh(r => r + 1)
+      } else {
+        if (!selectedPassageId) { setAssignError('Please select a passage.'); setAssigning(false); return }
+        await addDoc(collection(db, 'assignments'), {
+          studentId:      b10Id,
+          assignmentType: 'main',
+          assignedBy:     currentUser.uid,
+          passageIds:     [selectedPassageId],
+          scaffoldConfig: null,
+          assignedAt:     serverTimestamp(),
+        })
+        setAssignSuccess(`Assigned ${selectedPassageId} to ${b10Id}`)
+        setSelectedPassageId('')
+        setShowAssign(false)
+        setAssignmentRefresh(r => r + 1)
+      }
     } catch (err) {
       setAssignError('Assignment failed: ' + err.message)
     } finally {
@@ -254,7 +348,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
         {showAssign && (
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap gap-1 mb-1">
-              {['ALL','ORIENT','CORE','EXT','ESO','NAR','DES','INS'].map(layer => (
+              {['ALL','ORIENT','CORE','EXT','ESO','NAR','DES','INS','BUNDLE'].map(layer => (
                 <button
                   key={layer}
                   onClick={() => { setLayerFilter(layer); setSelectedPassageId('') }}
@@ -270,31 +364,51 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                 </button>
               ))}
             </div>
-            <select
-              value={selectedPassageId}
-              onChange={e => setSelectedPassageId(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={assigning}
-            >
-              <option value="">Select a passage…</option>
-              {loadingPassages
-                ? <option disabled>Loading passages…</option>
-                : assignablePassages
-                    .filter(p => {
-                      if (layerFilter === 'ALL') return true
-                      const map = {
-                        ORIENT: 'ORI', CORE: 'COR', EXT: 'EXT',
-                        ESO: 'ESO', NAR: 'NAR', DES: 'DES', INS: 'INS'
-                      }
-                      return p.corpusType === map[layerFilter]
-                    })
-                    .map(p => (
-                      <option key={p.passageId} value={p.passageId}>
-                        {p.passageId} — {p.question ? p.question.split(' ').slice(0,6).join(' ') + '…' : p.domain || p.taskType}
+            {layerFilter === 'BUNDLE' ? (
+              <select
+                value={selectedBundle}
+                onChange={e => setSelectedBundle(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={assigning}
+              >
+                <option value="">Select a bundle…</option>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(setNum => (
+                  <optgroup key={setNum} label={`Set ${setNum}`}>
+                    {BUNDLE_MAP.filter(b => b.set === setNum).map(b => (
+                      <option key={`S${b.set}.${b.day}`} value={`S${b.set}.${b.day}`}>
+                        S{b.set}.{b.day} — {b.q}
                       </option>
-                    ))
-              }
-            </select>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            ) : (
+              <select
+                value={selectedPassageId}
+                onChange={e => setSelectedPassageId(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={assigning}
+              >
+                <option value="">Select a passage…</option>
+                {loadingPassages
+                  ? <option disabled>Loading passages…</option>
+                  : assignablePassages
+                      .filter(p => {
+                        if (layerFilter === 'ALL') return true
+                        const map = {
+                          ORIENT: 'ORI', CORE: 'COR', EXT: 'EXT',
+                          ESO: 'ESO', NAR: 'NAR', DES: 'DES', INS: 'INS'
+                        }
+                        return p.corpusType === map[layerFilter]
+                      })
+                      .map(p => (
+                        <option key={p.passageId} value={p.passageId}>
+                          {p.passageId} — {p.question ? p.question.split(' ').slice(0,6).join(' ') + '…' : p.domain || p.taskType}
+                        </option>
+                      ))
+                }
+              </select>
+            )}
             {assignError && <p className="text-red-600 text-sm">{assignError}</p>}
             <button
               onClick={handleAssign}
@@ -302,7 +416,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
               className="w-full py-2 rounded-lg text-white text-sm font-semibold"
               style={{ backgroundColor: assigning ? '#7a9bbf' : '#1e3a5f' }}
             >
-              {assigning ? 'Assigning…' : 'Confirm Assignment'}
+              {assigning ? 'Assigning…' : layerFilter === 'BUNDLE' ? 'Assign Bundle (3 passages)' : 'Confirm Assignment'}
             </button>
           </div>
         )}
