@@ -246,16 +246,18 @@ export default function PassageMenuScreen() {
         >
           Browse Library
         </button>
-        <button
-          onClick={() => setActiveTab('progress')}
-          className={`flex-1 py-3 text-sm font-semibold border-b-2 transition-colors ${
-            activeTab === 'progress'
-              ? 'border-blue-700 text-blue-700'
-              : 'border-transparent text-gray-500'
-          }`}
-        >
-          My Progress
-        </button>
+        {claims?.role === 'student' && (
+          <button
+            onClick={() => setActiveTab('progress')}
+            className={`flex-1 py-3 text-sm font-semibold border-b-2 transition-colors ${
+              activeTab === 'progress'
+                ? 'border-blue-700 text-blue-700'
+                : 'border-transparent text-gray-500'
+            }`}
+          >
+            My Progress
+          </button>
+        )}
       </div>
 
       <main className="px-4 py-4 max-w-2xl mx-auto">

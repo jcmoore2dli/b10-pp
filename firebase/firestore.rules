@@ -338,7 +338,8 @@ service cloud.firestore {
 // Admin manages. Students never read or write.
 // Instructors read-only in Week 4 dashboard.
 match /accessCodes/{codeId} {
-  allow read: if isAdmin();
+  allow read: if isAdmin() ||
+    (isInstructor() && resource.data.instructorUid == request.auth.uid);
   allow create, update, delete: if isAdmin();
 }
 
