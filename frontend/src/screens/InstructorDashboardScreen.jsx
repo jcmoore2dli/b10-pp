@@ -58,6 +58,24 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
   const audioRef = useRef(null)
   const playing = playingId === attemptId
 
+  // Pre-fetch URL on mount so play() fires synchronously on iOS
+  useEffect(() => {
+    async function prefetch() {
+      try {
+        const storageRef = ref(storage, audioPath)
+        const downloadUrl = await getDownloadURL(storageRef)
+        setUrl(downloadUrl)
+        if (audioRef.current) {
+          audioRef.current.src = downloadUrl
+          audioRef.current.load()
+        }
+      } catch (err) {
+        console.error('Audio prefetch failed:', err)
+      }
+    }
+    prefetch()
+  }, [audioPath])
+
   useEffect(() => {
     if (!playing && audioRef.current) {
       audioRef.current.pause()
@@ -65,7 +83,7 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
     }
   }, [playing])
 
-  async function handlePlay() {
+  function handlePlay() {
     if (playing) {
       setPlayingId(null)
       return
@@ -74,28 +92,19 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
       audioManager.current.pause()
       audioManager.current.currentTime = 0
     }
-    setPlayingId(attemptId)
-    try {
-      setLoading(true)
-      let downloadUrl = url
-      if (!downloadUrl) {
-        const storageRef = ref(storage, audioPath)
-        downloadUrl = await getDownloadURL(storageRef)
-        setUrl(downloadUrl)
-      }
-      const audioEl = audioRef.current
-      audioEl.src = downloadUrl
-      audioEl.load()
-      audioManager.current = audioEl
-      audioEl.onended = () => setPlayingId(null)
-      await audioEl.play()
-    } catch (err) {
-      console.error('Audio fetch failed:', err)
-      setAudioError(err.message || err.name || 'Unknown error')
-      setPlayingId(null)
-    } finally {
-      setLoading(false)
+    const audioEl = audioRef.current
+    if (!audioEl || !audioEl.src) {
+      setAudioError('Audio not ready yet, try again')
+      return
     }
+    setPlayingId(attemptId)
+    audioManager.current = audioEl
+    audioEl.onended = () => setPlayingId(null)
+    audioEl.play().catch(err => {
+      console.error('Audio play failed:', err)
+      setAudioError(err.message || err.name || 'Playback error')
+      setPlayingId(null)
+    })
   }
 
   return (
