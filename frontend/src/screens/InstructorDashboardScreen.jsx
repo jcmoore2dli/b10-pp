@@ -365,7 +365,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                       <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      {attempt.audioPath && <AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} />}
+                      {attempt.audioPath && <span onClick={e => e.stopPropagation()}><AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} /></span>}
                       <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
                         <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
                         <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
