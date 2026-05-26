@@ -203,6 +203,43 @@ async function processSubmission(submissionId) {
         passageTextLength: passageText.length,
       });
     }
+    // ── Step 6c: Frames Practice auto-scaffold (ESO-AES- passages) ──────────
+    // If the passage is a Frames Practice question, override scaffoldConfig
+    // from the passage doc's frame fields. Instructor scaffold not used.
+    let effectiveScaffoldConfig = scaffoldConfig || null;
+
+    if (data.passageId && data.passageId.startsWith("ESO-AES-")) {
+      try {
+        const framesSnap = await db.collection("passages").doc(data.passageId).get();
+        if (framesSnap.exists) {
+          const fd = framesSnap.data();
+          effectiveScaffoldConfig = {
+            focusArea:    fd.suggestedFocusArea   || "discourse_frame",
+            primaryFrame: fd.suggestedPrimaryFrame || null,
+            secondaryFrame: null,
+            primaryStructure: null,
+            studentCueText: "",
+          };
+          logger.info("processSubmission: Frames auto-scaffold applied", {
+            submissionId,
+            passageId: data.passageId,
+            effectiveScaffoldConfig,
+          });
+        } else {
+          logger.warn("processSubmission: Frames passage doc not found — scoring holistic", {
+            submissionId,
+            passageId: data.passageId,
+          });
+        }
+      } catch (framesErr) {
+        logger.error("processSubmission: Frames auto-scaffold fetch failed — scoring holistic", {
+          submissionId,
+          passageId: data.passageId,
+          error: framesErr.message,
+        });
+      }
+    }
+
     // ── Step 7 + 8: Build scorer params ───────────────────────────────────
     const scorerParams = {
       transcript,
@@ -212,9 +249,9 @@ async function processSubmission(submissionId) {
     };
 
     if (type === "ESO") {
-      scorerParams.focusMode       = scaffoldConfig?.focusArea      || "Holistic";
-      scorerParams.primaryTarget   = scaffoldConfig?.primaryFrame   || "none";
-      scorerParams.secondaryTarget = scaffoldConfig?.secondaryFrame || "none";
+      scorerParams.focusMode       = effectiveScaffoldConfig?.focusArea      || "Holistic";
+      scorerParams.primaryTarget   = effectiveScaffoldConfig?.primaryFrame   || "none";
+      scorerParams.secondaryTarget = effectiveScaffoldConfig?.secondaryFrame || "none";
     }
 
     if (["NARRATION", "DESCRIPTION", "INSTRUCTIONS"].includes(type)) {

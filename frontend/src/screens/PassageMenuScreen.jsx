@@ -23,9 +23,11 @@ function normalizePassage(doc) {
     taskType:       d.taskType || 'PARAPHRASE',
     passageText:    d.passageText || '',
     audioPath:      d.audioPath || null,
-    esoQuestionId:  d.esoQuestionId || null,
-    ext_band:       d.ext_band || null,
-    pil_level:      d.pil || null,
+    esoQuestionId:        d.esoQuestionId || null,
+    ext_band:             d.ext_band || null,
+    pil_level:            d.pil || null,
+    suggestedPrimaryFrame: d.suggestedPrimaryFrame || null,
+    framesWeek:           d.framesWeek || null,
   }
 }
 
@@ -371,6 +373,18 @@ function PassageCard({ passage, onSelect, status }) {
             {passage.scaffoldConfig && passage.scaffoldConfig.focusArea && passage.scaffoldConfig.focusArea !== 'holistic' && (
               <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>Focused</span>
             )}
+            {passage.passage_id?.startsWith('ESO-AES-') && (() => {
+              const frameShort = {
+                FRAME_01: 'Scale', FRAME_02: 'Trade-offs', FRAME_03: 'Causal',
+                FRAME_04: 'Conditional', FRAME_05: 'Values', FRAME_06: 'Synthesis'
+              }
+              const label = passage.suggestedPrimaryFrame ? frameShort[passage.suggestedPrimaryFrame] : null
+              return (
+                <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#0d9488', color: '#fff' }}>
+                  {label ? `Frames · ${label}` : 'Frames'}
+                </span>
+              )
+            })()}
           </div>
           <p className="font-semibold text-gray-900 text-sm leading-snug">{(['ESO','NAR','DES','INS'].includes(passage.layer) && passage.question) ? passage.question : passage.domain}</p>
           <div className="flex flex-wrap gap-1 mt-2">

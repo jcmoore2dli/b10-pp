@@ -197,6 +197,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
   const [selectedPassageId, setSelectedPassageId] = useState('')
   const [layerFilter, setLayerFilter] = useState('ALL')
   const [selectedBundle, setSelectedBundle] = useState('')
+  const [framesWeekFilter, setFramesWeekFilter] = useState(null)
   const [scaffoldOpen, setScaffoldOpen] = useState(false)
   const [focusArea, setFocusArea] = useState('Holistic')
   const [primaryFrame, setPrimaryFrame] = useState('')
@@ -387,7 +388,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
               {['ALL','ORIENT','CORE','EXT','ESO','NAR','DES','INS','BUNDLE'].map(layer => (
                 <button
                   key={layer}
-                  onClick={() => { setLayerFilter(layer); setSelectedPassageId('') }}
+                  onClick={() => { setLayerFilter(layer); setSelectedPassageId(''); setFramesWeekFilter(null) }}
                   className="text-xs px-2 py-1 rounded-full font-semibold border transition-colors"
                   style={{
                     backgroundColor: layerFilter === layer ? '#1e3a5f' : 'white',
@@ -399,6 +400,45 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                   {layer}
                 </button>
               ))}
+              <button
+                onClick={() => { setLayerFilter('FRAMES'); setSelectedPassageId(''); setFramesWeekFilter(null) }}
+                className="text-xs px-2 py-1 rounded-full font-semibold border transition-colors"
+                style={{
+                  backgroundColor: layerFilter === 'FRAMES' ? '#0d9488' : 'white',
+                  color: layerFilter === 'FRAMES' ? 'white' : '#0d9488',
+                  borderColor: '#0d9488',
+                }}
+                disabled={assigning}
+              >
+                FRAMES
+              </button>
+              {layerFilter === 'FRAMES' && (
+                <div className="flex flex-wrap gap-1 mt-1 w-full">
+                  {[
+                    { w: 'W1', label: 'Scale & Stakeholder' },
+                    { w: 'W2', label: 'Trade-offs & Constraints' },
+                    { w: 'W3', label: 'Causal Systems' },
+                    { w: 'W4', label: 'Hypothetical & Conditional' },
+                    { w: 'W5', label: 'Values, Heuristics & Bias' },
+                    { w: 'W6', label: 'Synthesis & Judgment' },
+                  ].map(({ w, label }) => (
+                    <button
+                      key={w}
+                      onClick={() => { setFramesWeekFilter(framesWeekFilter === w ? null : w); setSelectedPassageId('') }}
+                      className="text-xs px-2 py-1 rounded-full font-semibold border transition-colors"
+                      style={{
+                        backgroundColor: framesWeekFilter === w ? '#0d9488' : '#f0fdfa',
+                        color: framesWeekFilter === w ? 'white' : '#0d9488',
+                        borderColor: '#0d9488',
+                      }}
+                      disabled={assigning}
+                      title={label}
+                    >
+                      {w} — {label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             {layerFilter === 'BUNDLE' ? (
               <select
@@ -431,6 +471,14 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                   : assignablePassages
                       .filter(p => {
                         if (layerFilter === 'ALL') return true
+                        if (layerFilter === 'FRAMES') {
+                          if (!p.passageId?.startsWith('ESO-AES-')) return false
+                          if (framesWeekFilter) {
+                            const parts = p.passageId.split('-')
+                            return parts[2] === framesWeekFilter
+                          }
+                          return true
+                        }
                         const map = {
                           ORIENT: 'ORI', CORE: 'COR', EXT: 'EXT',
                           ESO: 'ESO', NAR: 'NAR', DES: 'DES', INS: 'INS'
