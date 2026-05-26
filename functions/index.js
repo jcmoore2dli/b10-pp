@@ -16,6 +16,7 @@
 const { setGlobalOptions }      = require("firebase-functions");
 const { onDocumentCreated }     = require("firebase-functions/v2/firestore");
 const { onCall, HttpsError }    = require("firebase-functions/v2/https");
+const { onSchedule }            = require("firebase-functions/v2/scheduler");
 const { defineSecret }          = require("firebase-functions/params");
 const logger                    = require("firebase-functions/logger");
 const admin                     = require("firebase-admin");
@@ -301,6 +302,53 @@ async function processSubmission(submissionId) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ── cleanupAudio ─────────────────────────────────────────────────────────────
+// Runs daily. Deletes audio files after 14 days, nulls transcripts after 30 days.
+// Privacy hard gate — required before pilot.
+exports.cleanupAudio = onSchedule("every 24 hours", async () => {
+  const db = admin.firestore();
+  const bucket = admin.storage().bucket();
+  const now = Date.now();
+  const day14 = new Date(now - 14 * 24 * 60 * 60 * 1000);
+  const day30 = new Date(now - 30 * 24 * 60 * 60 * 1000);
+
+  // ── Delete audio files older than 14 days ─────────────────────────────────
+  const audioSnap = await db.collection("submissions")
+    .where("createdAt", "<", day14)
+    .where("audioPath", "!=", null)
+    .get();
+
+  let audioDeleted = 0;
+  await Promise.all(audioSnap.docs.map(async (doc) => {
+    const { audioPath } = doc.data();
+    try {
+      await bucket.file(audioPath).delete();
+      await doc.ref.update({ audioPath: null });
+      audioDeleted++;
+    } catch (err) {
+      logger.error("cleanupAudio: failed to delete audio", { docId: doc.id, audioPath, error: err.message });
+    }
+  }));
+  logger.info("cleanupAudio: audio deletion complete", { audioDeleted });
+
+  // ── Null transcript text older than 30 days ───────────────────────────────
+  const transcriptSnap = await db.collection("submissions")
+    .where("createdAt", "<", day30)
+    .where("transcriptText", "!=", null)
+    .get();
+
+  let transcriptNulled = 0;
+  await Promise.all(transcriptSnap.docs.map(async (doc) => {
+    try {
+      await doc.ref.update({ transcriptText: null });
+      transcriptNulled++;
+    } catch (err) {
+      logger.error("cleanupAudio: failed to null transcript", { docId: doc.id, error: err.message });
+    }
+  }));
+  logger.info("cleanupAudio: transcript cleanup complete", { transcriptNulled });
+});
+
 // TRIGGER: onDocumentCreated → /submissions/{submissionId}
 // ─────────────────────────────────────────────────────────────────────────────
 exports.onSubmissionCreated = onDocumentCreated(
