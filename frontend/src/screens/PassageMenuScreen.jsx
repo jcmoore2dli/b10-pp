@@ -4,6 +4,9 @@ import { signOut } from 'firebase/auth'
 import { auth, db } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore'
+import { ref, getDownloadURL } from 'firebase/storage'
+import { storage } from '../services/firebase'
+import { useRef } from 'react'
 
 // Normalize Firestore passage doc to UI shape
 function normalizePassage(doc) {
@@ -72,6 +75,8 @@ export default function PassageMenuScreen() {
   const [assignedPassages, setAssignedPassages] = useState([])
   const [allPassages, setAllPassages] = useState([])
   const [passagesLoading, setPassagesLoading] = useState(true)
+  const [mySubmissions, setMySubmissions] = useState([])
+  const [submissionsLoading, setSubmissionsLoading] = useState(true)
 
   useEffect(() => {
     async function loadAssigned() {
@@ -118,6 +123,27 @@ export default function PassageMenuScreen() {
     }
     loadAllPassages()
   }, [])
+
+  useEffect(() => {
+    async function loadSubmissions() {
+      if (!b10Id || b10Id === '—') return
+      setSubmissionsLoading(true)
+      try {
+        const snap = await getDocs(
+          query(collection(db, 'submissions'), where('b10Id', '==', b10Id), orderBy('createdAt', 'desc'))
+        )
+        const complete = snap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .filter(s => s.status === 'complete')
+        setMySubmissions(complete)
+      } catch (err) {
+        console.error('Failed to load submissions:', err)
+      } finally {
+        setSubmissionsLoading(false)
+      }
+    }
+    loadSubmissions()
+  }, [b10Id])
 
   async function handleSignOut() {
     sessionStorage.clear()
@@ -203,11 +229,24 @@ export default function PassageMenuScreen() {
         >
           Browse Library
         </button>
+        <button
+          onClick={() => setActiveTab('progress')}
+          className={`flex-1 py-3 text-sm font-semibold border-b-2 transition-colors ${
+            activeTab === 'progress'
+              ? 'border-blue-700 text-blue-700'
+              : 'border-transparent text-gray-500'
+          }`}
+        >
+          My Progress
+        </button>
       </div>
 
       <main className="px-4 py-4 max-w-2xl mx-auto">
         {activeTab === 'assigned' && (
           <AssignedSetView passages={assignedPassages} onSelect={handleSelectPassage} />
+        )}
+        {activeTab === 'progress' && (
+          <MyProgressView submissions={mySubmissions} loading={submissionsLoading} />
         )}
         {activeTab === 'browse' && (
           <BrowseLibraryView
@@ -343,6 +382,108 @@ function PassageCard({ passage, onSelect, status }) {
   )
 }
 
+const SCORE_COLORS = {
+  4: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
+  3: { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-200' },
+  2: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
+  1: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200' },
+}
+function formatDate(ts) {
+  if (!ts) return "—"
+  const d = ts.toDate ? ts.toDate() : new Date(ts)
+  const now = new Date()
+  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24))
+  if (diff === 0) return "Today"
+  if (diff === 1) return "Yesterday"
+  if (diff < 7) return `${diff} days ago`
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+}
+function taskTypeLabel(taskType) {
+  const labels = { paraphrase: "Paraphrase", eso: "ESO", extended_listening: "Ext. Listening", narration: "Narration", description: "Description", instructions: "Instructions" }
+  return labels[taskType] || taskType
+}
+const studentAudioManager = { current: null, stop() { if (this.current) { this.current.pause(); this.current.currentTime = 0; this.current = null } } }
+function StudentAudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
+  const [url, setUrl] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const audioRef = useRef(null)
+  const playing = playingId === attemptId
+  useEffect(() => {
+    if (!playing && audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0 }
+  }, [playing])
+  async function handlePlay() {
+    if (playing) { setPlayingId(null); return }
+    if (studentAudioManager.current && studentAudioManager.current !== audioRef.current) { studentAudioManager.current.pause(); studentAudioManager.current.currentTime = 0 }
+    const audioEl = audioRef.current
+    if (!audioEl) return
+    try {
+      setLoading(true)
+      let downloadUrl = url
+      if (!downloadUrl) { const storageRef = ref(storage, audioPath); downloadUrl = await getDownloadURL(storageRef); setUrl(downloadUrl) }
+      audioEl.src = downloadUrl; audioEl.load(); setPlayingId(attemptId); studentAudioManager.current = audioEl
+      audioEl.onended = () => setPlayingId(null)
+      await audioEl.play()
+    } catch (err) { setPlayingId(null) } finally { setLoading(false) }
+  }
+  return (
+    <span>
+      <audio ref={audioRef} playsInline preload="none" />
+      <button onClick={handlePlay} disabled={loading} className="text-xs px-2 py-1 rounded-lg border font-semibold shrink-0" style={{ borderColor: playing ? "#c0392b" : "#1e3a5f", color: playing ? "#c0392b" : "#1e3a5f", backgroundColor: "white" }}>
+        {loading ? "Loading" : playing ? "Stop" : "Play"}
+      </button>
+    </span>
+  )
+}
+function MyProgressView({ submissions, loading }) {
+  const [expandedId, setExpandedId] = useState(null)
+  const [playingId, setPlayingId] = useState(null)
+  if (loading) return <div className="flex justify-center py-12"><div className="w-8 h-8 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" /></div>
+  if (submissions.length === 0) return (
+    <div className="text-center py-12 text-gray-400">
+      <p className="font-semibold mb-1">No completed attempts yet.</p>
+      <p className="text-sm">Complete a passage to see your progress here.</p>
+    </div>
+  )
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold">{submissions.length} completed attempt{submissions.length !== 1 ? "s" : ""}</p>
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="flex flex-col">
+          {submissions.map(attempt => {
+            const colors = SCORE_COLORS[attempt.score] || SCORE_COLORS[1]
+            const scoreMax = attempt.taskFamily === "LEVEL3" ? 4 : 3
+            const isExpanded = expandedId === attempt.id
+            return (
+              <div key={attempt.id} className="flex flex-col border-b border-gray-100 last:border-0">
+                <button onClick={() => setExpandedId(isExpanded ? null : attempt.id)} className="flex items-center justify-between py-3 gap-3 w-full text-left">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900">{taskTypeLabel(attempt.taskType)} · {attempt.passageId}<span className="ml-2 text-gray-300 text-xs">{isExpanded ? "▲" : "▼"}</span></p>
+                    <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {attempt.audioPath && <span onClick={e => e.stopPropagation()}><StudentAudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} /></span>}
+                    <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
+                      <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
+                      <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>
+                    </div>
+                  </div>
+                </button>
+                {isExpanded && (
+                  <div className="pb-4 flex flex-col gap-4">
+                    {attempt.transcriptText && <div className="bg-gray-50 rounded-lg p-3"><p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Your Response</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.transcriptText}</p></div>}
+                    {attempt.strengths && <div className="bg-green-50 rounded-lg p-3"><p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Strengths</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.strengths}</p></div>}
+                    {attempt.gaps && <div className="bg-yellow-50 rounded-lg p-3"><p className="text-xs font-semibold text-yellow-600 uppercase tracking-wide mb-1">Areas to Improve</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.gaps}</p></div>}
+                    {attempt.language_feedback && <div className="bg-blue-50 rounded-lg p-3"><p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Language Feedback</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.language_feedback}</p></div>}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
 function LayerBadge({ layer }) {
   const config = {
     ORIENT: 'bg-green-50 text-green-700',
