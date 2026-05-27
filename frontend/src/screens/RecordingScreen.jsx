@@ -307,12 +307,39 @@ export default function RecordingScreen() {
           </p>
         </div>
         {/* Scaffold cue */}
-        {scaffoldCue && (
-          <div className="w-full rounded-xl p-4 border" style={{ backgroundColor: '#fffbeb', borderColor: '#c8a84b' }}>
-            <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: '#92640a' }}>Speaking Focus</p>
-            <p className="text-sm leading-relaxed" style={{ color: '#78350f' }}>{scaffoldCue}</p>
-          </div>
-        )}
+        {scaffoldCue && (() => {
+          const FRAME_GUIDE_URLS = {
+            'FRAME_01': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W1_Scale_and_Stakeholder.pdf',
+            'FRAME_02': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W2_Trade-offs_and_Constraints.pdf',
+            'FRAME_03': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W3_Causal_Systems.pdf',
+            'FRAME_04': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W4_Hypothetical_and_Conditional.pdf',
+            'FRAME_05': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W5_Values_Heuristics_and_Bias.pdf',
+            'FRAME_06': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W6_Synthesis_and_Judgment.pdf',
+          }
+          let guideUrl = null
+          try {
+            const raw = sessionStorage.getItem('b10pp_scaffold')
+            if (raw) {
+              const sc = JSON.parse(raw)
+              if (sc?.suggestedPrimaryFrame) guideUrl = FRAME_GUIDE_URLS[sc.suggestedPrimaryFrame]
+              else if (sc?.primaryFrame) guideUrl = FRAME_GUIDE_URLS[sc.primaryFrame]
+            }
+          } catch(e) {}
+          return (
+            <div className="w-full rounded-xl p-4 border" style={{ backgroundColor: '#fffbeb', borderColor: '#c8a84b' }}>
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs font-bold uppercase tracking-wide" style={{ color: '#92640a' }}>Speaking Focus</p>
+                {guideUrl && (
+                  <a href={guideUrl} target="_blank" rel="noopener noreferrer"
+                    className="text-xs font-semibold underline" style={{ color: '#92640a' }}>
+                    Frame Guide ↗
+                  </a>
+                )}
+              </div>
+              <p className="text-sm leading-relaxed" style={{ color: '#78350f' }}>{scaffoldCue}</p>
+            </div>
+          )
+        })()}
 
         {isEvaluating ? (
           /* Uploading / evaluating state */

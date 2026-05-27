@@ -177,6 +177,13 @@ export default function PassageMenuScreen() {
     sessionStorage.setItem('b10pp_active_tab', activeTab)
     if (passage.scaffoldConfig) {
       sessionStorage.setItem('b10pp_scaffold', JSON.stringify(passage.scaffoldConfig))
+    } else if (passage.suggestedPrimaryFrame) {
+      // Frames Practice passage — auto-scaffold from passage doc fields
+      sessionStorage.setItem('b10pp_scaffold', JSON.stringify({
+        focusArea: passage.suggestedFocusArea || 'discourse_frame',
+        suggestedPrimaryFrame: passage.suggestedPrimaryFrame,
+        primaryFrame: passage.suggestedPrimaryFrame,
+      }))
     } else {
       sessionStorage.removeItem('b10pp_scaffold')
     }
