@@ -86,7 +86,21 @@ export default function RecordingScreen() {
       return null
     } catch { return null }
   }
-  const scaffoldCue = getScaffoldCue()
+  // For ESO-AES Frames passages — inject cue from passage fields if no session scaffold
+  function getFramesCue() {
+    if (!passage?.passage_id?.startsWith('ESO-AES-')) return null
+    if (getScaffoldCue()) return null  // session scaffold takes priority
+    const frameLabels = {
+      FRAME_01: 'Speaking Focus: Scale & Stakeholder — Consider who is affected and at what scale.',
+      FRAME_02: 'Speaking Focus: Trade-offs & Constraints — What must be given up, and what limits apply?',
+      FRAME_03: 'Speaking Focus: Causal Systems — Trace the causes and consequences at work.',
+      FRAME_04: 'Speaking Focus: Hypothetical & Conditional — Consider what would happen if conditions changed.',
+      FRAME_05: 'Speaking Focus: Values, Heuristics & Bias — What assumptions or values are driving this?',
+      FRAME_06: 'Speaking Focus: Synthesis & Judgment — Weigh the evidence and reach a supported conclusion.',
+    }
+    return passage.suggestedPrimaryFrame ? (frameLabels[passage.suggestedPrimaryFrame] || null) : null
+  }
+  const scaffoldCue = getScaffoldCue() || getFramesCue()
 
   const [phase, setPhase]                 = useState('idle')
   const [errorMessage, setErrorMessage]   = useState(null)
@@ -110,8 +124,11 @@ export default function RecordingScreen() {
               : ['NARRATION','DESCRIPTION','INSTRUCTIONS'].includes(d.taskType)
               ? 'Record yourself speaking on this topic.'
               : d.promptDescription || 'Listen carefully, then record your paraphrase.',
-            scaffold_config:     d.scaffoldConfig || {},
-            audioPath:           d.audioPath || null,
+            scaffold_config:        d.scaffoldConfig || {},
+            audioPath:             d.audioPath || null,
+            suggestedPrimaryFrame: d.suggestedPrimaryFrame || null,
+            framesWeek:            d.framesWeek || null,
+            framesFrame:           d.framesFrame || null,
           }
           setPassage(normalized)
           if (normalized.audioPath) {
@@ -309,32 +326,59 @@ export default function RecordingScreen() {
         {/* Scaffold cue */}
         {scaffoldCue && (() => {
           const FRAME_GUIDE_URLS = {
-            'FRAME_01': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W1_Scale_and_Stakeholder.pdf',
-            'FRAME_02': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W2_Trade-offs_and_Constraints.pdf',
-            'FRAME_03': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W3_Causal_Systems.pdf',
-            'FRAME_04': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W4_Hypothetical_and_Conditional.pdf',
-            'FRAME_05': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W5_Values_Heuristics_and_Bias.pdf',
-            'FRAME_06': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/frames-practice/guides/B10_FP_W6_Synthesis_and_Judgment.pdf',
+            'FRAME_01': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/B10_FP_W1_Scale_and_Stakeholder.pdf',
+            'FRAME_02': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/B10_FP_W2_Trade-offs_and_Constraints.pdf',
+            'FRAME_03': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/B10_FP_W3_Causal_Systems.pdf',
+            'FRAME_04': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/B10_FP_W4_Hypothetical_and_Conditional.pdf',
+            'FRAME_05': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/B10_FP_W5_Values_Heuristics_and_Bias.pdf',
+            'FRAME_06': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/B10_FP_W6_Synthesis_and_Judgment.pdf',
           }
-          let guideUrl = null
+          const GRAMMAR_GUIDE_URLS = {
+            'argument_structure': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-argument-structure.pdf',
+            'STRUCT_01': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-conditional-structures.pdf',
+            'STRUCT_02': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-concession-contrast.pdf',
+            'STRUCT_03': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-relative-clauses.pdf',
+            'STRUCT_04': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-modality-hedging.pdf',
+            'STRUCT_05': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-nominalization.pdf',
+            'STRUCT_06': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-passive-reporting.pdf',
+            'STRUCT_07': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-parallelism.pdf',
+          }
+          let frameGuideUrl = null
+          let grammarGuideUrl = null
           try {
             const raw = sessionStorage.getItem('b10pp_scaffold')
             if (raw) {
               const sc = JSON.parse(raw)
-              if (sc?.suggestedPrimaryFrame) guideUrl = FRAME_GUIDE_URLS[sc.suggestedPrimaryFrame]
-              else if (sc?.primaryFrame) guideUrl = FRAME_GUIDE_URLS[sc.primaryFrame]
+              // Frame guide — resolve from primaryFrame or suggestedPrimaryFrame independently
+              const frameKey = sc?.primaryFrame || sc?.suggestedPrimaryFrame || null
+              frameGuideUrl = frameKey ? (FRAME_GUIDE_URLS[frameKey] || null) : null
+              // Grammar guide — resolve from focusArea or primaryStructure independently
+              if (sc?.focusArea === 'argument_structure') grammarGuideUrl = GRAMMAR_GUIDE_URLS['argument_structure'] || null
+              else if (sc?.primaryStructure) grammarGuideUrl = GRAMMAR_GUIDE_URLS[sc.primaryStructure] || null
             }
           } catch(e) {}
+          // For ESO-AES Frames passages with no session scaffold
+          if (!frameGuideUrl && passage?.passage_id?.startsWith('ESO-AES-') && passage?.suggestedPrimaryFrame) {
+            frameGuideUrl = FRAME_GUIDE_URLS[passage.suggestedPrimaryFrame] || null
+          }
           return (
             <div className="w-full rounded-xl p-4 border" style={{ backgroundColor: '#fffbeb', borderColor: '#c8a84b' }}>
               <div className="flex items-center justify-between mb-1">
                 <p className="text-xs font-bold uppercase tracking-wide" style={{ color: '#92640a' }}>Speaking Focus</p>
-                {guideUrl && (
-                  <a href={guideUrl} target="_blank" rel="noopener noreferrer"
-                    className="text-xs font-semibold underline" style={{ color: '#92640a' }}>
-                    Frame Guide ↗
-                  </a>
-                )}
+                <div className="flex items-center gap-3">
+                  {frameGuideUrl && (
+                    <a href={frameGuideUrl} target="_blank" rel="noopener noreferrer"
+                      className="text-xs font-semibold underline" style={{ color: '#0d9488' }}>
+                      Frame Guide ↗
+                    </a>
+                  )}
+                  {grammarGuideUrl && (
+                    <a href={grammarGuideUrl} target="_blank" rel="noopener noreferrer"
+                      className="text-xs font-semibold underline" style={{ color: '#4338ca' }}>
+                      Grammar Guide ↗
+                    </a>
+                  )}
+                </div>
               </div>
               <p className="text-sm leading-relaxed" style={{ color: '#78350f' }}>{scaffoldCue}</p>
             </div>

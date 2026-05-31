@@ -232,13 +232,37 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
       .finally(() => setLoadingAssignments(false))
   }, [b10Id, assignmentRefresh])
 
+  const [selectedAssignmentIds, setSelectedAssignmentIds] = useState(new Set())
+
+  function toggleAssignmentSelect(assignmentId) {
+    setSelectedAssignmentIds(prev => {
+      const next = new Set(prev)
+      if (next.has(assignmentId)) next.delete(assignmentId)
+      else next.add(assignmentId)
+      return next
+    })
+  }
+
   async function handleDeleteAssignment(assignmentId) {
     if (!window.confirm('Remove this assignment?')) return
     try {
       await deleteDoc(doc(db, 'assignments', assignmentId))
       setAssignmentHistory(prev => prev.filter(a => a.id !== assignmentId))
+      setSelectedAssignmentIds(prev => { const next = new Set(prev); next.delete(assignmentId); return next })
     } catch (err) {
       console.error('Failed to delete assignment:', err)
+    }
+  }
+
+  async function handleDeleteSelected() {
+    if (selectedAssignmentIds.size === 0) return
+    if (!window.confirm(`Remove ${selectedAssignmentIds.size} selected assignment(s)?`)) return
+    try {
+      await Promise.all([...selectedAssignmentIds].map(id => deleteDoc(doc(db, 'assignments', id))))
+      setAssignmentHistory(prev => prev.filter(a => !selectedAssignmentIds.has(a.id)))
+      setSelectedAssignmentIds(new Set())
+    } catch (err) {
+      console.error('Failed to delete selected assignments:', err)
     }
   }
 
@@ -483,11 +507,14 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                           ORIENT: 'ORI', CORE: 'COR', EXT: 'EXT',
                           ESO: 'ESO', NAR: 'NAR', DES: 'DES', INS: 'INS'
                         }
-                        return p.corpusType === map[layerFilter]
+                        const match = p.corpusType === map[layerFilter]
+                        if (!match) return false
+                        if (layerFilter === 'ESO' && p.passageId?.startsWith('ESO-AES-')) return false
+                        return true
                       })
                       .map(p => (
                         <option key={p.passageId} value={p.passageId}>
-                          {p.passageId} — {p.question ? p.question.split(' ').slice(0,6).join(' ') + '…' : p.domain || p.taskType}
+                          {p.passageId} — {p.question ? p.question : p.domain || p.taskType}
                         </option>
                       ))
                 }
@@ -632,9 +659,20 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
 
       {/* Assignment history */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
-          Assigned Passages ({assignmentHistory.length})
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+            Assigned Passages ({assignmentHistory.length})
+          </p>
+          {selectedAssignmentIds.size > 0 && (
+            <button
+              onClick={handleDeleteSelected}
+              className="text-xs font-semibold px-3 py-1 rounded-full border transition-colors"
+              style={{ backgroundColor: '#fee2e2', color: '#b91c1c', borderColor: '#fca5a5' }}
+            >
+              Delete selected ({selectedAssignmentIds.size})
+            </button>
+          )}
+        </div>
         {loadingAssignments ? (
           <div className="flex justify-center py-4">
             <div className="w-6 h-6 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" />
@@ -648,20 +686,45 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
             {assignmentHistory.map(assignment => {
               const attemptedPassageIds = new Set(attempts.map(a => a.passageId))
               const passageIds = assignment.passageIds || []
-              const SCAFFOLD_ABBREV = {
-                'holistic': null,
-                'argument_structure': 'ARG',
-                'discourse_frame': 'DFr',
-                'grammar_structure': 'GRA',
-                'combined': 'CMB',
+              const FRAME_SHORT = {
+                FRAME_01: 'Scale', FRAME_02: 'Trade-offs', FRAME_03: 'Causal',
+                FRAME_04: 'Conditional', FRAME_05: 'Values', FRAME_06: 'Synthesis'
+              }
+              const STRUCT_SHORT = {
+                STRUCT_01: 'Conditional', STRUCT_02: 'Concession', STRUCT_03: 'Relative Clauses',
+                STRUCT_04: 'Modality', STRUCT_05: 'Nominalization', STRUCT_06: 'Passive', STRUCT_07: 'Parallelism'
+              }
+              function getScaffoldBadge(sc) {
+                if (!sc || sc.focusArea === 'holistic') return null
+                if (sc.focusArea === 'argument_structure') return { label: 'ARG · PSU Arc', color: '#1e40af', text: '#fff' }
+                if (sc.focusArea === 'discourse_frame') {
+                  const frame = FRAME_SHORT[sc.primaryFrame] || 'Frame'
+                  return { label: `Frames · ${frame}`, color: '#0d9488', text: '#fff' }
+                }
+                if (sc.focusArea === 'grammar_structure') {
+                  const struct = STRUCT_SHORT[sc.primaryStructure] || 'Grammar'
+                  return { label: `Grammar · ${struct}`, color: '#4338ca', text: '#fff' }
+                }
+                if (sc.focusArea === 'combined') {
+                  const frame = FRAME_SHORT[sc.primaryFrame] || 'Frame'
+                  const struct = STRUCT_SHORT[sc.primaryStructure] || 'Grammar'
+                  return { label: `${frame} + ${struct}`, color: '#1e3a5f', text: '#fff' }
+                }
+                return null
               }
               const scaffoldBadge = assignment.scaffoldConfig
-                ? SCAFFOLD_ABBREV[assignment.scaffoldConfig.focusArea] || null
+                ? getScaffoldBadge(assignment.scaffoldConfig)
                 : null
               return passageIds.map(pid => {
                 const attempted = attemptedPassageIds.has(pid)
                 return (
                   <div key={assignment.id + pid} className="flex items-center justify-between py-3 gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedAssignmentIds.has(assignment.id)}
+                      onChange={() => toggleAssignmentSelect(assignment.id)}
+                      className="shrink-0 w-4 h-4 accent-blue-700 cursor-pointer"
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-gray-900 font-mono">{pid}</p>
                       <p className="text-xs text-gray-400 mt-0.5">Assigned {formatDate(assignment.assignedAt)}</p>
@@ -669,8 +732,8 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                     <div className="flex items-center gap-2 shrink-0">
                       {scaffoldBadge && (
                         <span className="text-xs font-bold px-2 py-1 rounded-full shrink-0"
-                          style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>
-                          {scaffoldBadge}
+                          style={{ backgroundColor: scaffoldBadge.color, color: scaffoldBadge.text }}>
+                          {scaffoldBadge.label}
                         </span>
                       )}
                       <span className={`text-xs font-bold px-2 py-1 rounded-full ${
@@ -725,7 +788,18 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
                       <p className="text-xs text-gray-400 mt-0.5">{formatDate(attempt.processedAt)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      {attempt.audioPath && <span onClick={e => e.stopPropagation()}><AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} /></span>}
+                      {attempt.audioPath && (
+                        <span onClick={e => e.stopPropagation()} className="flex items-center gap-1">
+                          <AudioPlayer audioPath={attempt.audioPath} attemptId={attempt.id} playingId={playingId} setPlayingId={setPlayingId} />
+                          {(() => {
+                            const p = attempt.audioPath
+                            if (p.endsWith('.mp3')) return <span className="text-xs font-semibold px-1.5 py-0.5 rounded" style={{ background: '#ccfbf1', color: '#0d9488' }}>All devices</span>
+                            if (p.endsWith('.mp4')) return <span className="text-xs font-semibold px-1.5 py-0.5 rounded" style={{ background: '#ccfbf1', color: '#0d9488' }}>All devices</span>
+                            if (p.endsWith('.webm')) return <span className="text-xs font-semibold px-1.5 py-0.5 rounded" style={{ background: '#f3f4f6', color: '#6b7280' }}>PC only</span>
+                            return null
+                          })()}
+                        </span>
+                      )}
                       <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-full border-2 shrink-0 ${colors.bg} ${colors.border}`}>
                         <p className={`text-sm font-black leading-none ${colors.text}`}>{attempt.score}/{scoreMax}</p>
                         <p className={`text-xs font-bold leading-none mt-0.5 ${colors.text}`}>{attempt.score_label?.slice(0, 4)}</p>

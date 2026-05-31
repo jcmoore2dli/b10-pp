@@ -1,0 +1,580 @@
+# B10-CC-ESO: ILR-3 Extended Supported Opinion Question Bank
+
+**Version:** Beta 10.3 (SYNCHRONIZED)  
+**Document Type:** Content Source (Policy Mode)  
+**Companion Documents:** B10-CC-SPEC (Test Specification), B10-CC-ALG (Algorithm Reference)  
+**Purpose:** Provide topic seeds for ILR-3 comprehension check passage generation
+**Sync Date:** December 15, 2025
+
+---
+
+## 1. DOCUMENT OVERVIEW
+
+### 1.1 Function
+
+This file contains Extended Supported Opinion (ESO) prompts organized by domain and subdomain. Each prompt serves as a topic seed for passage generation using B10-CC-ALG algorithms.
+
+### 1.2 Usage Protocol
+
+1. Select domain (or allow random selection)
+2. Select subdomain (or allow random selection)
+3. Select question from subdomain
+4. Consult algorithm tag for recommended generation approach
+5. Execute algorithm per B10-CC-ALG procedures
+6. Validate output per B10-CC-SPEC protocol
+
+### 1.3 Algorithm Tag Key
+
+| Tag | Algorithm | Best For |
+|-----|-----------|----------|
+| A01 | Research Finding Report | Research-framed questions |
+| A02 | Policy Debate | Policy tension with counterargument |
+| A03 | Trend Analysis | Emerging patterns with complications |
+| A04 | Causal Explanation | "Why does X happen" questions |
+| A05 | Institutional Critique | System/structural criticism |
+| A06 | Nature/Science Narrative | Natural phenomena, biomimicry |
+| A07 | Diagnostic Reversal | Correcting common assumptions |
+| A08 | Public Health / Compliance | Health/safety regulatory gaps |
+| A09 | Cross-Domain Connection | Unexpected field connections |
+| A10 | Collective Response | Community adaptation to adversity |
+| A11 | Technology Innovation | Novel technology mechanisms |
+| A12 | Workplace Behavioral Pattern | Work behavior paradoxes |
+
+### 1.4 Synchronization Note
+
+This version has been synchronized with B10-CC-CURRICULUM v10.3. All IDs used in the curriculum correspond exactly to the questions in this file. Questions marked with [CURR] are actively used in curriculum Sets 1-12.
+
+---
+
+## 2. DOMAIN INVENTORY
+
+| Code | Domain | Subdomains | Question Count |
+|------|--------|------------|----------------|
+| EDU | Education & Learning | 5 | 28 |
+| WRK | Labor & Employment | 5 | 24 |
+| ECN | Economic Systems | 5 | 26 |
+| GOV | Governance & Civic Life | 5 | 26 |
+| HLT | Health & Medicine | 5 | 35 |
+| TEC | Technology & Digital Society | 5 | 38 |
+| ENV | Environment & Resources | 5 | 34 |
+| JUS | Justice & Rights | 4 | 18 |
+| INT | International Systems | 4 | 20 |
+| CUL | Culture & Society | 4 | 18 |
+| SOC | Social Systems | 2 | 10 |
+
+---
+
+## 3. EDU — EDUCATION & LEARNING
+
+### 3.1 K-12 Systems
+
+EDU-001 [A02] [CURR] Should standardized testing be eliminated as the main tool for measuring student achievement?
+EDU-002 [A02] Should students with disabilities always be fully included in mainstream classrooms?
+EDU-003 [A02] [CURR] Should college education be free for all students?
+EDU-004 [A02] Should private schools receive the same level of public funding as state schools?
+EDU-005 [A02] [CURR] Should vocational education be expanded in secondary schools?
+EDU-006 [A02] [CURR] Should financial literacy be a required subject in school curricula?
+
+### 3.2 Higher Education
+
+EDU-007 [A02] Should higher education be made tuition-free at public universities?
+EDU-008 [A05] Should universities limit legacy admissions?
+EDU-009 [A02] Should community colleges and vocational institutes be tuition-free?
+EDU-010 [A02] Should universities forgive student loan debt for graduates in public service careers?
+EDU-011 [A02] Should universities be required to share patents developed with public funding?
+
+### 3.3 Workforce Development
+
+EDU-012 [A02] [CURR] Should schools teach critical media literacy as a required subject?
+EDU-013 [A02] Should vocational education be prioritized over academic preparation?
+EDU-014 [A02] Should teacher training be coordinated at the national level?
+EDU-015 [A02] [CURR] Should governments provide financial incentives to address teacher shortages in rural areas?
+
+### 3.4 Learning Science & Technology
+
+EDU-016 [A03] Should AI teachers replace human instructors in some schools?
+EDU-017 [A11] Should personalized learning algorithms be mandatory in public education?
+EDU-018 [A02] [CURR] Should teacher salaries be significantly increased?
+EDU-019 [A02] Should personal technology devices be restricted during school hours?
+EDU-020 [A02] Should schools integrate media literacy education into their curricula?
+
+### 3.5 Educational Equity
+
+EDU-021 [A02] Should schools adopt bilingual education as a national policy?
+EDU-022 [A02] [CURR] Should class sizes be reduced in public schools?
+EDU-023 [A02] Should gender equity in STEM fields be enforced through policy?
+EDU-024 [A02] Should all children have access to universal pre-primary education?
+EDU-025 [A02] [CURR] Should arts education be mandatory in all schools?
+EDU-026 [A02] Should governments restrict international student mobility?
+EDU-027 [A02] Should universal free higher education be established?
+EDU-028 [A02] Should governments fund broadband expansion to eliminate the digital divide?
+
+---
+
+## 4. WRK — LABOR & EMPLOYMENT
+
+### 4.1 Worker Rights
+
+WRK-001 [A02] Should all workers receive guaranteed paid family leave?
+WRK-002 [A02] Should governments require employers to provide paid sick leave?
+WRK-003 [A02] [CURR] Should workers have the legal right to disconnect from work communications outside office hours?
+WRK-004 [A02] Should governments require employers to provide paid parental leave?
+
+### 4.2 Gig Economy & Classification
+
+WRK-005 [A03] Should gig workers be classified as employees?
+WRK-006 [A05] Should cooperative enterprises receive tax benefits?
+
+### 4.3 Work-Life Policy
+
+WRK-007 [A03] [CURR] Should a four-day work week be adopted as national labor policy?
+WRK-008 [A02] [CURR] Should parental leave be significantly extended?
+WRK-009 [A03] Should governments protect the right to disconnect?
+WRK-010 [A11] Should public napping facilities be established?
+WRK-011 [A03] Should daylight saving time be abolished?
+
+### 4.4 Compensation & Benefits
+
+WRK-012 [A02] [CURR] Should governments raise the minimum wage to ensure a living standard?
+WRK-013 [A02] Should pension systems be reformed?
+WRK-014 [A02] Should pension contributions be mandatory?
+WRK-015 [A02] [CURR] Should the retirement age be raised?
+
+### 4.5 Workplace Structure
+
+WRK-016 [A11] Should caregiving robots replace human caregivers?
+WRK-017 [A03] Should governments regulate the "speed of life"?
+WRK-018 [A12] Should remote work policies be standardized?
+WRK-019 [A02] Should employers accommodate flexible work arrangements?
+WRK-020 [A05] Should workplace wellness programs be mandatory?
+
+---
+
+## 5. ECN — ECONOMIC SYSTEMS
+
+### 5.1 Fiscal Policy
+
+ECN-001 [A02] Should stimulus packages prioritize direct cash transfers?
+ECN-002 [A02] Should governments raise taxes on the wealthy?
+ECN-003 [A02] Should inheritance taxes be increased?
+ECN-004 [A02] Should governments introduce a sugar tax?
+
+### 5.2 Trade & Investment
+
+ECN-005 [A02] Should governments restrict foreign ownership of critical industries?
+ECN-006 [A02] Should foreign investment in farmland be restricted?
+ECN-007 [A02] Should land ownership by foreign investors in agriculture be restricted?
+
+### 5.3 Financial Regulation
+
+ECN-008 [A02] [CURR] Should gig workers be classified as employees with full benefits?
+ECN-009 [A02] Should financial inclusion be treated as a basic right?
+ECN-010 [A02] Should governments implement financial literacy programs?
+
+### 5.4 Inequality & Redistribution
+
+ECN-011 [A02] Should universal basic income be adopted?
+ECN-012 [A02] [CURR] Should predatory lending be more strictly regulated?
+ECN-013 [A05] Should medical debt be forgiven for low-income families?
+ECN-014 [A02] Should international institutions forgive debts of the poorest countries?
+ECN-015 [A02] Should debt relief programs be expanded worldwide?
+
+### 5.5 Entrepreneurship & Development
+
+ECN-016 [A02] Should governments provide microfinance programs?
+ECN-017 [A02] Should governments prioritize rural development?
+ECN-018 [A02] [CURR] Should subscription pricing models be regulated to protect consumers?
+ECN-019 [A05] Should antitrust laws be strengthened to break up technology monopolies?
+ECN-020 [A02] Should private companies be restricted from mining space resources?
+
+---
+
+## 6. GOV — GOVERNANCE & CIVIC LIFE
+
+### 6.1 Electoral Systems
+
+GOV-001 [A02] Should election day be a public holiday?
+GOV-002 [A02] Should campaign contributions be capped by law?
+GOV-003 [A02] [CURR] Should voting be mandatory for all citizens?
+GOV-004 [A08] Should political deepfakes be banned during elections?
+
+### 6.2 Legislative Process
+
+GOV-005 [A02] Should legislators be subject to term limits?
+GOV-006 [A05] Should lobbying by corporations be restricted?
+GOV-007 [A02] Should emergency powers be strictly limited?
+GOV-008 [A02] [CURR] Should campaign contributions be limited by law?
+
+### 6.3 Public Administration
+
+GOV-009 [A02] Should autonomous vehicles meet stricter safety standards?
+GOV-010 [A02] Should public funding prioritize renovation of existing housing?
+GOV-011 [A03] Should short-term rentals be restricted in urban areas?
+GOV-012 [A02] [CURR] Should there be term limits for legislators?
+
+### 6.4 Civic Participation
+
+GOV-013 [A02] Should governments require new housing to meet sustainability standards?
+GOV-014 [A02] Should non-citizen residents vote in local elections?
+GOV-015 [A02] [CURR] Should gerrymandering be prohibited by law?
+GOV-016 [A02] Should public protests be restricted to designated areas?
+
+### 6.5 Institutional Oversight
+
+GOV-017 [A02] Should governments expand disaster risk reduction programs?
+GOV-018 [A02] [CURR] Should lobbying be more strictly regulated?
+GOV-019 [A02] Should media ownership be regulated to prevent monopolies?
+GOV-020 [A02] Should governments regulate digital platforms to limit misinformation?
+GOV-021 [A02] Should online platforms be legally responsible for harmful content?
+GOV-022 [A02] [CURR] Should whistleblower protections be expanded?
+GOV-023 [A02] Should governments expand public trust in science?
+GOV-024 [A02] Should governments invest in civil defense programs?
+GOV-025 [A02] [CURR] Should political advertising be regulated?
+
+---
+
+## 7. HLT — HEALTH & MEDICINE
+
+### 7.1 Healthcare Access
+
+HLT-001 [A02] Should the government guarantee universal healthcare coverage?
+HLT-002 [A02] Should countries adopt a single-payer healthcare system?
+HLT-003 [A02] Should private health insurance be banned if universal public healthcare is adopted?
+HLT-004 [A02] Should rural hospitals receive government subsidies?
+HLT-005 [A02] [CURR] Should sugary drinks be taxed to discourage unhealthy consumption?
+HLT-006 [A02] Should undocumented residents be eligible for public healthcare?
+HLT-007 [A11] Should telemedicine be reimbursed at the same rate as in-person visits?
+
+### 7.2 Public Health Policy
+
+HLT-008 [A08] [CURR] Should organ donation be opt-out by default?
+HLT-009 [A08] Should antibiotics in livestock be banned?
+HLT-010 [A02] Should governments impose higher taxes on sugary drinks?
+HLT-011 [A02] Should governments regulate noise pollution more strictly?
+HLT-012 [A02] [CURR] Should vaccinations be mandatory for all schoolchildren?
+
+### 7.3 Mental Health
+
+HLT-013 [A02] Should mental health services be funded equally with physical health?
+HLT-014 [A02] Should governments expand funding for mental health crisis hotlines?
+HLT-015 [A08] [CURR] Should pharmaceutical advertising to consumers be restricted?
+HLT-016 [A08] Should mood-altering technologies be banned outside medical use?
+
+### 7.4 Bioethics & Enhancement
+
+HLT-017 [A02] Should physician-assisted dying be legalized?
+HLT-018 [A02] [CURR] Should processed foods carry warning labels?
+HLT-019 [A02] Should gene editing for intelligence be prohibited?
+HLT-020 [A02] [CURR] Should prescription drug prices be regulated by government?
+HLT-021 [A08] Should governments restrict genetic screening to protect privacy?
+HLT-022 [A08] [CURR] Should healthcare be provided universally to all citizens?
+HLT-023 [A08] Should exoskeletons be regulated as medical devices?
+HLT-024 [A08] Should implanted microchips be legally restricted?
+HLT-025 [A08] [CURR] Should alternative medicine be regulated for safety?
+
+### 7.5 Pharmaceutical Policy
+
+HLT-026 [A02] Should cognitive enhancement therapies be publicly available?
+HLT-027 [A08] Should sensory enhancement devices be restricted?
+HLT-028 [A02] [CURR] Should mental health services be significantly expanded?
+HLT-029 [A02] Should prescription drug prices be capped?
+HLT-030 [A02] Should dental and vision care be included in public insurance?
+HLT-031 [A02] Should governments regulate pharmaceutical advertising?
+HLT-032 [A05] [CURR] Should end-of-life care decision-making be expanded for patients?
+HLT-033 [A02] Should cosmetic surgeries be excluded from public insurance?
+HLT-034 [A08] Should health data from wearables be regulated as medical records?
+HLT-035 [A02] Should alternative medicines be integrated into public healthcare?
+
+---
+
+## 8. TEC — TECHNOLOGY & DIGITAL SOCIETY
+
+### 8.1 AI & Automation
+
+TEC-001 [A02] Should AI development be subject to international regulation?
+TEC-002 [A08] Should predictive policing be banned?
+TEC-003 [A02] [CURR] Should social media have age restrictions for minors?
+TEC-004 [A02] Should social media algorithms operate transparently?
+TEC-005 [A11] Should AI in healthcare require special regulation?
+
+### 8.2 Platform Governance
+
+TEC-006 [A02] Should net neutrality be protected by law?
+TEC-007 [A02] Should digital advertising be regulated to prevent manipulation?
+TEC-008 [A02] [CURR] Should facial recognition technology be banned in public spaces?
+TEC-009 [A05] Should online platforms be legally responsible for misinformation?
+
+### 8.3 Privacy & Data
+
+TEC-010 [A02] Should countries pass national data privacy laws?
+TEC-011 [A02] Should facial recognition use by police be regulated?
+TEC-012 [A02] [CURR] Should AI-generated content be labeled as such?
+TEC-013 [A02] Should governments provide free cybersecurity training?
+TEC-014 [A02] Should digital afterlife rights be established?
+TEC-015 [A02] [CURR] Should encryption backdoors be mandated for law enforcement?
+
+### 8.4 Biotechnology & Synthetic Biology
+
+TEC-016 [A02] Should synthetic biology be more strictly regulated?
+TEC-017 [A02] Should cloning of animals for food be banned?
+TEC-018 [A02] [CURR] Should autonomous vehicles be allowed on public roads?
+TEC-019 [A02] Should governments ban animal testing?
+
+### 8.5 Digital Infrastructure & Innovation
+
+TEC-020 [A11] Should governments fund smart city transitions?
+TEC-021 [A11] Should governments invest in carbon capture technology?
+TEC-022 [A02] [CURR] Should data brokers be regulated to protect consumer privacy?
+TEC-023 [A02] Should international cooperation be mandatory for space missions?
+TEC-024 [A02] Should nuclear energy be expanded despite safety concerns?
+TEC-025 [A02] [CURR] Should genetic engineering of humans be permitted?
+TEC-026 [A08] Should orbital debris be treated as an international problem?
+TEC-027 [A02] Should deep-sea mining be prohibited?
+TEC-028 [A02] [CURR] Should space resources be privately owned?
+TEC-029 [A02] Should quantum computing research be internationally regulated?
+TEC-030 [A02] Should brain-machine interfaces be developed for medical use?
+TEC-031 [A02] Should autonomous weapons be banned?
+TEC-032 [A02] [CURR] Should brain-computer interfaces be regulated?
+TEC-033 [A02] Should gene drives be banned in wild populations?
+TEC-034 [A02] Should digital twins of individuals be regulated?
+TEC-035 [A02] [CURR] Should algorithmic hiring be regulated to prevent bias?
+
+---
+
+## 9. ENV — ENVIRONMENT & RESOURCES
+
+### 9.1 Climate Policy
+
+ENV-001 [A02] Should carbon taxes be implemented to reduce emissions?
+ENV-002 [A02] Should carbon emissions trading systems be adopted globally?
+ENV-003 [A02] [CURR] Should carbon taxes be implemented to address climate change?
+ENV-004 [A02] Should countries comply with international climate agreements?
+ENV-005 [A02] Should environmental treaties include binding penalties?
+
+### 9.2 Energy Transition
+
+ENV-006 [A02] Should governments ban fossil fuel subsidies?
+ENV-007 [A02] Should subsidies for fossil fuels be eliminated?
+ENV-008 [A02] [CURR] Should single-use plastics be banned?
+ENV-009 [A02] Should nuclear power be expanded as clean energy?
+ENV-010 [A02] Should rooftop solar installations be subsidized?
+ENV-011 [A02] Should governments fund electric vehicle charging stations?
+ENV-012 [A02] [CURR] Should deforestation be banned globally?
+ENV-013 [A10] Should governments promote community energy cooperatives?
+
+### 9.3 Conservation & Biodiversity
+
+ENV-014 [A02] Should conservation be prioritized over economic development?
+ENV-015 [A02] [CURR] Should nuclear energy be expanded as part of climate policy?
+ENV-016 [A02] Should logging in old-growth forests be banned?
+ENV-017 [A02] Should rivers and forests be granted legal personhood?
+ENV-018 [A02] [CURR] Should water usage be rationed during shortages?
+
+### 9.4 Urban Ecology & Infrastructure
+
+ENV-019 [A02] Should urban green spaces be legally protected?
+ENV-020 [A02] Should cities adopt congestion pricing?
+ENV-021 [A02] Should public transportation receive higher subsidies?
+ENV-022 [A02] Should vehicle emissions standards be stricter?
+ENV-023 [A02] Should new buildings meet green building standards?
+
+---
+
+## 10. JUS — JUSTICE & RIGHTS
+
+### 10.1 Criminal Justice Reform
+
+JUS-001 [A05] Should private prisons be banned?
+JUS-002 [A02] Should police officers wear body cameras?
+JUS-003 [A02] [CURR] Should the death penalty be abolished?
+JUS-004 [A05] Should cash bail be eliminated?
+JUS-005 [A02] [CURR] Should cash bail be eliminated?
+JUS-006 [A02] Should rehabilitation be prioritized over punishment?
+JUS-007 [A02] Should the death penalty be abolished worldwide?
+JUS-008 [A02] [CURR] Should marijuana possession be decriminalized?
+
+### 10.2 Civil Liberties
+
+JUS-009 [A02] Should housing be guaranteed as a human right?
+JUS-010 [A02] Should governments regulate foreign media influence?
+JUS-011 [A02] Should police have military-grade weapons?
+
+### 10.3 Migration & Asylum
+
+JUS-012 [A02] Should refugees be granted permanent residency?
+JUS-013 [A02] Should refugee resettlement be shared among nations?
+JUS-014 [A02] Should brain drain be addressed through policy?
+JUS-015 [A08] [CURR] Should restorative justice programs replace traditional incarceration?
+
+### 10.4 Privacy & Surveillance
+
+JUS-016 [A02] Should biometric surveillance in public spaces be restricted?
+JUS-017 [A02] Should whistleblower protections be expanded internationally?
+JUS-018 [A02] Should corporate espionage be a criminal offense?
+
+---
+
+## 11. INT — INTERNATIONAL SYSTEMS
+
+### 11.1 Security & Defense
+
+INT-001 [A02] Should defense spending be capped as percentage of income?
+INT-002 [A02] Should governments expand compulsory military service?
+INT-003 [A02] Should maritime disputes be settled by international arbitration?
+INT-004 [A02] [CURR] Should countries accept more refugees?
+
+### 11.2 Global Commons & Environment
+
+INT-005 [A02] Should geoengineering be banned until global rules exist?
+INT-006 [A02] [CURR] Should refugee integration programs be expanded?
+INT-007 [A08] Should orbital debris cleanup be mandatory?
+INT-008 [A02] [CURR] Should international trade agreements prioritize labor standards?
+
+### 11.3 Development & Aid
+
+INT-009 [A02] Should international environmental treaties include binding penalties?
+INT-010 [A02] Should wealthy nations fund climate adaptation in developing countries?
+INT-011 [A02] Should international development aid prioritize education?
+INT-012 [A03] [CURR] Should sanctions be used as a foreign policy tool?
+
+### 11.4 Demographics & Migration
+
+INT-013 [A02] Should rural depopulation be slowed through incentives?
+INT-014 [A02] Should governments provide financial incentives for having children?
+INT-015 [A02] Should skilled worker immigration be expanded?
+INT-016 [A02] Should international student mobility be encouraged?
+INT-017 [A02] Should climate refugees be recognized under international law?
+INT-018 [A02] Should multinational corporations be subject to global minimum tax?
+INT-019 [A02] Should international courts have jurisdiction over corporate human rights violations?
+INT-020 [A02] Should nations share vaccine patents during pandemics?
+
+---
+
+## 12. CUL — CULTURE & SOCIETY
+
+### 12.1 Media & Information
+
+CUL-001 [A02] Should governments regulate media ownership?
+CUL-002 [A02] Should public funding for the arts be expanded?
+CUL-003 [A02] Should mass tourism be limited to protect cultural sites?
+CUL-004 [A02] Should museums return cultural artifacts?
+
+### 12.2 Arts & Heritage
+
+CUL-005 [A02] [CURR] Should cultural appropriation be regulated?
+CUL-006 [A02] Should governments fund public art commissioning?
+CUL-007 [A02] Should cultural diplomacy be publicly funded?
+CUL-008 [A02] Should sports diplomacy be supported with public money?
+
+### 12.3 Language & Identity
+
+CUL-009 [A02] Should endangered languages receive government funding?
+CUL-010 [A02] Should governments mandate multilingual education?
+CUL-011 [A02] Should indigenous language instruction be required?
+CUL-012 [A02] [CURR] Should cultural heritage sites be protected from development?
+
+### 12.4 Science Communication & Social Norms
+
+CUL-013 [A02] Should social media platforms label AI-generated content?
+CUL-014 [A02] Should influencer marketing be regulated?
+CUL-015 [A02] Should screen time for children be regulated?
+CUL-016 [A03] Should governments address loneliness as a public health priority?
+CUL-017 [A02] Should community centers receive guaranteed public funding?
+CUL-018 [A02] Should intergenerational housing projects receive support?
+
+---
+
+## 13. SOC — SOCIAL SYSTEMS
+
+### 13.1 Platform & Media
+
+SOC-001 [A02] Should social media platforms be broken up as monopolies?
+SOC-002 [A02] Should social media companies be liable for addictive design?
+SOC-003 [A02] Should algorithms that maximize engagement be regulated?
+SOC-004 [A02] Should online anonymity be limited?
+SOC-005 [A02] Should content moderation standards be set by government?
+
+### 13.2 Digital Society
+
+SOC-006 [A02] Should digital literacy be required for citizenship?
+SOC-007 [A02] Should governments regulate the attention economy?
+SOC-008 [A02] Should influencer culture be regulated for youth protection?
+SOC-009 [A02] Should virtual reality spaces be regulated like public spaces?
+SOC-010 [A02] [CURR] Should social media platforms be required to moderate harmful content?
+
+---
+
+## 14. ALGORITHM COVERAGE ANALYSIS
+
+### 14.1 Current Distribution
+
+| Algorithm | Count | % | Status |
+|-----------|-------|---|--------|
+| A01 | 0 | 0% | GAP |
+| A02 | 240 | 87% | Dominant |
+| A03 | 8 | 3% | Weak |
+| A04 | 0 | 0% | GAP |
+| A05 | 8 | 3% | Weak |
+| A06 | 0 | 0% | GAP |
+| A07 | 0 | 0% | GAP |
+| A08 | 16 | 6% | Moderate |
+| A09 | 0 | 0% | GAP |
+| A10 | 2 | 1% | GAP |
+| A11 | 6 | 2% | Weak |
+| A12 | 1 | 0.4% | GAP |
+
+### 14.2 Note
+
+These gaps reflect the ESO format (policy opinion prompts). The bot can apply any algorithm to any question—tags indicate natural affinity, not restriction.
+
+---
+
+## 15. CURRICULUM COVERAGE
+
+### 15.1 IDs Used in B10-CC-CURRICULUM v10.3
+
+**EDU:** 001, 003, 005, 006, 012, 015, 018, 022, 025
+**WRK:** 003, 007, 008, 012, 015
+**ECN:** 008, 012, 018
+**GOV:** 003, 008, 012, 015, 018, 022, 025
+**HLT:** 005, 008, 012, 015, 018, 020, 022, 025, 028, 032
+**TEC:** 003, 008, 012, 015, 018, 022, 025, 028, 032, 035
+**ENV:** 003, 008, 012, 015, 018
+**JUS:** 003, 005, 008, 015
+**INT:** 004, 006, 008, 012
+**CUL:** 005, 012
+**SOC:** 010
+
+Total ESO IDs in curriculum: 60
+
+---
+
+## 16. USAGE NOTES
+
+### 16.1 Algorithm Override
+
+The algorithm tag is a RECOMMENDATION, not a constraint. Any question can be processed through any algorithm.
+
+### 16.2 Counter-Intuitive Requirement
+
+Regardless of algorithm, all passages must include a counter-intuitive element per B10-CC-SPEC Section 9.
+
+### 16.3 Randomization Protocol
+
+For balanced domain coverage, the bot should:
+1. Track domains used in current session
+2. Prioritize underrepresented domains
+3. Avoid consecutive questions from same subdomain
+
+---
+
+## 17. VERSION HISTORY
+
+| Version | Date | Changes |
+|---------|------|---------|
+| B10 | 2025-12-10 | Initial canonized version |
+| B10.3 | 2025-12-15 | Synchronized with curriculum; added SOC domain; aligned all IDs |
+
+---
+
+## END OF DOCUMENT: B10-CC-ESO (v10.3 SYNCHRONIZED)

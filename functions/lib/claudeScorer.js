@@ -111,6 +111,8 @@ SCAFFOLD FOCUS:
 focusMode: {focusMode}
 primaryTarget: {primaryTarget}
 secondaryTarget: {secondaryTarget}
+SCAFFOLD DEFINITIONS:
+- argument_structure: When evaluating support, require analytical moves — tracing consequences, identifying mechanisms, mapping stakeholder impact, or evaluating constraints. Illustration or restatement without analytical development does not constitute support at Level 3.
 
 STUDENT TRANSCRIPT:
 {transcript}`;

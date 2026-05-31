@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10 Practice Platform — Pilot Overview &amp; Demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8fafc; color: #1e293b; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 48px 24px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  h1 { font-size: 32px; font-weight: 800; color: #0f172a; margin-bottom: 6px; line-height: 1.2; }
+  .doc-sub { font-size: 14px; color: #64748b; margin-bottom: 36px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; }
+
+  h2 { font-size: 11px; color: #0284c7; letter-spacing: 3px; text-transform: uppercase; margin: 44px 0 16px; padding-bottom: 8px; border-bottom: 2px solid #bae6fd; font-weight: 700; }
+
+  /* Identity box */
+  .identity-box { background: #0f172a; color: #f1f5f9; border-radius: 12px; padding: 24px 28px; margin-bottom: 28px; }
+  .id-label { font-size: 10px; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
+  .id-text { font-size: 18px; font-weight: 600; line-height: 1.6; color: #f1f5f9; }
+
+  /* Stats row */
+  .stats { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 28px; background: white; }
+  .stat { padding: 16px 20px; border-right: 1px solid #e2e8f0; flex: 1; min-width: 120px; }
+  .stat:last-child { border-right: none; }
+  .stat-label { font-size: 10px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+  .stat-val { font-size: 20px; color: #0f172a; font-weight: 800; }
+
+  /* Corpus grid */
+  .corpus-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .corpus-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+  .corpus-tag { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .corpus-title { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+  .corpus-desc { font-size: 13px; color: #475569; line-height: 1.5; }
+
+  /* Step rows */
+  .step-row { display: flex; gap: 0; margin-bottom: 8px; border: 1px solid #f1f5f9; border-radius: 10px; overflow: hidden; }
+  .step-num { font-size: 13px; font-weight: 800; color: #0284c7; padding: 14px 18px; background: #f0f9ff; border-right: 1px solid #e2e8f0; min-width: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-text { font-size: 14px; color: #334155; padding: 14px 18px; line-height: 1.6; }
+  .step-text strong { color: #0f172a; }
+
+  /* Pipeline */
+  .pipeline { display: flex; align-items: stretch; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: white; }
+  .pipe-step { flex: 1; padding: 20px 14px; border-right: 1px solid #e2e8f0; text-align: center; }
+  .pipe-step:last-child { border-right: none; }
+  .pipe-arrow { display: flex; align-items: center; justify-content: center; padding: 0 4px; color: #cbd5e1; font-size: 18px; flex-shrink: 0; }
+  .pipe-name { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+  .pipe-detail { font-size: 12px; color: #64748b; line-height: 1.4; }
+  .pipe-dot { width: 10px; height: 10px; border-radius: 50%; background: #0284c7; margin: 0 auto 10px; }
+
+  /* Note box */
+  .note-box { background: #f0f9ff; border: 1px solid #bae6fd; border-left: 4px solid #0284c7; border-radius: 8px; padding: 16px 20px; margin-bottom: 14px; }
+  .note-box p { font-size: 14px; color: #334155; line-height: 1.7; }
+  .note-box strong { color: #0284c7; }
+
+  /* Frames grid */
+  .frames-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .frame-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; border-left: 4px solid #0d9488; }
+  .frame-week { font-size: 11px; font-weight: 800; color: #0d9488; letter-spacing: 2px; margin-bottom: 6px; }
+  .frame-name { font-size: 14px; font-weight: 700; color: #0f172a; line-height: 1.3; }
+
+  /* Security list */
+  .sec-list { background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .sec-row { display: flex; align-items: flex-start; border-bottom: 1px solid #f1f5f9; }
+  .sec-row:last-child { border-bottom: none; }
+  .sec-label { font-size: 13px; font-weight: 700; color: #0f172a; padding: 14px 18px; min-width: 220px; flex-shrink: 0; border-right: 1px solid #f1f5f9; background: #f8fafc; display: flex; align-items: center; }
+  .sec-desc { font-size: 13px; color: #475569; padding: 14px 18px; line-height: 1.6; }
+
+  /* Roadmap */
+  .roadmap-item { display: flex; gap: 16px; align-items: flex-start; background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; }
+  .roadmap-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .roadmap-text { font-size: 14px; color: #334155; line-height: 1.6; }
+  .roadmap-text strong { color: #0f172a; }
+
+  /* Pilot grid */
+  .pilot-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .pilot-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; }
+  .pilot-label { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .pilot-val { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+  .pilot-desc { font-size: 12px; color: #64748b; line-height: 1.4; }
+
+  .teal-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 22px; margin-bottom: 14px; border-left: 4px solid #0d9488; }
+  .teal-card .card-title { font-size: 16px; font-weight: 800; color: #0d9488; margin-bottom: 10px; }
+  .teal-card p { font-size: 14px; color: #334155; line-height: 1.7; }
+
+  .footer { margin-top: 56px; font-size: 11px; color: #94a3b8; text-align: center; letter-spacing: 2px; line-height: 2.4; border-top: 1px solid #e2e8f0; padding-top: 24px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <h1>B10 Practice Platform</h1>
+  <div class="doc-sub">Pilot Overview &amp; Demo &nbsp;·&nbsp; June 5, 2026</div>
+
+  <!-- IDENTITY -->
+  <div class="identity-box">
+    <div class="id-label">What This Is</div>
+    <div class="id-text">An AI-assisted asynchronous speaking and listening practice platform for international military learners targeting ILR 2+ and 3 proficiency — purpose-built at DLIELC.</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Corpus Items</div><div class="stat-val">816</div></div>
+    <div class="stat"><div class="stat-label">Pilot Duration</div><div class="stat-val">6 weeks</div></div>
+    <div class="stat"><div class="stat-label">Target Students</div><div class="stat-val">10–20</div></div>
+
+  </div>
+
+  <!-- SECTION 1: CORPUS -->
+  <h2>Section 1 — The B10 Corpus</h2>
+
+  <div class="corpus-grid">
+    <div class="corpus-card">
+      <div class="corpus-tag" style="color:#7c3aed;">ORIENT</div>
+      <div class="corpus-title">18</div>
+      <div class="corpus-desc">Fixed discourse patterns. CEFR B2 vocabulary. Controlled entry point.</div>
+    </div>
+    <div class="corpus-card">
+      <div class="corpus-tag" style="color:#0284c7;">CORE</div>
+      <div class="corpus-title">120</div>
+      <div class="corpus-desc">12 sets × 10 passages. Primary ILR 2→3 vehicle.</div>
+    </div>
+    <div class="corpus-card">
+      <div class="corpus-tag" style="color:#d97706;">EXT</div>
+      <div class="corpus-title">72</div>
+      <div class="corpus-desc">Extended listening. ILR 3 causal reasoning.</div>
+    </div>
+    <div class="corpus-card">
+      <div class="corpus-tag" style="color:#0d9488;">ESO</div>
+      <div class="corpus-title">300</div>
+      <div class="corpus-desc">Opinion support tasks. 60 bundled · 48 Frames · 192 general.</div>
+    </div>
+    <div class="corpus-card">
+      <div class="corpus-tag" style="color:#64748b;">NAR / DES / INS</div>
+      <div class="corpus-title">306</div>
+      <div class="corpus-desc">ILR 2 speaking tasks. Narration, Description, Instructions.</div>
+    </div>
+    <div class="corpus-card" style="background:#f0fdf4; border-color:#bbf7d0;">
+      <div class="corpus-tag" style="color:#16a34a;">TOTAL LIVE</div>
+      <div class="corpus-title" style="color:#16a34a;">816</div>
+      <div class="corpus-desc">All items live. CORE and EXT audio pre-generated.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: STUDENT LOOP -->
+  <h2>Section 2 — The Student Practice Loop</h2>
+
+  <div class="step-row"><div class="step-num">1</div><div class="step-text"><strong>Student signs in</strong> with email and password. No personal name, rank, or identifier is stored — only a B10 ID number.</div></div>
+  <div class="step-row"><div class="step-num">2</div><div class="step-text"><strong>Assigned passages appear.</strong> For audio passages, the student listens first. A Speaking Focus cue appears if a scaffold is active.</div></div>
+  <div class="step-row"><div class="step-num">3</div><div class="step-text"><strong>Student records their response.</strong> One tap to start, one tap to stop. Works on iOS and PC — no app download required.</div></div>
+  <div class="step-row"><div class="step-num">4</div><div class="step-text"><strong>AI pipeline processes the submission.</strong> Transcription → disfluency analysis → scoring → structured feedback. Typical turnaround: under 30 seconds.</div></div>
+  <div class="step-row" style="margin-bottom:0;"><div class="step-num">5</div><div class="step-text"><strong>Student reviews feedback</strong> — score, strengths, gaps, and actionable language notes.</div></div>
+
+  <!-- SECTION 3: INSTRUCTOR -->
+  <h2>Section 3 — The Instructor View</h2>
+
+  <div class="step-row"><div class="step-num">Assign</div><div class="step-text">Select any passage or bundle from the full corpus. Filter by layer or assign a pre-built bundle of 3 passages at once.</div></div>
+  <div class="step-row"><div class="step-num">Scaffold</div><div class="step-text">For ESO passages, optionally set a speaking focus — Argument Structure, Discourse Frame, or Grammar Structure. Score is never affected.</div></div>
+  <div class="step-row"><div class="step-num">Monitor</div><div class="step-text">Assignment history shows Pending / Attempted status per passage. Tap any attempt to expand: transcript, strengths, gaps, and language feedback.</div></div>
+  <div class="step-row" style="margin-bottom:0;"><div class="step-num">Roster</div><div class="step-text">Add any student by B10 ID. No administrator needed. A student working with multiple instructors simultaneously is fully supported.</div></div>
+
+  <!-- SECTION 4: PIPELINE -->
+  <h2>Section 4 — How the AI Pipeline Works</h2>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-dot"></div>
+      <div class="pipe-name">Record</div>
+      <div class="pipe-detail">Student records in browser. Audio uploaded to secure storage.</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot" style="background:#0d9488;"></div>
+      <div class="pipe-name">Transcribe</div>
+      <div class="pipe-detail">Speech-to-text with word-level timestamps returned.</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot" style="background:#7c3aed;"></div>
+      <div class="pipe-name">Analyze</div>
+      <div class="pipe-detail">Disfluency pre-processor runs on timestamp data.</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot" style="background:#d97706;"></div>
+      <div class="pipe-name">Score</div>
+      <div class="pipe-detail">AI scores transcript against task type and scaffold.</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-dot" style="background:#16a34a;"></div>
+      <div class="pipe-name">Feedback</div>
+      <div class="pipe-detail">Structured feedback written to database. Student sees results.</div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <p><strong>On disfluency and fairness.</strong> The speech-to-text engine returns word-level timestamps for every token in the transcript. These are used to compute a disfluency profile — false starts, repetitions, filled pauses — before the transcript reaches the scoring engine. This protects students from false penalties caused by transcription error rather than actual performance.</p>
+  </div>
+
+  <!-- SECTION 5: FRAMES -->
+  <h2>Section 5 — Frames Practice</h2>
+
+  <div class="teal-card">
+    <div class="card-title">Discourse Frame-Targeted ESO Practice</div>
+    <p>Students practice one discourse frame per week across a 6-week sequence aligned to the pilot duration. 48 questions — 8 per week — drawn from the full ESO bank across diverse domains.</p>
+  </div>
+
+  <div class="frames-grid">
+    <div class="frame-card"><div class="frame-week">W1</div><div class="frame-name">Scale &amp; Stakeholder</div></div>
+    <div class="frame-card"><div class="frame-week">W2</div><div class="frame-name">Trade-offs &amp; Constraints</div></div>
+    <div class="frame-card"><div class="frame-week">W3</div><div class="frame-name">Causal Systems</div></div>
+    <div class="frame-card"><div class="frame-week">W4</div><div class="frame-name">Hypothetical &amp; Conditional</div></div>
+    <div class="frame-card"><div class="frame-week">W5</div><div class="frame-name">Values, Heuristics &amp; Bias</div></div>
+    <div class="frame-card"><div class="frame-week">W6</div><div class="frame-name">Synthesis &amp; Judgment</div></div>
+  </div>
+
+  <!-- SECTION 6: SECURITY -->
+  <h2>Section 6 — Security by Design</h2>
+
+  <div class="sec-list">
+    <div class="sec-row">
+      <div class="sec-label">B10 ID Pseudonyms</div>
+      <div class="sec-desc">Students are identified only by a B10 ID number. No real name or personal identifier is collected, stored, or transmitted at any point.</div>
+    </div>
+    <div class="sec-row">
+      <div class="sec-label">Authenticated Access</div>
+      <div class="sec-desc">All users sign in with email and password. Student accounts contain no personally identifiable information beyond the B10 ID.</div>
+    </div>
+    <div class="sec-row">
+      <div class="sec-label">Role-Based Data Access</div>
+      <div class="sec-desc">Instructors see only their own students' data. Access is enforced at the database level — not just in the interface.</div>
+    </div>
+    <div class="sec-row">
+      <div class="sec-label">Audio Deleted After 14 Days</div>
+      <div class="sec-desc">All student audio recordings are automatically deleted by a scheduled process running every 24 hours.</div>
+    </div>
+    <div class="sec-row">
+      <div class="sec-label">Transcripts Removed After 30 Days</div>
+      <div class="sec-desc">Spoken transcripts are automatically removed after 30 days. Scores and feedback persist; raw spoken content does not.</div>
+    </div>
+    <div class="sec-row" style="border-bottom:none;">
+      <div class="sec-label">Enterprise-Grade Storage</div>
+      <div class="sec-desc">Data is stored on a commercially available cloud platform with encryption at rest and in transit, and security rules consistent with enterprise-level standards.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: PILOT -->
+  <h2>Section 7 — Pilot Parameters</h2>
+
+  <div class="pilot-grid">
+    <div class="pilot-card">
+      <div class="pilot-label">Launch</div>
+      <div class="pilot-val">Aug 2026</div>
+      <div class="pilot-desc">6-week duration</div>
+    </div>
+    <div class="pilot-card">
+      <div class="pilot-label">Students</div>
+      <div class="pilot-val">10–20</div>
+      <div class="pilot-desc">2–3 main instructors</div>
+    </div>
+    <div class="pilot-card">
+      <div class="pilot-label">Daily Load</div>
+      <div class="pilot-val">4 items</div>
+      <div class="pilot-desc">Weekday and weekend</div>
+    </div>
+    <div class="pilot-card">
+      <div class="pilot-label">Frames Track</div>
+      <div class="pilot-val">W1–W6</div>
+      <div class="pilot-desc">One frame per week</div>
+    </div>
+    <div class="pilot-card">
+      <div class="pilot-label">ESO Pool</div>
+      <div class="pilot-val">300</div>
+      <div class="pilot-desc">Bundled · Frames · General</div>
+    </div>
+    <div class="pilot-card">
+      <div class="pilot-label">Platform</div>
+      <div class="pilot-val">Live</div>
+      <div class="pilot-desc">iOS and PC browsers</div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: ROADMAP -->
+  <h2>Section 8 — Where This Is Going</h2>
+
+  <div class="roadmap-item">
+    <div class="roadmap-dot" style="background:#0284c7;"></div>
+    <div class="roadmap-text"><strong>Instructor session notes.</strong> Written notes linked to any student attempt — visible only to that instructor, persistent with the performance record.</div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-dot" style="background:#0284c7;"></div>
+    <div class="roadmap-text"><strong>Progress summaries.</strong> AI-generated summary of performance patterns across a session or cohort — identifying consistent gaps and areas of growth.</div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-dot" style="background:#0284c7;"></div>
+    <div class="roadmap-text"><strong>Performance arc.</strong> Score trend across attempts over time — a visible arc of progress rather than isolated data points.</div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-dot" style="background:#0d9488;"></div>
+    <div class="roadmap-text"><strong>Gap-to-activity recommendations.</strong> Based on accumulated performance, the platform identifies persistent gaps and recommends targeted corpus passages to address them.</div>
+  </div>
+  <div class="roadmap-item">
+    <div class="roadmap-dot" style="background:#7c3aed;"></div>
+    <div class="roadmap-text"><strong>Full curriculum integration.</strong> Frames Practice aligned to a completed discourse frame curriculum. Pronunciation module. Platform becomes the practice engine for a complete ILR 3 instructional system.</div>
+  </div>
+
+  <div class="footer">
+    B10 Practice Platform &nbsp;·&nbsp; DLIELC &nbsp;·&nbsp; June 5, 2026 &nbsp;·&nbsp; Pilot Overview &amp; Demo
+  </div>
+
+</div>
+</body>
+</html>

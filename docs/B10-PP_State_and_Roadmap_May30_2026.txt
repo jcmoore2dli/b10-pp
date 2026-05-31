@@ -1,0 +1,227 @@
+# B10-PP State and Roadmap — May 30, 2026
+
+---
+
+## PLATFORM STATUS
+
+**Live URL:** https://b10-practice-platform.web.app/b10_practice_platform/
+**Firebase project:** b10-practice-platform (nam5, Blaze plan)
+**Repo:** github.com/jcmoore2dli/b10-pp
+**Project root:** ~/b10_corpus/b10_practice_platform/
+**Frontend:** frontend/src/
+**Functions:** functions/index.js, functions/lib/claudeScorer.js
+
+---
+
+## BILLING STATUS (as of May 30)
+
+- **Anthropic:** $18.80 balance, auto-reload ON ($10 trigger, $20 add)
+- **Deepgram:** $199.55 balance, Pay As You Go
+- **Firebase:** $0.12 this month, Blaze plan, billing card confirmed via Google Cloud Console
+- **AssemblyAI:** Card on file — verify next session
+
+---
+
+## CORPUS STATUS
+
+### Live in Firestore
+
+| Layer | Count | Notes |
+|-------|-------|-------|
+| ORIENT | 18 | Fixed discourse, CEFR B2 vocab |
+| CORE | 120 | 12 sets × 10 passages, tiered by MF word count |
+| EXT | 72 | Arc Anchor metadata, ILR 3 causal reasoning |
+| ESO — Bundled [CURR] | 60 | Paired with CORE sets |
+| ESO — Frames (ESO-AES) | 48 | W1–W6, 8 per week, auto-scaffold |
+| ESO — General | 192 | Uploaded May 30 from B10-CC-ESO-v10.3 |
+| NAR / DES / INS | 306 | ILR 2 speaking tasks |
+| **TOTAL** | **816** | All live in Firestore |
+
+### ESO General Pool Notes
+- Source: B10-CC-ESO-SYNCED.txt (252 total questions, 60 [CURR] already in Firestore)
+- 192 non-CURR questions uploaded May 30 via upload_eso_general.py
+- All uploaded with: corpusType=ESO, taskType=ESO, curr=false, status=active, source=B10-CC-ESO-v10.3
+- No taboo/culture-specific screening applied — all are policy opinion questions appropriate for this population
+- Appositives for culture-specific terms (gig workers, cash bail, legacy admissions, etc.) deferred to post-pilot
+
+---
+
+## SPEAKING GUIDES — FIREBASE STORAGE
+
+**Location:** gs://b10-practice-platform.firebasestorage.app/resources/speaking-guides/
+**Access:** Public read (AllUsers:R granted May 30)
+
+### Files uploaded:
+- B10_FP_W1_Scale_and_Stakeholder.pdf (teal)
+- B10_FP_W2_Trade-offs_and_Constraints.pdf (teal)
+- B10_FP_W3_Causal_Systems.pdf (teal)
+- B10_FP_W4_Hypothetical_and_Conditional.pdf (teal)
+- B10_FP_W5_Values_Heuristics_and_Bias.pdf (teal)
+- B10_FP_W6_Synthesis_and_Judgment.pdf (teal)
+- b10pp-argument-structure.pdf (steel blue, ARG badge)
+- b10pp-grammar-conditional-structures.pdf (indigo, STRUCT_01)
+- b10pp-grammar-concession-contrast.pdf (indigo, STRUCT_02)
+- b10pp-grammar-relative-clauses.pdf (indigo, STRUCT_03)
+- b10pp-grammar-modality-hedging.pdf (indigo, STRUCT_04)
+- b10pp-grammar-nominalization.pdf (indigo, STRUCT_05)
+- b10pp-grammar-passive-reporting.pdf (indigo, STRUCT_06)
+- b10pp-grammar-parallelism.pdf (indigo, STRUCT_07)
+
+### Local copies:
+~/Documents/b10pp-speaking-guides/ (home Mint machine)
+
+---
+
+## FRONTEND CHANGES — May 30
+
+### RecordingScreen.jsx
+- normalizePassage now passes through: suggestedPrimaryFrame, framesWeek, framesFrame
+- getFramesCue() injects Speaking Focus cue for ESO-AES passages from passage fields
+- scaffoldCue = getScaffoldCue() || getFramesCue()
+- Guide URL logic split into frameGuideUrl and grammarGuideUrl (independent resolution)
+- FRAME_GUIDE_URLS keyed on FRAME_01–FRAME_06
+- GRAMMAR_GUIDE_URLS keyed on STRUCT_01–STRUCT_07 and argument_structure
+- ESO-AES passages without session scaffold resolve frameGuideUrl from passage.suggestedPrimaryFrame
+- Combined scaffold shows both Frame Guide (teal) and Grammar Guide (indigo) links side by side
+- Frame Guide link color: #0d9488 (teal); Grammar Guide link color: #4338ca (indigo)
+
+### InstructorDashboardScreen.jsx
+- ESO filter now excludes ESO-AES- passages (those belong in FRAMES filter only)
+- ESO dropdown truncation fixed — shows full question text
+- Scaffold badge on assigned passage rows now shows descriptive labels:
+  - argument_structure → "ARG · PSU Arc" (steel blue)
+  - discourse_frame → "Frames · [frame name]" (teal)
+  - grammar_structure → "Grammar · [structure name]" (indigo)
+  - combined → "[frame] + [structure]" (navy)
+- Multi-select checkboxes restored on assigned passage rows
+- "Delete selected (N)" button appears when checkboxes are checked
+- framesWeekFilter state added for W1–W6 sub-filter under FRAMES button
+
+### functions/lib/claudeScorer.js
+- SCAFFOLD DEFINITIONS section added after scaffold focus params:
+  "argument_structure: When evaluating support, require analytical moves — tracing consequences, identifying mechanisms, mapping stakeholder impact, or evaluating constraints. Illustration or restatement without analytical development does not constitute support at Level 3."
+
+### functions/index.js
+- Frames Practice auto-scaffold: when passageId starts with ESO-AES-, fetches passage doc and builds effectiveScaffoldConfig from suggestedFocusArea and suggestedPrimaryFrame
+- All ESO scorer params now use effectiveScaffoldConfig instead of raw scaffoldConfig
+- Falls through to holistic if fetch fails
+
+---
+
+## ARGUMENT STRUCTURE SCAFFOLD — DESIGN DECISION
+
+- PSU (Point → Support → Universal) framework
+- Claude's generic interpretation of "argument_structure" is close but not identical to PSU
+- Key gap: "Support" in generic terms accepts illustration; PSU requires analytical move
+- Decision: prompt addition closes this gap without boxing students into a template
+- Post-pilot review: check scaffold_feedback outputs for argument_structure after Week 2
+- If Claude tracks OPI rater judgment → leave alone; if not → add explicit PSU definition
+
+---
+
+## FRAMES PRACTICE LAYER
+
+- 48 questions live: ESO-AES-W1-001 through ESO-AES-W6-008
+- Each doc has: framesWeek, framesFrame, suggestedFocusArea, suggestedPrimaryFrame, curr=false, status=active
+- Auto-scaffold fires in processSubmission when passageId starts with ESO-AES-
+- No instructor scaffold needed or shown for Frames passages
+- Speaking guide PDFs link directly from W1–W6 existing guides (no duplicate docs)
+- Student sees teal Frames badge on passage card with short frame name
+
+---
+
+## ESO LAYER ARCHITECTURE
+
+Three distinct ESO pools — instructors must use correct filter:
+
+| Pool | Filter | Scaffold | Notes |
+|------|--------|----------|-------|
+| Bundled [CURR] | BUNDLE | Optional | Paired with CORE sets, curriculum-sequenced |
+| Frames (ESO-AES) | FRAMES | Auto (from passage) | Discourse frame baked in |
+| General | ESO | Optional (grammar/discourse/ARG) | 192 questions, freely assignable |
+
+ESO filter in InstructorDashboard explicitly excludes ESO-AES- passages to prevent accidental cross-assignment.
+
+---
+
+## SPEAKING GUIDE INTEGRATION
+
+- Guides surface in Speaking Focus cue box on RecordingScreen
+- Frame Guide link (teal) → W1–W6 PDF based on primaryFrame or suggestedPrimaryFrame
+- Grammar Guide link (indigo) → STRUCT_01–STRUCT_07 PDF based on primaryStructure
+- ARG guide (steel blue) → argument-structure PDF when focusArea = argument_structure
+- Combined scaffold → both links appear side by side
+- ESO-AES passages → Frame Guide link from passage.suggestedPrimaryFrame (no session scaffold needed)
+- Discourse frame scaffold → resolves to W1–W6 guide via primaryFrame
+
+---
+
+## KNOWN ISSUES / POST-PILOT FIXES
+
+- **Hard reload 404:** Ctrl+Shift+R on deep routes returns Firebase 404. Normal navigation unaffected. Root cause: rewrite rule doesn't catch all deep routes. Do not attempt to fix before pilot.
+- **URL simplification:** Platform lives at /b10_practice_platform/ subdirectory. Attempt to move to root broke styling (May 30). Reverted. Post-pilot fix.
+- **AssemblyAI billing:** Card not verified this session. Check next session.
+- **ESO culture-specific terms:** 32 questions flagged with terms like "gig workers," "cash bail," "legacy admissions." Decision: upload as-is, add appositives post-pilot based on student confusion data.
+
+---
+
+## PILOT PARAMETERS
+
+- **Launch:** August 2026
+- **Duration:** 6 weeks (36 instructional days)
+- **Students:** 10–20
+- **Instructors:** 2–3 main + SLT
+- **Weekday load:** 3 CORE/ORIENT paraphrases + 1 ESO
+- **Weekend load:** 2 CORE paraphrases + 2 ESO
+- **Frames track:** W1–W6, one frame per week, aligned to pilot duration
+- **ESO pool:** 300 questions (60 bundled + 48 Frames + 192 general)
+
+---
+
+## JUNE 5 IST DELIVERABLES
+
+- [x] Pilot Overview & Demo HTML (b10pp-pilot-overview-demo.html) — revised May 30
+- [x] Platform live and tested
+- [x] Speaking guides uploaded and linked
+- [x] Frames Practice fully functional
+- [x] ESO filter corrected
+- [ ] Chief-level demo rehearsal (requires dev server startup only)
+
+---
+
+## INSTITUTIONAL ADVOCACY STATUS
+
+- Supervisor: strong champion, described ecosystem as most impactful single development in a decade
+- Former Academic Director: aware and approving
+- Chief of Testing and Chief of Curriculum: want visibility — addressed via supervisor reaching up
+- Chief of Specialized: showed initial resistance; supervisor of specialized will attend pilot IST
+- Strategy: let pilot data make the argument; avoid personal aggrandizement in any briefing
+
+### Three asks (sequenced):
+- S1: Protected time for platform maintenance (supervisor authorizes directly)
+- S2: Purchase card ~$176/year (supervisor carries upward, after pilot data)
+- S3: Formal program adoption (after pilot data, broader stakeholder alignment)
+
+---
+
+## ROADMAP (post-pilot)
+
+- Instructor session notes linked to submission records
+- AI-generated progress summaries across sessions
+- Performance arc visualization (score trend over time)
+- Gap-to-activity recommendations based on performance history
+- Full curriculum integration — Frames Practice aligned to completed discourse frame curriculum
+- Pronunciation module (Deepgram Aura-2 IPA override — post-January 2027)
+- OPSEC transcript filtering — detect and redact names/rank/sensitive spoken content before scoring engine (pre-expansion, not pilot requirement)
+- URL simplification (root path, no subdirectory)
+- Hard reload 404 fix
+
+---
+
+## DEEPGRAM AURA-2 TTS NOTE
+
+Deepgram now supports speed control (0.7–1.5x) and IPA pronunciation overrides for Aura-2 voices. Potentially useful for EXT passage re-generation with problematic compound noun pronunciation. Decision: investigate post-pilot. 192 corpus MP3s already generated via Azure — do not re-generate before pilot.
+
+---
+
+END OF DOCUMENT — May 30, 2026
