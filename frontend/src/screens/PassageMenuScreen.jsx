@@ -271,7 +271,7 @@ export default function PassageMenuScreen() {
 
       <main className="px-4 py-4 max-w-2xl mx-auto">
         {activeTab === 'assigned' && (
-          <AssignedSetView passages={assignedPassages} onSelect={handleSelectPassage} />
+          <AssignedSetView passages={assignedPassages} onSelect={handleSelectPassage} submissions={mySubmissions} />
         )}
         {activeTab === 'progress' && (
           <MyProgressView submissions={mySubmissions} loading={submissionsLoading} />
@@ -291,7 +291,7 @@ export default function PassageMenuScreen() {
   )
 }
 
-function AssignedSetView({ passages, onSelect }) {
+function AssignedSetView({ passages, onSelect, submissions = [] }) {
   if (passages.length === 0) {
     return (
       <div className="text-center py-12 text-gray-400">
@@ -299,13 +299,23 @@ function AssignedSetView({ passages, onSelect }) {
       </div>
     )
   }
+  const attemptedIds = new Set(submissions.map(s => s.passageId))
+  const pending = passages.filter(p => !attemptedIds.has(p.passage_id))
+  const completed = passages.filter(p => attemptedIds.has(p.passage_id))
+  const sorted = [...pending, ...completed]
   return (
     <div className="flex flex-col gap-3">
       <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
         {passages.length} passage{passages.length !== 1 ? 's' : ''} assigned
+        {completed.length > 0 && <span className="ml-2 text-green-600">· {completed.length} done</span>}
       </p>
-      {passages.map((p) => (
-        <PassageCard key={p.passage_id} passage={p} onSelect={onSelect} status="not_started" />
+      {sorted.map((p) => (
+        <PassageCard
+          key={p.passage_id}
+          passage={p}
+          onSelect={onSelect}
+          status={attemptedIds.has(p.passage_id) ? 'completed' : 'not_started'}
+        />
       ))}
     </div>
   )
