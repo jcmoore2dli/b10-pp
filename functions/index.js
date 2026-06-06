@@ -346,7 +346,7 @@ exports.cleanupAudio = onSchedule("every 24 hours", async () => {
   const db = admin.firestore();
   const bucket = admin.storage().bucket();
   const now = Date.now();
-  const day14 = new Date(now - 14 * 24 * 60 * 60 * 1000);
+  const day14 = new Date(now - 3 * 24 * 60 * 60 * 1000);
   const day30 = new Date(now - 30 * 24 * 60 * 60 * 1000);
 
   // ── Delete audio files older than 14 days ─────────────────────────────────
