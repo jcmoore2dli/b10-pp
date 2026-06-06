@@ -265,7 +265,7 @@ export default function RecordingScreen() {
             unsubscribeRef.current()
             unsubscribeRef.current = null
           }
-          navigate(`/b10_practice_platform/feedback/${passageId}`, { state: { submissionData: data } })
+          navigate(`/b10_practice_platform/feedback/${passageId}`, { state: { submissionData: data, submissionId } })
           return
         }
 

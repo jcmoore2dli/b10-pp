@@ -21,6 +21,9 @@
 //   - disfluencyMetadata never shown to student
 
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../services/firebase'
 
 // ── Score display helpers ─────────────────────────────────────────────────────
 
@@ -47,9 +50,22 @@ export default function FeedbackScreen() {
   const { passageId } = useParams()
   const navigate      = useNavigate()
   const { state }     = useLocation()
+  const [freshData, setFreshData] = useState(null)
+
+  useEffect(() => {
+    const submissionId = state?.submissionId
+    const hasScaffold = state?.submissionData?.scaffold_feedback
+    if (submissionId && !hasScaffold) {
+      getDoc(doc(db, 'submissions', submissionId)).then(snap => {
+        if (snap.exists()) setFreshData(snap.data())
+      }).catch(() => {})
+    }
+  }, [state])
+
+  const submissionData = freshData || state?.submissionData
 
   // Guard: if arrived without submission data, redirect
-  if (!state?.submissionData || state.submissionData.score == null) {
+  if (!submissionData || submissionData.score == null) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
@@ -72,9 +88,10 @@ export default function FeedbackScreen() {
     strengths,
     gaps,
     language_feedback,
+    scaffold_feedback,
     transcript_note,
     transcriptText,
-  } = state.submissionData
+  } = submissionData
 
   const scoreMax       = getScoreMax(taskFamily)
   const contextualLine = getContextualLine(score, scoreMax)
@@ -127,6 +144,57 @@ export default function FeedbackScreen() {
           <FeedbackSection title="Language note:">
             <p className="text-sm text-gray-700 leading-relaxed">{language_feedback}</p>
           </FeedbackSection>
+        )}
+
+        {/* Scaffold feedback box — only shown when scaffold is active */}
+        {scaffold_feedback?.primary && (
+          <div className="rounded-xl border-2 p-4 flex flex-col gap-2"
+            style={{ borderColor: '#0d9488', backgroundColor: '#f0fdfa' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-bold uppercase tracking-wide"
+                style={{ color: '#0d9488' }}>
+                Focus Feedback — {scaffold_feedback.primary.target?.replace(/_/g, ' ')}
+              </span>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                style={{
+                  backgroundColor:
+                    scaffold_feedback.primary.level === 'Sustained' ? '#16a34a' :
+                    scaffold_feedback.primary.level === 'Developing' ? '#d97706' : '#dc2626',
+                  color: 'white'
+                }}>
+                {scaffold_feedback.primary.level}
+              </span>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {scaffold_feedback.primary.descriptor}
+            </p>
+            {scaffold_feedback.primary.evidence && (
+              <p className="text-xs text-gray-500 italic leading-relaxed border-l-2 pl-3"
+                style={{ borderColor: '#0d9488' }}>
+                {scaffold_feedback.primary.evidence}
+              </p>
+            )}
+            {scaffold_feedback.secondary && (
+              <div className="mt-2 pt-2 border-t border-teal-100">
+                <p className="text-xs font-bold uppercase tracking-wide mb-1"
+                  style={{ color: '#0d9488' }}>
+                  {scaffold_feedback.secondary.target?.replace(/_/g, ' ')}
+                  {' '}<span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor:
+                        scaffold_feedback.secondary.level === 'Sustained' ? '#16a34a' :
+                        scaffold_feedback.secondary.level === 'Developing' ? '#d97706' : '#dc2626',
+                      color: 'white'
+                    }}>
+                    {scaffold_feedback.secondary.level}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {scaffold_feedback.secondary.descriptor}
+                </p>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Transcript note — plain language, shown only if non-empty */}

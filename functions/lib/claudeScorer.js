@@ -87,9 +87,9 @@ SCORING CONSTRAINTS:
 - PISU completion is not a scoring criterion.
 - Scaffold focus is diagnostic, not punitive. Never affects holistic score.
 - When focusMode is Holistic: omit scaffold_feedback from output entirely.
-- When focusMode is active: produce holistic score unchanged, weight feedback
-  toward scaffold target, add scaffold_feedback field with REDS status and
-  one developmental suggestion per target.
+- When focusMode is active: produce holistic score unchanged. Add scaffold_feedback
+  object with level (Emerging/Developing/Sustained), descriptor, and evidence
+  drawn from the student transcript. Write at B2 ceiling — plain, direct language.
 
 OUTPUT FORMAT — Return valid JSON only. No backticks, markdown, or text outside JSON.
 HOLISTIC MODE:
@@ -102,7 +102,15 @@ HOLISTIC MODE:
   "transcript_note": "<criterion-relevant disfluency only — empty string if none>"
 }
 SCAFFOLD FOCUS MODE: same fields as above plus:
-  "scaffold_feedback": "<REDS status + one developmental suggestion per target>"
+  "scaffold_feedback": {
+    "primary": {
+      "target": "<primaryTarget value>",
+      "level": "<Emerging | Developing | Sustained>",
+      "descriptor": "<one sentence describing what the student did>",
+      "evidence": "<specific phrase or move from the transcript>"
+    },
+    "secondary": null
+  }
 
 PROMPT DESCRIPTION:
 {promptDescription}
@@ -544,6 +552,78 @@ function computeDisfluencyMetadata(words) {
 
 // ── Prompt builder ─────────────────────────────────────────────────────────
 
+const SCAFFOLD_RUBRICS = {
+  FRAME_01: `Scale & Stakeholder — The student considers who is affected, at what scale, and whether different groups are affected differently.
+Sustained: Identifies specific stakeholders and explains how the issue affects them differently at different scales. Argument moves between individual, group, and systemic levels with control. Signal: "Different groups are affected in different ways... at a broader level, this creates..."
+Developing: Names stakeholders or mentions scale but does not consistently connect both. Stays at one level or the connection is incomplete. Signal: "This affects workers, but also..." without full development.
+Emerging: Mentions a group or scale reference but does not develop who is affected or how. Signal: "Many people are affected by this" or "This is a big issue."`,
+
+  FRAME_02: `Trade-offs & Constraints — The student identifies what must be given up to gain something, and what limits shape the choice.
+Sustained: Explicitly names what is gained and lost, and explains why both matter. Constraints are identified and developed. Argument does not collapse into simple good/bad judgment. Signal: "The benefit of X comes at the cost of Y, and that trade-off is difficult because..."
+Developing: Identifies a trade-off or constraint but does not fully develop both sides. One side is stronger or the constraint is named without explanation. Signal: "There are advantages and disadvantages..." without full development.
+Emerging: Suggests a choice has downsides or conditions matter but does not frame this as a trade-off. Signal: "It is not a perfect solution" or "There are some problems with this approach."`,
+
+  FRAME_03: `Causal Systems — The student traces a cause-effect chain identifying what causes what and how one outcome leads to another.
+Sustained: Builds a multi-step causal chain from an initial condition through intermediate steps to an outcome. Each link is explained, not just named. Signal: "If X happens, then Y follows because... and that in turn leads to..."
+Developing: Identifies a cause and effect but the chain is incomplete or only one link is developed. Signal: "This causes problems because..." or "If this happens, there will be consequences."
+Emerging: Uses causal language but does not develop the connection. Signal: "This has consequences" or "This would affect the economy."`,
+
+  FRAME_04: `Hypothetical & Conditional — The student reasons about what would happen under different conditions.
+Sustained: Builds a developed conditional argument — condition clearly stated, consequence projected, explanation of why it follows. Hypothetical used as analytical tool. Signal: "If this policy were implemented without safeguards, the most likely outcome would be... because..."
+Developing: Uses conditional structures but consequence not fully developed or condition is vague. Signal: "If this were to happen, there could be problems" without specifying what or why.
+Emerging: Uses conditional language without developing a real hypothetical. Signal: "If we think about it, maybe..." or "It could be good or bad depending on the situation."`,
+
+  FRAME_05: `Values, Heuristics & Bias — The student identifies the underlying assumption or value driving an argument and explains what would change if a different value were prioritized.
+Sustained: Names the underlying value or assumption, explains how it shapes the argument, shows what a different value would lead to. Signal: "The argument assumes that X is the priority, but those who disagree weight values differently..."
+Developing: Identifies a value or assumption but does not fully show how it shapes the argument. Signal: "This depends on what you value" or "Some people think it is more important to..."
+Emerging: Acknowledges opinions differ but does not identify the underlying value driving differences. Signal: "People have different opinions about this" or "It depends on your perspective."`,
+
+  FRAME_06: `Synthesis & Judgment — The student weighs multiple considerations and arrives at a supported conclusion.
+Sustained: Brings together multiple threads, weighs them against each other, arrives at an explicitly justified conclusion. Judgment is earned, not just stated. Signal: "Weighing these factors together, the most significant consideration is... because it determines..."
+Developing: Attempts a conclusion but does not fully weigh considerations. Judgment stated without showing the reasoning. Signal: "Overall, I think X is the best approach" without explaining why it outweighs alternatives.
+Emerging: Restates position or summarizes without synthesis. No weighing of considerations. Signal: "So in conclusion, X is important" or "That is why I think this."`,
+
+  STRUCT_01: `Conditional Structures — Uses conditional structures as reasoning tools to project consequences and test assumptions.
+Sustained: Uses conditional structures throughout to project specific consequences or test assumptions. Each conditional is developed — condition clear, consequence explained. Signal: "If this policy were implemented, the most likely outcome would be... because..." used more than once.
+Developing: Uses conditional structures but not consistently. Some conditionals developed, others incomplete or decorative. Signal: Mix of developed conditionals and undeveloped ones.
+Emerging: Uses conditional language without analytical weight. Conditionals present as grammar patterns without projecting real consequences. Signal: "If we think about it..." without development.`,
+
+  STRUCT_02: `Concession & Contrast — Acknowledges opposing views while maintaining own position. Separates analysis from assertion.
+Sustained: Consistently acknowledges opposing views and returns to own position with control. Concession strengthens rather than weakens argument. Signal: "While it is true that... the more significant point is..." used with control.
+Developing: Uses concession or contrast structures but inconsistently. Some acknowledgments collapse into agreement, or contrast markers used without returning to original position. Signal: "However..." or "On the other hand..." present but not consistently developed.
+Emerging: Acknowledges other views exist but does not use concession structures to manage it. Signal: "Some people think differently" or "There are other opinions."`,
+
+  STRUCT_03: `Relative Clauses — Uses relative clauses to specify, qualify, and embed analytical precision.
+Sustained: Uses relative clauses to specify which aspect is being argued, qualify claims, and embed information without breaking argument flow. Clauses accurate and purposeful. Signal: "The policy that most directly affects low-income households is the one that has received the least scrutiny."
+Developing: Uses relative clauses but not consistently for precision. Some clauses add meaningful qualification; others loose or inaccurate. Signal: Mix of precise and vague relative clauses.
+Emerging: Avoids relative clauses or uses them only in simple formulaic ways. Qualification happens through separate sentences. Signal: "This policy affects people. These people are low-income."`,
+
+  STRUCT_04: `Hedging — Signals level of certainty, qualifies scope of claims, shows where argument is strong and where it has limits.
+Sustained: Uses hedging consistently and purposefully — qualifying where appropriate, signaling certainty where warranted, projecting consequences with appropriate tentativeness. Signal: "This tends to produce... though it may not apply in every context... the evidence suggests..."
+Developing: Uses some hedging but inconsistently. Some claims appropriately qualified; others overconfident or hedging used as filler. Signal: Mix of purposeful hedges and overconfident claims.
+Emerging: Uses hedging language as filler rather than precision tool. Modal verbs appear but do not signal meaningful certainty levels. Signal: "I think maybe it could possibly be..." without control.`,
+
+  STRUCT_05: `Nominalization — Converts processes and qualities into nouns that can be analyzed, compared, and argued about.
+Sustained: Consistently converts verbs and adjectives into noun phrases to name and analyze processes. Nominalizations carry analytical weight. Signal: "The reluctance of governments to act reflects a deeper tension between short-term cost and long-term risk."
+Developing: Uses some nominalizations but not consistently. Some noun phrases carry analytical weight; others revert to simpler verb-based constructions. Signal: Mix of abstract noun phrases and simpler verb forms.
+Emerging: Operates primarily in a verb-based register. Processes described through actions rather than named as concepts. Signal: "When people don't do this, it causes problems" instead of "The failure to act creates systemic risk."`,
+
+  STRUCT_06: `Passive & Reporting — Foregrounds outcomes, attributes claims accurately, positions evidence with appropriate distance.
+Sustained: Uses passive constructions purposefully to shift focus to outcomes or attribute claims with precision. Reporting verbs varied and accurate. Clearly distinguishes own claims from reported ones. Signal: "It has been argued that... however, this position has been challenged by..."
+Developing: Uses some passive or reporting structures but inconsistently. Some attributions clear; others blur distinction between own position and reported claims. Signal: Mix of accurate reporting and blurred attribution.
+Emerging: Presents all claims including reported ones as own. Passive voice avoided or only formulaic. Attribution structures absent. Signal: "Studies say this is true" or "Everyone knows that..."`,
+
+  STRUCT_07: `Parallelism — Uses matching grammatical structures to express ideas of equal weight and signal deliberate organization.
+Sustained: Uses parallel structures consistently to compare, contrast, and organize ideas. Matching structures grammatically accurate and items genuinely equivalent in weight. Signal: "The question is not whether to act, but when to act and at what scale."
+Developing: Uses some parallel structures but not consistently. Some items not grammatically matched or structure set up but not completed. Signal: "We need to consider the cost, the time it takes, and also thinking about who benefits..."
+Emerging: Lists ideas without parallel structure. Items presented sequentially rather than in matched grammatical form. Signal: "There is the cost, and then there is the time, and we also need to think about who benefits."`,
+
+  argument_structure: `Argument Structure (PSU Arc) — Point, Support through analytical moves, Universal significance.
+Sustained: Support constitutes analytical moves — tracing consequences, identifying mechanisms, mapping stakeholder impact, or evaluating constraints. Illustration or restatement without analytical development does not constitute support at Level 3.
+Developing: Support present but relies on illustration or example rather than analytical development. Point and significance present but the analytical move connecting them is incomplete.
+Emerging: Point stated but support is absent, restatement, or purely illustrative. No analytical move present.`,
+};
+
 function buildPrompt(taskType, params) {
   const {
     transcript,
@@ -569,6 +649,7 @@ function buildPrompt(taskType, params) {
       .replace("{focusMode}", focusMode || "Holistic")
       .replace("{primaryTarget}", primaryTarget || "none")
       .replace("{secondaryTarget}", secondaryTarget || "none")
+      .replace("{scaffoldRubric}", (primaryTarget && SCAFFOLD_RUBRICS[primaryTarget]) ? SCAFFOLD_RUBRICS[primaryTarget] : "No specific rubric — use holistic judgment.")
       .replace("{transcript}", transcript);
   }
 
