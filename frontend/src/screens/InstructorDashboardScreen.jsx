@@ -897,15 +897,12 @@ export default function InstructorDashboardScreen() {
       setRosterLoading(true)
       setRosterError(null)
       try {
-        const codesSnap = await getDocs(
-          query(collection(db, 'accessCodes'), where('instructorUid', '==', currentUser.uid))
+        const { collection: col } = await import('firebase/firestore')
+        const rosterSnap = await getDocs(
+          col(db, 'rosters', currentUser.uid, 'students')
         )
-        const codes = codesSnap.docs.map(d => d.data().code)
-        if (codes.length === 0) { setStudents([]); setRosterLoading(false); return }
-        const studentsSnap = await getDocs(
-          query(collection(db, 'students'), where('accessCode', 'in', codes))
-        )
-        const studentList = studentsSnap.docs.map(d => d.data())
+        if (rosterSnap.empty) { setStudents([]); setRosterLoading(false); return }
+        const studentList = rosterSnap.docs.map(d => ({ b10Id: d.data().b10Id }))
         setStudents(studentList)
         const attemptsMap = {}
         await Promise.all(studentList.map(async (student) => {
@@ -931,6 +928,31 @@ export default function InstructorDashboardScreen() {
     setView('detail')
   }
 
+  async function handleAddToRoster(b10Id, uid) {
+    try {
+      const { doc: docFn, setDoc: setDocFn, serverTimestamp: stFn } = await import('firebase/firestore')
+      const { getFunctions, httpsCallable } = await import('firebase/functions')
+      const functions = getFunctions()
+      // Set student claims so b10Id token is available on next student login
+      const setStudentClaims = httpsCallable(functions, 'setStudentClaims')
+      await setStudentClaims({ uid, b10Id, role: 'student', groupId: 'DLIELC' })
+      // Add to roster
+      await setDocFn(docFn(db, 'rosters', currentUser.uid, 'students', b10Id), {
+        b10Id,
+        addedAt: stFn(),
+        addedBy: currentUser.uid,
+      })
+      // Reload roster
+      setStudents(prev => {
+        if (prev.find(s => s.b10Id === b10Id)) return prev
+        return [...prev, { b10Id }]
+      })
+      setLookupResult(prev => ({ ...prev, onRoster: true }))
+    } catch (err) {
+      setLookupError('Failed to add to roster: ' + err.message)
+    }
+  }
+
   async function handleLookup() {
     const id = lookupId.trim()
     if (!id) { setLookupError('Please enter a B10 ID.'); return }
@@ -942,13 +964,13 @@ export default function InstructorDashboardScreen() {
       const { getFunctions, httpsCallable } = await import('firebase/functions')
       const functions = getFunctions()
       const lookupStudent = httpsCallable(functions, 'lookupStudent')
-      await lookupStudent({ b10Id: id })
+      const lookupData = await lookupStudent({ b10Id: id })
       // Student confirmed — fetch any existing submissions
       const snap = await getDocs(
         query(collection(db, 'submissions'), where('b10Id', '==', id), orderBy('createdAt', 'desc'))
       )
       const attempts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(a => a.status === 'complete')
-      setLookupResult({ b10Id: id, attempts })
+      setLookupResult({ b10Id: id, attempts, uid: lookupData.data.uid })
     } catch (err) {
       if (err.message && err.message.includes('No student found')) {
         setLookupError(`No student found with B10 ID: ${id}`)
@@ -1082,6 +1104,24 @@ export default function InstructorDashboardScreen() {
               </div>
               {lookupError && <p className="text-red-600 text-sm mt-2">{lookupError}</p>}
             </div>
+            {lookupResult && (
+              <>
+              {!lookupResult.onRoster && (
+                <button
+                  onClick={() => handleAddToRoster(lookupResult.b10Id, lookupResult.uid)}
+                  className="w-full mt-3 py-2 rounded-xl text-white text-sm font-semibold"
+                  style={{ backgroundColor: '#1e5c3a' }}
+                >
+                  Add {lookupResult.b10Id} to Roster
+                </button>
+              )}
+              {lookupResult.onRoster && (
+                <p className="text-green-600 text-sm font-medium mt-3 text-center">
+                  ✓ Added to roster
+                </p>
+              )}
+              </>
+            )}
             {lookupResult && (
               <AttemptHistory
                 b10Id={lookupResult.b10Id}

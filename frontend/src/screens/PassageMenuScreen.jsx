@@ -71,8 +71,16 @@ export default function PassageMenuScreen() {
   const [clusterFilter, setClusterFilter] = useState('ALL')
   const [layerFilter, setLayerFilter] = useState('ALL')
 
-  const { claims } = useAuth()
+  const { claims, refreshClaims } = useAuth()
   const b10Id = claims?.b10Id || '—'
+
+  // Force token refresh if b10Id claim is missing — happens when claims
+  // were set after the student's last login (e.g. added to roster by instructor)
+  useEffect(() => {
+    if (claims && !claims.b10Id) {
+      refreshClaims()
+    }
+  }, [claims])
   const accessCode = sessionStorage.getItem('b10pp_access_code') || '—'
   const [assignedPassages, setAssignedPassages] = useState([])
   const [allPassages, setAllPassages] = useState([])

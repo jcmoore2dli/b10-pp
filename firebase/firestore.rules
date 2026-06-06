@@ -288,7 +288,6 @@ service cloud.firestore {
         );
 
       allow create: if isAdminOrInstructor()
-        && exists(studentPath(request.resource.data.studentId))
         && validAssignmentType(request.resource.data.assignmentType)
         && request.resource.data.assignedBy == request.auth.uid
         && request.resource.data.passageIds is list
@@ -342,6 +341,17 @@ match /accessCodes/{codeId} {
     (isInstructor() && resource.data.instructorUid == request.auth.uid);
   allow create, update, delete: if isAdmin();
 }
+
+    // ── rosters ───────────────────────────────────────────────────────────
+    // Direct instructor-student roster. No access codes required.
+    // Instructors manage their own roster only.
+    match /rosters/{instructorUid}/students/{b10Id} {
+      allow read: if isAdmin() ||
+        (isInstructor() && request.auth.uid == instructorUid);
+      allow create, delete: if isAdmin() ||
+        (isInstructor() && request.auth.uid == instructorUid);
+      allow update: if false;
+    }
 
     // ── attempts ──────────────────────────────────────────────────────────
     // Permanent performance record. Anchored to studentId.
