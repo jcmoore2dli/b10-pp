@@ -1,0 +1,28 @@
+B10-PP Pre-Pilot Security Check — Late July 2026
+Paste this at the top of a new session along with the most recent state doc.
+
+This is a focused security hardening session for B10-PP ahead of the August 2026 pilot. We are working through a pre-pilot security checklist. The project root is ~/b10_corpus/b10_practice_platform/. Work through each item in order. Use the standard Python patch script approach for any code changes.
+Item 1 — Firestore Security Rules
+The Firestore rules were temporarily opened to if true during an earlier sprint. Restoring real rules is a hard pre-pilot gate. Begin by running:
+cat ~/b10_corpus/b10_practice_platform/firebase/firestore.rules
+Review the current rules and determine whether they are open or properly restricted. If open, write and deploy production rules that enforce: (a) authenticated access only, (b) instructors read/write only their own data, (c) students read only their own submissions, (d) no unauthenticated access to any collection.
+Item 2 — Storage Security Rules
+Run: cat ~/b10_corpus/b10_practice_platform/firebase/storage.rules
+Verify that storage rules require authentication for all student audio paths. Confirm that the resources/speaking-guides/ path is publicly readable (intentional — PDFs are reference documents). Confirm all other paths require auth.
+Item 3 — Google Account 2FA
+Remind me to verify that 2FA is enabled on jcmoore2dli@gmail.com before proceeding. This is the account that controls the Firebase Console. Go to myaccount.google.com → Security → 2-Step Verification and confirm it is active.
+Item 4 — Firebase Usage Alert
+Guide me through setting a $10 budget alert in Firebase Console / Google Cloud Billing so any unexpected usage spike triggers an email notification. Use Chrome for this — Firefox has known issues with Firebase billing flows.
+Item 5 — AssemblyAI Billing
+Verify that a valid payment card is on file at app.assemblyai.com. This was not confirmed in the May 30 session.
+Item 6 — Firebase App Check (Assessment Only)
+Do not implement App Check this session — assess whether it is needed before the pilot. Given the pilot involves 10–20 known students with managed accounts, App Check may be deferred to post-pilot expansion. Confirm this decision and log it in the governance doc.
+Item 7 — Firestore Rules Smoke Test
+After restoring real Firestore rules, run a smoke test: attempt to read a student submission document without authentication and confirm it is rejected. Attempt to read a passage document as an authenticated instructor and confirm it succeeds.
+Item 8 — Deploy and Verify
+Deploy updated rules: firebase deploy --only firestore,storage
+Confirm the platform still functions end-to-end: instructor login, passage assignment, student login, recording submission, feedback display.
+Item 9 — Commit and Tag
+After all items pass: git add -A && git commit -m "Pre-pilot security hardening July 2026" && git tag v1.1-pre-pilot && git push && git push --tags
+Governance log entry
+At the end of the session, produce a brief governance log entry summarizing what was verified, what was changed, and what was deferred, for inclusion in the B10-PP governance docs.

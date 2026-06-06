@@ -2,9 +2,19 @@ import { useState } from "react";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebase";
 
+// B10 ID is the only identifier. No email address is collected or stored.
+// Firebase Auth requires an email format internally — we construct a synthetic
+// address from the B10 ID that is never shown or communicated to the user.
+function toSyntheticEmail(b10Id) {
+  const val = b10Id.trim();
+  // If input already looks like a real email, use it as-is (admin accounts)
+  if (val.includes('@') && val.includes('.')) return val;
+  return val.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+}
+
 export default function LoginScreen() {
   const [mode, setMode] = useState("signin"); // "signin" | "register"
-  const [email, setEmail] = useState("");
+  const [b10Id, setB10Id] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState(null);
@@ -13,19 +23,23 @@ export default function LoginScreen() {
   function switchMode(newMode) {
     setMode(newMode);
     setError(null);
-    setEmail("");
+    setB10Id("");
     setPassword("");
     setConfirm("");
   }
 
   async function handleSignIn() {
     setError(null);
+    if (!b10Id || !password) {
+      setError("Please enter your B10 ID and password.");
+      return;
+    }
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, toSyntheticEmail(b10Id), password);
     } catch (err) {
       if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found") {
-        setError("Email or password is incorrect.");
+        setError("B10 ID or password is incorrect.");
       } else {
         setError(err.message);
       }
@@ -36,7 +50,7 @@ export default function LoginScreen() {
 
   async function handleRegister() {
     setError(null);
-    if (!email || !password || !confirm) {
+    if (!b10Id || !password || !confirm) {
       setError("Please fill in all fields.");
       return;
     }
@@ -50,13 +64,11 @@ export default function LoginScreen() {
     }
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, toSyntheticEmail(b10Id), password);
       // Auth state change handled by App.jsx — will route to EntryScreen automatically
     } catch (err) {
       if (err.code === "auth/email-already-in-use") {
-        setError("An account with this email already exists. Please sign in.");
-      } else if (err.code === "auth/invalid-email") {
-        setError("Please enter a valid email address.");
+        setError("An account with this B10 ID already exists. Please sign in.");
       } else {
         setError(err.message);
       }
@@ -102,12 +114,12 @@ export default function LoginScreen() {
       {/* Form */}
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8 flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-semibold text-gray-700">Email</label>
+          <label className="text-sm font-semibold text-gray-700">B10 ID</label>
           <input
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="e.g. 26-001-1"
+            value={b10Id}
+            onChange={(e) => setB10Id(e.target.value)}
             className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={loading}
           />
