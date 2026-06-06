@@ -938,14 +938,23 @@ export default function InstructorDashboardScreen() {
     setLookupError(null)
     setLookupResult(null)
     try {
+      // Confirm student exists via Cloud Function (works for all account types)
+      const { getFunctions, httpsCallable } = await import('firebase/functions')
+      const functions = getFunctions()
+      const lookupStudent = httpsCallable(functions, 'lookupStudent')
+      await lookupStudent({ b10Id: id })
+      // Student confirmed — fetch any existing submissions
       const snap = await getDocs(
         query(collection(db, 'submissions'), where('b10Id', '==', id), orderBy('createdAt', 'desc'))
       )
-      if (snap.empty) { setLookupError(`No submissions found for B10 ID: ${id}`); return }
       const attempts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(a => a.status === 'complete')
       setLookupResult({ b10Id: id, attempts })
     } catch (err) {
-      setLookupError('Lookup failed: ' + err.message)
+      if (err.message && err.message.includes('No student found')) {
+        setLookupError(`No student found with B10 ID: ${id}`)
+      } else {
+        setLookupError('Lookup failed: ' + err.message)
+      }
     } finally {
       setLookupSearching(false)
     }

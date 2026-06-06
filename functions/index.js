@@ -758,3 +758,85 @@ exports.enrollStudent = onCall(async (request) => {
   return { success: true, b10Id, alreadyEnrolled: false };
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: createInstructorAccount
+//
+// Admin-only. Creates a Firebase Auth user for an instructor and sets
+// custom claims { b10Id, role: "instructor", groupId } in one server-side call.
+//
+// Input: { b10Id, password, groupId }
+// b10Id format: YY-NNN (e.g., 26-001)
+// Synthetic email: {b10id}@b10pp.local
+//
+// INVARIANT: Only admin role may call this. Never callable by students.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.createInstructorAccount = onCall(async (request) => {
+  // ── Auth check ────────────────────────────────────────────────────────────
+  const callerUid = request.auth?.uid;
+  if (!callerUid) throw new HttpsError("unauthenticated", "Must be signed in.");
+  const callerToken = request.auth?.token;
+  if (callerToken?.role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin role required.");
+  }
+  // ── Input validation ──────────────────────────────────────────────────────
+  const { b10Id, password, groupId = "DLIELC" } = request.data;
+  if (!b10Id || !password) {
+    throw new HttpsError("invalid-argument", "b10Id and password are required.");
+  }
+  if (password.length < 6) {
+    throw new HttpsError("invalid-argument", "Password must be at least 6 characters.");
+  }
+  // ── Construct synthetic email ─────────────────────────────────────────────
+  const syntheticEmail = b10Id.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+  // ── Create Firebase Auth user ─────────────────────────────────────────────
+  let userRecord;
+  try {
+    userRecord = await admin.auth().createUser({
+      email:    syntheticEmail,
+      password: password,
+    });
+  } catch (err) {
+    if (err.code === "auth/email-already-exists") {
+      throw new HttpsError("already-exists", `An account with B10 ID ${b10Id} already exists.`);
+    }
+    throw new HttpsError("internal", `Failed to create user: ${err.message}`);
+  }
+  // ── Set custom claims ─────────────────────────────────────────────────────
+  await admin.auth().setCustomUserClaims(userRecord.uid, {
+    b10Id:   b10Id.trim(),
+    role:    "instructor",
+    groupId: groupId.trim(),
+  });
+  logger.info("createInstructorAccount: complete", { uid: userRecord.uid, b10Id, groupId });
+  return { success: true, uid: userRecord.uid, b10Id, role: "instructor", groupId };
+});
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: lookupStudent
+//
+// Instructor/admin only. Looks up a student by B10 ID via Firebase Auth.
+// Works regardless of whether student went through enrollStudent or direct
+// registration. Returns basic account info if found.
+//
+// Input: { b10Id }
+// ─────────────────────────────────────────────────────────────────────────────
+exports.lookupStudent = onCall(async (request) => {
+  const callerUid = request.auth?.uid;
+  if (!callerUid) throw new HttpsError("unauthenticated", "Must be signed in.");
+  const callerToken = request.auth?.token;
+  if (!["instructor", "admin"].includes(callerToken?.role)) {
+    throw new HttpsError("permission-denied", "Instructor or admin role required.");
+  }
+  const { b10Id } = request.data;
+  if (!b10Id) throw new HttpsError("invalid-argument", "b10Id is required.");
+  const syntheticEmail = b10Id.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+  try {
+    const userRecord = await admin.auth().getUserByEmail(syntheticEmail);
+    logger.info("lookupStudent: found", { b10Id, uid: userRecord.uid });
+    return { success: true, b10Id: b10Id.trim(), uid: userRecord.uid };
+  } catch (err) {
+    if (err.code === "auth/user-not-found") {
+      throw new HttpsError("not-found", `No student found with B10 ID: ${b10Id}`);
+    }
+    throw new HttpsError("internal", `Lookup failed: ${err.message}`);
+  }
+});

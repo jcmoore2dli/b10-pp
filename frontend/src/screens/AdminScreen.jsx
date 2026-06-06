@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collection, doc, setDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
 
@@ -30,6 +31,44 @@ export default function AdminScreen() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+
+  // Instructor account creation
+  const [instrB10Id, setInstrB10Id] = useState('')
+  const [instrPassword, setInstrPassword] = useState('')
+  const [instrGroupId, setInstrGroupId] = useState('DLIELC')
+  const [instrLoading, setInstrLoading] = useState(false)
+  const [instrError, setInstrError] = useState(null)
+  const [instrSuccess, setInstrSuccess] = useState(null)
+
+  async function handleCreateInstructor() {
+    setInstrError(null)
+    setInstrSuccess(null)
+    if (!instrB10Id || !instrPassword) {
+      setInstrError('Please enter a B10 ID and password.')
+      return
+    }
+    if (instrPassword.length < 6) {
+      setInstrError('Password must be at least 6 characters.')
+      return
+    }
+    setInstrLoading(true)
+    try {
+      const functions = getFunctions()
+      const createInstructorAccount = httpsCallable(functions, 'createInstructorAccount')
+      const result = await createInstructorAccount({
+        b10Id:    instrB10Id.trim(),
+        password: instrPassword,
+        groupId:  instrGroupId.trim(),
+      })
+      setInstrSuccess(`Instructor account created: ${result.data.b10Id}`)
+      setInstrB10Id('')
+      setInstrPassword('')
+    } catch (err) {
+      setInstrError(err.message || 'Failed to create instructor account.')
+    } finally {
+      setInstrLoading(false)
+    }
+  }
 
   const fullCode = `${yearPrefix}-${codeNumber.padStart(3, '0')}`
 
@@ -197,6 +236,40 @@ export default function AdminScreen() {
             style={{ backgroundColor: loading ? '#7a9bbf' : '#1e3a5f' }}
           >
             {loading ? 'Creating…' : 'Create Access Code'}
+          </button>
+        </div>
+
+        {/* Create Instructor Account */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
+            Create Instructor Account
+          </p>
+          <div className="flex flex-col gap-1 mb-4">
+            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">B10 ID</label>
+            <input type="text" value={instrB10Id} onChange={(e) => setInstrB10Id(e.target.value)}
+              placeholder="e.g. 26-INS-1"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={instrLoading} />
+          </div>
+          <div className="flex flex-col gap-1 mb-4">
+            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Password</label>
+            <input type="password" value={instrPassword} onChange={(e) => setInstrPassword(e.target.value)}
+              placeholder="Min 6 characters"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={instrLoading} />
+          </div>
+          <div className="flex flex-col gap-1 mb-5">
+            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Group ID</label>
+            <input type="text" value={instrGroupId} onChange={(e) => setInstrGroupId(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={instrLoading} />
+          </div>
+          {instrError && <p className="text-red-600 text-sm font-medium mb-3">{instrError}</p>}
+          {instrSuccess && <p className="text-green-600 text-sm font-medium mb-3">{instrSuccess}</p>}
+          <button onClick={handleCreateInstructor} disabled={instrLoading}
+            className="w-full py-3 rounded-xl text-white font-semibold text-base"
+            style={{ backgroundColor: instrLoading ? '#7a9bbf' : '#1e5c3a' }}>
+            {instrLoading ? 'Creating…' : 'Create Instructor Account'}
           </button>
         </div>
 
