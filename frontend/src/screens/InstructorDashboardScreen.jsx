@@ -186,7 +186,7 @@ function AudioPlayer({ audioPath, playingId, setPlayingId, attemptId }) {
 }
 
 
-function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
+function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
   const [playingId, setPlayingId] = useState(null)
   const [expandedAttemptId, setExpandedAttemptId] = useState(null)
   const [showScoringNotes, setShowScoringNotes] = useState({})
@@ -293,17 +293,17 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
         // Assign all 3 items
         await Promise.all([
           addDoc(collection(db, 'assignments'), {
-            studentId: b10Id, assignmentType: 'main', assignedBy: currentUser.uid,
+            studentId: b10Id, assignmentType: instrRole, assignedBy: currentUser.uid,
             passageIds: [bundle.leg], scaffoldConfig: null, assignedAt: serverTimestamp(),
             bundleId: selectedBundle,
           }),
           addDoc(collection(db, 'assignments'), {
-            studentId: b10Id, assignmentType: 'main', assignedBy: currentUser.uid,
+            studentId: b10Id, assignmentType: instrRole, assignedBy: currentUser.uid,
             passageIds: [bundle.cor], scaffoldConfig: null, assignedAt: serverTimestamp(),
             bundleId: selectedBundle,
           }),
           addDoc(collection(db, 'assignments'), {
-            studentId: b10Id, assignmentType: 'main', assignedBy: currentUser.uid,
+            studentId: b10Id, assignmentType: instrRole, assignedBy: currentUser.uid,
             passageIds: [bundle.eso], scaffoldConfig: null, assignedAt: serverTimestamp(),
             bundleId: selectedBundle,
           }),
@@ -342,7 +342,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser }) {
           : null
         await addDoc(collection(db, 'assignments'), {
           studentId:      b10Id,
-          assignmentType: 'main',
+          assignmentType: instrRole,
           assignedBy:     currentUser.uid,
           passageIds:     [selectedPassageId],
           scaffoldConfig,
@@ -886,6 +886,14 @@ export default function InstructorDashboardScreen() {
   const [lookupSearching, setLookupSearching] = useState(false)
   const [lookupError, setLookupError] = useState(null)
   const [lookupResult, setLookupResult] = useState(null)
+  const [instrRole, setInstrRole] = useState(() => {
+    return localStorage.getItem('b10pp_instrRole') || 'main'
+  })
+  function toggleInstrRole() {
+    const next = instrRole === 'main' ? 'slt' : 'main'
+    setInstrRole(next)
+    localStorage.setItem('b10pp_instrRole', next)
+  }
 
   async function handleSignOut() {
     await signOut(auth)
@@ -990,6 +998,19 @@ export default function InstructorDashboardScreen() {
           <p className="text-blue-200 text-xs">{claims?.b10Id} · {claims?.role}</p>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={toggleInstrRole}
+            className="text-xs font-bold px-2 py-1 rounded-full border-2 transition-all"
+            style={{
+              backgroundColor: instrRole === 'main' ? '#1e3a5f' : '#0d9488',
+              borderColor: instrRole === 'main' ? '#60a5fa' : '#5eead4',
+              color: 'white',
+              minWidth: '48px',
+              textAlign: 'center',
+            }}
+          >
+            {instrRole === 'main' ? 'MAIN' : 'SLT'}
+          </button>
           <div className="text-xs font-semibold px-2 py-1 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>DASHBOARD</div>
           {claims?.role === 'admin' && (
             <button onClick={() => navigate('/b10_practice_platform/admin')} className="text-xs text-blue-200 underline">Admin</button>
@@ -1076,6 +1097,7 @@ export default function InstructorDashboardScreen() {
             attempts={selectedStudent.attempts}
             onBack={() => setView('roster')}
             currentUser={currentUser}
+            instrRole={instrRole}
           />
         )}
 
@@ -1126,6 +1148,7 @@ export default function InstructorDashboardScreen() {
               <AttemptHistory
                 b10Id={lookupResult.b10Id}
                 attempts={lookupResult.attempts}
+                instrRole={instrRole}
                 onBack={() => setLookupResult(null)}
                 currentUser={currentUser}
               />

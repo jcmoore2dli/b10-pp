@@ -101,7 +101,12 @@ export default function PassageMenuScreen() {
           const data = d.data()
           const pids = data.passageIds || []
           pids.forEach(pid => {
-            if (!scaffoldMap[pid]) scaffoldMap[pid] = data.scaffoldConfig || null
+            if (!scaffoldMap[pid]) {
+              scaffoldMap[pid] = {
+                scaffoldConfig: data.scaffoldConfig || null,
+                assignmentType: data.assignmentType || 'main',
+              }
+            }
           })
         })
         const unique = Object.keys(scaffoldMap)
@@ -114,6 +119,8 @@ export default function PassageMenuScreen() {
               if (docSnap.exists()) {
                 const normalized = normalizePassage(docSnap)
                 normalized.scaffoldConfig = scaffoldMap[id]
+                normalized.scaffoldConfig = scaffoldMap[id]?.scaffoldConfig || null
+                normalized.assignmentType = scaffoldMap[id]?.assignmentType || 'main'
                 return normalized
               }
               return null
@@ -395,6 +402,13 @@ function PassageCard({ passage, onSelect, status }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <p className="text-xs font-mono text-gray-400">{passage.passage_id}</p>
+            {passage.assignmentType && (
+              <span
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: passage.assignmentType === 'slt' ? '#0d9488' : '#d97706' }}
+                title={passage.assignmentType === 'slt' ? 'SLT assignment' : 'Main instructor assignment'}
+              />
+            )}
             {passage.scaffoldConfig && passage.scaffoldConfig.focusArea && passage.scaffoldConfig.focusArea !== 'holistic' && (
               <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>Focused</span>
             )}
