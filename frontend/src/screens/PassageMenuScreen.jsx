@@ -551,6 +551,27 @@ function MyProgressView({ submissions, loading }) {
                     {attempt.strengths && <div className="bg-green-50 rounded-lg p-3"><p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Strengths</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.strengths}</p></div>}
                     {attempt.gaps && <div className="bg-yellow-50 rounded-lg p-3"><p className="text-xs font-semibold text-yellow-600 uppercase tracking-wide mb-1">Areas to Improve</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.gaps}</p></div>}
                     {attempt.language_feedback && <div className="bg-blue-50 rounded-lg p-3"><p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Language Feedback</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.language_feedback}</p></div>}
+                    {attempt.scaffold_feedback?.primary && (
+                      <div className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#0d9488', backgroundColor: '#f0fdfa' }}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wide" style={{ color: '#0d9488' }}>
+                            Focus Feedback — {attempt.scaffold_feedback.primary.target?.replace(/_/g, ' ')}
+                          </span>
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
+                            backgroundColor: attempt.scaffold_feedback.primary.level === 'Sustained' ? '#16a34a' : attempt.scaffold_feedback.primary.level === 'Developing' ? '#d97706' : '#dc2626',
+                            color: 'white'
+                          }}>
+                            {attempt.scaffold_feedback.primary.level}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed">{attempt.scaffold_feedback.primary.descriptor}</p>
+                        {attempt.scaffold_feedback.primary.evidence && (
+                          <p className="text-xs text-gray-500 italic leading-relaxed border-l-2 pl-3" style={{ borderColor: '#0d9488' }}>
+                            {attempt.scaffold_feedback.primary.evidence}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

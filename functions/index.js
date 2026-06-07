@@ -252,6 +252,7 @@ async function processSubmission(submissionId) {
       scorerParams.focusMode       = effectiveScaffoldConfig?.focusArea      || "Holistic";
       scorerParams.primaryTarget   = effectiveScaffoldConfig?.primaryFrame   || effectiveScaffoldConfig?.primaryStructure   || "none";
       scorerParams.secondaryTarget = effectiveScaffoldConfig?.secondaryFrame || effectiveScaffoldConfig?.secondaryStructure || "none";
+
     }
 
     if (["NARRATION", "DESCRIPTION", "INSTRUCTIONS"].includes(type)) {

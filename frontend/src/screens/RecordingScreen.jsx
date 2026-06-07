@@ -231,7 +231,12 @@ export default function RecordingScreen() {
         passageId:         passage.passage_id,
         corpusType:        passage.corpus_type        || 'ORI',
         promptDescription: passage.prompt_description || '',
-        scaffoldConfig:    passage.scaffold_config    || {},
+        scaffoldConfig:    (() => {
+          try {
+            const raw = sessionStorage.getItem('b10pp_scaffold')
+            return raw ? JSON.parse(raw) : (passage.scaffold_config || {})
+          } catch { return passage.scaffold_config || {} }
+        })(),
         audioPath,
       })
 

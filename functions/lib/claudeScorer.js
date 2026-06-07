@@ -90,6 +90,11 @@ SCORING CONSTRAINTS:
 - When focusMode is active: produce holistic score unchanged. Add scaffold_feedback
   object with level (Emerging/Developing/Sustained), descriptor, and evidence
   drawn from the student transcript. Write at B2 ceiling — plain, direct language.
+- scaffold_feedback must evaluate ONLY the specific frame or structure named in
+  primaryTarget. Do not evaluate general argument quality or other frames.
+  The descriptor must explicitly name the analytical move (e.g. 'causal chain,'
+  'trade-off,' 'concession') and evaluate whether the student used that specific
+  move — not whether they argued well in general.
 
 OUTPUT FORMAT — Return valid JSON only. No backticks, markdown, or text outside JSON.
 HOLISTIC MODE:
