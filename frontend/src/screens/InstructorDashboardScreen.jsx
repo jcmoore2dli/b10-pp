@@ -82,7 +82,9 @@ function formatDate(ts) {
   if (!ts) return '—'
   const d = ts.toDate ? ts.toDate() : new Date(ts)
   const now = new Date()
-  const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24))
+  const dDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+  const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const diff = Math.round((nDate - dDate) / (1000 * 60 * 60 * 24))
   if (diff === 0) return 'Today'
   if (diff === 1) return 'Yesterday'
   if (diff < 7) return `${diff} days ago`
@@ -224,7 +226,9 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
       query(collection(db, 'assignments'), where('studentId', '==', b10Id), orderBy('assignedAt', 'desc'))
     )
       .then(snap => {
-        setAssignmentHistory(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        setAssignmentHistory(snap.docs
+          .map(d => ({ id: d.id, ...d.data() }))
+          .filter(a => !(a.hiddenBy || []).includes(currentUser.uid)))
       })
       .catch(err => {
         setAssignmentError(err.message)
@@ -251,6 +255,18 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
       setSelectedAssignmentIds(prev => { const next = new Set(prev); next.delete(assignmentId); return next })
     } catch (err) {
       console.error('Failed to delete assignment:', err)
+    }
+  }
+
+  async function handleHideAssignment(assignmentId) {
+    try {
+      const { doc: docFn, updateDoc, arrayUnion } = await import('firebase/firestore')
+      await updateDoc(docFn(db, 'assignments', assignmentId), {
+        hiddenBy: arrayUnion(currentUser.uid)
+      })
+      setAssignmentHistory(prev => prev.filter(a => a.id !== assignmentId))
+    } catch (err) {
+      console.error('Failed to hide assignment:', err)
     }
   }
 
@@ -744,12 +760,21 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
                         {attempted ? '✓ Attempted' : 'Pending'}
                       </span>
                       <button
-                        onClick={() => handleDeleteAssignment(assignment.id)}
-                        className="text-gray-300 hover:text-red-500 text-base leading-none px-1"
-                        title="Remove assignment"
+                        onClick={() => handleHideAssignment(assignment.id)}
+                        className="text-gray-300 hover:text-yellow-500 text-xs leading-none px-1"
+                        title="Hide from your view"
                       >
-                        ✕
+                        Hide
                       </button>
+                      {assignment.assignedBy === currentUser.uid && (
+                        <button
+                          onClick={() => handleDeleteAssignment(assignment.id)}
+                          className="text-gray-300 hover:text-red-500 text-base leading-none px-1"
+                          title="Remove assignment"
+                        >
+                          ✕
+                        </button>
+                      )}
                     </div>
                   </div>
                 )

@@ -293,11 +293,13 @@ service cloud.firestore {
         && request.resource.data.passageIds is list
         && validScaffoldConfig(request.resource.data.scaffoldConfig);
 
-      allow update: if isAdminOrInstructor()
-        && resource.data.assignedBy == request.auth.uid
-        && request.resource.data.assignedBy == resource.data.assignedBy
-        && validAssignmentType(request.resource.data.assignmentType)
-        && validScaffoldConfig(request.resource.data.scaffoldConfig);
+      allow update: if isAdmin() ||
+        (isInstructor() && resource.data.assignedBy == request.auth.uid
+          && request.resource.data.assignedBy == resource.data.assignedBy
+          && validAssignmentType(request.resource.data.assignmentType)
+          && validScaffoldConfig(request.resource.data.scaffoldConfig)) ||
+        (isInstructor()
+          && request.resource.data.diff(resource.data).changedKeys().hasOnly(["hiddenBy"]));
 
       allow delete: if isAdmin() ||
         (isInstructor() && resource.data.assignedBy == request.auth.uid);

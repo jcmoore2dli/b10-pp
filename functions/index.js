@@ -250,8 +250,8 @@ async function processSubmission(submissionId) {
 
     if (type === "ESO") {
       scorerParams.focusMode       = effectiveScaffoldConfig?.focusArea      || "Holistic";
-      scorerParams.primaryTarget   = effectiveScaffoldConfig?.primaryFrame   || "none";
-      scorerParams.secondaryTarget = effectiveScaffoldConfig?.secondaryFrame || "none";
+      scorerParams.primaryTarget   = effectiveScaffoldConfig?.primaryFrame   || effectiveScaffoldConfig?.primaryStructure   || "none";
+      scorerParams.secondaryTarget = effectiveScaffoldConfig?.secondaryFrame || effectiveScaffoldConfig?.secondaryStructure || "none";
     }
 
     if (["NARRATION", "DESCRIPTION", "INSTRUCTIONS"].includes(type)) {
