@@ -123,6 +123,8 @@ export default function RecordingScreen() {
               ? 'Listen to the passage up to 3 times. Then record yourself explaining: what does the passage say is actually happening, and why is that different from what people commonly assume?'
               : ['NARRATION','DESCRIPTION','INSTRUCTIONS'].includes(d.taskType)
               ? 'Record yourself speaking on this topic.'
+              : d.taskType === 'ESO' && d.question
+              ? d.question
               : d.promptDescription || 'Listen carefully, then record your paraphrase.',
             scaffold_config:        d.scaffoldConfig || {},
             audioPath:             d.audioPath || null,

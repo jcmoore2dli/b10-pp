@@ -409,9 +409,33 @@ function PassageCard({ passage, onSelect, status }) {
                 title={passage.assignmentType === 'slt' ? 'SLT assignment' : 'Main instructor assignment'}
               />
             )}
-            {passage.scaffoldConfig && passage.scaffoldConfig.focusArea && passage.scaffoldConfig.focusArea !== 'holistic' && (
-              <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>Focused</span>
-            )}
+            {passage.scaffoldConfig && passage.scaffoldConfig.focusArea && passage.scaffoldConfig.focusArea !== 'holistic' && (() => {
+              const sc = passage.scaffoldConfig
+              const frameShort = {
+                FRAME_01: 'Scale', FRAME_02: 'Trade-offs', FRAME_03: 'Causal',
+                FRAME_04: 'Conditional', FRAME_05: 'Values', FRAME_06: 'Synthesis'
+              }
+              const structShort = {
+                STRUCT_01: 'Conditionals', STRUCT_02: 'Concession', STRUCT_03: 'Relative Clauses',
+                STRUCT_04: 'Hedging', STRUCT_05: 'Nominalization', STRUCT_06: 'Passive', STRUCT_07: 'Parallelism'
+              }
+              if (sc.focusArea === 'argument_structure') {
+                return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#1e40af', color: '#fff' }}>ARG · PSU Arc</span>
+              }
+              if (sc.focusArea === 'discourse_frame' && sc.primaryFrame) {
+                return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#0d9488', color: '#fff' }}>Frames · {frameShort[sc.primaryFrame] || sc.primaryFrame}</span>
+              }
+              if (sc.focusArea === 'grammar_structure' && sc.primaryStructure) {
+                return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#4338ca', color: '#fff' }}>Grammar · {structShort[sc.primaryStructure] || sc.primaryStructure}</span>
+              }
+              if (sc.focusArea === 'combined') {
+                const frameLabel = sc.primaryFrame ? frameShort[sc.primaryFrame] : null
+                const structLabel = sc.primaryStructure ? structShort[sc.primaryStructure] : null
+                const label = [frameLabel, structLabel].filter(Boolean).join(' + ')
+                return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#7c3aed', color: '#fff' }}>Focus · {label || 'Combined'}</span>
+              }
+              return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#c8a84b', color: '#1e3a5f' }}>Focused</span>
+            })()}
             {passage.passage_id?.startsWith('ESO-AES-') && (() => {
               const frameShort = {
                 FRAME_01: 'Scale', FRAME_02: 'Trade-offs', FRAME_03: 'Causal',
