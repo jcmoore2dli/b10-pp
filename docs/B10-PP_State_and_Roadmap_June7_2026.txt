@@ -1,0 +1,239 @@
+# B10-PP State and Roadmap — June 7, 2026
+
+---
+
+## PLATFORM STATUS
+
+**Live URL:** https://b10-practice-platform.web.app/b10_practice_platform/
+**Firebase project:** b10-practice-platform (nam5, Blaze plan)
+**Repo:** github.com/jcmoore2dli/b10-pp
+**Project root:** ~/b10_corpus/b10_practice_platform/
+**Frontend:** frontend/src/
+**Functions:** functions/index.js, functions/lib/claudeScorer.js
+**Latest commit:** 913ce12 (scaffold feedback box working)
+**Git tag:** v1.0-pre-IST (working state before June 5 IST)
+
+---
+
+## IST OUTCOME — June 5, 2026
+
+- **Result:** Adoption declared a foregone conclusion in the room
+- **Supervisor commitment:** Will provide instructor account setup timeline
+- **Instructors:** ~6 want practice accounts; 2-week head start before soft launch
+- **Soft launch target:** ~June 19 (instructor practice accounts)
+- **Live student launch target:** July 27
+- **MTT instructor:** Meeting in 2 weeks; needs CORE-only accounts with student IDs
+- **TESOL 2027 proposal:** Submitted
+
+---
+
+## BILLING STATUS (as of June 7)
+
+- **Anthropic:** $18.80 balance, auto-reload ON ($10 trigger, $20 add)
+- **Deepgram:** $199.55 balance, Pay As You Go
+- **Firebase:** Blaze plan, billing card confirmed
+- **AssemblyAI:** Card on file — verify next session
+
+---
+
+## CORPUS STATUS
+
+### Live in Firestore (816 total)
+
+| Layer | Count | Notes |
+|-------|-------|-------|
+| ORIENT | 18 | Fixed discourse, CEFR B2 vocab |
+| CORE | 120 | 12 sets × 10 passages, tiered by MF word count |
+| EXT | 72 | Arc Anchor metadata, ILR 3 causal reasoning |
+| ESO — Bundled [CURR] | 60 | Paired with CORE sets |
+| ESO — Frames (ESO-AES) | 48 | W1–W6, 8 per week, auto-scaffold |
+| ESO — General | 192 | Uploaded May 30 from B10-CC-ESO-v10.3 |
+| NAR / DES / INS | 306 | ILR 2 speaking tasks |
+| **TOTAL** | **816** | All live in Firestore |
+
+---
+
+## COMPLETED THIS WEEK (June 1–7)
+
+### Authentication
+- Email login replaced with B10 ID + password
+- Firebase Auth uses synthetic email internally: `{b10id}@b10pp.local`
+- Admin accounts with real emails pass through as-is (detected by @ and .)
+- Legacy student accounts with real emails still work via passthrough
+
+### Instructor Account Creation
+- New Cloud Function `createInstructorAccount` — creates Firebase Auth user and sets instructor role claims in one server-side call
+- Admin panel now has "Create Instructor Account" section with B10 ID, password, group ID fields
+- Green button, distinct from student access code creation
+
+### Direct Roster System (replaces access code model)
+- New Firestore collection: `/rosters/{instructorUid}/students/{b10Id}`
+- Instructor looks up student by B10 ID via `lookupStudent` Cloud Function
+- Cloud Function checks Firebase Auth — works regardless of how account was created
+- "Add to Roster" button appears after successful lookup
+- On add: `setStudentClaims` called to set student's b10Id token claim
+- Token refresh on PassageMenuScreen if b10Id claim missing
+- Firestore rules updated for `/rosters` collection
+
+### SLT / Main Instructor Toggle
+- Binary toggle in instructor dashboard header (MAIN / SLT)
+- Persists to localStorage across sessions
+- Assignment tagged with `instrRole` (main or SLT) on every assignment
+- Student assignment feed shows colored dot: amber = main, teal = SLT
+
+### Audio Deletion
+- Changed from 14 days to 72 hours (accommodates full weekend)
+- cleanupAudio Cloud Function runs daily, deletes audio older than 72 hours
+
+### Scaffold Feedback Box
+- All 13 rubric criteria (FRAME_01–06, STRUCT_01–07) wired into claudeScorer.js
+- SCAFFOLD_RUBRICS lookup object injects relevant rubric per primaryTarget
+- Output spec changed: scaffold_feedback is now structured JSON object with primary.level, primary.descriptor, primary.evidence, primary.target
+- Scale: Emerging / Developing / Sustained
+- Bug fixed: scaffoldConfig was being read from passage doc instead of assignment — now reads from sessionStorage
+- Bug fixed: primaryTarget was only reading primaryFrame, never primaryStructure — now reads both
+- Prompt tightened: scaffold_feedback must evaluate ONLY the specific frame/structure, not general argument quality
+- Scaffold feedback box displayed in FeedbackScreen (immediate) with teal border, colored level pill
+- Scaffold feedback box displayed in PassageMenuScreen My Progress view
+- FeedbackScreen does fresh Firestore read if scaffold_feedback missing from navigation state
+
+### Hide Assignment Feature
+- Instructors can hide assignments they didn't create from their own view
+- "Hide" button on each assignment row — does not delete, does not affect student queue
+- hiddenBy array field on assignment doc; filtered on load
+- Firestore rules updated to allow instructors to update hiddenBy field only
+
+### Badge and Label Fixes
+- Student passage card: gold "Focused" badge replaced with descriptive badge
+  - Discourse frame → teal "Frames · [name]"
+  - Grammar structure → indigo "Grammar · [name]"
+  - Argument structure → steel blue "ARG · PSU Arc"
+  - Combined → purple "Focus · [frame] + [structure]"
+- ESO promptDescription fixed: now shows actual ESO question instead of "Listen carefully, then record your paraphrase"
+- Date formatting fixed: uses calendar date comparison instead of 24-hour elapsed time
+
+### Firestore Rules
+- /rosters collection added with instructor-scoped read/write
+- Assignment update rule updated to allow hiddenBy field updates by any instructor
+- Assignment create rule relaxed (removed /students doc existence check for direct roster model)
+
+---
+
+## ARCHITECTURE — CURRENT STATE
+
+### Login Flow
+- Input: B10 ID (or real email for legacy/admin accounts)
+- toSyntheticEmail(): if contains @ and . → use as-is; else → {b10id}@b10pp.local
+- Firebase Auth stores synthetic email; never shown to user
+
+### Roster System
+- /rosters/{instructorUid}/students/{b10Id} — direct roster collection
+- lookupStudent Cloud Function — verifies student exists in Firebase Auth
+- setStudentClaims called on roster add — sets b10Id, role, groupId claims
+- Old access code enrollment path still exists but not required for pilot
+
+### Scaffold Pipeline
+- Assignment stores scaffoldConfig with focusArea, primaryFrame, primaryStructure
+- RecordingScreen reads scaffoldConfig from sessionStorage (set by PassageMenuScreen)
+- Submission doc carries scaffoldConfig field
+- processSubmission reads primaryFrame || primaryStructure for primaryTarget
+- claudeScorer injects SCAFFOLD_RUBRICS[primaryTarget] into prompt
+- Claude returns scaffold_feedback as structured JSON object
+- FeedbackScreen and PassageMenuScreen both display scaffold feedback box
+
+### Audio Retention
+- Audio: deleted within 72 hours
+- Transcripts: nulled after 30 days
+- cleanupAudio runs daily on schedule
+
+---
+
+## KNOWN ISSUES / PENDING
+
+### Pre-soft-launch (before ~June 19):
+1. **Bulk student assignment** — select multiple students, assign same passage to all at once
+2. **Pre-load sequence assignment** — load full bundle sequence for remote/absent instructor
+3. **B2 student language summary** — `student_language_note` field in ESO API call, B2 ceiling, plain language
+
+### Pre-pilot (before July 27):
+4. **Progress summary by week/month** — instructor button queries submissions over time window, Claude generates plain-language summary (supervisor specifically requested)
+5. **Scaffold feedback heading harmonization** — FeedbackScreen and PassageMenuScreen use different heading labels
+6. **Scaffold rubric norming** — pilot transcripts will anchor rubrics with real examples
+
+### Pre-expansion (post-pilot):
+7. **PII transcript filter** — pre-scoring filter detects and redacts names/identifying numbers
+8. **MTT CORE-only mode with time limit** — scoped corpus for MTT instructor's students
+9. **Audio playback re-enable** — pending formal privacy guidance (24-hour deletion model)
+10. **Email/login migration** — existing accounts still use real emails as passthrough
+
+### Known bugs (low priority):
+- Hard reload 404 on deep routes — do not fix before pilot
+- URL simplification (root path) — post-pilot
+- AssemblyAI billing — verify card on file
+
+---
+
+## PILOT PARAMETERS
+
+- **Soft launch:** ~June 19 (instructor practice accounts)
+- **Live student launch:** July 27
+- **Duration:** 6 weeks
+- **Students:** 10–20
+- **Instructors:** 2–3 main + SLT
+- **Frames track:** W1–W6, one frame per week
+- **ESO pool:** 300 questions (60 bundled + 48 Frames + 192 general)
+- **Six-week rationale:** One frame per week = complete sequence. Generates performance arc per student and norming dataset for 15 scaffold rubrics.
+
+---
+
+## POST-IST FEATURE REQUESTS (from instructors)
+
+1. ✅ Scaffold feedback box (Emerging/Developing/Sustained) — DONE
+2. B2-register student language summary — pending
+3. Progress summary by week/month — pending (supervisor specifically requested)
+4. ✅ SLT vs main instructor toggle with color-coded student feed — DONE
+5. Bulk assignment and pre-load sequence — pending
+6. ✅ Instructor practice accounts — DONE (creation flow built)
+
+---
+
+## SECURITY / COMPLIANCE STATUS
+
+- B10 ID pseudonyms — in place
+- No email collected for new accounts — in place
+- Audio deleted within 72 hours — in place
+- Transcripts removed after 30 days — in place
+- Enterprise-grade storage (ISO 27001, SOC 1/2/3) — in place
+- SORN: Not Applicable by design — platform intentionally avoids identifiable records
+- ATO: Gap — required before institutional deployment at scale
+- PIA: Gap — recommended before broad deployment
+- Third-party processors (Deepgram/Anthropic): DPA status to confirm
+- PII transcript filter: planned pre-expansion feature
+
+---
+
+## NEXT SESSION PRIORITIES
+
+1. Bulk student assignment (Feature 1) — select multiple students, assign same passage
+2. Pre-load sequence assignment (Feature 2) — for remote/absent instructor
+3. B2 student language summary — student_language_note field in ESO prompt
+4. Progress summary by week/month
+
+---
+
+## KEY FILES
+
+- functions/index.js — processSubmission, cleanupAudio, createInstructorAccount, lookupStudent
+- functions/lib/claudeScorer.js — all scoring prompts + SCAFFOLD_RUBRICS
+- frontend/src/screens/LoginScreen.jsx — B10 ID login
+- frontend/src/screens/InstructorDashboardScreen.jsx — instructor dashboard, roster, assignments
+- frontend/src/screens/PassageMenuScreen.jsx — student passage menu, My Progress
+- frontend/src/screens/RecordingScreen.jsx — recording + speaking guides
+- frontend/src/screens/FeedbackScreen.jsx — immediate feedback display
+- frontend/src/screens/AdminScreen.jsx — access code + instructor account creation
+- frontend/src/context/AuthProvider.jsx — auth context with refreshClaims
+- firebase/firestore.rules — security rules
+
+---
+
+END OF DOCUMENT — June 7, 2026
