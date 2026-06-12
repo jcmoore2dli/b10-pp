@@ -966,15 +966,9 @@ export default function InstructorDashboardScreen() {
       const { doc: docFn, setDoc: setDocFn, serverTimestamp: stFn } = await import('firebase/firestore')
       const { getFunctions, httpsCallable } = await import('firebase/functions')
       const functions = getFunctions()
-      // Set student claims so b10Id token is available on next student login
-      const setStudentClaims = httpsCallable(functions, 'setStudentClaims')
-      await setStudentClaims({ uid, b10Id, role: 'student', groupId: 'DLIELC' })
-      // Add to roster
-      await setDocFn(docFn(db, 'rosters', currentUser.uid, 'students', b10Id), {
-        b10Id,
-        addedAt: stFn(),
-        addedBy: currentUser.uid,
-      })
+      // Set student claims and write roster entry server-side
+      const instructorAddStudent = httpsCallable(functions, 'instructorAddStudent')
+      await instructorAddStudent({ b10Id, groupId: 'DLIELC' })
       // Reload roster
       setStudents(prev => {
         if (prev.find(s => s.b10Id === b10Id)) return prev

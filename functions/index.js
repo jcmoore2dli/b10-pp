@@ -1014,6 +1014,7 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
             corpusType:     "COR",
             scaffoldConfig: null,
             instrRole:      "main",
+            assignedAt:     admin.firestore.FieldValue.serverTimestamp(),
             createdAt:      admin.firestore.FieldValue.serverTimestamp(),
             status:         "pending",
           });
@@ -1041,4 +1042,58 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
   logger.info("adminBulkRosterSetup: complete", { instructorB10Id, successCount, errorCount });
 
   return { success: true, instructorUid, groupId, results, successCount, errorCount };
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: instructorAddStudent
+//
+// Instructor or admin. Adds a student to the calling instructor's roster
+// and sets student claims via admin SDK. Replaces direct setStudentClaims
+// call from instructor dashboard.
+//
+// Input: { b10Id, groupId }
+// ─────────────────────────────────────────────────────────────────────────────
+exports.instructorAddStudent = onCall(async (request) => {
+  const callerUid = request.auth?.uid;
+  if (!callerUid) throw new HttpsError("unauthenticated", "Must be signed in.");
+  const callerToken = request.auth?.token;
+  if (!["instructor", "admin"].includes(callerToken?.role)) {
+    throw new HttpsError("permission-denied", "Instructor or admin role required.");
+  }
+
+  const { b10Id, groupId = "DLIELC" } = request.data;
+  if (!b10Id) throw new HttpsError("invalid-argument", "b10Id is required.");
+
+  // Resolve student UID
+  const syntheticEmail = b10Id.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+  let studentRecord;
+  try {
+    studentRecord = await admin.auth().getUserByEmail(syntheticEmail);
+  } catch (err) {
+    throw new HttpsError("not-found", `No student found with B10 ID: ${b10Id}`);
+  }
+  const studentUid = studentRecord.uid;
+
+  // Set student claims
+  await admin.auth().setCustomUserClaims(studentUid, {
+    b10Id: b10Id.trim(),
+    role: "student",
+    groupId,
+  });
+
+  // Write roster entry
+  await db
+    .collection("rosters")
+    .doc(callerUid)
+    .collection("students")
+    .doc(b10Id.trim())
+    .set({
+      b10Id: b10Id.trim(),
+      studentUid,
+      addedAt: admin.firestore.FieldValue.serverTimestamp(),
+      addedBy: callerUid,
+    }, { merge: true });
+
+  logger.info("instructorAddStudent: complete", { b10Id, callerUid, groupId });
+  return { success: true, b10Id, studentUid };
 });

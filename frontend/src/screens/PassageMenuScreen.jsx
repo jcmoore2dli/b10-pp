@@ -93,7 +93,7 @@ export default function PassageMenuScreen() {
       if (!b10Id || b10Id === '—') return
       try {
         const snap = await getDocs(
-          query(collection(db, 'assignments'), where('studentId', '==', b10Id), orderBy('assignedAt', 'desc'))
+          query(collection(db, 'assignments'), where('studentId', '==', b10Id), orderBy('setNumber', 'asc'), orderBy('dayNumber', 'asc'), orderBy('assignedAt', 'desc'))
         )
         // Build map: passageId -> most recent scaffoldConfig
         const scaffoldMap = {}
