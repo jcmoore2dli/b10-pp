@@ -302,7 +302,8 @@ service cloud.firestore {
           && request.resource.data.diff(resource.data).changedKeys().hasOnly(["hiddenBy"]));
 
       allow delete: if isAdmin() ||
-        (isInstructor() && resource.data.assignedBy == request.auth.uid);
+        (isInstructor() && resource.data.assignedBy == request.auth.uid) ||
+        (isInstructor() && exists(/databases/$(database)/documents/rosters/$(request.auth.uid)/students/$(resource.data.studentId)));
     }
 
     // ── submissions ────────────────────────────────────────────────────────
