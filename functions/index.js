@@ -841,3 +841,204 @@ exports.lookupStudent = onCall(async (request) => {
     throw new HttpsError("internal", `Lookup failed: ${err.message}`);
   }
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: adminBulkRosterSetup
+//
+// Admin-only. Bulk-adds students to an instructor's roster.
+// Optionally pre-loads all 12 CORE bundle assignments in sequence order.
+// Optionally sets an expiry date on each roster entry.
+//
+// Input: {
+//   instructorB10Id: string,
+//   studentB10Ids:   string[],
+//   preloadBundles:  boolean,
+//   expiryDate:      string | null  (ISO date string, e.g. "2026-10-01")
+// }
+// ─────────────────────────────────────────────────────────────────────────────
+const CORE_BUNDLE_MAP = [
+  { set: 1,  day: 1, leg: 'COR-ECN-002', cor: 'COR-EDU-001', eso: 'EDU-001' },
+  { set: 1,  day: 2, leg: 'COR-ECN-010', cor: 'COR-EDU-006', eso: 'EDU-006' },
+  { set: 1,  day: 3, leg: 'COR-SCI-002', cor: 'COR-EDU-015', eso: 'EDU-015' },
+  { set: 1,  day: 4, leg: 'COR-SCI-010', cor: 'COR-WRK-003', eso: 'WRK-003' },
+  { set: 1,  day: 5, leg: 'COR-SCI-013', cor: 'COR-WRK-007', eso: 'WRK-007' },
+  { set: 2,  day: 1, leg: 'COR-BIO-008', cor: 'COR-ENV-008', eso: 'ENV-008' },
+  { set: 2,  day: 2, leg: 'COR-BIO-011', cor: 'COR-ENV-015', eso: 'ENV-015' },
+  { set: 2,  day: 3, leg: 'COR-ENV-001', cor: 'COR-HLT-005', eso: 'HLT-005' },
+  { set: 2,  day: 4, leg: 'COR-HLT-002', cor: 'COR-HLT-012', eso: 'HLT-012' },
+  { set: 2,  day: 5, leg: 'COR-HLT-009', cor: 'COR-HLT-022', eso: 'HLT-022' },
+  { set: 3,  day: 1, leg: 'COR-ECN-003', cor: 'COR-GOV-003', eso: 'GOV-003' },
+  { set: 3,  day: 2, leg: 'COR-SOC-003', cor: 'COR-GOV-012', eso: 'GOV-012' },
+  { set: 3,  day: 3, leg: 'COR-SOC-005', cor: 'COR-INT-004', eso: 'INT-004' },
+  { set: 3,  day: 4, leg: 'COR-SOC-007', cor: 'COR-JUS-003', eso: 'JUS-003' },
+  { set: 3,  day: 5, leg: 'COR-SOC-008', cor: 'COR-JUS-008', eso: 'JUS-008' },
+  { set: 4,  day: 1, leg: 'COR-PHY-003', cor: 'COR-ECN-008', eso: 'ECN-008' },
+  { set: 4,  day: 2, leg: 'COR-PHY-006', cor: 'COR-TEC-003', eso: 'TEC-003' },
+  { set: 4,  day: 3, leg: 'COR-TEC-006', cor: 'COR-TEC-012', eso: 'TEC-012' },
+  { set: 4,  day: 4, leg: 'COR-TEC-007', cor: 'COR-TEC-018', eso: 'TEC-018' },
+  { set: 4,  day: 5, leg: 'COR-TEC-009', cor: 'COR-TEC-025', eso: 'TEC-025' },
+  { set: 5,  day: 1, leg: 'COR-BIO-001', cor: 'COR-CUL-005', eso: 'CUL-005' },
+  { set: 5,  day: 2, leg: 'COR-ECN-006', cor: 'COR-EDU-003', eso: 'EDU-003' },
+  { set: 5,  day: 3, leg: 'COR-ENV-006', cor: 'COR-GOV-008', eso: 'GOV-008' },
+  { set: 5,  day: 4, leg: 'COR-SCI-004', cor: 'COR-HLT-008', eso: 'HLT-008' },
+  { set: 5,  day: 5, leg: 'COR-SOC-001', cor: 'COR-TEC-008', eso: 'TEC-008' },
+  { set: 6,  day: 1, leg: 'COR-BIO-007', cor: 'COR-ENV-003', eso: 'ENV-003' },
+  { set: 6,  day: 2, leg: 'COR-HLT-004', cor: 'COR-HLT-018', eso: 'HLT-018' },
+  { set: 6,  day: 3, leg: 'COR-PHY-007', cor: 'COR-INT-006', eso: 'INT-006' },
+  { set: 6,  day: 4, leg: 'COR-SCI-008', cor: 'COR-INT-008', eso: 'INT-008' },
+  { set: 6,  day: 5, leg: 'COR-TEC-011', cor: 'COR-WRK-012', eso: 'WRK-012' },
+  { set: 7,  day: 1, leg: 'COR-BIO-006', cor: 'COR-EDU-012', eso: 'EDU-012' },
+  { set: 7,  day: 2, leg: 'COR-ECN-005', cor: 'COR-GOV-018', eso: 'GOV-018' },
+  { set: 7,  day: 3, leg: 'COR-ENV-013', cor: 'COR-HLT-025', eso: 'HLT-025' },
+  { set: 7,  day: 4, leg: 'COR-HLT-006', cor: 'COR-SOC-010', eso: 'SOC-010' },
+  { set: 7,  day: 5, leg: 'COR-SCI-006', cor: 'COR-TEC-022', eso: 'TEC-022' },
+  { set: 8,  day: 1, leg: 'COR-ECN-009', cor: 'COR-EDU-005', eso: 'EDU-005' },
+  { set: 8,  day: 2, leg: 'COR-ECN-015', cor: 'COR-EDU-018', eso: 'EDU-018' },
+  { set: 8,  day: 3, leg: 'COR-SCI-003', cor: 'COR-EDU-022', eso: 'EDU-022' },
+  { set: 8,  day: 4, leg: 'COR-SCI-009', cor: 'COR-WRK-008', eso: 'WRK-008' },
+  { set: 8,  day: 5, leg: 'COR-SCI-014', cor: 'COR-WRK-015', eso: 'WRK-015' },
+  { set: 9,  day: 1, leg: 'COR-BIO-002', cor: 'COR-ENV-012', eso: 'ENV-012' },
+  { set: 9,  day: 2, leg: 'COR-BIO-003', cor: 'COR-ENV-018', eso: 'ENV-018' },
+  { set: 9,  day: 3, leg: 'COR-ENV-007', cor: 'COR-HLT-015', eso: 'HLT-015' },
+  { set: 9,  day: 4, leg: 'COR-HLT-003', cor: 'COR-HLT-028', eso: 'HLT-028' },
+  { set: 9,  day: 5, leg: 'COR-HLT-010', cor: 'COR-HLT-032', eso: 'HLT-032' },
+  { set: 10, day: 1, leg: 'COR-ECN-001', cor: 'COR-GOV-015', eso: 'GOV-015' },
+  { set: 10, day: 2, leg: 'COR-SOC-002', cor: 'COR-GOV-022', eso: 'GOV-022' },
+  { set: 10, day: 3, leg: 'COR-SOC-006', cor: 'COR-INT-012', eso: 'INT-012' },
+  { set: 10, day: 4, leg: 'COR-SOC-009', cor: 'COR-JUS-005', eso: 'JUS-005' },
+  { set: 10, day: 5, leg: 'COR-SOC-012', cor: 'COR-JUS-015', eso: 'JUS-015' },
+  { set: 11, day: 1, leg: 'COR-PHY-001', cor: 'COR-ECN-012', eso: 'ECN-012' },
+  { set: 11, day: 2, leg: 'COR-PHY-012', cor: 'COR-ECN-018', eso: 'ECN-018' },
+  { set: 11, day: 3, leg: 'COR-TEC-002', cor: 'COR-TEC-015', eso: 'TEC-015' },
+  { set: 11, day: 4, leg: 'COR-TEC-010', cor: 'COR-TEC-028', eso: 'TEC-028' },
+  { set: 11, day: 5, leg: 'COR-TEC-014', cor: 'COR-TEC-032', eso: 'TEC-032' },
+  { set: 12, day: 1, leg: 'COR-BIO-013', cor: 'COR-CUL-012', eso: 'CUL-012' },
+  { set: 12, day: 2, leg: 'COR-ECN-004', cor: 'COR-EDU-025', eso: 'EDU-025' },
+  { set: 12, day: 3, leg: 'COR-ENV-002', cor: 'COR-GOV-025', eso: 'GOV-025' },
+  { set: 12, day: 4, leg: 'COR-PHY-015', cor: 'COR-HLT-020', eso: 'HLT-020' },
+  { set: 12, day: 5, leg: 'COR-SCI-007', cor: 'COR-TEC-035', eso: 'TEC-035' },
+];
+
+exports.adminBulkRosterSetup = onCall(async (request) => {
+  // ── Auth check ────────────────────────────────────────────────────────────
+  const callerUid = request.auth?.uid;
+  if (!callerUid) throw new HttpsError("unauthenticated", "Must be signed in.");
+  const callerToken = request.auth?.token;
+  if (callerToken?.role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin role required.");
+  }
+
+  // ── Input validation ──────────────────────────────────────────────────────
+  const { instructorB10Id, studentB10Ids, preloadBundles, expiryDate } = request.data;
+  if (!instructorB10Id || typeof instructorB10Id !== "string") {
+    throw new HttpsError("invalid-argument", "instructorB10Id required.");
+  }
+  if (!Array.isArray(studentB10Ids) || studentB10Ids.length === 0) {
+    throw new HttpsError("invalid-argument", "studentB10Ids must be a non-empty array.");
+  }
+
+  // ── Resolve instructor UID ────────────────────────────────────────────────
+  const instrEmail = instructorB10Id.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+  let instructorRecord;
+  try {
+    instructorRecord = await admin.auth().getUserByEmail(instrEmail);
+  } catch (err) {
+    throw new HttpsError("not-found", `Instructor not found: ${instructorB10Id}`);
+  }
+  const instructorUid = instructorRecord.uid;
+  const instructorClaims = instructorRecord.customClaims || {};
+  const groupId = instructorClaims.groupId || "DLIELC";
+
+  logger.info("adminBulkRosterSetup: instructor resolved", { instructorB10Id, instructorUid, groupId });
+
+  // ── Process each student ──────────────────────────────────────────────────
+  const results = [];
+
+  for (const rawB10Id of studentB10Ids) {
+    const b10Id = rawB10Id.trim();
+    if (!b10Id) continue;
+
+    const studentResult = { b10Id, status: null, error: null, assignmentsCreated: 0 };
+
+    try {
+      // Resolve student UID
+      const studentEmail = b10Id.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+      let studentRecord;
+      try {
+        studentRecord = await admin.auth().getUserByEmail(studentEmail);
+      } catch (err) {
+        throw new Error(`Student not found in Firebase Auth: ${b10Id}`);
+      }
+      const studentUid = studentRecord.uid;
+
+      // Set student claims
+      await admin.auth().setCustomUserClaims(studentUid, {
+        b10Id,
+        role:    "student",
+        groupId,
+      });
+
+      // Write roster entry
+      const rosterRef = db
+        .collection("rosters")
+        .doc(instructorUid)
+        .collection("students")
+        .doc(b10Id);
+
+      const rosterEntry = {
+        b10Id,
+        studentUid,
+        addedAt:   admin.firestore.FieldValue.serverTimestamp(),
+        addedBy:   callerUid,
+      };
+      if (expiryDate) {
+        rosterEntry.expiryDate = expiryDate;
+      }
+      await rosterRef.set(rosterEntry, { merge: true });
+
+      // Pre-load CORE bundle assignments if requested
+      if (preloadBundles) {
+        const batch = db.batch();
+        let count = 0;
+        for (const bundle of CORE_BUNDLE_MAP) {
+          const assignmentRef = db.collection("assignments").doc();
+          batch.set(assignmentRef, {
+            studentId:      b10Id,
+            assignedBy:     callerUid,
+            assignedTo:     studentUid,
+            passageIds:     [bundle.leg, bundle.cor, bundle.eso],
+            bundleId:       `S${bundle.set}.${bundle.day}`,
+            setNumber:      bundle.set,
+            dayNumber:      bundle.day,
+            assignmentType: "main",
+            corpusType:     "COR",
+            scaffoldConfig: null,
+            instrRole:      "main",
+            createdAt:      admin.firestore.FieldValue.serverTimestamp(),
+            status:         "pending",
+          });
+          count++;
+        }
+        await batch.commit();
+        studentResult.assignmentsCreated = count;
+      }
+
+      studentResult.status = "ok";
+      logger.info("adminBulkRosterSetup: student processed", { b10Id, preloadBundles, assignmentsCreated: studentResult.assignmentsCreated });
+
+    } catch (err) {
+      studentResult.status = "error";
+      studentResult.error = err.message;
+      logger.error("adminBulkRosterSetup: student error", { b10Id, error: err.message });
+    }
+
+    results.push(studentResult);
+  }
+
+  const successCount = results.filter(r => r.status === "ok").length;
+  const errorCount   = results.filter(r => r.status === "error").length;
+
+  logger.info("adminBulkRosterSetup: complete", { instructorB10Id, successCount, errorCount });
+
+  return { success: true, instructorUid, groupId, results, successCount, errorCount };
+});
