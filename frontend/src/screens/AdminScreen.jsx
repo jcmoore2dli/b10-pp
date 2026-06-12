@@ -40,6 +40,48 @@ export default function AdminScreen() {
   const [instrError, setInstrError] = useState(null)
   const [instrSuccess, setInstrSuccess] = useState(null)
 
+
+  // Bulk Roster Setup
+  const [rosterInstrB10Id, setRosterInstrB10Id] = useState('')
+  const [rosterStudentList, setRosterStudentList] = useState('')
+  const [rosterPreload, setRosterPreload] = useState(true)
+  const [rosterExpiry, setRosterExpiry] = useState('')
+  const [rosterLoading, setRosterLoading] = useState(false)
+  const [rosterError, setRosterError] = useState(null)
+  const [rosterResults, setRosterResults] = useState(null)
+
+  async function handleBulkRosterSetup() {
+    setRosterError(null)
+    setRosterResults(null)
+    const studentB10Ids = rosterStudentList
+      .split('\n')
+      .map(s => s.trim())
+      .filter(Boolean)
+    if (!rosterInstrB10Id.trim()) {
+      setRosterError('Instructor B10 ID is required.')
+      return
+    }
+    if (studentB10Ids.length === 0) {
+      setRosterError('Enter at least one student B10 ID.')
+      return
+    }
+    setRosterLoading(true)
+    try {
+      const functions = getFunctions()
+      const adminBulkRosterSetup = httpsCallable(functions, 'adminBulkRosterSetup')
+      const result = await adminBulkRosterSetup({
+        instructorB10Id: rosterInstrB10Id.trim(),
+        studentB10Ids,
+        preloadBundles: rosterPreload,
+        expiryDate: rosterExpiry.trim() || null,
+      })
+      setRosterResults(result.data)
+    } catch (err) {
+      setRosterError(err.message || 'Bulk roster setup failed.')
+    } finally {
+      setRosterLoading(false)
+    }
+  }
   async function handleCreateInstructor() {
     setInstrError(null)
     setInstrSuccess(null)
@@ -270,6 +312,116 @@ export default function AdminScreen() {
             className="w-full py-3 rounded-xl text-white font-semibold text-base"
             style={{ backgroundColor: instrLoading ? '#7a9bbf' : '#1e5c3a' }}>
             {instrLoading ? 'Creating…' : 'Create Instructor Account'}
+          </button>
+        </div>
+
+
+        {/* Bulk Roster Setup */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
+            Bulk Roster Setup
+          </p>
+
+          <div className="flex flex-col gap-1 mb-4">
+            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              Instructor B10 ID
+            </label>
+            <input
+              type="text"
+              value={rosterInstrB10Id}
+              onChange={(e) => setRosterInstrB10Id(e.target.value)}
+              placeholder="e.g. 26-INS-2"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={rosterLoading}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 mb-4">
+            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              Student B10 IDs (one per line)
+            </label>
+            <textarea
+              value={rosterStudentList}
+              onChange={(e) => setRosterStudentList(e.target.value)}
+              placeholder={"26-001-1\n26-001-2\n26-001-3"}
+              rows={6}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+              disabled={rosterLoading}
+            />
+            <p className="text-xs text-gray-400">
+              {rosterStudentList.split('\n').filter(s => s.trim()).length} student(s) entered
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                Pre-load CORE Bundle Sequence
+              </p>
+              <p className="text-xs text-gray-400">Assigns all 60 bundles (S1.1–S12.5) in order</p>
+            </div>
+            <button
+              onClick={() => setRosterPreload(!rosterPreload)}
+              className={`w-12 h-6 rounded-full transition-colors relative ${
+                rosterPreload ? 'bg-blue-600' : 'bg-gray-300'
+              }`}
+              disabled={rosterLoading}
+            >
+              <span
+                className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  rosterPreload ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-1 mb-5">
+            <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              Expiry Date (optional)
+            </label>
+            <input
+              type="date"
+              value={rosterExpiry}
+              onChange={(e) => setRosterExpiry(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={rosterLoading}
+            />
+            <p className="text-xs text-gray-400">Leave blank for no expiry</p>
+          </div>
+
+          {rosterError && (
+            <p className="text-red-600 text-sm font-medium mb-3">{rosterError}</p>
+          )}
+
+          {rosterResults && (
+            <div className="mb-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                Results — {rosterResults.successCount} ok · {rosterResults.errorCount} failed
+              </p>
+              <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
+                {rosterResults.results.map((r) => (
+                  <div key={r.b10Id} className="flex items-center justify-between text-xs font-mono">
+                    <span className="text-gray-700">{r.b10Id}</span>
+                    {r.status === 'ok' ? (
+                      <span className="text-green-600 font-semibold">
+                        ✓{r.assignmentsCreated > 0 ? ` · ${r.assignmentsCreated} assignments` : ''}
+                      </span>
+                    ) : (
+                      <span className="text-red-500" title={r.error}>✗ {r.error}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={handleBulkRosterSetup}
+            disabled={rosterLoading}
+            className="w-full py-3 rounded-xl text-white font-semibold text-base"
+            style={{ backgroundColor: rosterLoading ? '#7a9bbf' : '#5b3a8f' }}
+          >
+            {rosterLoading ? 'Setting up roster…' : 'Set Up Roster'}
           </button>
         </div>
 
