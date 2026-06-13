@@ -209,6 +209,73 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
   const totalAttempts = attempts.length
   const lastAttempt = attempts[0]
   const lastPractice = lastAttempt ? formatDate(lastAttempt.processedAt) : '—'
+  const [summaryLoading, setSummaryLoading] = useState(false)
+  const [summaryText, setSummaryText] = useState(null)
+  const [summaryWindow, setSummaryWindow] = useState(null)
+  const [summaryError, setSummaryError] = useState(null)
+
+  async function handleProgressSummary(windowDays) {
+    setSummaryLoading(true)
+    setSummaryText(null)
+    setSummaryError(null)
+    setSummaryWindow(windowDays)
+    try {
+      const cutoff = new Date()
+      cutoff.setDate(cutoff.getDate() - windowDays)
+      const filtered = attempts.filter(a => {
+        const d = a.processedAt?.toDate ? a.processedAt.toDate() : new Date(a.processedAt)
+        return d >= cutoff
+      })
+      const windowLabel = windowDays === 7 ? 'the past week' : `the past ${windowDays} days`
+      const attemptCount = filtered.length
+      if (attemptCount === 0) {
+        setSummaryText(`No completed attempts found in ${windowLabel}.`)
+        setSummaryLoading(false)
+        return
+      }
+      const attemptLines = filtered.map((a, i) => {
+        const d = a.processedAt?.toDate ? a.processedAt.toDate() : new Date(a.processedAt)
+        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        const scoreMax = a.taskFamily === 'LEVEL3' ? 4 : 3
+        return `${i + 1}. ${dateStr} — ${a.taskType} — ${a.passageId} — Score: ${a.score}/${scoreMax} (${a.score_label})`
+      }).join('\n')
+      const prompt = `You are an experienced ESL instructor reviewing a student's recent practice data. Write a concise progress summary for the instructor.
+
+Student B10 ID: ${b10Id}
+Time window: ${windowLabel}
+Total attempts in window: ${attemptCount}
+Total attempts all time: ${totalAttempts}
+
+Attempt log:
+${attemptLines}
+
+Write 3-5 sentences covering:
+1. Total attempts and engagement level
+2. Score trajectory (improving, stable, inconsistent)
+3. What is working well based on score patterns
+4. One specific area to continue working on
+5. Any notable patterns (e.g. task type performance differences)
+
+Use professional instructor register. You may reference ILR levels if relevant. Be honest and specific. Do not pad or over-praise.`
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      })
+      const data = await response.json()
+      const text = data.content?.find(b => b.type === 'text')?.text || 'No summary generated.'
+      setSummaryText(text)
+    } catch (err) {
+      setSummaryError('Failed to generate summary: ' + err.message)
+    } finally {
+      setSummaryLoading(false)
+    }
+  }
 
   const [assignablePassages, setAssignablePassages] = useState([])
   const [loadingPassages, setLoadingPassages] = useState(false)
@@ -408,6 +475,43 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
             {lastAttempt ? `${lastAttempt.score}/${lastAttempt.taskFamily === 'LEVEL3' ? 4 : 3}` : '—'}
           </p>
         </div>
+      </div>
+
+      {/* Progress Summary */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Progress Summary</p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleProgressSummary(7)}
+            disabled={summaryLoading}
+            className="flex-1 py-2 rounded-lg text-xs font-bold text-white"
+            style={{ backgroundColor: summaryLoading && summaryWindow === 7 ? '#9ca3af' : '#1e3a5f' }}
+          >
+            {summaryLoading && summaryWindow === 7 ? 'Generating…' : 'This Week'}
+          </button>
+          <button
+            onClick={() => handleProgressSummary(28)}
+            disabled={summaryLoading}
+            className="flex-1 py-2 rounded-lg text-xs font-bold text-white"
+            style={{ backgroundColor: summaryLoading && summaryWindow === 28 ? '#9ca3af' : '#1e5c3a' }}
+          >
+            {summaryLoading && summaryWindow === 28 ? 'Generating…' : '4-Week Summary'}
+          </button>
+        </div>
+        {summaryError && (
+          <p className="text-red-600 text-xs mt-2">{summaryError}</p>
+        )}
+        {summaryText && (
+          <div className="mt-3 bg-blue-50 border border-blue-100 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">
+                {summaryWindow === 7 ? 'Weekly' : '4-Week'} Summary — {b10Id}
+              </p>
+              <button onClick={() => setSummaryText(null)} className="text-xs text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{summaryText}</p>
+          </div>
+        )}
       </div>
 
       {/* Assign passage */}
@@ -1021,8 +1125,8 @@ export default function InstructorDashboardScreen() {
             onClick={toggleInstrRole}
             className="text-xs font-bold px-2 py-1 rounded-full border-2 transition-all"
             style={{
-              backgroundColor: instrRole === 'main' ? '#1e3a5f' : '#0d9488',
-              borderColor: instrRole === 'main' ? '#60a5fa' : '#5eead4',
+              backgroundColor: instrRole === 'main' ? '#d97706' : '#0d9488',
+              borderColor: instrRole === 'main' ? '#f59e0b' : '#5eead4',
               color: 'white',
               minWidth: '48px',
               textAlign: 'center',
