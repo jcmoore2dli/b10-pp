@@ -997,7 +997,20 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
       await rosterRef.set(rosterEntry, { merge: true });
 
       // Pre-load CORE bundle assignments if requested
+      // Deduplication: skip if S1.1 already exists for this student
       if (preloadBundles) {
+        const existingCheck = await db.collection('assignments')
+          .where('studentId', '==', b10Id)
+          .where('bundleId', '==', 'S1.1')
+          .limit(1)
+          .get()
+        if (!existingCheck.empty) {
+          logger.info('adminBulkRosterSetup: bundles already exist, skipping', { b10Id })
+          studentResult.status = 'ok'
+          studentResult.skippedPreload = true
+          results.push(studentResult)
+          continue
+        }
         const batch = db.batch();
         let count = 0;
         for (const bundle of CORE_BUNDLE_MAP) {
