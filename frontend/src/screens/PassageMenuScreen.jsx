@@ -92,9 +92,28 @@ export default function PassageMenuScreen() {
     async function loadAssigned() {
       if (!b10Id || b10Id === '—') return
       try {
-        const snap = await getDocs(
-          query(collection(db, 'assignments'), where('studentId', '==', b10Id), orderBy('setNumber', 'asc'), orderBy('dayNumber', 'asc'), orderBy('assignedAt', 'desc'))
+        // Single query — all assignments for this student, sorted client-side
+        // CORE bundles: sorted by setNumber asc, dayNumber asc
+        // Everything else: sorted by assignedAt desc, appended after CORE
+        const rawSnap = await getDocs(
+          query(collection(db, 'assignments'), where('studentId', '==', b10Id))
         )
+        const coreDocs = rawSnap.docs
+          .filter(d => d.data().corpusType === 'COR')
+          .sort((a, b) => {
+            const as_ = a.data().setNumber || 0
+            const bs = b.data().setNumber || 0
+            if (as_ !== bs) return as_ - bs
+            return (a.data().dayNumber || 0) - (b.data().dayNumber || 0)
+          })
+        const practiceDocs = rawSnap.docs
+          .filter(d => d.data().corpusType !== 'COR')
+          .sort((a, b) => {
+            const at = a.data().assignedAt?.toMillis?.() || 0
+            const bt = b.data().assignedAt?.toMillis?.() || 0
+            return bt - at
+          })
+        const snap = { docs: [...coreDocs, ...practiceDocs] }
         // Build map: passageId -> most recent scaffoldConfig
         const scaffoldMap = {}
         snap.docs.forEach(d => {
@@ -105,6 +124,10 @@ export default function PassageMenuScreen() {
               scaffoldMap[pid] = {
                 scaffoldConfig: data.scaffoldConfig || null,
                 assignmentType: data.assignmentType || 'main',
+                corpusType: data.corpusType || null,
+                setNumber: data.setNumber || null,
+                dayNumber: data.dayNumber || null,
+                assignedAt: data.assignedAt || null,
               }
             }
           })
@@ -118,9 +141,12 @@ export default function PassageMenuScreen() {
               const docSnap = await getDoc(doc(db, 'passages', id))
               if (docSnap.exists()) {
                 const normalized = normalizePassage(docSnap)
-                normalized.scaffoldConfig = scaffoldMap[id]
                 normalized.scaffoldConfig = scaffoldMap[id]?.scaffoldConfig || null
                 normalized.assignmentType = scaffoldMap[id]?.assignmentType || 'main'
+                normalized.corpusType = scaffoldMap[id]?.corpusType || null
+                normalized.setNumber = scaffoldMap[id]?.setNumber || null
+                normalized.dayNumber = scaffoldMap[id]?.dayNumber || null
+                normalized.assignedAt = scaffoldMap[id]?.assignedAt || null
                 return normalized
               }
               return null
@@ -307,6 +333,9 @@ export default function PassageMenuScreen() {
 }
 
 function AssignedSetView({ passages, onSelect, submissions = [] }) {
+  const [expandedSets, setExpandedSets] = useState({})
+  const [bundleSectionOpen, setBundleSectionOpen] = useState(false)
+
   if (passages.length === 0) {
     return (
       <div className="text-center py-12 text-gray-400">
@@ -314,24 +343,111 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
       </div>
     )
   }
+
   const attemptedIds = new Set(submissions.map(s => s.passageId))
-  const pending = passages.filter(p => !attemptedIds.has(p.passage_id))
-  const completed = passages.filter(p => attemptedIds.has(p.passage_id))
-  const sorted = [...pending, ...completed]
+
+  // Split into CORE bundles vs instructor-assigned practice
+  const bundlePassages = passages.filter(p => p.corpusType === 'COR')
+  const practicePassages = passages.filter(p => p.corpusType !== 'COR')
+
+  // Group bundle passages by set number
+  const setGroups = {}
+  bundlePassages.forEach(p => {
+    const key = p.setNumber || 0
+    if (!setGroups[key]) setGroups[key] = []
+    setGroups[key].push(p)
+  })
+  const sortedSets = Object.keys(setGroups).map(Number).sort((a, b) => a - b)
+
+  function toggleSet(setNum) {
+    setExpandedSets(prev => ({ ...prev, [setNum]: !prev[setNum] }))
+  }
+
+  const bundleDone = bundlePassages.filter(p => attemptedIds.has(p.passage_id)).length
+  const practiceDone = practicePassages.filter(p => attemptedIds.has(p.passage_id)).length
+
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">
-        {passages.length} passage{passages.length !== 1 ? 's' : ''} assigned
-        {completed.length > 0 && <span className="ml-2 text-green-600">· {completed.length} done</span>}
-      </p>
-      {sorted.map((p) => (
-        <PassageCard
-          key={p.passage_id}
-          passage={p}
-          onSelect={onSelect}
-          status={attemptedIds.has(p.passage_id) ? 'completed' : 'not_started'}
-        />
-      ))}
+    <div className="flex flex-col gap-6">
+
+      {/* Section 1 — Bundle Sequence */}
+      {bundlePassages.length > 0 && (
+        <div>
+          <button
+            onClick={() => setBundleSectionOpen(prev => !prev)}
+            className="w-full flex items-center justify-between mb-3"
+          >
+            <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold">
+              Bundle Sequence · {bundlePassages.length} passages
+              {bundleDone > 0 && <span className="ml-2 text-green-600">· {bundleDone} done</span>}
+            </p>
+            <span className="text-gray-400 text-xs">{bundleSectionOpen ? '▲' : '▼'}</span>
+          </button>
+          {bundleSectionOpen && <div className="flex flex-col gap-2">
+            {sortedSets.map(setNum => {
+              const group = setGroups[setNum]
+              const isExpanded = expandedSets[setNum] === true
+              const groupDone = group.filter(p => attemptedIds.has(p.passage_id)).length
+              const allDone = groupDone === group.length
+              return (
+                <div key={setNum} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => toggleSet(setNum)}
+                    className="w-full flex items-center justify-between px-4 py-3 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
+                        Set {setNum}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {group.length} passages · {groupDone}/{group.length} done
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {allDone && <span className="text-xs text-green-600 font-semibold">✓ Complete</span>}
+                      <span className="text-gray-400 text-xs">{isExpanded ? '▲' : '▼'}</span>
+                    </div>
+                  </button>
+                  {isExpanded && (
+                    <div className="flex flex-col gap-2 px-3 pb-3">
+                      {group
+                        .sort((a, b) => (a.dayNumber || 0) - (b.dayNumber || 0))
+                        .map(p => (
+                          <PassageCard
+                            key={p.passage_id}
+                            passage={p}
+                            onSelect={onSelect}
+                            status={attemptedIds.has(p.passage_id) ? 'completed' : 'not_started'}
+                          />
+                        ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>}
+        </div>
+      )}
+
+      {/* Section 2 — Assigned Practice */}
+      {practicePassages.length > 0 && (
+        <div>
+          <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-3">
+            Assigned Practice · {practicePassages.length} passages
+            {practiceDone > 0 && <span className="ml-2 text-green-600">· {practiceDone} done</span>}
+          </p>
+          <div className="flex flex-col gap-3">
+            {practicePassages.map(p => (
+              <PassageCard
+                key={p.passage_id}
+                passage={p}
+                onSelect={onSelect}
+                status={attemptedIds.has(p.passage_id) ? 'completed' : 'not_started'}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

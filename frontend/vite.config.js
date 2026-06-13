@@ -43,7 +43,16 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,mp3,json}'],
+        navigateFallback: 'index.html',
         runtimeCaching: [
+          {
+            urlPattern: /\.js$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'js-cache',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
           {
             urlPattern: /\/audio\/.+\.mp3$/,
             handler: 'CacheFirst',
