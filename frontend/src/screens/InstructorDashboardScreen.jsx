@@ -258,18 +258,11 @@ Write 3-5 sentences covering:
 
 Use professional instructor register. You may reference ILR levels if relevant. Be honest and specific. Do not pad or over-praise.`
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
-        })
-      })
-      const data = await response.json()
-      const text = data.content?.find(b => b.type === 'text')?.text || 'No summary generated.'
-      setSummaryText(text)
+      const { getFunctions, httpsCallable } = await import('firebase/functions')
+      const functions = getFunctions()
+      const generateProgressSummary = httpsCallable(functions, 'generateProgressSummary')
+      const result = await generateProgressSummary({ prompt })
+      setSummaryText(result.data.text)
     } catch (err) {
       setSummaryError('Failed to generate summary: ' + err.message)
     } finally {

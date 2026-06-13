@@ -1170,3 +1170,42 @@ exports.instructorAddStudent = onCall(async (request) => {
   logger.info("instructorAddStudent: complete", { b10Id, callerUid, groupId });
   return { success: true, b10Id, studentUid };
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: generateProgressSummary
+//
+// Instructor or admin. Takes a pre-built prompt from the client and calls
+// Anthropic. Returns plain-text summary. API key never leaves the server.
+//
+// Input: { prompt: string }
+// ─────────────────────────────────────────────────────────────────────────────
+exports.generateProgressSummary = onCall(
+  { secrets: [ANTHROPIC_API_KEY] },
+  async (request) => {
+    const callerUid = request.auth?.uid;
+    if (!callerUid) throw new HttpsError("unauthenticated", "Must be signed in.");
+    const callerToken = request.auth?.token;
+    if (!["instructor", "admin"].includes(callerToken?.role)) {
+      throw new HttpsError("permission-denied", "Instructor or admin role required.");
+    }
+
+    const { prompt } = request.data;
+    if (!prompt || typeof prompt !== "string") {
+      throw new HttpsError("invalid-argument", "prompt is required.");
+    }
+
+    const Anthropic = require("@anthropic-ai/sdk");
+    const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
+
+    const response = await client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      temperature: 0,
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const text = response.content?.[0]?.text || "No summary generated.";
+    logger.info("generateProgressSummary: complete", { callerUid, promptLength: prompt.length });
+    return { success: true, text };
+  }
+);
