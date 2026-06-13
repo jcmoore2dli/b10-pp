@@ -31,6 +31,8 @@ export default function AdminScreen() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+  const [preloadBundles, setPreloadBundles] = useState(false)
+  const [linkedInstrB10Id, setLinkedInstrB10Id] = useState('')
 
   // Instructor account creation
   const [instrB10Id, setInstrB10Id] = useState('')
@@ -136,12 +138,14 @@ export default function AdminScreen() {
       }
 
       await setDoc(doc(db, 'accessCodes', fullCode), {
-        code:           fullCode,
-        groupId:        groupId.trim(),
-        instructorUid:  currentUser.uid,
-        enrolledCount:  0,
+        code:              fullCode,
+        groupId:           groupId.trim(),
+        instructorUid:     currentUser.uid,
+        linkedInstrB10Id:  linkedInstrB10Id.trim() || null,
+        preloadBundles,
+        enrolledCount:     0,
         active,
-        createdAt:      serverTimestamp(),
+        createdAt:         serverTimestamp(),
       })
 
       setSuccess(`Access code ${fullCode} created successfully.`)
@@ -229,6 +233,47 @@ export default function AdminScreen() {
               disabled={loading}
             />
           </div>
+
+          {/* Pre-load CORE bundles toggle */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                Pre-load CORE Bundle Sequence
+              </p>
+              <p className="text-xs text-gray-400">Students auto-receive 60 bundles on enrollment</p>
+            </div>
+            <button
+              onClick={() => setPreloadBundles(!preloadBundles)}
+              className={`w-12 h-6 rounded-full transition-colors relative ${
+                preloadBundles ? 'bg-blue-600' : 'bg-gray-300'
+              }`}
+              disabled={loading}
+            >
+              <span
+                className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  preloadBundles ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Linked instructor B10 ID (required for preload) */}
+          {preloadBundles && (
+            <div className="flex flex-col gap-1 mb-4">
+              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                Linked Instructor B10 ID
+              </label>
+              <input
+                type="text"
+                value={linkedInstrB10Id}
+                onChange={(e) => setLinkedInstrB10Id(e.target.value)}
+                placeholder="e.g. 26-INS-2"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+              />
+              <p className="text-xs text-gray-400">Student will be added to this instructor's roster</p>
+            </div>
+          )}
 
           {/* Active toggle */}
           <div className="flex items-center justify-between mb-5">

@@ -687,10 +687,14 @@ function MyProgressView({ submissions, loading }) {
                 </button>
                 {isExpanded && (
                   <div className="pb-4 flex flex-col gap-4">
-                    {attempt.transcriptText && <div className="bg-gray-50 rounded-lg p-3"><p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Your Response</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.transcriptText}</p></div>}
+                    {attempt.summary && (
+                      <div className="rounded-xl border-2 p-3" style={{ borderColor: '#1e3a5f', backgroundColor: '#f0f4f8' }}>
+                        <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: '#1e3a5f' }}>Summary</p>
+                        <p className="text-sm text-gray-700 leading-relaxed">{attempt.summary}</p>
+                      </div>
+                    )}
                     {attempt.strengths && <div className="bg-green-50 rounded-lg p-3"><p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Strengths</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.strengths}</p></div>}
                     {attempt.gaps && <div className="bg-yellow-50 rounded-lg p-3"><p className="text-xs font-semibold text-yellow-600 uppercase tracking-wide mb-1">Areas to Improve</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.gaps}</p></div>}
-                    {attempt.language_feedback && <div className="bg-blue-50 rounded-lg p-3"><p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Language Feedback</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.language_feedback}</p></div>}
                     {attempt.scaffold_feedback?.primary && (
                       <div className="rounded-xl border-2 p-3 flex flex-col gap-2" style={{ borderColor: '#0d9488', backgroundColor: '#f0fdfa' }}>
                         <div className="flex items-center gap-2">
@@ -712,6 +716,8 @@ function MyProgressView({ submissions, loading }) {
                         )}
                       </div>
                     )}
+                    {attempt.language_feedback && <div className="bg-blue-50 rounded-lg p-3"><p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Language Feedback</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.language_feedback}</p></div>}
+                    {attempt.transcriptText && <div className="bg-gray-50 rounded-lg p-3"><p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Your Response</p><p className="text-sm text-gray-700 leading-relaxed">{attempt.transcriptText}</p></div>}
                   </div>
                 )}
               </div>

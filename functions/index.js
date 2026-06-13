@@ -313,6 +313,7 @@ async function processSubmission(submissionId) {
 
     if (type === "ESO") {
       resultFields.scaffold_feedback = scoreResult.scaffold_feedback || "";
+      resultFields.summary = scoreResult.summary || "";
     }
 
     await submissionRef.update(resultFields);
@@ -753,6 +754,65 @@ exports.enrollStudent = onCall(async (request) => {
     role:    "student",
     groupId,
   });
+
+  // ── Pre-load CORE bundles if access code has preloadBundles: true ──────────
+  if (codeData.preloadBundles && codeData.linkedInstrB10Id) {
+    try {
+      const instrEmail = codeData.linkedInstrB10Id.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+      let instrRecord = null;
+      try {
+        instrRecord = await admin.auth().getUserByEmail(instrEmail);
+      } catch (e) {
+        logger.warn("enrollStudent: linked instructor not found, skipping preload", { linkedInstrB10Id: codeData.linkedInstrB10Id });
+      }
+
+      if (instrRecord) {
+        const instrUid = instrRecord.uid;
+
+        await db.collection("rosters").doc(instrUid).collection("students").doc(b10Id).set({
+          b10Id,
+          studentUid: uid,
+          addedAt: admin.firestore.FieldValue.serverTimestamp(),
+          addedBy: "enrollStudent",
+        }, { merge: true });
+
+        const existingCheck = await db.collection("assignments")
+          .where("studentId", "==", b10Id)
+          .where("bundleId", "==", "S1.1")
+          .limit(1)
+          .get();
+
+        if (existingCheck.empty) {
+          const batch = db.batch();
+          for (const bundle of CORE_BUNDLE_MAP) {
+            const assignmentRef = db.collection("assignments").doc();
+            batch.set(assignmentRef, {
+              studentId:      b10Id,
+              assignedBy:     instrUid,
+              assignedTo:     uid,
+              passageIds:     [bundle.leg, bundle.cor, bundle.eso],
+              bundleId:       `S${bundle.set}.${bundle.day}`,
+              setNumber:      bundle.set,
+              dayNumber:      bundle.day,
+              assignmentType: "main",
+              corpusType:     "COR",
+              scaffoldConfig: null,
+              instrRole:      "main",
+              assignedAt:     admin.firestore.FieldValue.serverTimestamp(),
+              createdAt:      admin.firestore.FieldValue.serverTimestamp(),
+              status:         "pending",
+            });
+          }
+          await batch.commit();
+          logger.info("enrollStudent: CORE bundles preloaded", { b10Id, instrUid });
+        } else {
+          logger.info("enrollStudent: bundles already exist, skipping preload", { b10Id });
+        }
+      }
+    } catch (preloadErr) {
+      logger.error("enrollStudent: preload failed — enrollment still complete", { b10Id, error: preloadErr.message });
+    }
+  }
 
   logger.info("enrollStudent: complete", { uid, b10Id, groupId, accessCode: code });
 

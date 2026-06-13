@@ -101,6 +101,7 @@ HOLISTIC MODE:
 {
   "score": <2, 3, or 4>,
   "score_label": "<Partial | Good | Excellent>",
+  "summary": "<3-4 sentence plain-language summary for the student. B2-accessible language throughout. Cover what reasoning moves worked, vocabulary strengths, and one key fluency observation. You may quote the student's own words or terms. Do not use ILR numbers or academic metalanguage.>",
   "strengths": "<specific evidence of Level 3 reasoning, language, discourse>",
   "gaps": "<which criterion lacks Level 3 presence and how>",
   "language_feedback": "<holistic summary with one actionable suggestion>",

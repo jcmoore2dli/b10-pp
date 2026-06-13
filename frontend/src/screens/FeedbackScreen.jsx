@@ -91,6 +91,7 @@ export default function FeedbackScreen() {
     scaffold_feedback,
     transcript_note,
     transcriptText,
+    summary,
   } = submissionData
 
   const scoreMax       = getScoreMax(taskFamily)
@@ -125,23 +126,33 @@ export default function FeedbackScreen() {
           </div>
         </div>
 
+        {/* Summary */}
+        {summary && (
+          <div className="rounded-xl border-2 p-4 flex flex-col gap-2"
+            style={{ borderColor: '#1e3a5f', backgroundColor: '#f0f4f8' }}>
+            <p className="text-xs font-bold uppercase tracking-wide mb-1"
+              style={{ color: '#1e3a5f' }}>Summary</p>
+            <p className="text-sm text-gray-700 leading-relaxed">{summary}</p>
+          </div>
+        )}
+
         {/* Strengths */}
         {strengths && (
-          <FeedbackSection title="What you did well:">
+          <FeedbackSection title="Strengths">
             <p className="text-sm text-gray-700 leading-relaxed">{strengths}</p>
           </FeedbackSection>
         )}
 
         {/* Gaps */}
         {gaps && (
-          <FeedbackSection title="What to work on:">
+          <FeedbackSection title="Areas to Improve">
             <p className="text-sm text-gray-700 leading-relaxed">{gaps}</p>
           </FeedbackSection>
         )}
 
         {/* Language feedback */}
         {language_feedback && (
-          <FeedbackSection title="Language note:">
+          <FeedbackSection title="Language Feedback">
             <p className="text-sm text-gray-700 leading-relaxed">{language_feedback}</p>
           </FeedbackSection>
         )}
@@ -199,14 +210,14 @@ export default function FeedbackScreen() {
 
         {/* Transcript note — plain language, shown only if non-empty */}
         {transcript_note && (
-          <FeedbackSection title="Note on your recording:">
+          <FeedbackSection title="Note on Your Recording">
             <p className="text-sm text-gray-700 leading-relaxed">{transcript_note}</p>
           </FeedbackSection>
         )}
 
-        {/* What we heard — transcript */}
+        {/* Transcript */}
         {transcriptText && (
-          <FeedbackSection title="What we heard:">
+          <FeedbackSection title="Your Response">
             <p className="text-sm text-gray-600 font-mono bg-gray-50 rounded-lg p-3 leading-relaxed">
               {transcriptText}
             </p>
