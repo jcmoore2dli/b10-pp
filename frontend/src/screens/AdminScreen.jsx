@@ -32,6 +32,7 @@ export default function AdminScreen() {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [preloadBundles, setPreloadBundles] = useState(false)
+  const [preloadFrames, setPreloadFrames] = useState(false)
   const [linkedInstrB10Id, setLinkedInstrB10Id] = useState('')
 
   // Instructor account creation
@@ -47,6 +48,7 @@ export default function AdminScreen() {
   const [rosterInstrB10Id, setRosterInstrB10Id] = useState('')
   const [rosterStudentList, setRosterStudentList] = useState('')
   const [rosterPreload, setRosterPreload] = useState(true)
+  const [rosterPreloadFrames, setRosterPreloadFrames] = useState(false)
   const [rosterExpiry, setRosterExpiry] = useState('')
   const [rosterLoading, setRosterLoading] = useState(false)
   const [rosterError, setRosterError] = useState(null)
@@ -75,6 +77,7 @@ export default function AdminScreen() {
         instructorB10Id: rosterInstrB10Id.trim(),
         studentB10Ids,
         preloadBundles: rosterPreload,
+        preloadFrames: rosterPreloadFrames,
         expiryDate: rosterExpiry.trim() || null,
       })
       setRosterResults(result.data)
@@ -143,6 +146,7 @@ export default function AdminScreen() {
         instructorUid:     currentUser.uid,
         linkedInstrB10Id:  linkedInstrB10Id.trim() || null,
         preloadBundles,
+        preloadFrames,
         enrolledCount:     0,
         active,
         createdAt:         serverTimestamp(),
@@ -252,6 +256,29 @@ export default function AdminScreen() {
               <span
                 className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
                   preloadBundles ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Pre-load Frames Practice toggle */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                Pre-load Frames Practice (W1-W6)
+              </p>
+              <p className="text-xs text-gray-400">Students auto-receive 6 weekly Frames sets on enrollment</p>
+            </div>
+            <button
+              onClick={() => setPreloadFrames(!preloadFrames)}
+              className={`w-12 h-6 rounded-full transition-colors relative ${
+                preloadFrames ? 'bg-teal-600' : 'bg-gray-300'
+              }`}
+              disabled={loading}
+            >
+              <span
+                className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  preloadFrames ? 'translate-x-7' : 'translate-x-1'
                 }`}
               />
             </button>
@@ -415,6 +442,28 @@ export default function AdminScreen() {
               <span
                 className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
                   rosterPreload ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                Pre-load Frames Practice (W1-W6)
+              </p>
+              <p className="text-xs text-gray-400">Assigns 6 weekly Frames sets</p>
+            </div>
+            <button
+              onClick={() => setRosterPreloadFrames(!rosterPreloadFrames)}
+              className={`w-12 h-6 rounded-full transition-colors relative ${
+                rosterPreloadFrames ? 'bg-teal-600' : 'bg-gray-300'
+              }`}
+              disabled={rosterLoading}
+            >
+              <span
+                className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  rosterPreloadFrames ? 'translate-x-7' : 'translate-x-1'
                 }`}
               />
             </button>

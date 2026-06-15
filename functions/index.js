@@ -808,6 +808,49 @@ exports.enrollStudent = onCall(async (request) => {
         } else {
           logger.info("enrollStudent: bundles already exist, skipping preload", { b10Id });
         }
+
+        // ── Pre-load Frames Practice (W1-W6) if requested ────────────────────
+        if (codeData.preloadFrames) {
+          const framesExistingCheck = await db.collection("assignments")
+            .where("studentId", "==", b10Id)
+            .where("framesWeek", "==", "W1")
+            .limit(1)
+            .get();
+
+          if (framesExistingCheck.empty) {
+            for (const week of FRAMES_WEEKS) {
+              const passagesSnap = await db.collection("passages")
+                .where("framesWeek", "==", week)
+                .get();
+
+              if (passagesSnap.empty) {
+                logger.warn("enrollStudent: no Frames passages found for week", { week, b10Id });
+                continue;
+              }
+
+              const passageIds = passagesSnap.docs.map(d => d.data().passageId || d.id);
+
+              const assignmentRef = db.collection("assignments").doc();
+              await assignmentRef.set({
+                studentId:      b10Id,
+                assignedBy:     instrUid,
+                assignedTo:     uid,
+                passageIds,
+                framesWeek:     week,
+                assignmentType: "main",
+                corpusType:     "ESO",
+                scaffoldConfig: null,
+                instrRole:      "main",
+                assignedAt:     admin.firestore.FieldValue.serverTimestamp(),
+                createdAt:      admin.firestore.FieldValue.serverTimestamp(),
+                status:         "pending",
+              });
+            }
+            logger.info("enrollStudent: Frames Practice preloaded", { b10Id, instrUid });
+          } else {
+            logger.info("enrollStudent: Frames already exist, skipping preload", { b10Id });
+          }
+        }
       }
     } catch (preloadErr) {
       logger.error("enrollStudent: preload failed — enrollment still complete", { b10Id, error: preloadErr.message });
@@ -979,6 +1022,9 @@ const CORE_BUNDLE_MAP = [
   { set: 12, day: 5, leg: 'COR-SCI-007', cor: 'COR-TEC-035', eso: 'TEC-035' },
 ];
 
+// Frames Practice weeks — passages identified by framesWeek field ('W1'-'W6')
+const FRAMES_WEEKS = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'];
+
 exports.adminBulkRosterSetup = onCall(async (request) => {
   // ── Auth check ────────────────────────────────────────────────────────────
   const callerUid = request.auth?.uid;
@@ -989,7 +1035,7 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
   }
 
   // ── Input validation ──────────────────────────────────────────────────────
-  const { instructorB10Id, studentB10Ids, preloadBundles, expiryDate } = request.data;
+  const { instructorB10Id, studentB10Ids, preloadBundles, preloadFrames, expiryDate } = request.data;
   if (!instructorB10Id || typeof instructorB10Id !== "string") {
     throw new HttpsError("invalid-argument", "instructorB10Id required.");
   }
@@ -1097,8 +1143,55 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
         studentResult.assignmentsCreated = count;
       }
 
+      // Pre-load Frames Practice (W1-W6) if requested
+      // Deduplication: skip if an assignment with framesWeek W1 already exists
+      if (preloadFrames) {
+        const framesExistingCheck = await db.collection('assignments')
+          .where('studentId', '==', b10Id)
+          .where('framesWeek', '==', 'W1')
+          .limit(1)
+          .get();
+
+        if (framesExistingCheck.empty) {
+          let framesCount = 0;
+          for (const week of FRAMES_WEEKS) {
+            const passagesSnap = await db.collection('passages')
+              .where('framesWeek', '==', week)
+              .get();
+
+            if (passagesSnap.empty) {
+              logger.warn('adminBulkRosterSetup: no Frames passages found for week', { week, b10Id });
+              continue;
+            }
+
+            const passageIds = passagesSnap.docs.map(d => d.data().passageId || d.id);
+
+            const assignmentRef = db.collection("assignments").doc();
+            await assignmentRef.set({
+              studentId:      b10Id,
+              assignedBy:     callerUid,
+              assignedTo:     studentUid,
+              passageIds,
+              framesWeek:     week,
+              assignmentType: "main",
+              corpusType:     "ESO",
+              scaffoldConfig: null,
+              instrRole:      "main",
+              assignedAt:     admin.firestore.FieldValue.serverTimestamp(),
+              createdAt:      admin.firestore.FieldValue.serverTimestamp(),
+              status:         "pending",
+            });
+            framesCount += passageIds.length;
+          }
+          studentResult.framesAssignmentsCreated = framesCount;
+        } else {
+          logger.info('adminBulkRosterSetup: Frames already exist, skipping', { b10Id });
+          studentResult.skippedFramesPreload = true;
+        }
+      }
+
       studentResult.status = "ok";
-      logger.info("adminBulkRosterSetup: student processed", { b10Id, preloadBundles, assignmentsCreated: studentResult.assignmentsCreated });
+      logger.info("adminBulkRosterSetup: student processed", { b10Id, preloadBundles, preloadFrames, assignmentsCreated: studentResult.assignmentsCreated, framesAssignmentsCreated: studentResult.framesAssignmentsCreated });
 
     } catch (err) {
       studentResult.status = "error";
