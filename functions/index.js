@@ -813,14 +813,14 @@ exports.enrollStudent = onCall(async (request) => {
         if (codeData.preloadFrames) {
           const framesExistingCheck = await db.collection("assignments")
             .where("studentId", "==", b10Id)
-            .where("framesWeek", "==", "W1")
+            .where("aesopWeek", "==", "W1")
             .limit(1)
             .get();
 
           if (framesExistingCheck.empty) {
             for (const week of FRAMES_WEEKS) {
               const passagesSnap = await db.collection("passages")
-                .where("framesWeek", "==", week)
+                .where("aesopWeek", "==", week)
                 .get();
 
               if (passagesSnap.empty) {
@@ -836,7 +836,7 @@ exports.enrollStudent = onCall(async (request) => {
                 assignedBy:     instrUid,
                 assignedTo:     uid,
                 passageIds,
-                framesWeek:     week,
+                aesopWeek:     week,
                 assignmentType: "main",
                 corpusType:     "ESO",
                 scaffoldConfig: null,
@@ -1148,7 +1148,7 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
       if (preloadFrames) {
         const framesExistingCheck = await db.collection('assignments')
           .where('studentId', '==', b10Id)
-          .where('framesWeek', '==', 'W1')
+          .where('aesopWeek', '==', 'W1')
           .limit(1)
           .get();
 
@@ -1156,7 +1156,7 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
           let framesCount = 0;
           for (const week of FRAMES_WEEKS) {
             const passagesSnap = await db.collection('passages')
-              .where('framesWeek', '==', week)
+              .where('aesopWeek', '==', week)
               .get();
 
             if (passagesSnap.empty) {
@@ -1172,7 +1172,7 @@ exports.adminBulkRosterSetup = onCall(async (request) => {
               assignedBy:     callerUid,
               assignedTo:     studentUid,
               passageIds,
-              framesWeek:     week,
+              aesopWeek:     week,
               assignmentType: "main",
               corpusType:     "ESO",
               scaffoldConfig: null,
