@@ -1302,3 +1302,178 @@ exports.generateProgressSummary = onCall(
     return { success: true, text };
   }
 );
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLABLE: createStudentAccount
+//
+// Public (no auth required). Creates a Firebase Auth account for a new student
+// using an access code, sets claims, and runs preload if configured.
+// Replaces the split LoginScreen register + EntryScreen flow.
+//
+// Input: { accessCode: string, password: string }
+// Returns: { success: true, b10Id: string }
+// ─────────────────────────────────────────────────────────────────────────────
+exports.createStudentAccount = onCall(async (request) => {
+  const { accessCode, password } = request.data;
+  if (!accessCode || !password) {
+    throw new HttpsError("invalid-argument", "accessCode and password are required.");
+  }
+  if (password.length < 6) {
+    throw new HttpsError("invalid-argument", "Password must be at least 6 characters.");
+  }
+
+  const code = accessCode.trim().toUpperCase().replace(/\s/g, "");
+
+  // ── Validate access code ──────────────────────────────────────────────────
+  const codeRef = db.collection("accessCodes").doc(code);
+  const codeSnap = await codeRef.get();
+  if (!codeSnap.exists) {
+    throw new HttpsError("not-found", "Access code not found.");
+  }
+  const codeData = codeSnap.data();
+  if (!codeData.active) {
+    throw new HttpsError("failed-precondition", "Access code is no longer active.");
+  }
+
+  const { groupId } = codeData;
+
+  // ── Assign b10Id = access code directly (one code per student) ──────────
+  let b10Id = code;
+  let uid;
+
+  // Check if student doc already exists
+  const existingStudent = await db.collection("students").doc(b10Id).get();
+  if (existingStudent.exists) {
+    throw new HttpsError("already-exists", `Account for ${b10Id} already exists.`);
+  }
+
+  try {
+    await db.collection("students").doc(b10Id).set({
+      b10Id,
+      groupId,
+      accessCode:  code,
+      track:       "B",
+      ilrBaseline: "3",
+      createdAt:   admin.firestore.FieldValue.serverTimestamp(),
+    });
+  } catch (err) {
+    throw new HttpsError("internal", `Student record creation failed: ${err.message}`);
+  }
+
+  // ── Create Firebase Auth account ──────────────────────────────────────────
+  const syntheticEmail = b10Id.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+  let userRecord;
+  try {
+    userRecord = await admin.auth().createUser({
+      email:    syntheticEmail,
+      password: password,
+    });
+    uid = userRecord.uid;
+  } catch (err) {
+    if (err.code === "auth/email-already-exists") {
+      throw new HttpsError("already-exists", `Account for ${b10Id} already exists.`);
+    }
+    throw new HttpsError("internal", `Failed to create account: ${err.message}`);
+  }
+
+  // ── Set custom claims ─────────────────────────────────────────────────────
+  await admin.auth().setCustomUserClaims(uid, {
+    b10Id,
+    role:    "student",
+    groupId,
+  });
+
+  // ── Update student doc with uid ───────────────────────────────────────────
+  await db.collection("students").doc(b10Id).update({ uid });
+
+  // ── Pre-load CORE bundles if configured ───────────────────────────────────
+  if (codeData.preloadBundles && codeData.linkedInstrB10Id) {
+    try {
+      const instrEmail = codeData.linkedInstrB10Id.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
+      let instrRecord = null;
+      try {
+        instrRecord = await admin.auth().getUserByEmail(instrEmail);
+      } catch (e) {
+        logger.warn("createStudentAccount: linked instructor not found", { linkedInstrB10Id: codeData.linkedInstrB10Id });
+      }
+
+      if (instrRecord) {
+        const instrUid = instrRecord.uid;
+
+        await db.collection("rosters").doc(instrUid).collection("students").doc(b10Id).set({
+          b10Id,
+          studentUid: uid,
+          addedAt:    admin.firestore.FieldValue.serverTimestamp(),
+          addedBy:    "createStudentAccount",
+        }, { merge: true });
+
+        const existingCheck = await db.collection("assignments")
+          .where("studentId", "==", b10Id)
+          .where("bundleId", "==", "S1.1")
+          .limit(1).get();
+
+        if (existingCheck.empty) {
+          const batch = db.batch();
+          for (const bundle of CORE_BUNDLE_MAP) {
+            const assignmentRef = db.collection("assignments").doc();
+            batch.set(assignmentRef, {
+              studentId:      b10Id,
+              assignedBy:     instrUid,
+              assignedTo:     uid,
+              passageIds:     [bundle.leg, bundle.cor, bundle.eso],
+              bundleId:       `S${bundle.set}.${bundle.day}`,
+              setNumber:      bundle.set,
+              dayNumber:      bundle.day,
+              assignmentType: "main",
+              corpusType:     "COR",
+              scaffoldConfig: null,
+              instrRole:      "main",
+              assignedAt:     admin.firestore.FieldValue.serverTimestamp(),
+              createdAt:      admin.firestore.FieldValue.serverTimestamp(),
+              status:         "pending",
+            });
+          }
+          await batch.commit();
+          logger.info("createStudentAccount: CORE bundles preloaded", { b10Id, instrUid });
+        }
+
+        // ── Pre-load Frames Practice if configured ──────────────────────────
+        if (codeData.preloadFrames) {
+          const framesCheck = await db.collection("assignments")
+            .where("studentId", "==", b10Id)
+            .where("aesopWeek", "==", "W1")
+            .limit(1).get();
+
+          if (framesCheck.empty) {
+            for (const week of FRAMES_WEEKS) {
+              const passagesSnap = await db.collection("passages")
+                .where("aesopWeek", "==", week).get();
+              if (passagesSnap.empty) continue;
+              const passageIds = passagesSnap.docs.map(d => d.data().passageId || d.id);
+              await db.collection("assignments").doc().set({
+                studentId:      b10Id,
+                assignedBy:     instrUid,
+                assignedTo:     uid,
+                passageIds,
+                aesopWeek:      week,
+                assignmentType: "main",
+                corpusType:     "ESO",
+                scaffoldConfig: null,
+                instrRole:      "main",
+                assignedAt:     admin.firestore.FieldValue.serverTimestamp(),
+                createdAt:      admin.firestore.FieldValue.serverTimestamp(),
+                status:         "pending",
+              });
+            }
+            logger.info("createStudentAccount: Frames Practice preloaded", { b10Id, instrUid });
+          }
+        }
+      }
+    } catch (preloadErr) {
+      logger.error("createStudentAccount: preload failed — account still created", { b10Id, error: preloadErr.message });
+    }
+  }
+
+  logger.info("createStudentAccount: complete", { uid, b10Id, groupId, accessCode: code });
+  return { success: true, b10Id };
+});

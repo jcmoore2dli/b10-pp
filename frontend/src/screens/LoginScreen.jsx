@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithCustomToken } from "firebase/auth";
 import { auth } from "../services/firebase";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "../services/firebase";
 
-// B10 ID is the only identifier. No email address is collected or stored.
-// Firebase Auth requires an email format internally — we construct a synthetic
-// address from the B10 ID that is never shown or communicated to the user.
 function toSyntheticEmail(b10Id) {
   const val = b10Id.trim();
-  // If input already looks like a real email, use it as-is (admin accounts)
   if (val.includes('@') && val.includes('.')) return val;
   return val.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '@b10pp.local';
 }
 
 export default function LoginScreen() {
-  const [mode, setMode] = useState("signin"); // "signin" | "register"
+  const [mode, setMode] = useState("signin");
   const [b10Id, setB10Id] = useState("");
+  const [accessCode, setAccessCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState(null);
@@ -24,6 +23,7 @@ export default function LoginScreen() {
     setMode(newMode);
     setError(null);
     setB10Id("");
+    setAccessCode("");
     setPassword("");
     setConfirm("");
   }
@@ -50,7 +50,7 @@ export default function LoginScreen() {
 
   async function handleRegister() {
     setError(null);
-    if (!b10Id || !password || !confirm) {
+    if (!accessCode || !password || !confirm) {
       setError("Please fill in all fields.");
       return;
     }
@@ -64,13 +64,23 @@ export default function LoginScreen() {
     }
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, toSyntheticEmail(b10Id), password);
-      // Auth state change handled by App.jsx — will route to EntryScreen automatically
+      const createStudentAccount = httpsCallable(functions, 'createStudentAccount');
+      const result = await createStudentAccount({
+        accessCode: accessCode.trim().toUpperCase(),
+        password,
+      });
+      if (result.data.success) {
+        const email = toSyntheticEmail(result.data.b10Id);
+        await signInWithEmailAndPassword(auth, email, password);
+      }
     } catch (err) {
-      if (err.code === "auth/email-already-in-use") {
-        setError("An account with this B10 ID already exists. Please sign in.");
+      const msg = err?.message || 'Account creation failed.';
+      if (msg.includes('not-found')) {
+        setError('Access code not found. Please check with your instructor.');
+      } else if (msg.includes('no longer active')) {
+        setError('This access code is no longer active.');
       } else {
-        setError(err.message);
+        setError(msg);
       }
     } finally {
       setLoading(false);
@@ -79,7 +89,6 @@ export default function LoginScreen() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 py-12">
-      {/* Header */}
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold mb-2" style={{ color: '#1e3a5f' }}>
           B10 Practice Platform
@@ -87,7 +96,6 @@ export default function LoginScreen() {
         <p className="text-gray-500 text-base">ILR 2→2+ Listening Practice</p>
       </div>
 
-      {/* Mode toggle */}
       <div className="w-full max-w-sm flex rounded-xl overflow-hidden border border-gray-200 mb-6">
         <button
           onClick={() => switchMode("signin")}
@@ -111,44 +119,70 @@ export default function LoginScreen() {
         </button>
       </div>
 
-      {/* Form */}
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8 flex flex-col gap-5">
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-semibold text-gray-700">B10 ID</label>
-          <input
-            type="text"
-            placeholder="e.g. 26-001-1"
-            value={b10Id}
-            onChange={(e) => setB10Id(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading}
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-semibold text-gray-700">Password</label>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading}
-          />
-        </div>
-
-        {mode === "register" && (
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-gray-700">Confirm Password</label>
-            <input
-              type="password"
-              placeholder="Confirm password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={loading}
-            />
-          </div>
+        {mode === "signin" ? (
+          <>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-gray-700">B10 ID</label>
+              <input
+                type="text"
+                placeholder="e.g. 26-001-1"
+                value={b10Id}
+                onChange={(e) => setB10Id(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-gray-700">Password</label>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-xs text-gray-500 text-center">Enter your access code from your instructor and create a password.</p>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-gray-700">Access Code</label>
+              <input
+                type="text"
+                placeholder="e.g. 26-001"
+                value={accessCode}
+                onChange={(e) => setAccessCode(e.target.value)}
+                autoCapitalize="characters"
+                className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-gray-700">Password</label>
+              <input
+                type="password"
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-semibold text-gray-700">Confirm Password</label>
+              <input
+                type="password"
+                placeholder="Confirm password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+              />
+            </div>
+          </>
         )}
 
         {error && (
@@ -169,10 +203,7 @@ export default function LoginScreen() {
         {mode === "signin" && (
           <p className="text-xs text-gray-400 text-center">
             First time?{" "}
-            <button
-              onClick={() => switchMode("register")}
-              className="text-blue-600 underline"
-            >
+            <button onClick={() => switchMode("register")} className="text-blue-600 underline">
               Create an account
             </button>
           </p>

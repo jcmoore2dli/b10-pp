@@ -22,12 +22,12 @@ function AppInner() {
   return (
     <Routes>
       <Route path="/b10_practice_platform/" element={
-        entered || claims?.b10Id
+        claims?.b10Id || entered
           ? <Navigate to="/b10_practice_platform/passages" replace />
           : <EntryScreen onEnter={() => setEntered(true)} />
       } />
       <Route path="/b10_practice_platform/passages" element={
-        entered || claims?.b10Id
+        claims?.b10Id || entered
           ? <PassageMenuScreen />
           : <Navigate to="/b10_practice_platform/" replace />
       } />

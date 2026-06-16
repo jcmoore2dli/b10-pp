@@ -128,6 +128,7 @@ export default function PassageMenuScreen() {
                 setNumber: data.setNumber || null,
                 dayNumber: data.dayNumber || null,
                 assignedAt: data.assignedAt || null,
+                aesopWeek: data.aesopWeek || null,
               }
             }
           })
@@ -147,6 +148,7 @@ export default function PassageMenuScreen() {
                 normalized.setNumber = scaffoldMap[id]?.setNumber || null
                 normalized.dayNumber = scaffoldMap[id]?.dayNumber || null
                 normalized.assignedAt = scaffoldMap[id]?.assignedAt || null
+                normalized.aesopWeek = scaffoldMap[id]?.aesopWeek || null
                 return normalized
               }
               return null
@@ -335,6 +337,7 @@ export default function PassageMenuScreen() {
 function AssignedSetView({ passages, onSelect, submissions = [] }) {
   const [expandedSets, setExpandedSets] = useState({})
   const [bundleSectionOpen, setBundleSectionOpen] = useState(false)
+  const [framesSectionOpen, setFramesSectionOpen] = useState(false)
 
   if (passages.length === 0) {
     return (
@@ -348,7 +351,22 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
 
   // Split into CORE bundles vs instructor-assigned practice
   const bundlePassages = passages.filter(p => p.corpusType === 'COR')
-  const practicePassages = passages.filter(p => p.corpusType !== 'COR')
+  const framesPassages = passages.filter(p => p.aesopWeek)
+  const practicePassages = passages.filter(p => p.corpusType !== 'COR' && !p.aesopWeek)
+
+  // Group Frames by week, sorted W1-W6
+  const framesGroups = {}
+  framesPassages.forEach(p => {
+    const w = p.aesopWeek || 'Unknown'
+    if (!framesGroups[w]) framesGroups[w] = []
+    framesGroups[w].push(p)
+  })
+  const WEEK_LABELS = {
+    W1: 'Scale & Stakeholder', W2: 'Trade-offs & Constraints',
+    W3: 'Causal Systems', W4: 'Hypothetical & Conditional',
+    W5: 'Values, Heuristics & Bias', W6: 'Synthesis & Judgment'
+  }
+  const sortedFramesWeeks = ['W1','W2','W3','W4','W5','W6'].filter(w => framesGroups[w])
 
   // Group bundle passages by set number
   const setGroups = {}
@@ -428,7 +446,60 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
         </div>
       )}
 
-      {/* Section 2 — Assigned Practice */}
+      {/* Section 2 — Frames Practice */}
+      {sortedFramesWeeks.length > 0 && (
+        <div>
+          <button
+            onClick={() => setFramesSectionOpen(prev => !prev)}
+            className="w-full flex items-center justify-between mb-3"
+          >
+            <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold">
+              Frames Practice · {framesPassages.length} passages
+            </p>
+            <span className="text-gray-400 text-xs">{framesSectionOpen ? '▲' : '▼'}</span>
+          </button>
+          {framesSectionOpen && <div className="flex flex-col gap-2">
+            {sortedFramesWeeks.map(week => {
+              const group = framesGroups[week]
+              const isOpen = expandedSets[week] === true
+              const groupDone = group.filter(p => attemptedIds.has(p.passage_id)).length
+              return (
+                <div key={week} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => toggleSet(week)}
+                    className="w-full flex items-center justify-between px-4 py-3 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#0d9488', color: 'white' }}>
+                        {week}
+                      </span>
+                      <span className="text-xs text-gray-600 font-medium">{WEEK_LABELS[week]}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500">{groupDone}/{group.length} done</span>
+                      <span className="text-gray-400 text-xs">{isOpen ? '▲' : '▼'}</span>
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="flex flex-col gap-2 px-3 pb-3">
+                      {group.map(p => (
+                        <PassageCard
+                          key={p.passage_id}
+                          passage={p}
+                          onSelect={onSelect}
+                          status={attemptedIds.has(p.passage_id) ? 'completed' : 'not_started'}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>}
+        </div>
+      )}
+
+      {/* Section 3 — Assigned Practice */}
       {practicePassages.length > 0 && (
         <div>
           <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-3">
