@@ -729,7 +729,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                       <div>
                         <p className="text-xs text-gray-400 font-semibold mb-2">Grammar structure</p>
                         <div className="flex flex-wrap gap-1">
-                          {['Conditional Structures','Concession & Contrast','Relative Clauses','Modality & Hedging','Nominalization','Passive & Reporting','Parallelism'].map(struct => (
+                          {['Conditional Structures','Concession & Contrast','Relative Clauses','Modality & Hedging','Nominalization','Passive & Reporting'].map(struct => (
                             <button
                               key={struct}
                               type="button"
@@ -1034,19 +1034,23 @@ export default function InstructorDashboardScreen() {
         if (rosterSnap.empty) { setStudents([]); setRosterLoading(false); return }
         const studentList = rosterSnap.docs.map(d => ({ b10Id: d.data().b10Id }))
         setStudents(studentList)
-        const attemptsMap = {}
-        await Promise.all(studentList.map(async (student) => {
-          const attSnap = await getDocs(
-            query(collection(db, 'submissions'), where('b10Id', '==', student.b10Id), orderBy('createdAt', 'desc'))
-          )
-          attemptsMap[student.b10Id] = attSnap.docs
-            .map(d => ({ id: d.id, ...d.data() }))
-            .filter(a => a.status === 'complete')
-        }))
-        setStudentAttempts(attemptsMap)
+        setRosterLoading(false)
+        // Fetch per-student attempt previews after roster renders (non-blocking)
+        studentList.forEach(async (student) => {
+          try {
+            const attSnap = await getDocs(
+              query(collection(db, 'submissions'), where('b10Id', '==', student.b10Id), orderBy('createdAt', 'desc'))
+            )
+            const attempts = attSnap.docs
+              .map(d => ({ id: d.id, ...d.data() }))
+              .filter(a => a.status === 'complete')
+            setStudentAttempts(prev => ({ ...prev, [student.b10Id]: attempts }))
+          } catch (e) {
+            // Silent fail per-student — roster still usable without preview
+          }
+        })
       } catch (err) {
         setRosterError('Failed to load roster: ' + err.message)
-      } finally {
         setRosterLoading(false)
       }
     }

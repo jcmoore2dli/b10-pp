@@ -126,7 +126,7 @@ export default function LoginScreen() {
               <label className="text-sm font-semibold text-gray-700">B10 ID</label>
               <input
                 type="text"
-                placeholder="e.g. 26-001-1"
+                placeholder="e.g. 26-001"
                 value={b10Id}
                 onChange={(e) => setB10Id(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
