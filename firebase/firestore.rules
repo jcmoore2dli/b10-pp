@@ -136,6 +136,7 @@ service cloud.firestore {
         "argument_structure",
         "discourse_frame",
         "grammar_structure",
+        "linguistic_flexibility",
         "combined"
       ];
     }
@@ -154,6 +155,11 @@ service cloud.firestore {
       ];
     }
 
+    function validFlex(v) {
+      return v == null || v in [
+        "FLEX_01", "FLEX_02", "FLEX_03", "FLEX_04"
+      ];
+    }
     function validScaffoldConfig(sc) {
       return sc == null || (
         sc.keys().hasOnly([
@@ -162,12 +168,14 @@ service cloud.firestore {
           "secondaryFrame",
           "primaryStructure",
           "secondaryStructure",
+          "primaryFlex",
           "studentCueText"
         ]) &&
         validFocusArea(sc.focusArea) &&
         validFrame(sc.primaryFrame) &&
         validFrame(sc.secondaryFrame) &&
         validStructure(sc.primaryStructure) &&
+        validFlex(sc.primaryFlex) &&
         validStructure(sc.secondaryStructure) &&
         sc.studentCueText is string
       );
