@@ -65,6 +65,12 @@ export default function RecordingScreen() {
       'STRUCT_06': 'Language focus: Use passive voice and reporting verbs — it is argued, research shows — to report and analyze.',
       'STRUCT_07': 'Language focus: Use parallel structure — similar grammatical forms — to list and compare clearly.',
     },
+    'linguistic_flexibility': {
+      'FLEX_01': 'Language focus: Vary your sentence patterns — try passive voice, fronting, or different clause orders, not just one structure repeated.',
+      'FLEX_02': 'Language focus: Shift word forms to fit the sentence — noun, verb, adjective, adverb — instead of repeating one fixed form.',
+      'FLEX_03': 'Language focus: Combine ideas into one sentence using because, although, if, since — not just short separate sentences.',
+      'FLEX_04': 'Language focus: Represent an opposing view with real content — critics argue, proponents claim — before responding to it.',
+    },
     'combined': null,
   }
 
@@ -77,6 +83,7 @@ export default function RecordingScreen() {
       if (sc.focusArea === 'argument_structure') return SCAFFOLD_CUES.argument_structure
       if (sc.focusArea === 'discourse_frame') return SCAFFOLD_CUES.discourse_frame[sc.primaryFrame] || null
       if (sc.focusArea === 'grammar_structure') return SCAFFOLD_CUES.grammar_structure[sc.primaryStructure] || null
+      if (sc.focusArea === 'linguistic_flexibility') return SCAFFOLD_CUES.linguistic_flexibility[sc.primaryFlex] || null
       if (sc.focusArea === 'combined') {
         const df = sc.primaryFrame ? SCAFFOLD_CUES.discourse_frame[sc.primaryFrame] : null
         const gs = sc.primaryStructure ? SCAFFOLD_CUES.grammar_structure[sc.primaryStructure] : null
@@ -349,6 +356,10 @@ export default function RecordingScreen() {
             'STRUCT_05': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-nominalization.pdf',
             'STRUCT_06': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-passive-reporting.pdf',
             'STRUCT_07': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-grammar-parallelism.pdf',
+            'FLEX_01': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-flex-structural-variation.pdf',
+            'FLEX_02': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-flex-word-form-flexibility.pdf',
+            'FLEX_03': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-flex-sentence-combining.pdf',
+            'FLEX_04': 'https://storage.googleapis.com/b10-practice-platform.firebasestorage.app/resources/speaking-guides/b10pp-flex-perspective-integration.pdf',
           }
           let frameGuideUrl = null
           let grammarGuideUrl = null
