@@ -205,6 +205,7 @@ function AttemptHistory({ b10Id, attempts, onBack, currentUser, instrRole }) {
   const [primaryFrame, setPrimaryFrame] = useState('')
   const [secondaryFrame, setSecondaryFrame] = useState('')
   const [primaryStructure, setPrimaryStructure] = useState('')
+  const [primaryFlex, setPrimaryFlex] = useState('')
 
   const totalAttempts = attempts.length
   const lastAttempt = attempts[0]
@@ -393,6 +394,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
         const FOCUS_MAP = {
           'Holistic': 'holistic', 'Argument structure': 'argument_structure',
           'Discourse frame': 'discourse_frame', 'Grammar structure': 'grammar_structure',
+          'Linguistic flexibility': 'linguistic_flexibility',
           'Combined': 'combined'
         }
         const FRAME_MAP = {
@@ -406,6 +408,10 @@ Use professional instructor register. You may reference ILR levels if relevant. 
           'Nominalization': 'STRUCT_05', 'Passive & Reporting': 'STRUCT_06',
           'Parallelism': 'STRUCT_07'
         }
+        const FLEX_MAP = {
+          'Structural Variation': 'FLEX_01', 'Word Form Flexibility': 'FLEX_02',
+          'Sentence Combining': 'FLEX_03', 'Perspective Integration': 'FLEX_04'
+        }
         const scaffoldConfig = layerFilter === 'ESO' && focusArea !== 'Holistic'
           ? {
               focusArea: FOCUS_MAP[focusArea] || 'holistic',
@@ -413,6 +419,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
               secondaryFrame: FRAME_MAP[secondaryFrame] || null,
               primaryStructure: STRUCT_MAP[primaryStructure] || null,
               secondaryStructure: null,
+              primaryFlex: FLEX_MAP[primaryFlex] || null,
               studentCueText: '',
             }
           : null
@@ -649,7 +656,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                     <div>
                       <p className="text-xs text-gray-400 font-semibold mb-2">What should Claude focus on?</p>
                       <div className="flex flex-wrap gap-1">
-                        {['Holistic','Argument structure','Discourse frame','Grammar structure','Combined'].map(opt => (
+                        {['Holistic','Argument structure','Discourse frame','Grammar structure','Linguistic flexibility','Combined'].map(opt => (
                           <button
                             key={opt}
                             type="button"
@@ -657,6 +664,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                               setFocusArea(opt)
                               if (opt !== 'Discourse frame' && opt !== 'Combined') { setPrimaryFrame(''); setSecondaryFrame('') }
                               if (opt !== 'Grammar structure' && opt !== 'Combined') { setPrimaryStructure('') }
+                              if (opt !== 'Linguistic flexibility') { setPrimaryFlex('') }
                             }}
                             className="text-xs px-2 py-1 rounded-full border font-semibold transition-colors"
                             style={{
@@ -748,6 +756,29 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                       </div>
                     )}
 
+                    {focusArea === 'Linguistic flexibility' && (
+                      <div>
+                        <p className="text-xs text-gray-400 font-semibold mb-2">Linguistic flexibility</p>
+                        <div className="flex flex-wrap gap-1">
+                          {['Structural Variation','Word Form Flexibility','Sentence Combining','Perspective Integration'].map(flex => (
+                            <button
+                              key={flex}
+                              type="button"
+                              onClick={() => setPrimaryFlex(primaryFlex === flex ? '' : flex)}
+                              className="text-xs px-2 py-1 rounded-full border font-semibold transition-colors"
+                              style={{
+                                backgroundColor: primaryFlex === flex ? '#7c3aed' : 'white',
+                                color: primaryFlex === flex ? 'white' : '#64748b',
+                                borderColor: '#7c3aed',
+                              }}
+                            >
+                              {flex}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {focusArea !== 'Holistic' && (
                       <p className="text-xs text-blue-600 bg-blue-50 rounded px-2 py-1">
                         Scaffold is diagnostic only — score is always holistic.
@@ -807,6 +838,9 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                 STRUCT_01: 'Conditional', STRUCT_02: 'Concession', STRUCT_03: 'Relative Clauses',
                 STRUCT_04: 'Modality', STRUCT_05: 'Nominalization', STRUCT_06: 'Passive', STRUCT_07: 'Parallelism'
               }
+              const FLEX_SHORT = {
+                FLEX_01: 'Structural Variation', FLEX_02: 'Word Form', FLEX_03: 'Sentence Combining', FLEX_04: 'Perspective'
+              }
               function getScaffoldBadge(sc) {
                 if (!sc || sc.focusArea === 'holistic') return null
                 if (sc.focusArea === 'argument_structure') return { label: 'ARG · PSU Arc', color: '#1e40af', text: '#fff' }
@@ -817,6 +851,10 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                 if (sc.focusArea === 'grammar_structure') {
                   const struct = STRUCT_SHORT[sc.primaryStructure] || 'Grammar'
                   return { label: `Grammar · ${struct}`, color: '#4338ca', text: '#fff' }
+                }
+                if (sc.focusArea === 'linguistic_flexibility') {
+                  const flex = FLEX_SHORT[sc.primaryFlex] || 'Flexibility'
+                  return { label: `Flexibility · ${flex}`, color: '#7c3aed', text: '#fff' }
                 }
                 if (sc.focusArea === 'combined') {
                   const frame = FRAME_SHORT[sc.primaryFrame] || 'Frame'
