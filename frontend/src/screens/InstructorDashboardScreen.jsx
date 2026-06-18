@@ -1132,6 +1132,16 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                   {isExpanded && (
                     <div className="pb-4 flex flex-col gap-4">
 
+                      {/* Summary */}
+                      {attempt.summary && (
+                        <div className="rounded-xl border-2 p-3 flex flex-col gap-2"
+                          style={{ borderColor: '#1e3a5f', backgroundColor: '#f0f4f8' }}>
+                          <p className="text-xs font-bold uppercase tracking-wide mb-1"
+                            style={{ color: '#1e3a5f' }}>Summary</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{attempt.summary}</p>
+                        </div>
+                      )}
+
                       {/* Transcript */}
                       {attempt.transcriptText && (
                         <div className="bg-gray-50 rounded-lg p-3">
@@ -1161,6 +1171,65 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                         <div className="bg-blue-50 rounded-lg p-3">
                           <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Language Feedback</p>
                           <p className="text-sm text-gray-700 leading-relaxed">{attempt.language_feedback}</p>
+                        </div>
+                      )}
+
+                      {/* Scaffold feedback box */}
+                      {attempt.scaffold_feedback?.primary && (
+                        <div className="rounded-xl border-2 p-3 flex flex-col gap-2"
+                          style={{ borderColor: '#0d9488', backgroundColor: '#f0fdfa' }}>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-bold uppercase tracking-wide"
+                              style={{ color: '#0d9488' }}>
+                              Focus Feedback — {attempt.scaffold_feedback.primary.target?.replace(/_/g, ' ')}
+                            </span>
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                              style={{
+                                backgroundColor:
+                                  attempt.scaffold_feedback.primary.level === 'Sustained' ? '#16a34a' :
+                                  attempt.scaffold_feedback.primary.level === 'Developing' ? '#d97706' : '#dc2626',
+                                color: 'white'
+                              }}>
+                              {attempt.scaffold_feedback.primary.level}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {attempt.scaffold_feedback.primary.descriptor}
+                          </p>
+                          {attempt.scaffold_feedback.primary.evidence && (
+                            <p className="text-xs text-gray-500 italic leading-relaxed border-l-2 pl-3"
+                              style={{ borderColor: '#0d9488' }}>
+                              {attempt.scaffold_feedback.primary.evidence}
+                            </p>
+                          )}
+                          {attempt.scaffold_feedback.secondary && (
+                            <div className="mt-2 pt-2 border-t border-teal-100">
+                              <p className="text-xs font-bold uppercase tracking-wide mb-1"
+                                style={{ color: '#0d9488' }}>
+                                {attempt.scaffold_feedback.secondary.target?.replace(/_/g, ' ')}
+                                {' '}<span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                                  style={{
+                                    backgroundColor:
+                                      attempt.scaffold_feedback.secondary.level === 'Sustained' ? '#16a34a' :
+                                      attempt.scaffold_feedback.secondary.level === 'Developing' ? '#d97706' : '#dc2626',
+                                    color: 'white'
+                                  }}>
+                                  {attempt.scaffold_feedback.secondary.level}
+                                </span>
+                              </p>
+                              <p className="text-sm text-gray-700 leading-relaxed">
+                                {attempt.scaffold_feedback.secondary.descriptor}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* Transcript note */}
+                      {attempt.transcript_note && (
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Note on Recording</p>
+                          <p className="text-sm text-gray-700 leading-relaxed">{attempt.transcript_note}</p>
                         </div>
                       )}
 
