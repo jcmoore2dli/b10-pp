@@ -881,7 +881,9 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                             const attempted = attemptedPassageIdsTop.has(pid)
                             return (
                               <div key={assignment.id + pid} className="flex items-center justify-between py-2 gap-2">
-                                <p className="text-xs font-mono text-gray-700">{pid}</p>
+                                <p className="text-xs font-mono text-gray-700">
+                                  <span className="font-bold" style={{ color: '#1e40af' }}>S{setNum}.{assignment.dayNumber || '?'}</span> — {pid}
+                                </p>
                                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                                   attempted ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
                                 }`}>
