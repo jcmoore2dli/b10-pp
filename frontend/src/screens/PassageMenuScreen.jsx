@@ -588,7 +588,9 @@ function PassageCard({ passage, onSelect, status }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <p className="text-xs font-mono text-gray-400">{passage.passage_id}</p>
+            <p className="text-xs font-mono text-gray-400">
+              {passage.setNumber ? `S${passage.setNumber}.${passage.dayNumber || '?'} — ` : ''}{passage.passage_id}
+            </p>
             {passage.assignmentType && (
               <span
                 className="w-2 h-2 rounded-full flex-shrink-0"
