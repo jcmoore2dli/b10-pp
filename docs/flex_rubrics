@@ -1,0 +1,24 @@
+FLEX_01: `Reformulation — The student abandons a formulation that isn't working and produces a substantively different one carrying the same content, rather than repeating or abandoning the idea.
+Sustained: Self-monitors and pivots to a different formulation — different syntax or lexical strategy — without prompting, and the new attempt successfully carries the original meaning. Signal: "What I mean is..." or "Let me say that another way: the real issue is..."
+Developing: Attempts a different formulation but execution is partial — drops part of the original meaning or is rough enough to undercut the repair. Signal: A second attempt that changes the wording but loses or muddles part of the point.
+Emerging: Repeats the same phrase nearly verbatim when the first attempt doesn't land, or abandons the idea rather than reformulating it. Signal: "It's... it's bad. It's really bad" with no real change between attempts.`,
+
+  FLEX_02: `Structural Variation — The student carries comparable content across more than one syntactic frame within the response, rather than relying on a single sentence template throughout.
+Sustained: Uses two or more genuinely distinct syntactic structures — passive, fronting, cleft, varied clause order — each carrying real content rather than decoration. Signal: "What drives this decision is the cost" alongside a separate passive construction used elsewhere in the response.
+Developing: One alternative structure appears but it is isolated or mechanically inserted rather than sustained across the response. Signal: A single passive sentence dropped into an otherwise uniform run of simple active sentences.
+Emerging: Every sentence follows the same syntactic shape regardless of content; no structural variation appears. Signal: Sentence after sentence beginning "I think..." or "This is..." with no shift in frame.`,
+
+  FLEX_03: `Word Form Flexibility — The student shifts across word-class forms of a shared root to fit the grammatical slot, rather than locking a concept into a single fixed form.
+Sustained: Shifts forms of a core lexical item correctly as different grammatical slots demand — noun, verb, adjective, adverb — without breakdown. Signal: "The decision was difficult, but deciding quickly mattered more than deciding perfectly."
+Developing: Attempts a shift in word form but the derivation is incorrect or introduces a new error elsewhere in the sentence. Signal: "It's more importantly to consider..." where an adverb form is reached for but misformed.
+Emerging: A key concept stays in one fixed form throughout, with visible strain or circumlocution when a different form is needed. Signal: "This is a big problem of decide" instead of shifting to "decision."`,
+
+  FLEX_04: `Sentence Combining — The student merges two or more propositions into a single complex or compound sentence via subordination, coordination, or embedding, rather than stringing short independent clauses together.
+Sustained: Combines two or more propositions into one sentence using a connector that accurately encodes the relationship — causal, concessive, temporal, conditional. Signal: "Although the cost is high, the long-term savings justify it because maintenance drops significantly."
+Developing: Attempts a combined sentence but the connector doesn't quite track the intended relationship, or the sentence breaks down partway through. Signal: "The cost is high, but the savings, because maintenance..." trailing off before the relationship is completed.
+Emerging: Ideas arrive almost entirely as short, simple, independent clauses, linked only by all-purpose connectors or no connector at all. Signal: "The cost is high. The savings are good. Maintenance is less."`,
+
+  FLEX_05: `Perspective Integration — The student grammatically represents a viewpoint other than their own inside the flow of the response, rather than speaking only from a single first-person vantage point.
+Sustained: Represents another perspective in integrated grammatical form — reported speech, attributive framing, an embedded clause voicing an objector — and the represented view carries real, developed content. Signal: "Critics would argue that the cost outweighs the benefit, but that view overlooks..."
+Developing: Represents another perspective, but thinly or mechanically — a short attributive phrase with minimal content, or tacked on rather than embedded into the sentence flow. Signal: "Some people disagree" with no development of what the disagreement actually is.
+Emerging: Cannot produce another viewpoint in integrated form when asked to consider one — restates own opinion again instead. Signal: "I still think my answer is right" in response to a prompt asking for an opposing view.`,

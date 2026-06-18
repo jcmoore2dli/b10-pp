@@ -1,0 +1,12 @@
+For looking up files in this codebase, run these commands and paste the output back to me:
+I'm working on B10-PP (B10 Practice Platform), a Firebase-based app. The codebase lives at ~/b10_corpus/b10_practice_platform/ on my Linux machine. I don't have a way to give you direct file access — I run commands in my terminal and paste the output to you.
+When you need to see a file or a specific section of code, give me the exact cat, grep -n, or sed -n 'START,ENDp' command to run, one step at a time. Don't assume file contents — ask me to look them up.
+Key files you'll likely need:
+
+functions/lib/claudeScorer.js — scoring prompts, rubrics, SCAFFOLD_RUBRICS object
+functions/index.js — Cloud Functions (enrollment, scoring pipeline, admin tools)
+frontend/src/screens/InstructorDashboardScreen.jsx — instructor dashboard, scaffold selector UI
+frontend/src/screens/PassageMenuScreen.jsx — student passage menu, assignment display
+firebase/firestore.rules — security rules
+
+To start, please give me a command to view the relevant file or section.
