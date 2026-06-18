@@ -450,10 +450,13 @@ Use professional instructor register. You may reference ILR levels if relevant. 
 
   const [coreSectionOpen, setCoreSectionOpen] = useState(false)
   const [expandedCoreSets, setExpandedCoreSets] = useState({})
+  const [framesSectionOpen, setFramesSectionOpen] = useState(false)
+  const [expandedFrameWeeks, setExpandedFrameWeeks] = useState({})
 
   const attemptedPassageIdsTop = new Set(attempts.map(a => a.passageId))
   const corePassages = assignmentHistory.filter(a => a.corpusType === 'COR')
-  const otherAssignments = assignmentHistory.filter(a => a.corpusType !== 'COR')
+  const framePassages = assignmentHistory.filter(a => a.aesopWeek)
+  const otherAssignments = assignmentHistory.filter(a => a.corpusType !== 'COR' && !a.aesopWeek)
 
   const coreSetGroups = {}
   corePassages.forEach(a => {
@@ -469,6 +472,24 @@ Use professional instructor register. You may reference ILR levels if relevant. 
 
   function toggleCoreSet(setNum) {
     setExpandedCoreSets(prev => ({ ...prev, [setNum]: !prev[setNum] }))
+  }
+  const FRAME_WEEK_LABELS = {
+    W1: 'Scale & Stakeholder', W2: 'Trade-offs & Constraints',
+    W3: 'Causal Systems', W4: 'Hypothetical & Conditional',
+    W5: 'Values, Heuristics & Bias', W6: 'Synthesis & Judgment'
+  }
+  const frameWeekGroups = {}
+  framePassages.forEach(a => {
+    const w = a.aesopWeek || 'Unknown'
+    if (!frameWeekGroups[w]) frameWeekGroups[w] = []
+    frameWeekGroups[w].push(a)
+  })
+  const sortedFrameWeeks = ['W1','W2','W3','W4','W5','W6'].filter(w => frameWeekGroups[w])
+  const frameTotalCount = framePassages.reduce((sum, a) => sum + (a.passageIds || []).length, 0)
+  const frameAttemptedCount = framePassages.reduce((sum, a) =>
+    sum + (a.passageIds || []).filter(pid => attemptedPassageIdsTop.has(pid)).length, 0)
+  function toggleFrameWeek(week) {
+    setExpandedFrameWeeks(prev => ({ ...prev, [week]: !prev[week] }))
   }
 
   return (
@@ -856,6 +877,65 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                     {isOpen && (
                       <div className="flex flex-col divide-y divide-gray-100 px-3">
                         {[...group].sort((a, b) => (a.dayNumber || 0) - (b.dayNumber || 0)).map(assignment =>
+                          (assignment.passageIds || []).map(pid => {
+                            const attempted = attemptedPassageIdsTop.has(pid)
+                            return (
+                              <div key={assignment.id + pid} className="flex items-center justify-between py-2 gap-2">
+                                <p className="text-xs font-mono text-gray-700">{pid}</p>
+                                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                                  attempted ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                                }`}>
+                                  {attempted ? '✓' : 'Pending'}
+                                </span>
+                              </div>
+                            )
+                          })
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Frames Practice — AESOP weeks, collapsed by default */}
+      {framePassages.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <button
+            onClick={() => setFramesSectionOpen(prev => !prev)}
+            className="w-full flex items-center justify-between"
+          >
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              Frames Practice ({frameAttemptedCount}/{frameTotalCount} attempted)
+            </p>
+            <span className="text-gray-400 text-xs">{framesSectionOpen ? '▲' : '▼'}</span>
+          </button>
+          {framesSectionOpen && (
+            <div className="flex flex-col gap-2 mt-3">
+              {sortedFrameWeeks.map(week => {
+                const group = frameWeekGroups[week]
+                const groupPassageIds = group.flatMap(a => a.passageIds || [])
+                const groupAttempted = groupPassageIds.filter(pid => attemptedPassageIdsTop.has(pid)).length
+                const isOpen = expandedFrameWeeks[week] === true
+                return (
+                  <div key={week} className="border border-gray-100 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => toggleFrameWeek(week)}
+                      className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 text-left"
+                    >
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#0d9488', color: 'white' }}>
+                        {week}
+                      </span>
+                      <span className="text-xs text-gray-600 font-medium">{FRAME_WEEK_LABELS[week]}</span>
+                      <span className="text-xs text-gray-500">{groupAttempted}/{groupPassageIds.length} attempted</span>
+                      <span className="text-gray-400 text-xs">{isOpen ? '▲' : '▼'}</span>
+                    </button>
+                    {isOpen && (
+                      <div className="flex flex-col divide-y divide-gray-100 px-3">
+                        {group.map(assignment =>
                           (assignment.passageIds || []).map(pid => {
                             const attempted = attemptedPassageIdsTop.has(pid)
                             return (
