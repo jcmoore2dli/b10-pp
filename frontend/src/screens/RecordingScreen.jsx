@@ -363,6 +363,7 @@ export default function RecordingScreen() {
           }
           let frameGuideUrl = null
           let grammarGuideUrl = null
+          let flexGuideUrl = null
           try {
             const raw = sessionStorage.getItem('b10pp_scaffold')
             if (raw) {
@@ -373,6 +374,8 @@ export default function RecordingScreen() {
               // Grammar guide — resolve from focusArea or primaryStructure independently
               if (sc?.focusArea === 'argument_structure') grammarGuideUrl = GRAMMAR_GUIDE_URLS['argument_structure'] || null
               else if (sc?.primaryStructure) grammarGuideUrl = GRAMMAR_GUIDE_URLS[sc.primaryStructure] || null
+              // Flexibility guide — resolve from primaryFlex independently
+              if (sc?.primaryFlex) flexGuideUrl = GRAMMAR_GUIDE_URLS[sc.primaryFlex] || null
             }
           } catch(e) {}
           // For ESO-AES Frames passages with no session scaffold
@@ -394,6 +397,12 @@ export default function RecordingScreen() {
                     <a href={grammarGuideUrl} target="_blank" rel="noopener noreferrer"
                       className="text-xs font-semibold underline" style={{ color: '#4338ca' }}>
                       Grammar Guide ↗
+                    </a>
+                  )}
+                  {flexGuideUrl && (
+                    <a href={flexGuideUrl} target="_blank" rel="noopener noreferrer"
+                      className="text-xs font-semibold underline" style={{ color: '#7c3aed' }}>
+                      Flexibility Guide ↗
                     </a>
                   )}
                 </div>

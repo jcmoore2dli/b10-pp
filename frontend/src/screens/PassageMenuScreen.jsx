@@ -615,6 +615,13 @@ function PassageCard({ passage, onSelect, status }) {
               if (sc.focusArea === 'grammar_structure' && sc.primaryStructure) {
                 return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#4338ca', color: '#fff' }}>Grammar · {structShort[sc.primaryStructure] || sc.primaryStructure}</span>
               }
+              if (sc.focusArea === 'linguistic_flexibility' && sc.primaryFlex) {
+                const flexShort = {
+                  FLEX_01: 'Structural Variation', FLEX_02: 'Word Form',
+                  FLEX_03: 'Sentence Combining', FLEX_04: 'Perspective'
+                }
+                return <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#7c3aed', color: '#fff' }}>Flexibility · {flexShort[sc.primaryFlex] || sc.primaryFlex}</span>
+              }
               if (sc.focusArea === 'combined') {
                 const frameLabel = sc.primaryFrame ? frameShort[sc.primaryFrame] : null
                 const structLabel = sc.primaryStructure ? structShort[sc.primaryStructure] : null
