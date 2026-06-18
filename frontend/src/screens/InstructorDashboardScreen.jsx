@@ -448,6 +448,29 @@ Use professional instructor register. You may reference ILR levels if relevant. 
     }
   }
 
+  const [coreSectionOpen, setCoreSectionOpen] = useState(false)
+  const [expandedCoreSets, setExpandedCoreSets] = useState({})
+
+  const attemptedPassageIdsTop = new Set(attempts.map(a => a.passageId))
+  const corePassages = assignmentHistory.filter(a => a.corpusType === 'COR')
+  const otherAssignments = assignmentHistory.filter(a => a.corpusType !== 'COR')
+
+  const coreSetGroups = {}
+  corePassages.forEach(a => {
+    const key = a.setNumber || 0
+    if (!coreSetGroups[key]) coreSetGroups[key] = []
+    coreSetGroups[key].push(a)
+  })
+  const sortedCoreSets = Object.keys(coreSetGroups).map(Number).sort((a, b) => a - b)
+
+  const coreTotalCount = corePassages.reduce((sum, a) => sum + (a.passageIds || []).length, 0)
+  const coreAttemptedCount = corePassages.reduce((sum, a) =>
+    sum + (a.passageIds || []).filter(pid => attemptedPassageIdsTop.has(pid)).length, 0)
+
+  function toggleCoreSet(setNum) {
+    setExpandedCoreSets(prev => ({ ...prev, [setNum]: !prev[setNum] }))
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <button onClick={onBack} className="flex items-center gap-1 text-sm text-blue-700 font-semibold self-start">
@@ -801,11 +824,67 @@ Use professional instructor register. You may reference ILR levels if relevant. 
         )}
       </div>
 
+      {/* Bundle Sequence — CORE bundles, collapsed by default */}
+      {corePassages.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <button
+            onClick={() => setCoreSectionOpen(prev => !prev)}
+            className="w-full flex items-center justify-between"
+          >
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              Bundle Sequence ({coreAttemptedCount}/{coreTotalCount} attempted)
+            </p>
+            <span className="text-gray-400 text-xs">{coreSectionOpen ? '▲' : '▼'}</span>
+          </button>
+          {coreSectionOpen && (
+            <div className="flex flex-col gap-2 mt-3">
+              {sortedCoreSets.map(setNum => {
+                const group = coreSetGroups[setNum]
+                const groupPassageIds = group.flatMap(a => a.passageIds || [])
+                const groupAttempted = groupPassageIds.filter(pid => attemptedPassageIdsTop.has(pid)).length
+                const isOpen = expandedCoreSets[setNum] === true
+                return (
+                  <div key={setNum} className="border border-gray-100 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => toggleCoreSet(setNum)}
+                      className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 text-left"
+                    >
+                      <span className="text-xs font-bold text-blue-700">Set {setNum}</span>
+                      <span className="text-xs text-gray-500">{groupAttempted}/{groupPassageIds.length} attempted</span>
+                      <span className="text-gray-400 text-xs">{isOpen ? '▲' : '▼'}</span>
+                    </button>
+                    {isOpen && (
+                      <div className="flex flex-col divide-y divide-gray-100 px-3">
+                        {[...group].sort((a, b) => (a.dayNumber || 0) - (b.dayNumber || 0)).map(assignment =>
+                          (assignment.passageIds || []).map(pid => {
+                            const attempted = attemptedPassageIdsTop.has(pid)
+                            return (
+                              <div key={assignment.id + pid} className="flex items-center justify-between py-2 gap-2">
+                                <p className="text-xs font-mono text-gray-700">{pid}</p>
+                                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                                  attempted ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                                }`}>
+                                  {attempted ? '✓' : 'Pending'}
+                                </span>
+                              </div>
+                            )
+                          })
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Assignment history */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-            Assigned Passages ({assignmentHistory.length})
+            Assigned Passages ({otherAssignments.length})
           </p>
           {selectedAssignmentIds.size > 0 && (
             <button
@@ -823,11 +902,11 @@ Use professional instructor register. You may reference ILR levels if relevant. 
           </div>
         ) : assignmentError ? (
           <p className="text-red-600 text-sm text-center py-4 break-all">{assignmentError}</p>
-        ) : assignmentHistory.length === 0 ? (
+        ) : otherAssignments.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-4">No passages assigned yet.</p>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100">
-            {assignmentHistory.map(assignment => {
+            {otherAssignments.map(assignment => {
               const attemptedPassageIds = new Set(attempts.map(a => a.passageId))
               const passageIds = assignment.passageIds || []
               const FRAME_SHORT = {
