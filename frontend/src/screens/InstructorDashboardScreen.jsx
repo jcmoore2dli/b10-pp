@@ -1390,8 +1390,8 @@ export default function InstructorDashboardScreen() {
             onClick={toggleInstrRole}
             className="text-xs font-bold px-2 py-1 rounded-full border-2 transition-all"
             style={{
-              backgroundColor: instrRole === 'main' ? '#d97706' : '#0d9488',
-              borderColor: instrRole === 'main' ? '#f59e0b' : '#5eead4',
+              backgroundColor: instrRole === 'main' ? '#0d9488' : '#d97706',
+              borderColor: instrRole === 'main' ? '#5eead4' : '#f59e0b',
               color: 'white',
               minWidth: '48px',
               textAlign: 'center',

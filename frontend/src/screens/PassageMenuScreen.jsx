@@ -594,7 +594,7 @@ function PassageCard({ passage, onSelect, status }) {
             {passage.assignmentType && (
               <span
                 className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ backgroundColor: passage.assignmentType === 'slt' ? '#0d9488' : '#d97706' }}
+                style={{ backgroundColor: passage.assignmentType === 'slt' ? '#d97706' : '#0d9488' }}
                 title={passage.assignmentType === 'slt' ? 'SLT assignment' : 'Main instructor assignment'}
               />
             )}
