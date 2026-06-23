@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from 'react'
  * Spec §6.5:
  * - Play, Pause, Replay controls only
  * - No seek bar
- * - No playback speed control
+ * - Playback speed toggle: 0.9× / 1× / 1.1× (±10% range)
  * - No autoplay
  * - Student must press Play deliberately
  */
@@ -14,11 +14,13 @@ export default function AudioPlayer({ audioSrc, onPlayStart, onEnded }) {
   const audioRef = useRef(null)
   const [state, setState] = useState('idle') // idle | playing | paused | ended | error
   const [hasPlayed, setHasPlayed] = useState(false)
+  const [playbackRate, setPlaybackRate] = useState(1)
 
   useEffect(() => {
     // Reset when audio source changes
     setState('idle')
     setHasPlayed(false)
+    setPlaybackRate(1)
   }, [audioSrc])
 
   useEffect(() => {
@@ -48,6 +50,10 @@ export default function AudioPlayer({ audioSrc, onPlayStart, onEnded }) {
       audio.removeEventListener('play', handlePlay)
     }
   }, [onEnded])
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.playbackRate = playbackRate
+  }, [playbackRate])
 
   function handlePlay() {
     const audio = audioRef.current
@@ -134,6 +140,25 @@ export default function AudioPlayer({ audioSrc, onPlayStart, onEnded }) {
           <ReplayIcon />
           Replay
         </button>
+      </div>
+
+      {/* Playback speed toggle */}
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-gray-400 font-medium">Speed:</span>
+        {[0.9, 1, 1.1].map(rate => (
+          <button
+            key={rate}
+            onClick={() => setPlaybackRate(rate)}
+            className="text-xs font-semibold px-2 py-1 rounded-lg border transition-all"
+            style={{
+              backgroundColor: playbackRate === rate ? '#1e3a5f' : '#f3f4f6',
+              color: playbackRate === rate ? 'white' : '#374151',
+              borderColor: playbackRate === rate ? '#1e3a5f' : '#d1d5db',
+            }}
+          >
+            {rate === 0.9 ? '0.9×' : rate === 1 ? '1×' : '1.1×'}
+          </button>
+        ))}
       </div>
     </div>
   )
