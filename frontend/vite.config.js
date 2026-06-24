@@ -44,6 +44,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,mp3,json}'],
         navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/b10_practice_platform\/materials\//],
         runtimeCaching: [
           {
             urlPattern: /\.js$/,
