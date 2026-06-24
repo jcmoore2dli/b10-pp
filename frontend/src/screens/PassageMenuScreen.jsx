@@ -338,6 +338,8 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
   const [expandedSets, setExpandedSets] = useState({})
   const [bundleSectionOpen, setBundleSectionOpen] = useState(false)
   const [framesSectionOpen, setFramesSectionOpen] = useState(false)
+  const [materialsSectionOpen, setMaterialsSectionOpen] = useState(false)
+  const [expandedMaterialsWeek, setExpandedMaterialsWeek] = useState(null)
 
   if (passages.length === 0) {
     return (
@@ -459,6 +461,69 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
             <span className="text-gray-400 text-xs">{framesSectionOpen ? '▲' : '▼'}</span>
           </button>
           {framesSectionOpen && <div className="flex flex-col gap-2">
+            {/* Materials Folder */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <button
+                onClick={() => setMaterialsSectionOpen(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#1e3a5f', color: 'white' }}>
+                    📁
+                  </span>
+                  <span className="text-xs text-gray-600 font-medium">Reference Materials</span>
+                </div>
+                <span className="text-gray-400 text-xs">{materialsSectionOpen ? '▲' : '▼'}</span>
+              </button>
+              {materialsSectionOpen && (
+                <div className="flex flex-col gap-1 px-3 pb-3">
+                  {['W1','W2','W3','W4','W5','W6'].map(w => {
+                    const wLabel = { W1:'Scale & Stakeholder', W2:'Trade-offs & Constraints', W3:'Causal Systems', W4:'Hypothetical & Conditional', W5:'Values, Heuristics & Bias', W6:'Synthesis & Judgment' }[w]
+                    const isOpen = expandedMaterialsWeek === w
+                    const base = `https://b10-practice-platform.web.app/b10_practice_platform/materials/${w}`
+                    const links = [
+                      { label: 'Scale & Stakeholder Phrases',       file: `B10PP_${w}_Scale_Stakeholder_Phrases.html` },
+                      { label: 'Trade-offs & Constraints Phrases',   file: `B10PP_${w}_Tradeoffs_Constraints_Phrases.html` },
+                      { label: 'Causal Systems Phrases',             file: `B10PP_${w}_Causal_Systems_Phrases.html` },
+                      { label: 'Hypothetical & Conditional Phrases', file: `B10PP_${w}_Hypothetical_Conditional_Phrases.html` },
+                      { label: 'Values, Heuristics & Bias Phrases',  file: `B10PP_${w}_Values_Heuristics_Bias_Phrases.html` },
+                      { label: 'Synthesis & Judgment Phrases',       file: `B10PP_${w}_Synthesis_Judgment_Phrases.html` },
+                      { label: 'Grammar Stems — All Weeks',          file: `B10PP_Grammar_Stems_All_Weeks.html` },
+                    ]
+                    return (
+                      <div key={w} className="rounded-lg border border-gray-100 overflow-hidden mt-1">
+                        <button
+                          onClick={() => setExpandedMaterialsWeek(isOpen ? null : w)}
+                          className="w-full flex items-center justify-between px-3 py-2 text-left bg-gray-50"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#0d9488' }}>{w}</span>
+                            <span className="text-xs text-gray-600">{wLabel}</span>
+                          </div>
+                          <span className="text-gray-400 text-xs">{isOpen ? '▲' : '▼'}</span>
+                        </button>
+                        {isOpen && (
+                          <div className="flex flex-col gap-1 px-3 py-2">
+                            {links.map(({ label, file }) => (
+                              
+                                key={file}
+                                href={`${base}/${file}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-teal-700 underline py-1"
+                              >
+                                {label}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+            {/* End Materials Folder */}
             {sortedFramesWeeks.map(week => {
               const group = framesGroups[week]
               const isOpen = expandedSets[week] === true
