@@ -505,7 +505,7 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
                         {isOpen && (
                           <div className="flex flex-col gap-1 px-3 py-2">
                             {links.map(({ label, file }) => (
-                              
+                              <a
                                 key={file}
                                 href={`${base}/${file}`}
                                 target="_blank"
