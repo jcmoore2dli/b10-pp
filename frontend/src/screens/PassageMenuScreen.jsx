@@ -500,7 +500,7 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
                           className="w-full flex items-center justify-between px-3 py-2 text-left bg-gray-50"
                         >
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#0d9488' }}>{w}</span>
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#4f46e5' }}>{w}</span>
                             <span className="text-xs text-gray-600">{wLabel}</span>
                           </div>
                           <span className="text-gray-400 text-xs">{isOpen ? '▲' : '▼'}</span>
