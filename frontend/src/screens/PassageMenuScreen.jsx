@@ -565,7 +565,7 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
                           { label: 'Perspective Integration Phrases',   file: 'B10PP_LF_Perspective_Integration_Phrases.html' },
                           { label: 'Grammar Stems — All Weeks',         file: 'B10PP_Grammar_Stems_All_Weeks.html' },
                         ].map(({ label, file }) => (
-                          
+                          <a
                             key={file}
                             href={`https://b10-practice-platform.web.app/b10_practice_platform/materials/LF/${file}`}
                             target="_blank"
