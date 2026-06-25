@@ -340,6 +340,8 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
   const [framesSectionOpen, setFramesSectionOpen] = useState(false)
   const [materialsSectionOpen, setMaterialsSectionOpen] = useState(false)
   const [expandedMaterialsWeek, setExpandedMaterialsWeek] = useState(null)
+  const [lfSectionOpen, setLfSectionOpen] = useState(false)
+  const [lfRefOpen, setLfRefOpen] = useState(false)
 
   if (passages.length === 0) {
     return (
@@ -468,7 +470,7 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
                 className="w-full flex items-center justify-between px-4 py-3 text-left"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#1e3a5f', color: 'white' }}>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#4f46e5', color: 'white' }}>
                     📁
                   </span>
                   <span className="text-xs text-gray-600 font-medium">Reference Materials</span>
@@ -489,6 +491,7 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
                       { label: 'Values, Heuristics & Bias Phrases',  file: `B10PP_${w}_Values_Heuristics_Bias_Phrases.html` },
                       { label: 'Synthesis & Judgment Phrases',       file: `B10PP_${w}_Synthesis_Judgment_Phrases.html` },
                       { label: 'Grammar Stems — All Weeks',          file: `B10PP_Grammar_Stems_All_Weeks.html` },
+                      { label: 'Frames Argument Builder',             file: `B10PP_Frames_Argument_Builder.html` },
                     ]
                     return (
                       <div key={w} className="rounded-lg border border-gray-100 overflow-hidden mt-1">
@@ -524,6 +527,78 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
               )}
             </div>
             {/* End Materials Folder */}
+            {/* Linguistic Flexibility Folder */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <button
+                onClick={() => setLfSectionOpen(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#d97706', color: 'white' }}>
+                    LF
+                  </span>
+                  <span className="text-xs text-gray-600 font-medium">Linguistic Flexibility</span>
+                </div>
+                <span className="text-gray-400 text-xs">{lfSectionOpen ? '▲' : '▼'}</span>
+              </button>
+              {lfSectionOpen && (
+                <div className="flex flex-col gap-1 px-3 pb-3">
+                  {/* LF Reference Materials */}
+                  <div className="rounded-lg border border-gray-100 overflow-hidden mt-1">
+                    <button
+                      onClick={() => setLfRefOpen(o => !o)}
+                      className="w-full flex items-center justify-between px-3 py-2 text-left bg-gray-50"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#4f46e5' }}>📁</span>
+                        <span className="text-xs text-gray-600">Reference Materials</span>
+                      </div>
+                      <span className="text-gray-400 text-xs">{lfRefOpen ? '▲' : '▼'}</span>
+                    </button>
+                    {lfRefOpen && (
+                      <div className="flex flex-col gap-1 px-3 py-2">
+                        {[
+                          { label: 'Frames Argument Builder',          file: 'B10PP_Frames_Argument_Builder.html' },
+                          { label: 'Word Form Flexibility Phrases',     file: 'B10PP_LF_Word_Form_Flexibility_Phrases.html' },
+                          { label: 'Structural Variation Phrases',      file: 'B10PP_LF_Structural_Variation_Phrases.html' },
+                          { label: 'Sentence Combining Phrases',        file: 'B10PP_LF_Sentence_Combining_Phrases.html' },
+                          { label: 'Perspective Integration Phrases',   file: 'B10PP_LF_Perspective_Integration_Phrases.html' },
+                          { label: 'Grammar Stems — All Weeks',         file: 'B10PP_Grammar_Stems_All_Weeks.html' },
+                        ].map(({ label, file }) => (
+                          
+                            key={file}
+                            href={`https://b10-practice-platform.web.app/b10_practice_platform/materials/LF/${file}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-teal-700 underline py-1"
+                          >
+                            {label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {/* LF Subcategory folders — placeholder for future passages */}
+                  {[
+                    { id: 'WFF', label: 'Word Form Flexibility' },
+                    { id: 'SV',  label: 'Structural Variation' },
+                    { id: 'SC',  label: 'Sentence Combining' },
+                    { id: 'PI',  label: 'Perspective Integration' },
+                  ].map(({ id, label }) => (
+                    <div key={id} className="rounded-lg border border-gray-100 overflow-hidden mt-1">
+                      <div className="w-full flex items-center justify-between px-3 py-2 bg-gray-50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#d97706' }}>{id}</span>
+                          <span className="text-xs text-gray-600">{label}</span>
+                        </div>
+                        <span className="text-xs text-gray-400 italic">coming soon</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* End Linguistic Flexibility Folder */}
             {sortedFramesWeeks.map(week => {
               const group = framesGroups[week]
               const isOpen = expandedSets[week] === true
