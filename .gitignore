@@ -11,3 +11,4 @@ hosting/
 .firebase/
 service-account.json
 key/
+.venv/
