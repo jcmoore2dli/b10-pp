@@ -341,6 +341,7 @@ function AssignedSetView({ passages, allPassages = [], onSelect, submissions = [
   const [framesSectionOpen, setFramesSectionOpen] = useState(false)
   const [materialsSectionOpen, setMaterialsSectionOpen] = useState(false)
   const [expandedMaterialsWeek, setExpandedMaterialsWeek] = useState(null)
+  const [coreMaterialsOpen, setCoreMaterialsOpen] = useState(false)
   const [lfSectionOpen, setLfSectionOpen] = useState(false)
   const [lfRefOpen, setLfRefOpen] = useState(false)
 
@@ -406,6 +407,40 @@ function AssignedSetView({ passages, allPassages = [], onSelect, submissions = [
             <span className="text-gray-400 text-xs">{bundleSectionOpen ? '▲' : '▼'}</span>
           </button>
           {bundleSectionOpen && <div className="flex flex-col gap-2">
+            {/* CORE Reference Materials */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <button
+                onClick={() => setCoreMaterialsOpen(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#1e3a5f', color: 'white' }}>📁</span>
+                  <span className="text-xs text-gray-600 font-medium">Reference Materials</span>
+                </div>
+                <span className="text-gray-400 text-xs">{coreMaterialsOpen ? '▲' : '▼'}</span>
+              </button>
+              {coreMaterialsOpen && (
+                <div className="flex flex-col gap-1 px-3 pb-3">
+                  {[
+                    { label: 'MTS 1 — Keyword Anchoring',             file: 'B10PP_MTS1_Keyword_Anchoring.html' },
+                    { label: 'MTS 2 — Chunking + Immediate Rehearsal', file: 'B10PP_MTS2_Chunking_Rehearsal.html' },
+                    { label: 'MTS 3 — Gist-First / Details-Second',   file: 'B10PP_MTS3_Gist_First.html' },
+                    { label: 'MTS 4 — Idea Skeleton',                 file: 'B10PP_MTS4_Idea_Skeleton.html' },
+                    { label: 'MTS 5 — Response Template',             file: 'B10PP_MTS5_Response_Template.html' },
+                  ].map(({ label, file }) => (
+                    <a
+                      key={file}
+                      href={`https://b10-practice-platform.web.app/b10_practice_platform/materials/CORE/${file}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-teal-700 underline py-1 px-1"
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
             {sortedSets.map(setNum => {
               const group = setGroups[setNum]
               const isExpanded = expandedSets[setNum] === true
