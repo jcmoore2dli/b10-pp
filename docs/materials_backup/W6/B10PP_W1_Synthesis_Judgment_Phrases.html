@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 — Synthesis &amp; Judgment · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-tensions   { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-priorities { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-judgment   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-tensions   .legend-label { color: #dc2626; }
+  .leg-priorities .legend-label { color: #d97706; }
+  .leg-judgment   .legend-label { color: #1e3a5f; }
+  .leg-tensions   .legend-desc { color: #dc2626; }
+  .leg-priorities .legend-desc { color: #d97706; }
+  .leg-judgment   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0f4f8; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #1e3a5f; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #1e3a5f; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #1e3a5f; background: #f0f4f8; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-tensions   .col-header { background: #dc2626; }
+  .col-priorities .col-header { background: #d97706; }
+  .col-judgment   .col-header { background: #1e3a5f; }
+  .col-tensions   { border: 1.5px solid #dc2626; }
+  .col-priorities { border: 1.5px solid #d97706; }
+  .col-judgment   { border: 1.5px solid #1e3a5f; }
+  .col-tensions   .col-body { background: #fef2f2; }
+  .col-priorities .col-body { background: #fffbeb; }
+  .col-judgment   .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W1 — Synthesis &amp; Judgment · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Bring competing considerations together and arrive at a reasoned, defensible conclusion. Phrases in each column are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.
+</div>
+<div class="legend">
+  <div class="legend-item leg-tensions"><span class="legend-label">Tensions</span><span class="legend-desc">The competing claims that must be addressed</span></div>
+  <div class="legend-item leg-priorities"><span class="legend-label">Priorities</span><span class="legend-desc">Which consideration wins and why</span></div>
+  <div class="legend-item leg-judgment"><span class="legend-label">Judgment</span><span class="legend-desc">The defensible conclusion that follows</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> while both positions have merit… · the stronger case rests on… · although X is a legitimate concern… · on balance… · weighing X against Y… · the evidence suggests… · neither position is without weakness, but… · a defensible position acknowledges… while concluding that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should students with disabilities always be fully included in mainstream classrooms?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">inclusion as a civil right vs. inclusion without support as a disservice to all students</div><div class="phrase">social integration benefits vs. risk of inadequate specialist support in mainstream settings</div><div class="phrase">legal mandates for inclusion vs. parental right to choose specialized placement</div><div class="phrase">long-term normalization of disability vs. short-term instructional disruption</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">civil rights framing is strong, but rights without resources produce hollow inclusion — support must accompany the mandate</div><div class="phrase">social integration benefits are real and documented, but they depend on adequate specialist staffing</div><div class="phrase">legal mandates appropriately set the floor; parental choice operates within that floor, not above it</div><div class="phrase">long-term normalization is the more durable social good; short-term disruption is manageable with investment</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, full inclusion with embedded specialist support is defensible — the civil rights argument holds when resources follow</div><div class="phrase">the stronger case is conditional: inclusion is defensible when support is adequate and harmful when it is not</div><div class="phrase">the defensible position honors the mandate while protecting the right to appropriate placement for students with complex needs</div><div class="phrase">long-term normalization outweighs short-term disruption — but only if the investment in support is genuine, not rhetorical</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to provide childcare for employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">employer obligation to support parental workforce participation vs. undue burden on small businesses</div><div class="phrase">gender equity benefit vs. unequal benefit perception among non-parent employees</div><div class="phrase">government mandate vs. market competition as mechanism for childcare provision</div><div class="phrase">workforce retention benefit to employers vs. compliance cost of uniform mandate</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">employer obligation is strongest for large employers; small business burden requires proportional threshold design</div><div class="phrase">gender equity benefit is structural and documented; non-parent perception is manageable through transparent communication</div><div class="phrase">mandate is appropriate where market competition has demonstrably failed to produce adequate childcare supply</div><div class="phrase">retention benefit accrues to employers — this is not purely a cost but a return on investment argument</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a mandate with employer size threshold is defensible — the equity benefit is real and the burden is addressable through design</div><div class="phrase">the stronger case acknowledges the non-parent perception issue while noting that structural equity interventions routinely appear unequal in the short term</div><div class="phrase">where markets have failed to produce adequate childcare, mandate is the appropriate corrective — the defensible position is conditional on market failure evidence</div><div class="phrase">the retention argument shifts this from pure cost to return on investment — employers who resist the mandate may be undervaluing the benefit</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should countries adopt a global minimum corporate tax?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">tax sovereignty of nations vs. collective action failure of race-to-the-bottom tax competition</div><div class="phrase">revenue recovery for high-tax nations vs. economic model disruption for tax havens</div><div class="phrase">enforcement feasibility vs. scale of profit-shifting harm</div><div class="phrase">benefit to developed nations vs. risk of developing nation exclusion from gains</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">sovereignty argument is legitimate but does not override the collective action failure — no single nation can solve race-to-the-bottom alone</div><div class="phrase">revenue recovery is documented and substantial; tax haven disruption is real but concentrated in a small number of economies</div><div class="phrase">enforcement is imperfect but improving — imperfect enforcement of a sound principle is preferable to no standard</div><div class="phrase">developing nation inclusion must be a design requirement, not an afterthought — the case for the minimum tax weakens if its benefits are captured only by wealthy nations</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a global minimum corporate tax is defensible — the collective action failure argument is stronger than the sovereignty objection</div><div class="phrase">the stronger case acknowledges tax haven disruption while noting that the disruption is concentrated and the benefit is diffuse</div><div class="phrase">the defensible position on enforcement is that imperfect compliance is better than no standard — the direction of travel matters</div><div class="phrase">the judgment depends on whether developing nations are included in the benefit design — if not, the equity case collapses</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments be required to consult citizens directly on major policy decisions?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">democratic legitimacy requires citizen voice vs. representative democracy was designed to buffer uninformed majorities</div><div class="phrase">consultation improves policy outcomes vs. consultation slows decision-making on urgent issues</div><div class="phrase">majority preference vs. minority rights protection</div><div class="phrase">citizen engagement value vs. manipulation of consultation by organized interests</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">legitimacy argument is strong for high-stakes, low-urgency decisions; urgency argument wins for security and climate emergencies</div><div class="phrase">consultation improves outcomes when participants are adequately informed — the quality of process determines whether the benefit materializes</div><div class="phrase">majority preference is legitimate within constitutional constraints; minority rights require structural protection regardless of consultation design</div><div class="phrase">manipulation risk is real but addressable through deliberative design — random citizen assemblies outperform open referenda on this dimension</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, structured deliberative consultation is defensible for major non-urgent decisions — the legitimacy benefit is real when process quality is high</div><div class="phrase">the stronger case is conditional: consultation improves outcomes when designed for informed deliberation, not when designed for maximum participation regardless of quality</div><div class="phrase">the defensible position protects minority rights through constitutional constraints on what consultation can decide, not by eliminating consultation</div><div class="phrase">the judgment on manipulation risk favors deliberative assemblies over open referenda — design determines whether the benefit or the risk dominates</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should mental health services be equally funded as physical health services?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">parity as a matter of justice vs. resource allocation should follow evidence of impact</div><div class="phrase">long-term cost savings from treatment vs. short-term fiscal cost of parity</div><div class="phrase">workforce shortage constrains impact of increased funding vs. funding is prerequisite for workforce expansion</div><div class="phrase">stigma reduction as downstream benefit vs. stigma as barrier to utilization even when access improves</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">justice argument is strong and does not require purely utilitarian justification — but evidence of impact strengthens rather than replaces it</div><div class="phrase">long-term cost savings are documented; short-term fiscal cost is real but one-time in character</div><div class="phrase">the chicken-and-egg argument favors funding first — workforce expansion follows investment, not the other way around</div><div class="phrase">stigma reduction is a downstream benefit that funding alone does not produce — public awareness investment must accompany service expansion</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, mental health parity is defensible on both justice and utilitarian grounds — the arguments reinforce rather than compete with each other</div><div class="phrase">the stronger case leads with the cost savings argument for fiscally skeptical audiences while retaining the justice argument as the foundational claim</div><div class="phrase">the defensible position on workforce shortage is to fund expansion and training pipelines simultaneously — sequential logic does not apply</div><div class="phrase">the judgment on stigma is that funding is necessary but not sufficient — parity legislation without public awareness investment underdelivers on its own goals</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should tech companies be required to pay taxes in every country they operate?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">digital presence as equivalent to physical presence for tax purposes vs. existing treaty frameworks should govern</div><div class="phrase">developing nation revenue access vs. double taxation risk for compliant companies</div><div class="phrase">enforcement feasibility vs. scale of profit-shifting harm</div><div class="phrase">consumer price impact of increased corporate tax vs. public revenue benefit</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">digital presence argument is more compelling than treaty framework defense — treaties were designed for a physical economy</div><div class="phrase">developing nation revenue access is the strongest equity argument; double taxation is addressable through careful design</div><div class="phrase">enforcement is imperfect but improving; the scale of documented profit-shifting harm makes imperfect enforcement worth pursuing</div><div class="phrase">consumer price impact is real but modest and distributable — public revenue benefit is substantial and concentrated in under-resourced governments</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, requiring digital companies to pay taxes where they earn revenue is defensible — the treaty framework argument defends the status quo, not a principle</div><div class="phrase">the stronger case leads with developing nation revenue access — it reframes the debate from corporate tax avoidance to global fiscal equity</div><div class="phrase">the defensible position on enforcement is that coordinated imperfect enforcement is better than uncoordinated non-enforcement</div><div class="phrase">the consumer price impact argument does not outweigh the public revenue benefit — the incidence is manageable and the benefit is substantial</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should countries be required to contribute to a global climate fund?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">historical emissions responsibility vs. current fiscal capacity as the basis for contribution</div><div class="phrase">mandatory contributions vs. voluntary pledges as the more reliable mechanism</div><div class="phrase">fund governance and transparency vs. political resistance in contributing nations</div><div class="phrase">adaptation funding for vulnerable nations vs. mitigation funding for emissions reduction</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">historical responsibility and current capacity are both legitimate bases — the strongest framework combines them proportionally</div><div class="phrase">voluntary pledges have a documented record of underfulfillment — mandatory contributions with enforcement are more reliable</div><div class="phrase">governance quality is a design requirement that determines whether the fund is worth defending — transparency must be built in from the start</div><div class="phrase">adaptation and mitigation serve different populations — the most vulnerable nations need adaptation most urgently</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, mandatory contributions with proportional formula are defensible — voluntary pledge history makes the case for mandate compelling</div><div class="phrase">the stronger case combines historical responsibility with current capacity — neither alone produces a defensible contribution formula</div><div class="phrase">the defensible position on governance is that transparency is non-negotiable — a poorly governed fund undermines the case for mandatory contributions</div><div class="phrase">the judgment on adaptation vs. mitigation favors adaptation prioritization for the most climate-vulnerable nations — their survival is the most urgent claim on fund resources</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments fund the preservation of indigenous cultural practices?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">historical dispossession creates ongoing obligation vs. cultural preservation is community responsibility</div><div class="phrase">self-determination requires resources vs. government funding creates dependency</div><div class="phrase">cultural diversity as public good vs. taxpayer resistance to funding specific group practices</div><div class="phrase">language revitalization as prerequisite for cultural transmission vs. material cultural practices as more immediately fundable</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">historical dispossession argument is strong and does not require purely utilitarian justification — but public good framing strengthens political viability</div><div class="phrase">self-determination requires resources — the dependency argument is strongest when funding comes with strings attached, not when community governance controls the funds</div><div class="phrase">cultural diversity as public good is the most defensible framing for general audiences — it shifts the question from special interest to shared benefit</div><div class="phrase">language is the primary transmission medium for most cultural knowledge — funding material practices without funding language revitalization is incomplete</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, government funding of indigenous cultural preservation is defensible when administered through community-controlled governance structures</div><div class="phrase">the stronger case separates the funding question from the governance question — funding is justified by historical obligation; governance determines whether it serves self-determination or undermines it</div><div class="phrase">the defensible framing is cultural diversity as public good, not special interest — it builds a broader coalition and reflects the genuine benefit</div><div class="phrase">the judgment on language vs. material practices is that language revitalization should be the priority — it is the infrastructure of cultural transmission, not one element among many</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Phrases are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.</p>
+  <div class="example">"While both the democratic legitimacy and federalism arguments have merit, the stronger case rests on legitimacy — small state protection already exists through Senate representation. On balance, a system that has produced three popular vote losers as president has a legitimacy deficit that federalism concerns cannot offset."</div>
+  <p>Three chunks, one number, one complete argument. <strong>The Priorities column is where ILR 3 performance lives</strong> — not identifying the tension, but explaining why one side carries more weight than the other.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

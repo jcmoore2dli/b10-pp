@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W4 — Causal Systems · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #7c3aed; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-trigger { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-mechanism { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-downstream { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-trigger .legend-label { color: #0d9488; }
+  .leg-mechanism .legend-label { color: #7c3aed; }
+  .leg-downstream .legend-label { color: #1e3a5f; }
+  .leg-trigger .legend-desc { color: #0d9488; }
+  .leg-mechanism .legend-desc { color: #7c3aed; }
+  .leg-downstream .legend-desc { color: #374151; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #7c3aed; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #7c3aed; background: #f5f3ff; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-trigger .col-header { background: #0d9488; }
+  .col-mechanism .col-header { background: #7c3aed; }
+  .col-downstream .col-header { background: #1e3a5f; }
+  .col-trigger { border: 1.5px solid #0d9488; }
+  .col-mechanism { border: 1.5px solid #7c3aed; }
+  .col-downstream { border: 1.5px solid #1e3a5f; }
+  .col-trigger .col-body { background: #f0fdfa; }
+  .col-mechanism .col-body { background: #f5f3ff; }
+  .col-downstream .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W4 — Causal Systems · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Trace the mechanism — show not just that something happens, but <em>how</em> and <em>why</em>, step by step. Pick one chunk from each column and connect them with causal language.
+</div>
+<div class="legend">
+  <div class="legend-item leg-trigger"><span class="legend-label">Trigger</span><span class="legend-desc">What initiates the chain</span></div>
+  <div class="legend-item leg-mechanism"><span class="legend-label">Mechanism</span><span class="legend-desc">How the effect is produced</span></div>
+  <div class="legend-item leg-downstream"><span class="legend-label">Downstream Effect</span><span class="legend-desc">What results at the end</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> this triggers… · as a direct result of… · the mechanism here is… · this in turn leads to… · the downstream consequence is… · what drives this effect is… · the causal chain runs from… to… · this amplifies / suppresses / accelerates…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should AI teachers replace human instructors in some schools?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">AI teacher deployment in selected school contexts</div><div class="phrase">human instructor replacement in specific subject areas</div><div class="phrase">AI-led instruction adopted for scalability in underserved regions</div><div class="phrase">hybrid AI-human teaching model implemented</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">personalized pacing adapts to individual student performance</div><div class="phrase">social-emotional learning is reduced without human presence</div><div class="phrase">teacher workforce contracts in AI-adopted schools</div><div class="phrase">student engagement patterns shift toward screen-based interaction</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">learning outcome variance increases across student types</div><div class="phrase">teacher profession undergoes structural redefinition</div><div class="phrase">equity gap widens if AI quality is unevenly distributed</div><div class="phrase">long-term reduction in human mentorship in education</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should personalized learning algorithms be mandatory in public education?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mandatory personalized learning algorithm deployment in public schools</div><div class="phrase">student performance data collection required at system level</div><div class="phrase">algorithmic content delivery replaces standardized curriculum pacing</div><div class="phrase">ed-tech vendor integration mandated by education policy</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">student learning paths diverge based on algorithmic assessment</div><div class="phrase">teacher role shifts from instruction to facilitation and monitoring</div><div class="phrase">student data privacy exposure increases at scale</div><div class="phrase">vendor dependency creates long-term curriculum lock-in</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">struggling students may improve with adaptive content</div><div class="phrase">advanced students risk under-challenge without human intervention</div><div class="phrase">data privacy risk accumulates across student population</div><div class="phrase">long-term deskilling of teaching profession in affected systems</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should cryptocurrency be regulated as a financial instrument?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">cryptocurrency classified and regulated as financial instrument</div><div class="phrase">exchange registration and compliance requirements enacted</div><div class="phrase">KYC and AML rules applied to crypto transactions</div><div class="phrase">tax reporting obligations extended to crypto gains</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">compliance costs increase for exchanges and large holders</div><div class="phrase">retail investor access narrows as smaller platforms exit</div><div class="phrase">money laundering and sanctions evasion via crypto becomes harder</div><div class="phrase">institutional investment in crypto increases with regulatory clarity</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">crypto market consolidates around compliant large players</div><div class="phrase">illegal finance through crypto decreases in regulated jurisdictions</div><div class="phrase">unbanked population loses access to alternative financial tools</div><div class="phrase">long-term legitimization of crypto as asset class accelerates</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should central banks adopt digital currencies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">central bank digital currency issued at national level</div><div class="phrase">CBDC made available directly to citizens via central bank</div><div class="phrase">digital cash replaces or supplements physical currency</div><div class="phrase">programmable money features embedded in CBDC design</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">commercial banks lose deposit base to CBDC accounts</div><div class="phrase">payment system infrastructure shifts toward central bank architecture</div><div class="phrase">monetary policy transmission becomes more direct and precise</div><div class="phrase">financial surveillance capacity of government increases significantly</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">financial inclusion improves for unbanked populations</div><div class="phrase">commercial banking sector faces structural disintermediation</div><div class="phrase">government control over individual spending becomes technically feasible</div><div class="phrase">long-term shift in relationship between citizens and monetary system</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement a digital identity system for all citizens?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">national digital identity system mandated for all citizens</div><div class="phrase">biometric or cryptographic ID issued to entire population</div><div class="phrase">government services access linked to digital identity verification</div><div class="phrase">digital ID required for financial, healthcare, and civic transactions</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">service delivery efficiency increases across government agencies</div><div class="phrase">identity fraud and document forgery become significantly harder</div><div class="phrase">citizens without documentation are excluded from the system</div><div class="phrase">surveillance infrastructure expands alongside service delivery</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">government service access improves for enrolled citizens</div><div class="phrase">marginalized populations face deeper exclusion if enrollment barriers exist</div><div class="phrase">authoritarian misuse risk increases as surveillance capacity grows</div><div class="phrase">long-term dependency on digital infrastructure for basic civic access</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments fund research into life extension technologies?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">government funding allocated to life extension research programs</div><div class="phrase">biogerontology and longevity science receive public investment</div><div class="phrase">age-related disease research prioritized in national health budget</div><div class="phrase">life extension technology development treated as public good</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">research pace accelerates with public funding injection</div><div class="phrase">breakthrough treatments emerge for age-related conditions</div><div class="phrase">life expectancy increases in populations with access to outcomes</div><div class="phrase">pension and retirement system assumptions become outdated</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">healthy productive lifespan extends for some populations</div><div class="phrase">retirement and pension systems face structural insolvency</div><div class="phrase">global inequality deepens if access is limited to wealthy nations</div><div class="phrase">long-term population dynamics shift with extended lifespans</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should there be a global moratorium on autonomous weapons development?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">global moratorium on autonomous weapons development agreed</div><div class="phrase">binding international ban on lethal autonomous systems enacted</div><div class="phrase">AI weapons development halted under international law</div><div class="phrase">existing autonomous weapons systems subject to decommissioning</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">nations with advanced AI lose autonomous weapons investment</div><div class="phrase">military doctrine reverts to human-controlled engagement</div><div class="phrase">non-signatory nations gain asymmetric autonomous weapons advantage</div><div class="phrase">defense industry redirects investment toward non-lethal AI applications</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">risk of algorithmic targeting error in conflict is reduced</div><div class="phrase">geopolitical balance shifts toward nations outside the moratorium</div><div class="phrase">international humanitarian law gap on autonomous systems remains unresolved</div><div class="phrase">long-term precedent for AI weapons governance is established or undermined</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be a global ban on nuclear weapons?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">global nuclear weapons ban treaty enacted and ratified</div><div class="phrase">all nuclear states commit to verified disarmament</div><div class="phrase">nuclear weapons development and possession criminalized under international law</div><div class="phrase">inspection and verification regime established</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">nuclear deterrence framework collapses among signatories</div><div class="phrase">disarmament process creates asymmetric vulnerability during transition</div><div class="phrase">defense budgets freed from nuclear maintenance are redirected</div><div class="phrase">non-nuclear states gain relative strategic parity with former nuclear powers</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">existential risk of nuclear exchange decreases among signatories</div><div class="phrase">breakout risk by non-signatories increases geopolitical instability</div><div class="phrase">conventional arms competition intensifies to fill deterrence gap</div><div class="phrase">long-term shift in basis of great power strategic competition</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with causal language.</p>
+  <div class="example">"Mandatory curriculum integration triggers a process in which students develop habitual source-checking behavior — and the downstream effect, over a generation, is a population significantly more resistant to foreign disinformation campaigns."</div>
+  <p>Three chunks. Two connectors. One complete causal argument. <strong>Do not skip the Mechanism column.</strong> Going straight from trigger to effect is the most common weakness in Causal Systems responses.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  // Auto-expand if URL hash matches a question id
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

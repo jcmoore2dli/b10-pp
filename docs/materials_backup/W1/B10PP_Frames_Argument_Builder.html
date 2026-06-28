@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Frames Practice — Argument Builder Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 14px;
+    padding: 16px;
+    padding-bottom: 40px;
+  }
+
+  header {
+    background: #1e3a5f;
+    color: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  header h1 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  header p { font-size: 11px; color: #93c5fd; }
+
+  .intro {
+    background: white;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: #374151;
+    line-height: 1.6;
+    border-left: 4px solid #1e3a5f;
+  }
+  .intro strong { color: #1e3a5f; }
+
+  .frames { display: flex; flex-direction: column; gap: 10px; }
+
+  .frame {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .frame-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .frame-week {
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    padding: 2px 7px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+
+  .frame-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .frame-body { padding: 10px 12px 12px; }
+
+  .labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .label-cell {
+    border-radius: 6px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+
+  .label-name {
+    font-size: 11px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .label-question {
+    font-size: 10.5px;
+    line-height: 1.45;
+    font-style: italic;
+    color: #374151;
+  }
+
+  /* Frame color schemes */
+  /* W1 Scale & Stakeholder — teal */
+  .f1 .frame-header { background: #0d9488; }
+  .f1 .lc1 { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .f1 .lc1 .label-name { color: #0d9488; }
+  .f1 .lc2 { background: #fffbeb; border: 1.5px solid #d97706; }
+  .f1 .lc2 .label-name { color: #d97706; }
+  .f1 .lc3 { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .f1 .lc3 .label-name { color: #1e3a5f; }
+
+  /* W2 Trade-offs — amber */
+  .f2 .frame-header { background: #d97706; }
+  .f2 .lc1 { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .f2 .lc1 .label-name { color: #16a34a; }
+  .f2 .lc2 { background: #fffbeb; border: 1.5px solid #d97706; }
+  .f2 .lc2 .label-name { color: #d97706; }
+  .f2 .lc3 { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .f2 .lc3 .label-name { color: #dc2626; }
+
+  /* W3 Causal Systems — purple */
+  .f3 .frame-header { background: #7c3aed; }
+  .f3 .lc1 { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .f3 .lc1 .label-name { color: #0d9488; }
+  .f3 .lc2 { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .f3 .lc2 .label-name { color: #7c3aed; }
+  .f3 .lc3 { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .f3 .lc3 .label-name { color: #1e3a5f; }
+
+  /* W4 Hypothetical — green */
+  .f4 .frame-header { background: #16a34a; }
+  .f4 .lc1 { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .f4 .lc1 .label-name { color: #16a34a; }
+  .f4 .lc2 { background: #fffbeb; border: 1.5px solid #d97706; }
+  .f4 .lc2 .label-name { color: #d97706; }
+  .f4 .lc3 { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .f4 .lc3 .label-name { color: #7c3aed; }
+
+  /* W5 Values — red */
+  .f5 .frame-header { background: #dc2626; }
+  .f5 .lc1 { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .f5 .lc1 .label-name { color: #dc2626; }
+  .f5 .lc2 { background: #fffbeb; border: 1.5px solid #d97706; }
+  .f5 .lc2 .label-name { color: #d97706; }
+  .f5 .lc3 { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .f5 .lc3 .label-name { color: #1e3a5f; }
+
+  /* W6 Synthesis — navy */
+  .f6 .frame-header { background: #1e3a5f; }
+  .f6 .lc1 { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .f6 .lc1 .label-name { color: #dc2626; }
+  .f6 .lc2 { background: #fffbeb; border: 1.5px solid #d97706; }
+  .f6 .lc2 .label-name { color: #d97706; }
+  .f6 .lc3 { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .f6 .lc3 .label-name { color: #1e3a5f; }
+
+  .reminder {
+    margin-top: 14px;
+    background: #1e3a5f;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 11px;
+    color: #e0e7ef;
+    line-height: 1.6;
+    text-align: center;
+  }
+  .reminder strong { color: white; }
+
+  @media (min-width: 640px) {
+    body { max-width: 680px; margin: 0 auto; padding: 24px; }
+    header h1 { font-size: 18px; }
+    .label-question { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Frames Practice — Argument Builder</h1>
+  <p>B10 Practice Platform · Use before you record · Ask each question in sequence</p>
+</header>
+
+<div class="intro">
+  <strong>How to use this sheet:</strong> Before you record, identify your frame for this passage. Work through the three questions in order — left to right. Your response needs to answer all three. A response that skips the middle question is incomplete.
+</div>
+
+<div class="frames">
+
+  <!-- W1 Scale & Stakeholder -->
+  <div class="frame f1">
+    <div class="frame-header">
+      <span class="frame-week">W1</span>
+      <span class="frame-title">Scale &amp; Stakeholder</span>
+    </div>
+    <div class="frame-body">
+      <div class="labels">
+        <div class="label-cell lc1">
+          <span class="label-name">Stakeholder</span>
+          <span class="label-question">Who is affected and at what level?</span>
+        </div>
+        <div class="label-cell lc2">
+          <span class="label-name">Impact</span>
+          <span class="label-question">What specifically happens to them?</span>
+        </div>
+        <div class="label-cell lc3">
+          <span class="label-name">Scale Consideration</span>
+          <span class="label-question">Why does operating at that level change the argument?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- W2 Trade-offs & Constraints -->
+  <div class="frame f2">
+    <div class="frame-header">
+      <span class="frame-week">W2</span>
+      <span class="frame-title">Trade-offs &amp; Constraints</span>
+    </div>
+    <div class="frame-body">
+      <div class="labels">
+        <div class="label-cell lc1">
+          <span class="label-name">Benefit</span>
+          <span class="label-question">What does the policy achieve?</span>
+        </div>
+        <div class="label-cell lc2">
+          <span class="label-name">Trade-off</span>
+          <span class="label-question">What competing good is sacrificed?</span>
+        </div>
+        <div class="label-cell lc3">
+          <span class="label-name">Constraint</span>
+          <span class="label-question">Why can't the trade-off simply be avoided?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- W3 Causal Systems -->
+  <div class="frame f3">
+    <div class="frame-header">
+      <span class="frame-week">W3</span>
+      <span class="frame-title">Causal Systems</span>
+    </div>
+    <div class="frame-body">
+      <div class="labels">
+        <div class="label-cell lc1">
+          <span class="label-name">Trigger</span>
+          <span class="label-question">What sets the causal chain in motion?</span>
+        </div>
+        <div class="label-cell lc2">
+          <span class="label-name">Mechanism</span>
+          <span class="label-question">How does the effect actually get produced?</span>
+        </div>
+        <div class="label-cell lc3">
+          <span class="label-name">Downstream Effect</span>
+          <span class="label-question">What results at the end of the chain?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- W4 Hypothetical & Conditional -->
+  <div class="frame f4">
+    <div class="frame-header">
+      <span class="frame-week">W4</span>
+      <span class="frame-title">Hypothetical &amp; Conditional</span>
+    </div>
+    <div class="frame-body">
+      <div class="labels">
+        <div class="label-cell lc1">
+          <span class="label-name">Condition</span>
+          <span class="label-question">What condition must hold for this scenario to follow?</span>
+        </div>
+        <div class="label-cell lc2">
+          <span class="label-name">Projected Outcome</span>
+          <span class="label-question">What would likely result?</span>
+        </div>
+        <div class="label-cell lc3">
+          <span class="label-name">Extended Scenario</span>
+          <span class="label-question">And if that outcome holds, then what?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- W5 Values, Heuristics & Bias -->
+  <div class="frame f5">
+    <div class="frame-header">
+      <span class="frame-week">W5</span>
+      <span class="frame-title">Values, Heuristics &amp; Bias</span>
+    </div>
+    <div class="frame-body">
+      <div class="labels">
+        <div class="label-cell lc1">
+          <span class="label-name">Value</span>
+          <span class="label-question">What does this stakeholder believe is important?</span>
+        </div>
+        <div class="label-cell lc2">
+          <span class="label-name">Assumption</span>
+          <span class="label-question">What must be true for that value to justify their position?</span>
+        </div>
+        <div class="label-cell lc3">
+          <span class="label-name">Competing Framework</span>
+          <span class="label-question">What does a stakeholder on the other side believe instead?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- W6 Synthesis & Judgment -->
+  <div class="frame f6">
+    <div class="frame-header">
+      <span class="frame-week">W6</span>
+      <span class="frame-title">Synthesis &amp; Judgment</span>
+    </div>
+    <div class="frame-body">
+      <div class="labels">
+        <div class="label-cell lc1">
+          <span class="label-name">Tensions</span>
+          <span class="label-question">What competing claims must be addressed?</span>
+        </div>
+        <div class="label-cell lc2">
+          <span class="label-name">Priorities</span>
+          <span class="label-question">Which consideration carries more weight and why?</span>
+        </div>
+        <div class="label-cell lc3">
+          <span class="label-name">Judgment</span>
+          <span class="label-question">What is the most defensible conclusion?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="reminder">
+  <strong>Remember:</strong> The middle column is where most responses fall short. Naming a trade-off, a mechanism, a projected outcome, an assumption, or a priority — and explaining <em>why</em> — is what separates an ILR 2+ response from an ILR 3 one.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Form Flexibility · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-base    { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-family  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-context { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-base    .legend-label { color: #0d9488; }
+  .leg-family  .legend-label { color: #7c3aed; }
+  .leg-context .legend-label { color: #d97706; }
+  .leg-base    .legend-desc { color: #0d9488; }
+  .leg-family  .legend-desc { color: #7c3aed; }
+  .leg-context .legend-desc { color: #d97706; }
+
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-base    .col-header { background: #0d9488; }
+  .col-family  .col-header { background: #7c3aed; }
+  .col-context .col-header { background: #d97706; }
+  .col-base    { border: 1.5px solid #0d9488; }
+  .col-family  { border: 1.5px solid #7c3aed; }
+  .col-context { border: 1.5px solid #d97706; }
+  .col-base    .col-body { background: #f0fdfa; }
+  .col-family  .col-body { background: #f5f3ff; }
+  .col-context .col-body { background: #fffbeb; }
+  .col-body { padding: 8px; }
+
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+
+  /* Base form gets bold non-italic treatment */
+  .col-base .phrase { font-style: normal; font-weight: 600; color: #0d9488; }
+  .col-base .phrase::before { color: #0d9488; }
+
+  /* Word family gets part-of-speech tag styling */
+  .pos { font-size: 9px; font-weight: 700; color: #7c3aed; background: #ede9fe; border-radius: 3px; padding: 1px 4px; margin-left: 4px; font-style: normal; vertical-align: middle; }
+
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+
+  .close-btn-bar { background: #1e3a5f; padding: 8px 16px; display: flex; justify-content: flex-end; }
+  .close-btn { background: rgba(255,255,255,0.15); border: none; color: white; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="close-btn-bar">
+  <button class="close-btn" onclick="window.close()">✕ Close</button>
+</div>
+
+<header>
+  <h1>Word Form Flexibility · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Linguistic Flexibility · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this reference:</strong> Word Form Flexibility is the ability to deploy multiple forms of the same root word — noun, verb, adjective, adverb — within a single response. Instead of repeating <em>regulate</em> four times, a strong response uses <em>regulate, regulation, regulatory,</em> and <em>deregulated</em> in context. The collocated phrases in the third column show each form as it actually appears in academic spoken argument.
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-base">
+    <span class="legend-label">Base Form</span>
+    <span class="legend-desc">The root word anchoring the lexical family</span>
+  </div>
+  <div class="legend-item leg-family">
+    <span class="legend-label">Word Family</span>
+    <span class="legend-desc">Noun, verb, adjective, and adverb variants</span>
+  </div>
+  <div class="legend-item leg-context">
+    <span class="legend-label">Collocated Phrases</span>
+    <span class="legend-desc">Each form used in a 3–5 word academic phrase</span>
+  </div>
+</div>
+
+<div class="connectors">
+  <strong>Key move:</strong> Vary the form, not just the word. Instead of "the regulation of X… regulating X… to regulate X" — try "the <em>regulatory</em> framework… <em>deregulated</em> markets… <em>regulation</em> alone cannot… governments that <em>regulate</em>…" Same root, four different grammatical roles, one response.
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should vocational education be prioritized over academic preparation?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">prioritize</div>
+        <div class="phrase">prepare</div>
+        <div class="phrase">vocation</div>
+        <div class="phrase">qualify</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">priority <span class="pos">n</span> · prioritization <span class="pos">n</span> · prioritized <span class="pos">adj</span></div>
+        <div class="phrase">preparation <span class="pos">n</span> · preparatory <span class="pos">adj</span> · prepared <span class="pos">adj</span></div>
+        <div class="phrase">vocational <span class="pos">adj</span> · vocationally <span class="pos">adv</span></div>
+        <div class="phrase">qualification <span class="pos">n</span> · qualified <span class="pos">adj</span> · unqualified <span class="pos">adj</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">the prioritization of skilled trades</div>
+        <div class="phrase">preparatory academic coursework</div>
+        <div class="phrase">vocational training pathways</div>
+        <div class="phrase">formally qualified tradespeople</div>
+        <div class="phrase">vocationally oriented curriculum</div>
+        <div class="phrase">inadequate preparation for employment</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should media ownership be regulated to prevent monopolies?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">regulate</div>
+        <div class="phrase">own</div>
+        <div class="phrase">monopoly</div>
+        <div class="phrase">concentrate</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">regulation <span class="pos">n</span> · regulatory <span class="pos">adj</span> · deregulate <span class="pos">v</span> · unregulated <span class="pos">adj</span></div>
+        <div class="phrase">ownership <span class="pos">n</span> · owner <span class="pos">n</span> · owned <span class="pos">adj</span> · publicly-owned <span class="pos">adj</span></div>
+        <div class="phrase">monopolize <span class="pos">v</span> · monopolistic <span class="pos">adj</span> · monopolization <span class="pos">n</span></div>
+        <div class="phrase">concentration <span class="pos">n</span> · concentrated <span class="pos">adj</span> · overconcentration <span class="pos">n</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">regulatory oversight of media</div>
+        <div class="phrase">deregulated broadcasting markets</div>
+        <div class="phrase">concentrated media ownership</div>
+        <div class="phrase">monopolistic control of content</div>
+        <div class="phrase">publicly-owned broadcasting</div>
+        <div class="phrase">the monopolization of information</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should online platforms be legally responsible for misinformation?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">responsible</div>
+        <div class="phrase">inform</div>
+        <div class="phrase">legal</div>
+        <div class="phrase">moderate</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">responsibility <span class="pos">n</span> · irresponsible <span class="pos">adj</span> · accountability <span class="pos">n</span></div>
+        <div class="phrase">misinformation <span class="pos">n</span> · disinformation <span class="pos">n</span> · informed <span class="pos">adj</span> · uninformed <span class="pos">adj</span></div>
+        <div class="phrase">legality <span class="pos">n</span> · legally <span class="pos">adv</span> · legislate <span class="pos">v</span> · legislation <span class="pos">n</span></div>
+        <div class="phrase">moderation <span class="pos">n</span> · moderator <span class="pos">n</span> · unmoderated <span class="pos">adj</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">legal responsibility for content</div>
+        <div class="phrase">the spread of disinformation</div>
+        <div class="phrase">unmoderated platform content</div>
+        <div class="phrase">legislate platform accountability</div>
+        <div class="phrase">irresponsible content amplification</div>
+        <div class="phrase">poorly informed public discourse</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments ban fossil fuel subsidies?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">subsidize</div>
+        <div class="phrase">depend</div>
+        <div class="phrase">sustain</div>
+        <div class="phrase">transition</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">subsidy <span class="pos">n</span> · subsidized <span class="pos">adj</span> · unsubsidized <span class="pos">adj</span></div>
+        <div class="phrase">dependence <span class="pos">n</span> · dependent <span class="pos">adj</span> · independent <span class="pos">adj</span> · overdependence <span class="pos">n</span></div>
+        <div class="phrase">sustainability <span class="pos">n</span> · sustainable <span class="pos">adj</span> · unsustainable <span class="pos">adj</span></div>
+        <div class="phrase">transitional <span class="pos">adj</span> · transitioning <span class="pos">v</span> · energy transition <span class="pos">n</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">fossil fuel subsidy removal</div>
+        <div class="phrase">overdependence on carbon energy</div>
+        <div class="phrase">subsidized energy prices</div>
+        <div class="phrase">unsustainable energy policy</div>
+        <div class="phrase">transitional support for workers</div>
+        <div class="phrase">independent of fossil fuel imports</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should prescription drug prices be capped?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">prescribe</div>
+        <div class="phrase">afford</div>
+        <div class="phrase">innovate</div>
+        <div class="phrase">access</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">prescription <span class="pos">n</span> · prescribed <span class="pos">adj</span> · prescriptive <span class="pos">adj</span></div>
+        <div class="phrase">affordability <span class="pos">n</span> · affordable <span class="pos">adj</span> · unaffordable <span class="pos">adj</span></div>
+        <div class="phrase">innovation <span class="pos">n</span> · innovative <span class="pos">adj</span> · innovator <span class="pos">n</span></div>
+        <div class="phrase">accessible <span class="pos">adj</span> · accessibility <span class="pos">n</span> · inaccessible <span class="pos">adj</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">prescription drug affordability</div>
+        <div class="phrase">inaccessible to low-income patients</div>
+        <div class="phrase">pharmaceutical innovation incentives</div>
+        <div class="phrase">prescribed medication costs</div>
+        <div class="phrase">unaffordable treatment options</div>
+        <div class="phrase">accessibility of essential medicines</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should inheritance taxes be increased?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">inherit</div>
+        <div class="phrase">distribute</div>
+        <div class="phrase">accumulate</div>
+        <div class="phrase">tax</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">inheritance <span class="pos">n</span> · inherited <span class="pos">adj</span> · inheritor <span class="pos">n</span></div>
+        <div class="phrase">distribution <span class="pos">n</span> · redistribute <span class="pos">v</span> · redistribution <span class="pos">n</span> · distributive <span class="pos">adj</span></div>
+        <div class="phrase">accumulation <span class="pos">n</span> · accumulated <span class="pos">adj</span> · accumulative <span class="pos">adj</span></div>
+        <div class="phrase">taxation <span class="pos">n</span> · taxable <span class="pos">adj</span> · untaxed <span class="pos">adj</span> · tax-exempt <span class="pos">adj</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">inherited wealth concentration</div>
+        <div class="phrase">redistributive tax policy</div>
+        <div class="phrase">accumulated intergenerational assets</div>
+        <div class="phrase">untaxed estate transfers</div>
+        <div class="phrase">wealth redistribution mechanisms</div>
+        <div class="phrase">taxable estate threshold</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should biometric surveillance in public spaces be restricted?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">surveil</div>
+        <div class="phrase">identify</div>
+        <div class="phrase">restrict</div>
+        <div class="phrase">private</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">surveillance <span class="pos">n</span> · surveilled <span class="pos">adj</span> · surveilling <span class="pos">v</span></div>
+        <div class="phrase">identification <span class="pos">n</span> · identity <span class="pos">n</span> · identifiable <span class="pos">adj</span> · unidentifiable <span class="pos">adj</span></div>
+        <div class="phrase">restriction <span class="pos">n</span> · restrictive <span class="pos">adj</span> · unrestricted <span class="pos">adj</span></div>
+        <div class="phrase">privacy <span class="pos">n</span> · privatize <span class="pos">v</span> · privately <span class="pos">adv</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">mass surveillance infrastructure</div>
+        <div class="phrase">identifiable biometric data</div>
+        <div class="phrase">unrestricted facial recognition</div>
+        <div class="phrase">privacy rights in public space</div>
+        <div class="phrase">surveilled urban environments</div>
+        <div class="phrase">restrictive data collection policy</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should algorithms that maximize engagement be regulated?</span>
+      </div>
+      <span class="q-tag">SOC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-base"><div class="col-header">Base Form</div><div class="col-body">
+        <div class="phrase">regulate</div>
+        <div class="phrase">engage</div>
+        <div class="phrase">manipulate</div>
+        <div class="phrase">maximize</div>
+      </div></div>
+      <div class="col col-family"><div class="col-header">Word Family</div><div class="col-body">
+        <div class="phrase">regulation <span class="pos">n</span> · regulatory <span class="pos">adj</span> · deregulate <span class="pos">v</span> · unregulated <span class="pos">adj</span></div>
+        <div class="phrase">engagement <span class="pos">n</span> · engaging <span class="pos">adj</span> · disengaged <span class="pos">adj</span> · over-engagement <span class="pos">n</span></div>
+        <div class="phrase">manipulation <span class="pos">n</span> · manipulative <span class="pos">adj</span> · manipulated <span class="pos">adj</span></div>
+        <div class="phrase">maximization <span class="pos">n</span> · maximized <span class="pos">adj</span> · maximum <span class="pos">adj</span></div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">Collocated Phrases</div><div class="col-body">
+        <div class="phrase">unregulated engagement optimization</div>
+        <div class="phrase">manipulative algorithmic design</div>
+        <div class="phrase">engagement maximization strategy</div>
+        <div class="phrase">regulatory framework for algorithms</div>
+        <div class="phrase">disengaged from civic discourse</div>
+        <div class="phrase">deregulated platform environment</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. The goal is not to use every form — it is to avoid repeating the same form. Before you record, identify 2–3 base forms central to your argument, then plan which grammatical role each will play in your response.</p>
+  <div class="example">"The <em>regulatory</em> framework for media ownership has failed to prevent <em>monopolization</em>. Without stronger oversight, <em>deregulated</em> markets will continue to concentrate editorial power — and governments that choose not to <em>regulate</em> are making an active choice, not a neutral one."</div>
+  <p>One base form — <strong>regulate</strong> — used in four grammatical roles in four sentences. That is Word Form Flexibility at ILR 2+/3.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+
+</body>
+</html>

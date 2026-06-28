@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 — Causal Systems · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 15px;
+    padding-bottom: 40px;
+  }
+
+  header {
+    background: #1e3a5f;
+    color: white;
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  header h1 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  header p {
+    font-size: 12px;
+    color: #93c5fd;
+    margin-top: 2px;
+  }
+
+  .frame-box {
+    background: white;
+    margin: 12px;
+    border-radius: 12px;
+    padding: 14px;
+    border-left: 4px solid #7c3aed;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #374151;
+  }
+
+  .frame-box strong {
+    color: #1e3a5f;
+  }
+
+  /* Category legend */
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin: 0 12px 4px;
+  }
+
+  .legend-item {
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .legend-item .legend-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .legend-item .legend-desc {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .leg-trigger    { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-mechanism  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-downstream { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+
+  .leg-trigger    .legend-label { color: #0d9488; }
+  .leg-mechanism  .legend-label { color: #7c3aed; }
+  .leg-downstream .legend-label { color: #1e3a5f; }
+
+  .leg-trigger    .legend-desc { color: #0d9488; }
+  .leg-mechanism  .legend-desc { color: #7c3aed; }
+  .leg-downstream .legend-desc { color: #374151; }
+
+  .connectors {
+    margin: 8px 12px 12px;
+    background: #fffbeb;
+    border: 1px solid #d97706;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #374151;
+    line-height: 1.6;
+  }
+
+  .connectors strong {
+    color: #d97706;
+  }
+
+  /* Question accordion */
+  .questions { margin: 0 12px; }
+
+  .question {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .question-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 14px;
+    cursor: pointer;
+    gap: 10px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .question-header:active {
+    background: #f9fafb;
+  }
+
+  .q-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .q-num {
+    background: #7c3aed;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .q-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e3a5f;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .q-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: #7c3aed;
+    background: #f5f3ff;
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-chevron {
+    font-size: 12px;
+    color: #9ca3af;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .question.open .q-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Phrase columns */
+  .phrase-panel {
+    display: none;
+    padding: 0 12px 14px;
+  }
+
+  .question.open .phrase-panel {
+    display: block;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
+    .columns {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .col {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .col-header {
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    padding: 6px 8px;
+    text-align: center;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .col-trigger    .col-header { background: #0d9488; }
+  .col-mechanism  .col-header { background: #7c3aed; }
+  .col-downstream .col-header { background: #1e3a5f; }
+
+  .col-trigger    { border: 1.5px solid #0d9488; }
+  .col-mechanism  { border: 1.5px solid #7c3aed; }
+  .col-downstream { border: 1.5px solid #1e3a5f; }
+
+  .col-trigger    .col-body { background: #f0fdfa; }
+  .col-mechanism  .col-body { background: #f5f3ff; }
+  .col-downstream .col-body { background: #f0f4f8; }
+
+  .col-body {
+    padding: 8px;
+  }
+
+  .phrase {
+    font-size: 12px;
+    font-style: italic;
+    color: #374151;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .phrase:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .phrase::before {
+    content: '›';
+    flex-shrink: 0;
+    font-style: normal;
+    color: #9ca3af;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  /* How to use */
+  .how-to {
+    margin: 16px 12px 0;
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    border-left: 4px solid #1e3a5f;
+  }
+
+  .how-to h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 8px;
+  }
+
+  .how-to p {
+    font-size: 12px;
+    color: #374151;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .example {
+    background: #f0f4f8;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    font-style: italic;
+    color: #1e3a5f;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .warning {
+    font-size: 11px;
+    font-weight: 700;
+    color: #dc2626;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>W3 — Causal Systems · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this frame:</strong> Trace the mechanism — show not just that something happens, but <em>how</em> and <em>why</em>, step by step. Pick one chunk from each column and connect them with causal language.
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-trigger">
+    <span class="legend-label">Trigger</span>
+    <span class="legend-desc">What initiates the chain</span>
+  </div>
+  <div class="legend-item leg-mechanism">
+    <span class="legend-label">Mechanism</span>
+    <span class="legend-desc">How the effect is produced</span>
+  </div>
+  <div class="legend-item leg-downstream">
+    <span class="legend-label">Downstream Effect</span>
+    <span class="legend-desc">What results at the end</span>
+  </div>
+</div>
+
+<div class="connectors">
+  <strong>Key connectors:</strong>
+  this triggers… · as a direct result of… · the mechanism here is… · this in turn leads to… · the downstream consequence is… · what drives this effect is… · the causal chain runs from… to… · this amplifies / suppresses / accelerates…
+</div>
+
+<div class="questions">
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should schools integrate media literacy education into their curricula?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">mandatory curriculum integration</div>
+            <div class="phrase">structured source evaluation practice</div>
+            <div class="phrase">systematic misinformation exposure training</div>
+            <div class="phrase">critical reading skills embedded in instruction</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">students develop habitual source checking</div>
+            <div class="phrase">false content recognition improves over time</div>
+            <div class="phrase">reduced emotional susceptibility to viral content</div>
+            <div class="phrase">critical evaluation becomes automatic</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">lower misinformation spread at population level</div>
+            <div class="phrase">stronger informed citizenry over a generation</div>
+            <div class="phrase">reduced effectiveness of disinformation campaigns</div>
+            <div class="phrase">healthier democratic discourse downstream</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the gig economy be more strictly regulated?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">reclassification of gig workers as employees</div>
+            <div class="phrase">mandatory benefit provision by platforms</div>
+            <div class="phrase">stricter labor law enforcement in gig sector</div>
+            <div class="phrase">minimum wage floor applied to gig earnings</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">platform operating costs rise significantly</div>
+            <div class="phrase">some platforms reduce workforce or exit markets</div>
+            <div class="phrase">remaining workers gain benefits but lose flexibility</div>
+            <div class="phrase">traditional employers face reduced cost advantage</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">gig labor market contracts in regulated jurisdictions</div>
+            <div class="phrase">worker protection improves for those who remain</div>
+            <div class="phrase">informal labor market expands as platforms exit</div>
+            <div class="phrase">long-term shift in contingent work structure</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should there be stronger antitrust laws to break up monopolies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">forced divestiture of dominant market players</div>
+            <div class="phrase">lowered barriers to market entry by regulation</div>
+            <div class="phrase">aggressive merger review and blocking</div>
+            <div class="phrase">prohibition of anti-competitive pricing practices</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">new competitors enter previously closed markets</div>
+            <div class="phrase">incumbents can no longer exclude rivals</div>
+            <div class="phrase">consumer choice expands as price competition increases</div>
+            <div class="phrase">innovation incentives shift to challengers</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">lower consumer prices over medium term</div>
+            <div class="phrase">accelerated product and service innovation</div>
+            <div class="phrase">reduced concentration of economic power</div>
+            <div class="phrase">stronger small business ecosystem downstream</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments implement stricter regulations on lobbying?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">mandatory lobbying disclosure requirements</div>
+            <div class="phrase">cooling-off periods for former officials</div>
+            <div class="phrase">caps on lobbying expenditure by sector</div>
+            <div class="phrase">public registry of lobbying contacts</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">corporate access to legislators is reduced</div>
+            <div class="phrase">cost of influencing legislation increases</div>
+            <div class="phrase">public interest groups gain relative influence</div>
+            <div class="phrase">policy outcomes shift toward broader constituencies</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">reduced regulatory capture over time</div>
+            <div class="phrase">improved public trust in legislative process</div>
+            <div class="phrase">more equitable distribution of policy attention</div>
+            <div class="phrase">long-term reduction in perception of corruption</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement sugar taxes on processed foods?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">price increase on high-sugar processed foods</div>
+            <div class="phrase">tax applied at point of manufacture or import</div>
+            <div class="phrase">revenue directed to public health programs</div>
+            <div class="phrase">industry reformulation incentive created by tax</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">consumer demand for taxed products decreases</div>
+            <div class="phrase">manufacturers reformulate to reduce sugar content</div>
+            <div class="phrase">lower-income consumers bear disproportionate burden</div>
+            <div class="phrase">substitution toward alternative products occurs</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">reduced average sugar consumption at population level</div>
+            <div class="phrase">lower obesity and type 2 diabetes rates over time</div>
+            <div class="phrase">reduced long-term healthcare system burden</div>
+            <div class="phrase">food environment shifts toward lower-sugar options</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the use of social media algorithms?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">algorithmic transparency requirements imposed</div>
+            <div class="phrase">engagement-maximizing optimization restricted</div>
+            <div class="phrase">harmful content amplification limits mandated</div>
+            <div class="phrase">third-party audit of recommendation systems required</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">platforms redesign algorithms to comply</div>
+            <div class="phrase">viral spread of provocative content decreases</div>
+            <div class="phrase">users are exposed to less polarizing content</div>
+            <div class="phrase">engagement-based business model is disrupted</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">reduced political polarization at population level</div>
+            <div class="phrase">lower radicalization rates in online communities</div>
+            <div class="phrase">healthier public information environment over time</div>
+            <div class="phrase">reduced platform revenue from engagement advertising</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments implement a carbon tax on all fossil fuel usage?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">price signal applied across all fossil fuel consumption</div>
+            <div class="phrase">tax rate set to reflect social cost of carbon</div>
+            <div class="phrase">revenue recycled to households or green investment</div>
+            <div class="phrase">carbon price floor established by legislation</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">energy costs rise for consumers and industry</div>
+            <div class="phrase">investment shifts toward lower-carbon alternatives</div>
+            <div class="phrase">fuel switching occurs in transport and heating</div>
+            <div class="phrase">carbon-intensive industries lose cost competitiveness</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">aggregate emissions decline over medium term</div>
+            <div class="phrase">accelerated deployment of renewable energy capacity</div>
+            <div class="phrase">structural shift away from fossil fuel dependence</div>
+            <div class="phrase">long-term reduction in climate risk at scale</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on deep-sea fishing?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body">
+            <div class="phrase">binding catch limits in international waters</div>
+            <div class="phrase">prohibition of destructive bottom trawling</div>
+            <div class="phrase">mandatory vessel monitoring and reporting</div>
+            <div class="phrase">closure of critical marine habitat areas</div>
+          </div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body">
+            <div class="phrase">commercial fishing pressure on depleted stocks reduced</div>
+            <div class="phrase">fish population recovery begins in protected areas</div>
+            <div class="phrase">bycatch and ecosystem disruption decreases</div>
+            <div class="phrase">illegal fishing becomes harder to conduct undetected</div>
+          </div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body">
+            <div class="phrase">marine biodiversity recovers over decade-scale timeline</div>
+            <div class="phrase">sustainable fish stocks support long-term food security</div>
+            <div class="phrase">ocean ecosystem services are preserved</div>
+            <div class="phrase">global protein supply chain becomes more resilient</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with causal language. For example:</p>
+  <div class="example">
+    "Mandatory curriculum integration triggers a process in which students develop habitual source-checking behavior — and the downstream effect, over a generation, is a population significantly more resistant to foreign disinformation campaigns."
+  </div>
+  <p>Three chunks. Two connectors. One complete causal argument. <strong>Do not skip the Mechanism column.</strong> Going straight from trigger to effect is the most common weakness in Causal Systems responses.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) {
+    el.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

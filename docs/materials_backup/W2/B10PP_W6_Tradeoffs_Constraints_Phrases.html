@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6 — Trade-offs &amp; Constraints · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #d97706; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-benefit    { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-tradeoff   { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-constraint { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-benefit    .legend-label { color: #16a34a; }
+  .leg-tradeoff   .legend-label { color: #d97706; }
+  .leg-constraint .legend-label { color: #dc2626; }
+  .leg-benefit    .legend-desc { color: #16a34a; }
+  .leg-tradeoff   .legend-desc { color: #d97706; }
+  .leg-constraint .legend-desc { color: #dc2626; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #d97706; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #d97706; background: #fffbeb; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-benefit    .col-header { background: #16a34a; }
+  .col-tradeoff   .col-header { background: #d97706; }
+  .col-constraint .col-header { background: #dc2626; }
+  .col-benefit    { border: 1.5px solid #16a34a; }
+  .col-tradeoff   { border: 1.5px solid #d97706; }
+  .col-constraint { border: 1.5px solid #dc2626; }
+  .col-benefit    .col-body { background: #f0fdf4; }
+  .col-tradeoff   .col-body { background: #fffbeb; }
+  .col-constraint .col-body { background: #fef2f2; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W6 — Trade-offs &amp; Constraints · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Show what is gained, what is lost, and what structural limit prevents a cleaner solution. These chunks are building blocks — combine them with grammar stems to construct your own sentences.
+</div>
+<div class="legend">
+  <div class="legend-item leg-benefit"><span class="legend-label">Benefit</span><span class="legend-desc">What the policy achieves — who gains, what improves</span></div>
+  <div class="legend-item leg-tradeoff"><span class="legend-label">Trade-off</span><span class="legend-desc">What is sacrificed — the competing good that is reduced or lost</span></div>
+  <div class="legend-item leg-constraint"><span class="legend-label">Constraint</span><span class="legend-desc">The structural limit — why the trade-off cannot simply be avoided</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> although… nevertheless · at the expense of · while X, Y is sacrificed · the cost falls on · cannot simultaneously · this comes with the constraint that · a win-win outcome is unavailable because
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should vocational education be prioritized over academic preparation?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">addresses skilled trades workforce shortage</div><div class="phrase">provides faster economic return for some students</div><div class="phrase">reduces student debt for non-academic pathways</div><div class="phrase">improves employer pipeline for technical roles</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">risks tracking students away from higher education</div><div class="phrase">academic preparation supports broader cognitive development</div><div class="phrase">false binary obscures the value of both pathways</div><div class="phrase">may reinforce class-based educational stratification</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining prioritization without eliminating either pathway is complex</div><div class="phrase">labor market demand shifts faster than curriculum reform</div><div class="phrase">cultural prestige of academic credentials is deeply embedded</div><div class="phrase">resource reallocation away from academic programs faces institutional resistance</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the electoral college be abolished?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">aligns presidential election with popular will</div><div class="phrase">reduces outsized influence of swing states</div><div class="phrase">increases voter relevance in non-competitive states</div><div class="phrase">eliminates faithless elector risk</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">reduces small state influence in federal elections</div><div class="phrase">requires constitutional amendment — extremely high bar</div><div class="phrase">shifts campaign strategy entirely to large population centers</div><div class="phrase">removes a federalism protection built into constitutional design</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">constitutional amendment requires supermajority threshold</div><div class="phrase">small states will not ratify an amendment reducing their influence</div><div class="phrase">National Popular Vote Interstate Compact is an incomplete workaround</div><div class="phrase">no consensus on replacement system exists</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should judges be elected or appointed?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">elections increase democratic accountability of judiciary</div><div class="phrase">appointments insulate judges from political pressure</div><div class="phrase">merit-based appointment improves average judicial quality</div><div class="phrase">elected judges are more responsive to community values</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">elected judges are influenced by donor interests in cases</div><div class="phrase">appointments concentrate selection power in executive branch</div><div class="phrase">elections expose judiciary to partisan campaign dynamics</div><div class="phrase">appointed judges may reflect appointing authority's ideology</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">no selection system fully insulates against political influence</div><div class="phrase">defining judicial merit independent of ideology is contested</div><div class="phrase">campaign finance in judicial elections is difficult to limit</div><div class="phrase">tenure design affects accountability regardless of selection method</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should education systems prioritize critical thinking over content knowledge?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">builds transferable skills for knowledge economy</div><div class="phrase">prepares students for adaptive problem-solving</div><div class="phrase">reduces dependence on rote memorization</div><div class="phrase">supports independent learning capacity</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">critical thinking requires content knowledge as its foundation</div><div class="phrase">false dichotomy risks reducing both</div><div class="phrase">assessment systems are not designed for critical thinking measurement</div><div class="phrase">teacher capacity for inquiry-based instruction is uneven</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">the two are not separable in effective pedagogy</div><div class="phrase">curriculum reform requires systemic assessment reform simultaneously</div><div class="phrase">cultural and parental expectations favor content mastery</div><div class="phrase">defining critical thinking for curriculum purposes is contested</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should there be stricter regulations on the use of cultural appropriation in art?</span>
+      </div>
+      <span class="q-tag">CUL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">protects source communities from economic exploitation</div><div class="phrase">reduces harmful misrepresentation of cultural practices</div><div class="phrase">supports intellectual property rights for traditional knowledge</div><div class="phrase">creates incentive for authentic cultural collaboration</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">restricts artistic freedom and creative borrowing</div><div class="phrase">definition of appropriation versus appreciation is contested</div><div class="phrase">enforcement requires cultural gatekeeping by institutions</div><div class="phrase">chilling effect on cross-cultural artistic exchange</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">no legal definition of cultural appropriation exists</div><div class="phrase">existing IP law does not protect traditional cultural expressions</div><div class="phrase">enforcement without community consent reproduces paternalism</div><div class="phrase">distinguishing exploitation from exchange is structurally contested</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments provide universal healthcare as an economic right?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">eliminates medical bankruptcy and coverage gaps</div><div class="phrase">improves population health outcomes at national level</div><div class="phrase">reduces administrative inefficiency of multi-payer systems</div><div class="phrase">provides equal access regardless of employment status</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">requires significant tax increase or reallocation</div><div class="phrase">may reduce innovation incentives in pharmaceutical sector</div><div class="phrase">private insurance industry faces existential disruption</div><div class="phrase">wait times may increase under single-payer systems</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining the scope of universal coverage is contested</div><div class="phrase">cost control without rationing is structurally difficult</div><div class="phrase">political resistance from healthcare industry is substantial</div><div class="phrase">transition from existing system creates short-term access disruption</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should tech companies be required to make their algorithms transparent?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">enables meaningful regulatory oversight of high-stakes decisions</div><div class="phrase">allows affected individuals to understand and contest outcomes</div><div class="phrase">supports detection of discriminatory algorithmic patterns</div><div class="phrase">builds public trust in automated decision systems</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">exposes proprietary systems to competitive theft</div><div class="phrase">technical transparency does not guarantee meaningful understanding</div><div class="phrase">compliance costs are substantial especially for smaller firms</div><div class="phrase">full disclosure may enable gaming of algorithmic systems</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">algorithmic transparency is technically complex to define and mandate</div><div class="phrase">trade secret protections limit disclosure scope</div><div class="phrase">third-party audit as compromise requires regulatory capacity</div><div class="phrase">international asymmetry disadvantages firms in regulated markets</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement a carbon border tax on imports?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">prevents carbon leakage to unregulated production countries</div><div class="phrase">protects domestic industries from unfair competition</div><div class="phrase">creates incentive for trading partners to adopt carbon pricing</div><div class="phrase">supports climate commitment credibility</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">increases cost of imports for domestic consumers and businesses</div><div class="phrase">disproportionate impact on developing country exporters</div><div class="phrase">risks retaliatory trade measures from affected nations</div><div class="phrase">administrative complexity of calculating embodied carbon is high</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">WTO compatibility is legally contested</div><div class="phrase">calculating carbon content of imports is technically demanding</div><div class="phrase">developing nations argue against bearing transition costs they did not cause</div><div class="phrase">bilateral trade relationships complicate multilateral implementation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one or two chunks from each column and connect them with trade-off language. For example:</p>
+  <div class="example">"Although this policy removes the financial barrier for low-income students, it shifts the cost to taxpayers — and the constraint here is that fiscal sustainability varies significantly by state, making a uniform national mandate structurally difficult."</div>
+  <p>Three chunks. Two connectors. One ILR 2+/3 argument move. <strong>The Constraint column is what separates a basic trade-off observation from an ILR 3 response</strong> — don't stop at naming what is lost. Explain why the trade-off cannot simply be avoided.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perspective Integration · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder  { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-position     { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-assumption   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder  .legend-label { color: #dc2626; }
+  .leg-position     .legend-label { color: #d97706; }
+  .leg-assumption   .legend-label { color: #1e3a5f; }
+  .leg-stakeholder  .legend-desc { color: #dc2626; }
+  .leg-position     .legend-desc { color: #d97706; }
+  .leg-assumption   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #dc2626; }
+  .col-position    .col-header { background: #d97706; }
+  .col-assumption  .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #dc2626; }
+  .col-position    { border: 1.5px solid #d97706; }
+  .col-assumption  { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #fef2f2; }
+  .col-position    .col-body { background: #fffbeb; }
+  .col-assumption  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .col-stakeholder .phrase { font-weight: 700; font-style: normal; color: #dc2626; font-size: 11.5px; }
+  .col-stakeholder .phrase::before { color: #dc2626; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+  .close-btn-bar { background: #1e3a5f; padding: 8px 16px; display: flex; justify-content: flex-end; }
+  .close-btn { background: rgba(255,255,255,0.15); border: none; color: white; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="close-btn-bar">
+  <button class="close-btn" onclick="window.close()">✕ Close</button>
+</div>
+
+<header>
+  <h1>Perspective Integration · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Linguistic Flexibility · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this reference:</strong> Perspective Integration is the ability to hold multiple viewpoints simultaneously and articulate them within a single coherent response — not by listing them, but by weaving them into your argument. A strong ILR 3 response does not ignore opposing views or simply mention them. It gives each perspective its genuine weight before arriving at a reasoned position.
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-stakeholder">
+    <span class="legend-label">Stakeholder</span>
+    <span class="legend-desc">Who holds this perspective and why they have a stake</span>
+  </div>
+  <div class="legend-item leg-position">
+    <span class="legend-label">Position</span>
+    <span class="legend-desc">What they argue or support on this question</span>
+  </div>
+  <div class="legend-item leg-assumption">
+    <span class="legend-label">Underlying Assumption</span>
+    <span class="legend-desc">What they must believe to be true for this position to make sense</span>
+  </div>
+</div>
+
+<div class="connectors">
+  <strong>Key connectors for integrating perspectives:</strong>
+  from the perspective of… · those who argue that… · proponents of this view assume that… · critics, however, contend that… · while X stakeholders emphasize… · those most directly affected by… · a position held by… rests on the assumption that… · this view is defensible provided that…
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should universities limit legacy admissions?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">First-generation applicants</div>
+        <div class="phrase">Legacy families</div>
+        <div class="phrase">University administrators</div>
+        <div class="phrase">Civil rights advocates</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">legacy preference structurally disadvantages equally qualified non-legacy applicants</div>
+        <div class="phrase">family connection to an institution is a legitimate form of social capital</div>
+        <div class="phrase">donor loyalty sustained by legacy preference funds financial aid for low-income students</div>
+        <div class="phrase">merit-based access is a prerequisite for genuine social mobility</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">admissions should reflect academic merit, not inherited social position</div>
+        <div class="phrase">institutions have a right to reward loyalty within their private networks</div>
+        <div class="phrase">eliminating legacy would reduce donations and ultimately hurt access overall</div>
+        <div class="phrase">universities receiving public subsidy have a public equity obligation</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should private health insurance be banned if universal public healthcare is adopted?</span></div>
+      <span class="q-tag">HLT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">Low-income patients</div>
+        <div class="phrase">High-income patients</div>
+        <div class="phrase">Private insurers</div>
+        <div class="phrase">Public health advocates</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">universal coverage eliminates the financial barrier to care they currently face</div>
+        <div class="phrase">banning private insurance removes the choice of faster or specialized care</div>
+        <div class="phrase">a parallel private market preserves competition and innovation incentives</div>
+        <div class="phrase">allowing private insurance creates a two-tier system that undermines universal equity</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">healthcare access should not depend on ability to pay</div>
+        <div class="phrase">individual freedom to pay for better care is a legitimate right</div>
+        <div class="phrase">market competition improves quality and controls cost</div>
+        <div class="phrase">true universality requires that all citizens use the same system</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should social media companies be liable for addictive design?</span></div>
+      <span class="q-tag">SOC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">Parents of young users</div>
+        <div class="phrase">Social media platforms</div>
+        <div class="phrase">Mental health professionals</div>
+        <div class="phrase">Individual users</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">companies deliberately engineered products they knew caused harm to minors</div>
+        <div class="phrase">users choose to engage and are responsible for their own consumption</div>
+        <div class="phrase">the clinical evidence linking addictive design to mental health harm is sufficient for liability</div>
+        <div class="phrase">personal autonomy includes the right to use platforms as one chooses</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">companies bear responsibility for foreseeable harm from products they profit from</div>
+        <div class="phrase">product liability requires proof of intent or negligence, not just harm</div>
+        <div class="phrase">the power asymmetry between platforms and users — especially minors — justifies intervention</div>
+        <div class="phrase">legal liability for design choices would chill innovation across the tech sector</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should refugee resettlement be shared among nations?</span></div>
+      <span class="q-tag">JUS</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">Refugees</div>
+        <div class="phrase">Host communities</div>
+        <div class="phrase">Non-participating nations</div>
+        <div class="phrase">International institutions</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">equitable burden-sharing would distribute resettlement across nations with capacity to absorb</div>
+        <div class="phrase">rapid population change strains housing, services, and social cohesion</div>
+        <div class="phrase">national sovereignty includes the right to control who enters the country</div>
+        <div class="phrase">a binding framework is the only mechanism that prevents free-riding by non-participating states</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">the international community has a shared obligation to those displaced by conflict or persecution</div>
+        <div class="phrase">integration capacity is finite and community consent matters for long-term success</div>
+        <div class="phrase">migration policy is a domestic matter that international agreements should not override</div>
+        <div class="phrase">voluntary frameworks produce insufficient and inequitable outcomes without enforcement</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should governments raise taxes on the wealthy?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">High-income earners</div>
+        <div class="phrase">Low-income populations</div>
+        <div class="phrase">Small business owners</div>
+        <div class="phrase">Fiscal policy economists</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">higher marginal rates reduce the incentive to invest and create employment</div>
+        <div class="phrase">redistributive taxation funds public services that disproportionately benefit lower-income groups</div>
+        <div class="phrase">tax increases on high earners can inadvertently penalize small business income</div>
+        <div class="phrase">the evidence on whether higher rates reduce growth is contested and context-dependent</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">individual economic freedom includes the right to retain a substantial share of earned income</div>
+        <div class="phrase">government has a redistributive obligation when inequality reaches a structurally damaging level</div>
+        <div class="phrase">tax policy must account for how high earners and small business owners are legally classified</div>
+        <div class="phrase">empirical evidence rather than ideology should drive tax rate decisions</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should cities adopt congestion pricing?</span></div>
+      <span class="q-tag">ENV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">Low-income commuters</div>
+        <div class="phrase">Urban planners</div>
+        <div class="phrase">City-center businesses</div>
+        <div class="phrase">Transit advocates</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">pricing schemes impose a regressive cost on workers who have no viable transit alternative</div>
+        <div class="phrase">demand-based pricing is the most efficient mechanism for reducing congestion and emissions</div>
+        <div class="phrase">reduced foot traffic from pricing schemes threatens retail viability in affected zones</div>
+        <div class="phrase">congestion revenue should be hypothecated to public transit expansion to offset the regressive burden</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">a policy that increases cost for those with fewest alternatives is unjust regardless of aggregate benefit</div>
+        <div class="phrase">market-based pricing signals are more efficient than blanket restrictions or subsidies</div>
+        <div class="phrase">urban economic vitality depends on physical accessibility for customers and workers</div>
+        <div class="phrase">pricing is defensible only if revenue is reinvested in the alternatives that make pricing bearable</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should mass tourism be limited to protect cultural sites?</span></div>
+      <span class="q-tag">CUL</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">Local residents</div>
+        <div class="phrase">International tourists</div>
+        <div class="phrase">Tourism industry</div>
+        <div class="phrase">Heritage organizations</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">unconstrained tourism degrades the sites and communities that attract visitors in the first place</div>
+        <div class="phrase">access to cultural heritage is a universal right that should not be restricted by pricing or quotas</div>
+        <div class="phrase">limiting visitor numbers threatens the livelihoods of those economically dependent on tourism revenue</div>
+        <div class="phrase">preservation of irreplaceable heritage justifies restrictions on access when damage is documented</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">the long-term survival of cultural sites matters more than maximizing current visitor numbers</div>
+        <div class="phrase">cultural heritage belongs to humanity and should be accessible to all, not only to those who arrive first</div>
+        <div class="phrase">economic dependence on tourism creates legitimate competing interests that conservation policy must address</div>
+        <div class="phrase">irreversible damage to heritage sites justifies intervention even at significant economic cost</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should public protests be restricted to designated areas?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">Civil liberties advocates</div>
+        <div class="phrase">Law enforcement</div>
+        <div class="phrase">Businesses near protest sites</div>
+        <div class="phrase">Protest organizers</div>
+      </div></div>
+      <div class="col col-position"><div class="col-header">Position</div><div class="col-body">
+        <div class="phrase">the right to assembly includes the right to be seen and heard in spaces of public significance</div>
+        <div class="phrase">designated zones enable protest while managing safety and minimizing disruption to others</div>
+        <div class="phrase">unrestricted protest causes economic harm to businesses that bear no responsibility for the grievance being expressed</div>
+        <div class="phrase">relegating protests to designated areas reduces their visibility and therefore their political effectiveness</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Underlying Assumption</div><div class="col-body">
+        <div class="phrase">the purpose of protest is to communicate dissent to those in power, which requires presence in meaningful public spaces</div>
+        <div class="phrase">the right to protest is not absolute and must be balanced against public order and others' rights</div>
+        <div class="phrase">economic disruption caused by protest is an externality that third parties should not be required to absorb</div>
+        <div class="phrase">a protest confined to where no one sees it is a protest that has been effectively silenced</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. The goal is not to present all four perspectives separately — it is to weave them into a single coherent argument that acknowledges competing views without losing your own position. For example, using Q6:</p>
+  <div class="example">"From the perspective of low-income commuters — those who have no viable transit alternative — congestion pricing imposes a regressive cost that falls hardest on those it least intends to target. Transit advocates, however, argue that this concern is addressable: if pricing revenue is hypothecated to transit expansion, the same workers who currently bear the cost would gain a viable alternative. The assumption driving both positions is the same — that the policy is only defensible if those with fewest options are genuinely protected, not merely promised protection."</div>
+  <p>Three perspectives. One argument. The views are not listed — they are integrated. <strong>That is Perspective Integration at ILR 3.</strong></p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

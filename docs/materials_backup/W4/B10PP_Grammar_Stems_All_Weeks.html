@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP Grammar Stems &amp; Templates — All Weeks</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+
+  .intro { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .intro strong { color: #1e3a5f; }
+
+  /* Section headers */
+  .section-header { margin: 16px 12px 6px; }
+  .section-header h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; text-transform: uppercase; letter-spacing: 0.05em; }
+  .section-header p { font-size: 12px; color: #6b7280; margin-top: 3px; line-height: 1.5; }
+
+  /* Week band headers */
+  .week-band { margin: 8px 12px 0; border-radius: 10px; overflow: hidden; }
+  .week-band-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .week-band-header:active { opacity: 0.85; }
+  .week-band-title { font-size: 13px; font-weight: 700; color: white; }
+  .week-band-chevron { font-size: 12px; color: rgba(255,255,255,0.7); transition: transform 0.2s; }
+  .week-band.open .week-band-chevron { transform: rotate(180deg); }
+  .week-band-body { display: none; background: white; border: 1.5px solid; border-top: none; border-radius: 0 0 10px 10px; }
+  .week-band.open .week-band-body { display: block; }
+
+  /* Grammar cards inside week bands */
+  .grammar-card { border-bottom: 1px solid #f3f4f6; }
+  .grammar-card:last-child { border-bottom: none; }
+  .grammar-card-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .grammar-card-header:active { background: #f9fafb; }
+  .grammar-card-label { font-size: 13px; font-weight: 600; color: #1e3a5f; }
+  .grammar-card-tag { font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 6px; white-space: nowrap; margin-left: 8px; }
+  .grammar-card-chevron { font-size: 11px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-left: 8px; }
+  .grammar-card.open .grammar-card-chevron { transform: rotate(180deg); }
+  .grammar-card-body { display: none; padding: 0 14px 14px; }
+  .grammar-card.open .grammar-card-body { display: block; }
+
+  /* Stems and templates */
+  .stems-label { font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; margin-top: 4px; }
+  .stem { font-size: 12px; font-style: italic; color: #374151; padding: 3px 0; border-bottom: 1px solid #f3f4f6; line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .stem:last-child { border-bottom: none; }
+  .stem::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .template { font-size: 12px; color: #374151; padding: 4px 8px; background: #f0f4f8; border-left: 2px solid #1e3a5f; border-radius: 0 4px 4px 0; margin-bottom: 4px; line-height: 1.5; }
+  .template:last-child { margin-bottom: 0; }
+
+  /* Priority/primary/tertiary tags */
+  .tag-primary   { background: #f0fdfa; color: #0d9488; border: 1px solid #0d9488; }
+  .tag-tertiary  { background: #f5f3ff; color: #7c3aed; border: 1px solid #7c3aed; }
+  .tag-universal { background: #f0f4f8; color: #1e3a5f; border: 1px solid #1e3a5f; }
+
+  /* Week colors */
+  .w1 { background: #0d9488; border-color: #0d9488; }
+  .w2 { background: #d97706; border-color: #d97706; }
+  .w3 { background: #7c3aed; border-color: #7c3aed; }
+  .w4 { background: #16a34a; border-color: #16a34a; }
+  .w5 { background: #dc2626; border-color: #dc2626; }
+  .w6 { background: #1e3a5f; border-color: #1e3a5f; }
+  .universal { background: #374151; border-color: #374151; }
+
+  .divider { height: 1px; background: #e5e7eb; margin: 8px 0; }
+
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 6px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>B10-PP Grammar Stems &amp; Templates</h1>
+  <p>Extended Supported Opinion · Weeks 1–6 · Tap any section to expand</p>
+</header>
+
+<div class="intro">
+  <strong>How to use this reference:</strong> Part 1 covers universal grammar structures usable in any ESO response, any week. Part 2 covers the 2–3 grammar structures most salient for each week's discourse frame. Use stems as building blocks — combine them with content chunks from the weekly phrase reference sheets.
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PART 1 — UNIVERSAL                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section-header">
+  <h2>Part 1 — Universal Grammar Structures</h2>
+  <p>These structures work across all six weeks. Master these first — they form the grammatical backbone of academic spoken argument at ILR 2+/3.</p>
+</div>
+
+<div class="week-band open" id="universal">
+  <div class="week-band-header universal" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">Universal — All Weeks</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#374151;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Cross-Scale Connectors</span>
+        <span class="grammar-card-tag tag-universal">Universal</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems</div>
+        <div class="stem">At the individual level, ___ ; however, at the national level, ___.</div>
+        <div class="stem">While the immediate impact falls on ___, the longer-term consequences extend to ___.</div>
+        <div class="stem">This affects not only ___ at the community level, but also ___ at the scale of ___.</div>
+        <div class="stem">What begins as a concern for individual ___ quickly becomes a question of national ___.</div>
+        <div class="stem">From the perspective of ___, ___ ; yet when we consider ___ as a whole, ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">At the individual level, workers face immediate job loss; however, at the national level, the long-term effect on tax revenue may be equally significant.</div>
+        <div class="template">While the immediate impact falls on small business owners, the longer-term consequences extend to the communities that depend on them.</div>
+        <div class="template">This affects not only students in mainstream classrooms, but also the broader institutional capacity of the school system as a whole.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Concession &amp; Contrast</span>
+        <span class="grammar-card-tag tag-universal">Universal</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems</div>
+        <div class="stem">Although ___, ___.</div>
+        <div class="stem">While it may seem that ___, in fact ___.</div>
+        <div class="stem">Despite the fact that ___, ___.</div>
+        <div class="stem">Even though ___ benefits ___, it comes at the cost of ___.</div>
+        <div class="stem">___ ; nevertheless, ___.</div>
+        <div class="stem">On one hand, ___ ; on the other hand, ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Although cash transfers may provide short-term relief, the long-term inflationary effect cannot be ignored.</div>
+        <div class="template">Despite the fact that this policy benefits large corporations, small businesses are disproportionately burdened.</div>
+        <div class="template">This approach reduces costs for employers; nevertheless, the burden on working families remains unaddressed.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Modality &amp; Hedging</span>
+        <span class="grammar-card-tag tag-universal">Universal</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems</div>
+        <div class="stem">This would likely ___.</div>
+        <div class="stem">There is a risk that ___.</div>
+        <div class="stem">It is possible that ___, though ___.</div>
+        <div class="stem">One might argue that ___.</div>
+        <div class="stem">This may ___, but it could also ___.</div>
+        <div class="stem">The evidence suggests that ___.</div>
+        <div class="stem">It is reasonable to assume that ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">This policy would likely benefit higher-income households more than those in the lowest income bracket.</div>
+        <div class="template">One might argue that direct citizen consultation strengthens democratic legitimacy, though it may also slow decision-making significantly.</div>
+        <div class="template">It is reasonable to assume that without enforcement mechanisms, compliance rates would remain low.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Passive &amp; Reporting</span>
+        <span class="grammar-card-tag tag-universal">Universal</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems</div>
+        <div class="stem">___ are disproportionately affected by ___.</div>
+        <div class="stem">___ are often overlooked in discussions of ___.</div>
+        <div class="stem">___ are left without access to ___.</div>
+        <div class="stem">It has been argued that ___.</div>
+        <div class="stem">It is widely recognized that ___.</div>
+        <div class="stem">Critics of this position argue that ___.</div>
+        <div class="stem">Proponents suggest that ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Low-income workers are disproportionately affected by automation policies that favor capital-intensive industries.</div>
+        <div class="template">It has been argued that corporate tax harmonization is essential for fiscal fairness; however, critics point to sovereignty concerns.</div>
+        <div class="template">Proponents suggest that early childhood investment yields long-term economic returns, though the timeline remains contested.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Nominalization</span>
+        <span class="grammar-card-tag tag-universal">Universal</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems</div>
+        <div class="stem">The displacement of ___</div>
+        <div class="stem">The burden on ___</div>
+        <div class="stem">The concentration of ___ among ___</div>
+        <div class="stem">The exclusion of ___ from ___</div>
+        <div class="stem">The dependence of ___ on ___</div>
+        <div class="stem">The tension between ___ and ___</div>
+        <div class="stem">The erosion of ___</div>
+        <div class="stem">Access to ___ for ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">The displacement of low-wage workers as a result of this policy creates pressure at both the family and community level.</div>
+        <div class="template">The concentration of decision-making power among a small number of nations undermines the legitimacy of the global fund.</div>
+        <div class="template">The tension between economic efficiency and social equity lies at the heart of this debate.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PART 2 — WEEK BY WEEK                               -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section-header">
+  <h2>Part 2 — Week-by-Week Grammar Focus</h2>
+  <p>Each week foregrounds 2–3 structures most salient to that frame's analytical demands. These are in addition to the universal structures above, not replacements for them.</p>
+</div>
+
+<!-- W1 -->
+<div class="week-band" id="w1">
+  <div class="week-band-header w1" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">W1 — Scale &amp; Stakeholder</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#0d9488;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Relative Clauses</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Specifying Stakeholders</div>
+        <div class="stem">Those who ___</div>
+        <div class="stem">Workers who ___</div>
+        <div class="stem">Countries that ___</div>
+        <div class="stem">Communities that have ___</div>
+        <div class="stem">Individuals who depend on ___</div>
+        <div class="stem">Groups that are most directly affected by ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Those who bear the greatest burden of this policy are low-income workers in export-dependent industries.</div>
+        <div class="template">Countries that have historically contributed most to carbon emissions carry a greater moral obligation to fund climate adaptation.</div>
+        <div class="template">Communities that rely on indigenous land rights stand to lose significant cultural and economic stability if this policy is implemented without consultation.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Nominalization</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Compressing Stakeholder Conditions</div>
+        <div class="stem">The displacement of ___</div>
+        <div class="stem">The burden on ___</div>
+        <div class="stem">The exclusion of ___ from ___</div>
+        <div class="stem">The concentration of ___ among ___</div>
+        <div class="stem">Access to ___ for ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">The displacement of low-wage workers as a direct consequence of automation creates pressure at both the family and community level.</div>
+        <div class="template">The burden on small business owners is disproportionate when mandates are applied uniformly regardless of company size.</div>
+        <div class="template">The exclusion of indigenous communities from policy consultation undermines both the legitimacy and the effectiveness of the decision.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Passive &amp; Reporting</span>
+        <span class="grammar-card-tag tag-tertiary">Tertiary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Foregrounding Impact</div>
+        <div class="stem">___ are disproportionately impacted by ___</div>
+        <div class="stem">___ are frequently left without ___</div>
+        <div class="stem">___ are often overlooked in ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Elderly residents in rural areas are frequently left without adequate access to mental health services under current funding structures.</div>
+        <div class="template">Part-time workers are often overlooked in childcare benefit discussions that focus primarily on full-time employment contracts.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- W2 -->
+<div class="week-band" id="w2">
+  <div class="week-band-header w2" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">W2 — Trade-offs &amp; Constraints</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#d97706;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Concession &amp; Contrast</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Weighing Competing Goods</div>
+        <div class="stem">Although ___ offers ___, it comes at the cost of ___.</div>
+        <div class="stem">While ___ benefits ___, the trade-off for ___ is ___.</div>
+        <div class="stem">The advantage of ___ must be weighed against ___.</div>
+        <div class="stem">___ ; however, this comes with the constraint that ___.</div>
+        <div class="stem">Even if ___, the risk to ___ remains significant.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Although a global minimum corporate tax reduces profit-shifting, it comes at the cost of fiscal autonomy for smaller economies.</div>
+        <div class="template">While mandatory childcare provision benefits working parents, the trade-off for small businesses operating on narrow margins is substantial.</div>
+        <div class="template">The advantage of direct citizen consultation must be weighed against the risk of decision paralysis on time-sensitive policy questions.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Modality &amp; Hedging</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Projecting Constrained Outcomes</div>
+        <div class="stem">If ___ is prioritized, then ___ may be compromised.</div>
+        <div class="stem">The more ___, the less likely it is that ___.</div>
+        <div class="stem">There is a risk that prioritizing ___ will come at the expense of ___.</div>
+        <div class="stem">It is unlikely that both ___ and ___ can be fully achieved simultaneously.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">If cost efficiency is prioritized in healthcare funding, it is unlikely that equity of access can be fully maintained simultaneously.</div>
+        <div class="template">There is a risk that prioritizing economic growth will come at the expense of environmental sustainability in the short term.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Conditional Structures</span>
+        <span class="grammar-card-tag tag-tertiary">Tertiary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Projecting Constrained Scenarios</div>
+        <div class="stem">If resources are limited, then prioritizing ___ means sacrificing ___.</div>
+        <div class="stem">Were ___ to be implemented without ___, the result would likely be ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">If healthcare resources are limited, then prioritizing mental health parity means reallocating funds currently designated for physical infrastructure.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- W3 -->
+<div class="week-band" id="w3">
+  <div class="week-band-header w3" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">W3 — Causal Systems</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#7c3aed;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Nominalization</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Packaging Causes and Effects</div>
+        <div class="stem">The accumulation of ___</div>
+        <div class="stem">The erosion of ___</div>
+        <div class="stem">The amplification of ___ through ___</div>
+        <div class="stem">The suppression of ___ as a result of ___</div>
+        <div class="stem">The collapse of ___ driven by ___</div>
+        <div class="stem">The reinforcement of ___ by ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">The accumulation of sovereign debt driven by stimulus spending creates a secondary constraint on post-crisis recovery.</div>
+        <div class="template">The erosion of consumer confidence during periods of high inflation suppresses discretionary spending across income groups.</div>
+        <div class="template">The amplification of inequality through automation-driven displacement represents a systemic risk, not merely an individual one.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Passive &amp; Reporting</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Foregrounding Effects Over Agents</div>
+        <div class="stem">___ is driven by ___</div>
+        <div class="stem">___ is suppressed when ___</div>
+        <div class="stem">___ is amplified by ___</div>
+        <div class="stem">___ is undermined by ___</div>
+        <div class="stem">___ is reinforced through ___</div>
+        <div class="stem">As ___ increases, ___ is put under pressure.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Inflation is driven not by the initial stimulus but by the mismatch between spending patterns and productive capacity during recovery.</div>
+        <div class="template">Wage growth is suppressed when labor market conditions favor employers in sectors where automation has reduced bargaining power.</div>
+        <div class="template">Public trust in institutions is undermined when policy decisions are made without transparent consultation processes.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Relative Clauses</span>
+        <span class="grammar-card-tag tag-tertiary">Tertiary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Specifying Causal Conditions</div>
+        <div class="stem">A system that relies on ___</div>
+        <div class="stem">Policies that fail to account for ___</div>
+        <div class="stem">Mechanisms that reinforce ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">A system that relies on consumer spending as its primary recovery driver is vulnerable to inflationary pressure during supply-constrained periods.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- W4 -->
+<div class="week-band" id="w4">
+  <div class="week-band-header w4" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">W4 — Hypothetical &amp; Conditional</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#16a34a;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Conditional Structures</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Projecting Scenarios</div>
+        <div class="stem">If ___ were implemented, the most likely outcome would be ___.</div>
+        <div class="stem">Were ___ to ___, then ___.</div>
+        <div class="stem">If this policy were adopted without ___, it would ___.</div>
+        <div class="stem">Should ___ fail to ___, the consequence would be ___.</div>
+        <div class="stem">In a scenario where ___, ___ would likely ___.</div>
+        <div class="stem">Assuming ___, the effect on ___ would be ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">If a global minimum corporate tax were implemented without a unified enforcement mechanism, compliance would likely remain voluntary and inconsistent.</div>
+        <div class="template">Were governments to consult citizens directly on every major policy decision, the risk of decision paralysis on time-sensitive issues would increase significantly.</div>
+        <div class="template">In a scenario where fossil fuel subsidies are redirected to the global climate fund, developing nations would gain access to resources currently unavailable to them.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Modality &amp; Hedging</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Calibrating Projection Certainty</div>
+        <div class="stem">This would likely ___, though it might also ___.</div>
+        <div class="stem">The probable outcome is ___, with the caveat that ___.</div>
+        <div class="stem">It is reasonable to project that ___.</div>
+        <div class="stem">There is a strong likelihood that ___, provided that ___.</div>
+        <div class="stem">One could argue that ___, but it is equally possible that ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">This policy would likely reduce offshore profit-shifting in the short term, though it might also incentivize structural reorganization to avoid compliance.</div>
+        <div class="template">There is a strong likelihood that early investment in childcare infrastructure would yield long-term workforce participation gains, provided that quality standards are maintained.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- W5 -->
+<div class="week-band" id="w5">
+  <div class="week-band-header w5" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">W5 — Values, Heuristics &amp; Bias</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#dc2626;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Concession &amp; Contrast</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Surfacing Competing Value Frameworks</div>
+        <div class="stem">While some prioritize ___, others argue that ___.</div>
+        <div class="stem">From a ___ perspective, ___ ; however, from a ___ perspective, ___.</div>
+        <div class="stem">Those who value ___ tend to conclude that ___, whereas those who prioritize ___ reach a different conclusion.</div>
+        <div class="stem">The tension here is not primarily empirical but normative — it depends on whether one values ___ or ___.</div>
+        <div class="stem">Although ___ appears to be a neutral position, it implicitly prioritizes ___ over ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">While some prioritize economic efficiency in healthcare allocation, others argue that equity of access is a non-negotiable baseline, regardless of cost.</div>
+        <div class="template">The tension here is not primarily empirical but normative — it depends on whether one values individual economic freedom or collective environmental responsibility.</div>
+        <div class="template">Although a market-based approach appears neutral, it implicitly prioritizes outcomes that favor established economic actors over emerging or vulnerable ones.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Modality &amp; Hedging</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Marking Value Claims as Perspective-Dependent</div>
+        <div class="stem">One might argue that ___, though this depends on whether ___.</div>
+        <div class="stem">This position assumes that ___, which not everyone would accept.</div>
+        <div class="stem">The validity of this claim rests on the assumption that ___.</div>
+        <div class="stem">Whether ___ is seen as ___ or ___ depends largely on ___.</div>
+        <div class="stem">It is worth noting that ___ reflects a particular value framework, namely ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">One might argue that governments have an obligation to fund indigenous cultural preservation, though this depends on whether cultural continuity is treated as a public good.</div>
+        <div class="template">This position assumes that individual economic freedom outweighs collective social benefit, which not everyone would accept as a starting premise.</div>
+        <div class="template">Whether mandatory childcare provision is seen as a benefit or a burden depends largely on the size and financial structure of the employer in question.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Passive &amp; Reporting</span>
+        <span class="grammar-card-tag tag-tertiary">Tertiary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Attributing Value Positions to Stakeholders</div>
+        <div class="stem">It is widely held that ___.</div>
+        <div class="stem">Critics of this view argue that ___.</div>
+        <div class="stem">Proponents of ___ tend to assume that ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">It is widely held that economic growth and environmental protection are fundamentally in tension, though this framing has been challenged by proponents of sustainable development.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- W6 -->
+<div class="week-band" id="w6">
+  <div class="week-band-header w6" onclick="toggleBand(this.parentElement)">
+    <span class="week-band-title">W6 — Synthesis &amp; Judgment</span>
+    <span class="week-band-chevron">▼</span>
+  </div>
+  <div class="week-band-body" style="border-color:#1e3a5f;">
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Nominalization</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Compressing Prior Arguments for Synthesis</div>
+        <div class="stem">Given the tension between ___ and ___</div>
+        <div class="stem">Weighing ___ against ___</div>
+        <div class="stem">Taking into account both ___ and ___</div>
+        <div class="stem">In light of the competing considerations of ___ and ___</div>
+        <div class="stem">The cumulative effect of ___, ___, and ___ suggests that ___</div>
+        <div class="stem">Balancing the interests of ___ with those of ___</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">Given the tension between fiscal sovereignty and global equity, a tiered contribution model appears more sustainable than a uniform mandate.</div>
+        <div class="template">Weighing the short-term cost burden on small businesses against the long-term workforce benefits, the case for subsidized rather than mandatory childcare is stronger.</div>
+        <div class="template">Taking into account both the historical emissions record of developed nations and the adaptive capacity of developing ones, differentiated obligations are more defensible than equal ones.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Concession &amp; Contrast</span>
+        <span class="grammar-card-tag tag-primary">Primary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — The Final Weighing Move</div>
+        <div class="stem">While both positions have merit, the stronger case rests on ___.</div>
+        <div class="stem">Although ___ is a legitimate concern, it does not outweigh ___.</div>
+        <div class="stem">The evidence on both sides is significant; however, ___ ultimately carries more weight because ___.</div>
+        <div class="stem">Neither position is without weakness, but ___ is more defensible because ___.</div>
+        <div class="stem">On balance, ___ because ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">While both positions have merit, the stronger case rests on the long-term fiscal and social benefits of mental health parity rather than on short-term cost projections.</div>
+        <div class="template">Although sovereignty concerns are legitimate, they do not outweigh the collective obligation to address a global environmental crisis with asymmetric impacts.</div>
+        <div class="template">On balance, a graduated global minimum tax is more defensible than a uniform rate, because it accounts for differences in national economic capacity without abandoning the principle of fairness.</div>
+      </div>
+    </div>
+
+    <div class="grammar-card">
+      <div class="grammar-card-header" onclick="toggleCard(this.parentElement)">
+        <span class="grammar-card-label">Modality &amp; Hedging</span>
+        <span class="grammar-card-tag tag-tertiary">Tertiary</span>
+        <span class="grammar-card-chevron">▼</span>
+      </div>
+      <div class="grammar-card-body">
+        <div class="stems-label">Stems — Calibrating the Final Judgment</div>
+        <div class="stem">On balance, ___.</div>
+        <div class="stem">The evidence suggests that ___.</div>
+        <div class="stem">While certainty is not possible, the most defensible position is ___.</div>
+        <div class="stem">It would be premature to conclude that ___, but the available evidence points toward ___.</div>
+        <div class="divider"></div>
+        <div class="stems-label">Templates</div>
+        <div class="template">On balance, the long-term social and economic benefits of universal childcare access outweigh the short-term compliance costs for mid-size employers.</div>
+        <div class="template">While certainty is not possible given the complexity of global tax enforcement, the most defensible position is that a minimum floor is preferable to no standard at all.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="how-to">
+  <h2>A Final Reminder</h2>
+  <p>Grammar structures are tools. A stem used without specific, precise content — named stakeholders, concrete consequences, clearly stated positions — does not demonstrate ILR 2+/3 performance. The scorer reads for analytical depth, not for the presence of particular structures. Use these templates to build the habit, then let the argument drive the language.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggleBand(el) {
+    el.classList.toggle('open');
+  }
+  function toggleCard(el) {
+    el.classList.toggle('open');
+  }
+  // Auto-expand if URL hash matches a week id
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) {
+        el.classList.add('open');
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

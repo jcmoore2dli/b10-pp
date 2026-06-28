@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 — Scale &amp; Stakeholder · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-impact      { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-scale       { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder .legend-label { color: #0d9488; }
+  .leg-impact      .legend-label { color: #d97706; }
+  .leg-scale       .legend-label { color: #1e3a5f; }
+  .leg-stakeholder .legend-desc { color: #0d9488; }
+  .leg-impact      .legend-desc { color: #d97706; }
+  .leg-scale       .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+  .scale-reminder { margin: 0 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #dc2626; font-weight: 700; line-height: 1.5; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #0d9488; }
+  .col-impact      .col-header { background: #d97706; }
+  .col-scale       .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #0d9488; }
+  .col-impact      { border: 1.5px solid #d97706; }
+  .col-scale       { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #f0fdfa; }
+  .col-impact      .col-body { background: #fffbeb; }
+  .col-scale       .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .how-to-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .how-to-cell { border-radius: 8px; padding: 8px; font-size: 11px; line-height: 1.5; }
+  .how-to-cell strong { display: block; font-size: 11px; margin-bottom: 3px; }
+  .htc-who  { background: #f0fdfa; border: 1px solid #0d9488; color: #374151; }
+  .htc-what { background: #fffbeb; border: 1px solid #d97706; color: #374151; }
+  .htc-why  { background: #f0f4f8; border: 1px solid #1e3a5f; color: #374151; }
+  .htc-who  strong { color: #0d9488; }
+  .htc-what strong { color: #d97706; }
+  .htc-why  strong { color: #1e3a5f; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W3 — Scale &amp; Stakeholder · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify who is affected by a policy, what happens to them, and why the scale at which they operate changes the argument. A strong response must engage <em>at least two different scale levels</em>.
+</div>
+<div class="legend">
+  <div class="legend-item leg-stakeholder"><span class="legend-label">Stakeholder</span><span class="legend-desc">Who is affected and at what scale level</span></div>
+  <div class="legend-item leg-impact"><span class="legend-label">Impact</span><span class="legend-desc">What specifically happens to that stakeholder</span></div>
+  <div class="legend-item leg-scale"><span class="legend-label">Scale Consideration</span><span class="legend-desc">Why operating at this level changes the argument</span></div>
+</div>
+<div class="scale-reminder">
+  You must engage at least two scale levels: Individual &amp; Family · Organizational &amp; Community · National &amp; Global
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> at the individual level… · at the organizational level… · at the national level… · this affects not only… but also… · while the immediate impact falls on… · what begins as a concern for… quickly becomes… · from the perspective of… · those most directly affected are… · the burden falls disproportionately on…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should schools integrate media literacy education into their curricula?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">students — individual level</div><div class="phrase">parents — individual level</div><div class="phrase">teachers — organizational level</div><div class="phrase">schools and districts — organizational level</div><div class="phrase">democratic institutions and information ecosystem — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">improved ability to evaluate sources; reduced misinformation susceptibility</div><div class="phrase">indirect benefit from children with stronger critical thinking</div><div class="phrase">additional training burden; curriculum crowding</div><div class="phrase">curriculum design and resource allocation challenges</div><div class="phrase">stronger informed citizenry; reduced foreign disinformation effectiveness</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the benefit is cognitive and behavioral — habits of source evaluation developed early persist</div><div class="phrase">at the teacher and school level, the constraint is capacity — mandate without training produces compliance without benefit</div><div class="phrase">at the national level, the democratic dividend argument is strongest — individual critical thinking aggregates into systemic resilience</div><div class="phrase">scale matters because the individual benefit is hard to measure while the national benefit is the compelling policy argument</div><div class="phrase">the argument is strongest when it connects individual habit formation to national information environment outcomes</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the gig economy be more strictly regulated?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">gig workers — individual level</div><div class="phrase">consumers — individual level</div><div class="phrase">gig platforms — organizational level</div><div class="phrase">traditional employers — organizational level</div><div class="phrase">national labor law and tax systems — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">improved protections; potential loss of flexibility or platform access</div><div class="phrase">potential price increases as platform costs rise</div><div class="phrase">increased operating costs; possible exit from regulated markets</div><div class="phrase">reduced competitive disadvantage from unregulated labor</div><div class="phrase">shift in employment classification and tax compliance standards</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the protection argument is strongest for those who depend on gig income and have no alternative</div><div class="phrase">at the individual level, the flexibility argument applies to high-income contractors who genuinely choose gig arrangements</div><div class="phrase">at the organizational level, platform disruption is real — but platforms that exit are those whose model depends on labor cost externalization</div><div class="phrase">at the national level, the labor law framework cannot be sustained if a growing sector operates entirely outside it</div><div class="phrase">scale reveals the systemic risk — individual workers choosing gig work is a micro-level story; the erosion of employment standards is a national-level consequence</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should there be stronger antitrust laws to break up monopolies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">consumers — individual level</div><div class="phrase">small business owners — individual level</div><div class="phrase">large corporations subject to breakup — organizational level</div><div class="phrase">startups and new market entrants — organizational level</div><div class="phrase">national economy and democratic institutions — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">potential price reductions and increased product choice</div><div class="phrase">reduced barriers to market entry</div><div class="phrase">forced divestiture; reduced market power</div><div class="phrase">expanded opportunity in previously closed markets</div><div class="phrase">reduced concentration of economic and political power</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the consumer benefit is real but diffuse — lower prices are spread across millions of small transactions</div><div class="phrase">at the individual level, small business owners experience the benefit most directly — market entry becomes genuinely possible</div><div class="phrase">at the organizational level, incumbent disruption is costly but concentrated — the pain falls on a small number of powerful firms</div><div class="phrase">at the national level, the political power argument is often stronger than the economic one — concentrated market power becomes concentrated political influence</div><div class="phrase">scale matters because the consumer benefit at the individual level and the democratic harm at the national level are both real — connecting them makes the strongest case</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments implement stricter regulations on lobbying?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">ordinary citizens — individual level</div><div class="phrase">former government officials — individual level</div><div class="phrase">corporate interests — organizational level</div><div class="phrase">NGOs and civil society organizations — organizational level</div><div class="phrase">democratic institutions and public trust — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">reduced influence of special interests on policies that affect them</div><div class="phrase">restricted career pathways in lobbying industry</div><div class="phrase">reduced legislative access and influence</div><div class="phrase">potentially affected by same restrictions as corporate lobbyists</div><div class="phrase">reduced perception of corruption; improved policy equity</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the benefit is diffuse — citizens rarely see a direct connection between lobbying reform and their lives</div><div class="phrase">at the individual level, former officials face a concrete career constraint — the revolving door restriction is most visible here</div><div class="phrase">at the organizational level, corporate and civil society interests are both affected — the regulation cannot discriminate without constitutional challenge</div><div class="phrase">at the national level, the democratic integrity argument is strongest — regulatory capture is a systemic problem that individual-level reform cannot address</div><div class="phrase">scale matters because the harm of lobbying is systemic and the benefit of reform is diffuse — individual-level framing understates both</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement sugar taxes on processed foods?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">low-income consumers — individual level</div><div class="phrase">children — individual level</div><div class="phrase">food manufacturers — organizational level</div><div class="phrase">healthcare providers — organizational level</div><div class="phrase">national public health systems — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">disproportionate cost burden as processed foods are cheaper alternatives</div><div class="phrase">long-term health benefit if consumption is reduced</div><div class="phrase">reformulation incentive or revenue loss</div><div class="phrase">reduced downstream treatment burden if effective</div><div class="phrase">reduced obesity and diet-related disease rates at population level</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the burden falls hardest on those with fewest alternatives — the policy is regressive without compensating mechanisms</div><div class="phrase">at the individual level, the long-term benefit to children is the strongest individual-level argument — habit formation in childhood persists</div><div class="phrase">at the organizational level, manufacturer reformulation is the desired second-order effect — the tax is a means, not the end</div><div class="phrase">at the national level, the healthcare cost argument is compelling — diet-related disease is a population-level outcome that individual food choices aggregate into</div><div class="phrase">scale reveals the distributional problem — individual burden is regressive; population benefit is progressive — both must be named</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the use of social media algorithms?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual users — individual level</div><div class="phrase">youth and vulnerable populations — individual level</div><div class="phrase">social media platforms — organizational level</div><div class="phrase">advertisers — organizational level</div><div class="phrase">democratic processes and national information environment — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">reduced exposure to manipulative content and filter bubbles</div><div class="phrase">reduced algorithmic radicalization and mental health harm</div><div class="phrase">business model disruption; compliance cost</div><div class="phrase">reduced targeting precision</div><div class="phrase">reduced political polarization and disinformation spread at scale</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the mental health argument is strongest — the causal link between algorithmic amplification and harm is most documented for youth</div><div class="phrase">at the individual level, the free speech concern is also individual — users value the ability to see content that algorithmic curation might suppress</div><div class="phrase">at the organizational level, the business model disruption is real and concentrated — advertising revenue depends on engagement optimization</div><div class="phrase">at the national level, the democratic integrity argument is the most compelling policy justification — individual harms aggregate into systemic polarization</div><div class="phrase">scale matters because individual mental health harm and national democratic harm are both real but require different policy instruments to address</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments implement a carbon tax on all fossil fuel usage?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">low-income households — individual level</div><div class="phrase">individual consumers — individual level</div><div class="phrase">energy companies — organizational level</div><div class="phrase">renewable energy sector — organizational level</div><div class="phrase">national economies and global climate system — national/global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">disproportionate cost burden on energy and transportation</div><div class="phrase">price signal incentivizes behavior change</div><div class="phrase">increased operating costs; investment shift toward renewables</div><div class="phrase">competitive advantage as fossil fuel costs rise</div><div class="phrase">aggregate emissions decline; accelerated energy transition</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the burden is regressive — low-income households spend a higher proportion of income on energy</div><div class="phrase">at the individual level, the behavior change argument assumes price sensitivity — which is lower among higher-income households</div><div class="phrase">at the organizational level, the investment signal is the most important effect — capital flows to renewables as fossil fuel costs rise</div><div class="phrase">at the national level, the emissions reduction argument is compelling but conditional on carbon leakage being addressed</div><div class="phrase">scale matters because the individual-level regressivity argument and the national-level emissions argument point in different directions — carbon dividend bridges them</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on deep-sea fishing?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">fishing community workers — individual level</div><div class="phrase">coastal populations dependent on fish protein — individual level</div><div class="phrase">commercial fishing fleets — organizational level</div><div class="phrase">small-scale artisanal fishers — organizational level</div><div class="phrase">global food security systems and ocean ecosystems — global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">potential income loss from restricted quotas</div><div class="phrase">food security implications from reduced fish availability</div><div class="phrase">major operational and economic impact</div><div class="phrase">often disproportionately affected by blanket restrictions</div><div class="phrase">long-term protein supply resilience; marine biodiversity recovery</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the harm is immediate and livelihood-threatening for fishing-dependent workers</div><div class="phrase">at the individual level, coastal protein-dependent populations face food security risk in the short term</div><div class="phrase">at the organizational level, commercial fleets and artisanal fishers have very different impact profiles — blanket regulation is not equitable across them</div><div class="phrase">at the global level, the food security and biodiversity arguments are strongest — sustainable stocks are the only long-term guarantee of fish supply</div><div class="phrase">scale reveals the time horizon problem — individual and organizational harm is immediate; global benefit is long-term — the argument requires connecting them explicitly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Here is what each column is asking you to do:</p>
+  <div class="how-to-grid">
+    <div class="how-to-cell htc-who">
+      <strong>Stakeholder = Who</strong>
+      Name the specific group affected and the scale level they operate at. "People" and "society" are not stakeholders — name the group precisely.
+    </div>
+    <div class="how-to-cell htc-what">
+      <strong>Impact = What Happens</strong>
+      State the specific consequence for that stakeholder — what concretely changes for them as a result of the policy.
+    </div>
+    <div class="how-to-cell htc-why">
+      <strong>Scale Consideration = Why Scale Matters</strong>
+      Explain why operating at that particular level changes the argument — what is true at the individual level may be false at the national level, and vice versa.
+    </div>
+  </div>
+  <p>Pick one chunk from each column and connect them. You must engage at least two scale levels. A response that stays at one level does not demonstrate the analytical depth this frame requires.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

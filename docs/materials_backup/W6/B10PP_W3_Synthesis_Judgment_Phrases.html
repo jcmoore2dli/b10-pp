@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 — Synthesis &amp; Judgment · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-tensions   { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-priorities { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-judgment   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-tensions   .legend-label { color: #dc2626; }
+  .leg-priorities .legend-label { color: #d97706; }
+  .leg-judgment   .legend-label { color: #1e3a5f; }
+  .leg-tensions   .legend-desc { color: #dc2626; }
+  .leg-priorities .legend-desc { color: #d97706; }
+  .leg-judgment   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0f4f8; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #1e3a5f; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #1e3a5f; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #1e3a5f; background: #f0f4f8; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-tensions   .col-header { background: #dc2626; }
+  .col-priorities .col-header { background: #d97706; }
+  .col-judgment   .col-header { background: #1e3a5f; }
+  .col-tensions   { border: 1.5px solid #dc2626; }
+  .col-priorities { border: 1.5px solid #d97706; }
+  .col-judgment   { border: 1.5px solid #1e3a5f; }
+  .col-tensions   .col-body { background: #fef2f2; }
+  .col-priorities .col-body { background: #fffbeb; }
+  .col-judgment   .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W3 — Synthesis &amp; Judgment · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Bring competing considerations together and arrive at a reasoned, defensible conclusion. Phrases in each column are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.
+</div>
+<div class="legend">
+  <div class="legend-item leg-tensions"><span class="legend-label">Tensions</span><span class="legend-desc">The competing claims that must be addressed</span></div>
+  <div class="legend-item leg-priorities"><span class="legend-label">Priorities</span><span class="legend-desc">Which consideration wins and why</span></div>
+  <div class="legend-item leg-judgment"><span class="legend-label">Judgment</span><span class="legend-desc">The defensible conclusion that follows</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> while both positions have merit… · the stronger case rests on… · although X is a legitimate concern… · on balance… · weighing X against Y… · the evidence suggests… · neither position is without weakness, but… · a defensible position acknowledges… while concluding that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should schools integrate media literacy education into their curricula?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">civic benefit of informed citizenry vs. curriculum crowding with existing subject demands</div><div class="phrase">teacher capacity to deliver vs. cost and time of training</div><div class="phrase">standalone course vs. integrated cross-subject approach</div><div class="phrase">short-term implementation cost vs. long-term democratic dividend</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">civic benefit is real and documented; curriculum crowding is addressable through integration rather than addition</div><div class="phrase">teacher capacity is the binding constraint — investment in training is the necessary precondition for the benefit to materialize</div><div class="phrase">integrated cross-subject approach is more durable and less costly than standalone — it avoids the addition problem while distributing delivery across trained educators</div><div class="phrase">long-term democratic dividend justifies short-term cost — the question is whether political time horizons allow for that calculus</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, integrated cross-subject media literacy is defensible — it addresses the crowding objection while distributing the benefit across all subjects</div><div class="phrase">the stronger case leads with the democratic dividend argument for general audiences and the cost-effectiveness of integration for institutional audiences</div><div class="phrase">the defensible position on teacher capacity is that it must be addressed first — mandate without training produces compliance without benefit</div><div class="phrase">the judgment on political time horizon is that the democratic dividend argument is strongest when made in terms of near-term harms — misinformation spread is current, not future</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the gig economy be more strictly regulated?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">worker protection benefit vs. gig work availability reduction</div><div class="phrase">platform accountability vs. platform market exit risk</div><div class="phrase">uniform national regulation vs. sector-specific or income-threshold approaches</div><div class="phrase">immediate benefit to low-income workers vs. long-term structural labor market effects</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">worker protection benefit is strongest for low-income workers with no real choice; availability reduction risk is strongest for high-income contractors who do choose gig work</div><div class="phrase">platform accountability is appropriate; market exit risk is real for smaller platforms but overstated for large ones with pricing power to absorb costs</div><div class="phrase">income-threshold approach is more defensible than uniform regulation — it protects the most vulnerable without restricting genuine independent contracting</div><div class="phrase">immediate benefit to low-income workers is the strongest moral claim; long-term structural effects are uncertain and should not override the immediate claim</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, income-threshold reclassification is defensible — it targets the most vulnerable workers while preserving flexibility for genuine contractors</div><div class="phrase">the stronger case distinguishes platform types — large platforms with documented exploitation histories are the primary target; smaller platforms and genuine contracting relationships are a secondary concern</div><div class="phrase">the defensible position on market exit is that platforms whose business models depend on labor cost externalization should restructure or exit — that is the point of the regulation</div><div class="phrase">the judgment on long-term effects is that uncertainty about structural effects does not override certainty about current harm — the moral claim of the most vulnerable workers is the strongest argument</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should there be stronger antitrust laws to break up monopolies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">consumer and innovation benefit vs. scale efficiency disruption</div><div class="phrase">structural remedies vs. behavioral remedies</div><div class="phrase">domestic antitrust vs. global competitive disadvantage</div><div class="phrase">speed of antitrust litigation vs. speed of market harm</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">scale efficiency argument is strongest for natural monopolies; it is much weaker for digital platform monopolies that achieved scale through network effects and acquisition</div><div class="phrase">structural remedies are more durable than behavioral remedies — behavioral compliance is gameable and monitoring-intensive; structural separation is self-enforcing</div><div class="phrase">global competitive disadvantage argument has merit for export-oriented industries but does not apply to domestic market digital platforms</div><div class="phrase">litigation speed is a genuine problem — the market often consolidates further during litigation; interim remedies and faster process are the appropriate response</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, stronger antitrust with preference for structural remedies is defensible for digital platform monopolies — the scale efficiency argument does not apply to this category</div><div class="phrase">the stronger case distinguishes natural monopolies from acquired monopolies — the antitrust argument is strongest where market dominance was achieved through acquisition rather than organic growth</div><div class="phrase">the defensible position on global competitiveness is context-dependent — it is a legitimate concern for export industries and not for domestic service platforms</div><div class="phrase">the judgment on litigation speed is that process reform is necessary alongside substantive reform — slower processes than markets makes antitrust structurally reactive</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments implement stricter regulations on lobbying?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">reduced corporate influence vs. legitimate stakeholder access restriction</div><div class="phrase">revolving door constraints vs. government capacity to attract industry expertise</div><div class="phrase">disclosure requirements vs. dark money channel persistence</div><div class="phrase">equal application to all lobbyists vs. disproportionate impact on civil society</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">legitimate stakeholder access is valuable; the question is whether current access is proportionate — evidence of regulatory capture suggests it is not</div><div class="phrase">revolving door constraint is the most important reform; government capacity concern is real but addressable through technical advisory roles that do not involve lobbying</div><div class="phrase">disclosure is necessary but not sufficient — dark money channels persist without 501(c)(4) reform alongside lobbying disclosure</div><div class="phrase">equal application is the right principle; disproportionate impact on civil society is a design flaw to be corrected, not an argument against reform</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, lobbying reform with disclosure, cooling-off periods, and 501(c)(4) reform is defensible — the regulatory capture evidence makes the case for reform compelling</div><div class="phrase">the stronger case leads with the revolving door argument — it is the most concrete and documentable form of regulatory capture</div><div class="phrase">the defensible position on disclosure is that it is necessary but insufficient — the full reform package must include dark money restriction</div><div class="phrase">the judgment on civil society impact is that design can address it — the reform should explicitly protect non-profit advocacy while targeting commercial lobbying</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement sugar taxes on processed foods?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">public health benefit vs. regressive distributional impact</div><div class="phrase">manufacturer reformulation incentive vs. consumer substitution to equally unhealthy alternatives</div><div class="phrase">revenue generation vs. revenue decline as policy succeeds</div><div class="phrase">individual freedom argument vs. externalized public health cost argument</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">public health benefit is real but concentrated in price-sensitive lower-income groups — which creates both the greatest benefit and the greatest regressive burden simultaneously</div><div class="phrase">reformulation incentive is documented; consumer substitution is real but partial — the net effect on consumption is positive even if substitution occurs</div><div class="phrase">revenue decline as the policy succeeds is a feature, not a bug — it indicates the policy is working; fiscal planning should account for it</div><div class="phrase">externalized public health cost argument is stronger than individual freedom argument — the cost of diet-related disease is borne collectively, not individually</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a sugar tax with household rebate mechanism and hypothecated revenue is defensible — the regressive burden is addressable and the public health benefit is real</div><div class="phrase">the stronger case leads with the externalized cost argument — it reframes the policy from government interference in individual choice to correction of a market failure</div><div class="phrase">the defensible position on substitution is that the net effect is positive even with substitution — the policy goal is reduced sugar consumption, not eliminated consumption</div><div class="phrase">the judgment on revenue decline is that successful policy creates fiscal planning requirements — governments should model revenue trajectories and plan accordingly rather than treating declining revenue as a failure</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the use of social media algorithms?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">harm reduction benefit vs. innovation and business model disruption</div><div class="phrase">government content control risk vs. platform unaccountability risk</div><div class="phrase">transparency requirement vs. gaming of disclosed systems</div><div class="phrase">domestic regulation vs. global platform with cross-border effect</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">harm reduction benefit is strongest for documented harms — radicalization, eating disorder content, election interference; innovation disruption concern is strongest for low-harm recommendation systems</div><div class="phrase">government content control risk is addressable through independent oversight; platform unaccountability risk is the current status quo — the comparison favors regulation</div><div class="phrase">gaming risk is real but manageable through third-party audit rather than public disclosure — auditors see the system, adversaries do not</div><div class="phrase">domestic regulation is insufficient alone but necessary — international coordination follows from domestic standard-setting, not precedes it</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, harm-based algorithmic regulation with third-party audit is defensible — the unaccountability risk of the status quo is stronger than the innovation disruption concern</div><div class="phrase">the stronger case leads with documented harms and their causal mechanisms — radicalization through engagement optimization is the clearest case</div><div class="phrase">the defensible position on transparency is third-party audit with confidentiality — it provides accountability without gaming vulnerability</div><div class="phrase">the judgment on cross-border effect is that domestic standard-setting creates de facto global standards for platforms that want market access — the EU DSA demonstrates this</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments implement a carbon tax on all fossil fuel usage?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">emissions reduction effectiveness vs. regressive distributional burden</div><div class="phrase">price signal efficiency vs. political feasibility</div><div class="phrase">revenue recycling options vs. revenue earmarking debates</div><div class="phrase">domestic carbon price vs. carbon leakage without border adjustment</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">emissions reduction effectiveness is documented; regressive burden is real and addressable through carbon dividend — the two are not in fundamental tension</div><div class="phrase">price signal efficiency is the strongest economic argument; political feasibility is a design challenge — carbon dividend addresses the political coalition problem</div><div class="phrase">carbon dividend to households is the most politically durable recycling mechanism — it builds the coalition of net beneficiaries among lower-income households</div><div class="phrase">carbon leakage is the strongest technical objection — border carbon adjustment is necessary alongside domestic pricing to complete the policy</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a carbon tax with carbon dividend and border adjustment is defensible — each element addresses one of the three strongest objections</div><div class="phrase">the stronger case leads with the distributional argument for carbon dividend — it reframes carbon tax from regressive burden to progressive transfer</div><div class="phrase">the defensible position on revenue recycling is carbon dividend over green investment earmarking — the coalition benefit of dividend outweighs the investment argument for most political contexts</div><div class="phrase">the judgment on border adjustment is that it is not optional — a carbon tax without border adjustment is environmentally incomplete and economically unfair to domestic industry</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on deep-sea fishing?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">ocean ecosystem protection vs. food security and fishing community livelihoods</div><div class="phrase">binding international regulation vs. voluntary framework and bilateral agreements</div><div class="phrase">commercial fleet restriction vs. artisanal fishing exemption design</div><div class="phrase">short-term catch reduction vs. long-term stock recovery and sustainable yield</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">ecosystem protection and food security are not fundamentally opposed — sustainable stocks produce higher long-term yields than depleted ones</div><div class="phrase">voluntary frameworks have a documented record of underfulfillment; binding regulation with enforcement is more reliable for global commons problems</div><div class="phrase">artisanal fishing exemption is justified by both equity and proportionality — the harm from small-scale fishing is marginal compared to industrial fleet impact</div><div class="phrase">short-term catch reduction is the necessary cost of long-term stock recovery — the time horizon determines whether the trade-off is acceptable</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, binding international regulation with artisanal exemptions and compensation for affected fishing nations is defensible — the ecosystem and food security arguments align over longer time horizons</div><div class="phrase">the stronger case leads with the long-term food security argument — it reframes conservation from environmentalism to economic self-interest for fishing-dependent nations</div><div class="phrase">the defensible position on voluntary vs. binding is that global commons problems require binding frameworks — the tragedy of the commons is the argument, not an objection</div><div class="phrase">the judgment on time horizon is that shorter stock recovery timelines produce greater political support — framing in terms of 10-year recovery rather than 30-year sustainability increases feasibility</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Phrases are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.</p>
+  <div class="example">"While both the democratic legitimacy and federalism arguments have merit, the stronger case rests on legitimacy — small state protection already exists through Senate representation. On balance, a system that has produced three popular vote losers as president has a legitimacy deficit that federalism concerns cannot offset."</div>
+  <p>Three chunks, one number, one complete argument. <strong>The Priorities column is where ILR 3 performance lives</strong> — not identifying the tension, but explaining why one side carries more weight than the other.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

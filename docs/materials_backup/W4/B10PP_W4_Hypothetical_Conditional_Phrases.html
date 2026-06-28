@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W4 — Hypothetical &amp; Conditional · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-condition { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-projected { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-extended  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-condition .legend-label { color: #16a34a; }
+  .leg-projected .legend-label { color: #d97706; }
+  .leg-extended  .legend-label { color: #7c3aed; }
+  .leg-condition .legend-desc { color: #16a34a; }
+  .leg-projected .legend-desc { color: #d97706; }
+  .leg-extended  .legend-desc { color: #7c3aed; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-condition .col-header { background: #16a34a; }
+  .col-projected .col-header { background: #d97706; }
+  .col-extended  .col-header { background: #7c3aed; }
+  .col-condition { border: 1.5px solid #16a34a; }
+  .col-projected { border: 1.5px solid #d97706; }
+  .col-extended  { border: 1.5px solid #7c3aed; }
+  .col-condition .col-body { background: #f0fdf4; }
+  .col-projected .col-body { background: #fffbeb; }
+  .col-extended  .col-body { background: #f5f3ff; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>W4 — Hypothetical &amp; Conditional · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this frame:</strong> Project scenarios and trace what follows. The core move is the conditional: <em>if X under condition Y, then Z would likely follow — and if Z holds, then...</em> The Extended Scenario column is where ILR 2+/3 responses go further than a basic conditional, chaining consequences and testing assumptions.
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-condition">
+    <span class="legend-label">Condition</span>
+    <span class="legend-desc">The specific circumstance that must hold</span>
+  </div>
+  <div class="legend-item leg-projected">
+    <span class="legend-label">Projected Outcome</span>
+    <span class="legend-desc">What would likely result if the condition holds</span>
+  </div>
+  <div class="legend-item leg-extended">
+    <span class="legend-label">Extended Scenario</span>
+    <span class="legend-desc">What follows from the outcome — second-order consequences</span>
+  </div>
+</div>
+
+<div class="connectors">
+  <strong>Key connectors:</strong>
+  if… were implemented… · were… to… then… · should… fail to… · in a scenario where… · assuming… the effect would be… · if that outcome holds, then… · this in turn would lead to… · the second-order consequence would be… · provided that… · on the condition that…
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should AI teachers replace human instructors in some schools?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if AI deployment is limited to underserved regions</div>
+        <div class="phrase">if human instructors remain in a supervisory role</div>
+        <div class="phrase">if AI quality meets minimum pedagogical standards</div>
+        <div class="phrase">if infrastructure and connectivity are guaranteed</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">access to consistent instruction expands in under-resourced areas</div>
+        <div class="phrase">teacher shortage in rural and remote contexts is partially addressed</div>
+        <div class="phrase">social-emotional development gaps emerge without human presence</div>
+        <div class="phrase">equity of AI quality becomes a new axis of educational inequality</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if quality gaps persist, AI adoption widens rather than closes the achievement divide</div>
+        <div class="phrase">if social-emotional gaps compound, long-term workforce readiness declines</div>
+        <div class="phrase">if successful, pressure mounts to expand AI replacement beyond initial scope</div>
+        <div class="phrase">if teacher profession declines, human instructional capacity becomes harder to rebuild</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should personalized learning algorithms be mandatory in public education?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if algorithm quality is independently verified before deployment</div>
+        <div class="phrase">if student data is protected under strict privacy law</div>
+        <div class="phrase">if teachers retain authority to override algorithmic recommendations</div>
+        <div class="phrase">if access to quality algorithms is equitably distributed</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">struggling students receive more targeted content delivery</div>
+        <div class="phrase">student data accumulates at scale creating systemic privacy risk</div>
+        <div class="phrase">teacher role shifts from instruction toward facilitation</div>
+        <div class="phrase">vendor dependency becomes embedded in public education infrastructure</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if vendor dependency deepens, curriculum control shifts away from public institutions</div>
+        <div class="phrase">if privacy protections fail, student profiles become commercially exploitable</div>
+        <div class="phrase">if teacher capacity declines, human judgment in education is structurally eroded</div>
+        <div class="phrase">if outcomes improve selectively, mandatory adoption entrenches unequal benefit</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should cryptocurrency be regulated as a financial instrument?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if regulation is coordinated across major jurisdictions simultaneously</div>
+        <div class="phrase">if compliance thresholds accommodate smaller retail participants</div>
+        <div class="phrase">if enforcement targets exchanges rather than individual holders</div>
+        <div class="phrase">if unbanked populations retain alternative access pathways</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">institutional investment increases with regulatory clarity</div>
+        <div class="phrase">money laundering via crypto becomes significantly harder</div>
+        <div class="phrase">market consolidates around large compliant exchanges</div>
+        <div class="phrase">unregulated crypto activity migrates to offshore platforms</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if consolidation continues, crypto market resembles traditional finance with same systemic risks</div>
+        <div class="phrase">if offshore migration grows, regulatory benefit is captured by non-signatory jurisdictions</div>
+        <div class="phrase">if institutional adoption accelerates, crypto volatility decreases but decentralization is lost</div>
+        <div class="phrase">if unbanked access is blocked, financial inclusion benefits of crypto are eliminated</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should central banks adopt digital currencies?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if CBDC is designed with strong privacy protections</div>
+        <div class="phrase">if commercial banks retain a role in CBDC distribution</div>
+        <div class="phrase">if programmable features are limited to specific use cases</div>
+        <div class="phrase">if interoperability with existing payment systems is guaranteed</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">financial inclusion improves for unbanked citizens</div>
+        <div class="phrase">monetary policy transmission becomes more direct and precise</div>
+        <div class="phrase">commercial bank deposit base declines as citizens hold CBDC directly</div>
+        <div class="phrase">government surveillance capacity over individual transactions increases</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if bank deposit base declines, credit availability tightens with downstream economic effects</div>
+        <div class="phrase">if surveillance capacity grows, authoritarian misuse becomes structurally available</div>
+        <div class="phrase">if programmable features expand, government control over spending patterns follows</div>
+        <div class="phrase">if public trust is lost, CBDC adoption fails and investment is wasted</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should governments implement a digital identity system for all citizens?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if enrollment is voluntary rather than mandatory</div>
+        <div class="phrase">if data use is strictly limited to service delivery</div>
+        <div class="phrase">if alternative non-digital access pathways are maintained</div>
+        <div class="phrase">if independent oversight of the system is legally guaranteed</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">government service delivery efficiency improves for enrolled citizens</div>
+        <div class="phrase">identity fraud decreases significantly</div>
+        <div class="phrase">citizens without documentation face deeper exclusion</div>
+        <div class="phrase">surveillance infrastructure is built alongside service delivery</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if surveillance infrastructure expands, scope creep toward social control becomes structurally available</div>
+        <div class="phrase">if exclusion deepens, marginalized populations lose access to essential services</div>
+        <div class="phrase">if voluntary system succeeds, pressure to make it mandatory increases</div>
+        <div class="phrase">if data breach occurs, biometric data cannot be changed — harm is permanent</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should governments fund research into life extension technologies?</span></div>
+      <span class="q-tag">HLT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if breakthroughs are made available as global public goods</div>
+        <div class="phrase">if pension and retirement systems are reformed in parallel</div>
+        <div class="phrase">if research is focused on healthspan rather than lifespan alone</div>
+        <div class="phrase">if ethical oversight governs distribution and access</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">healthy productive lifespan extends for populations with access</div>
+        <div class="phrase">age-related disease burden decreases in the long term</div>
+        <div class="phrase">pension and retirement systems face structural insolvency</div>
+        <div class="phrase">global inequality deepens if access is limited to wealthy nations</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if pension systems are not reformed, fiscal crisis follows extended lifespan</div>
+        <div class="phrase">if access is unequal, life extension becomes the ultimate marker of global inequality</div>
+        <div class="phrase">if healthspan improves without lifespan extension, workforce participation and productivity increase</div>
+        <div class="phrase">if population growth accelerates, resource and environmental pressure compounds</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should there be a global moratorium on autonomous weapons development?</span></div>
+      <span class="q-tag">TEC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if all major military powers sign and ratify the moratorium</div>
+        <div class="phrase">if verification mechanisms are technically feasible</div>
+        <div class="phrase">if defensive autonomous systems are distinguished from offensive ones</div>
+        <div class="phrase">if non-signatory states face meaningful consequences for non-compliance</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">autonomous weapons proliferation to non-state actors is slowed</div>
+        <div class="phrase">human accountability in use of force is maintained</div>
+        <div class="phrase">nations outside the moratorium gain asymmetric military advantage</div>
+        <div class="phrase">defense AI investment is redirected to non-lethal applications</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if non-signatories gain advantage, signatory nations face pressure to withdraw</div>
+        <div class="phrase">if verification fails, moratorium becomes unenforceable and collapses</div>
+        <div class="phrase">if successful, precedent for AI weapons governance is established for future technologies</div>
+        <div class="phrase">if defensive systems are banned, vulnerability of signatory nations increases</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should there be a global ban on nuclear weapons?</span></div>
+      <span class="q-tag">INT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-condition"><div class="col-header">Condition</div><div class="col-body">
+        <div class="phrase">if all nuclear-armed states ratify and comply</div>
+        <div class="phrase">if verification regime is technically robust</div>
+        <div class="phrase">if conventional arms buildup is addressed simultaneously</div>
+        <div class="phrase">if breakout risk is managed through inspection access</div>
+      </div></div>
+      <div class="col col-projected"><div class="col-header">Projected Outcome</div><div class="col-body">
+        <div class="phrase">existential risk of nuclear exchange decreases among signatories</div>
+        <div class="phrase">mutual assured destruction framework collapses</div>
+        <div class="phrase">conventional arms competition intensifies to fill deterrence gap</div>
+        <div class="phrase">non-nuclear states gain strategic parity with former nuclear powers</div>
+      </div></div>
+      <div class="col col-extended"><div class="col-header">Extended Scenario</div><div class="col-body">
+        <div class="phrase">if conventional arms race follows, conflict frequency may increase despite nuclear risk reduction</div>
+        <div class="phrase">if one state secretly retains weapons, it gains decisive asymmetric advantage</div>
+        <div class="phrase">if verification fails, ban collapses and trust between nuclear states is permanently damaged</div>
+        <div class="phrase">if successful, basis of great power competition shifts to conventional and cyber domains</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with conditional language. For example:</p>
+  <div class="example">"If CBDC is designed with strong privacy protections, the projected outcome is that financial inclusion improves for unbanked citizens — but if surveillance capacity grows alongside it, the extended scenario is that authoritarian misuse becomes structurally available, regardless of original intent."</div>
+  <p>Three chunks. Three connectors. A complete hypothetical argument with a second-order consequence. <strong>The Extended Scenario column is what separates an ILR 2+ response from an ILR 3 one</strong> — don't stop at the projected outcome.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+
+</body>
+</html>

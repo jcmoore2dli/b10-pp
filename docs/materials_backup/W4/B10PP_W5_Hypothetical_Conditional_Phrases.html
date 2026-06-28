@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W5 — Hypothetical &amp; Conditional · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-condition { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-projected { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-extended  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-condition .legend-label { color: #16a34a; }
+  .leg-projected .legend-label { color: #d97706; }
+  .leg-extended  .legend-label { color: #7c3aed; }
+  .leg-condition .legend-desc { color: #16a34a; }
+  .leg-projected .legend-desc { color: #d97706; }
+  .leg-extended  .legend-desc { color: #7c3aed; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-condition .col-header { background: #16a34a; }
+  .col-projected .col-header { background: #d97706; }
+  .col-extended  .col-header { background: #7c3aed; }
+  .col-condition { border: 1.5px solid #16a34a; }
+  .col-projected { border: 1.5px solid #d97706; }
+  .col-extended  { border: 1.5px solid #7c3aed; }
+  .col-condition .col-body { background: #f0fdf4; }
+  .col-projected .col-body { background: #fffbeb; }
+  .col-extended  .col-body { background: #f5f3ff; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W5 — Hypothetical &amp; Conditional · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Project scenarios and trace what follows. The core move is the conditional: <em>if X under condition Y, then Z would likely follow — and if Z holds, then...</em> The Extended Scenario column is where ILR 2+/3 responses go further, chaining consequences and testing second-order assumptions.
+</div>
+<div class="legend">
+  <div class="legend-item leg-condition"><span class="legend-label">Condition</span><span class="legend-desc">The specific circumstance that must hold</span></div>
+  <div class="legend-item leg-projected"><span class="legend-label">Projected Outcome</span><span class="legend-desc">What would likely result if the condition holds</span></div>
+  <div class="legend-item leg-extended"><span class="legend-label">Extended Scenario</span><span class="legend-desc">What follows from the outcome — second-order consequences</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> if… were implemented… · were… to… then… · should… fail to… · in a scenario where… · assuming… the effect would be… · if that outcome holds, then… · this in turn would lead to… · the second-order consequence would be… · provided that… · on the condition that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should universities limit legacy admissions?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if legacy preferences are eliminated but donor recognition programs are maintained separately</div><div class="phrase">if the change is implemented gradually to allow fundraising model adaptation</div><div class="phrase">if need-based financial aid is expanded simultaneously to improve access</div><div class="phrase">if the change applies to all selective institutions through accreditation requirements</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">admissions pool composition shifts toward higher academic merit and lower income backgrounds</div><div class="phrase">alumni donation rates decrease in the short term as transactional motivation declines</div><div class="phrase">need-based aid expansion partially offsets access improvement from legacy elimination</div><div class="phrase">selective institutions face pressure to compete on mission rather than legacy network</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if need-based aid is well-funded, access improvement is substantial and durable</div><div class="phrase">if fundraising declines significantly, financial aid budgets are cut and access gains are reversed</div><div class="phrase">if change is limited to top institutions, legacy advantage migrates to second-tier selective schools</div><div class="phrase">if accreditation requires universal adoption, industry-wide change is more durable</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to disclose pay scales for all positions?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if disclosure applies to both job postings and internal salary bands</div><div class="phrase">if enforcement includes meaningful penalties for non-compliance</div><div class="phrase">if disclosure is phased in by company size starting with large employers</div><div class="phrase">if anonymized pay data is reported to a regulatory body for pattern analysis</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">wage-setting becomes more transparent and comparable across organizations</div><div class="phrase">discriminatory pay gaps become harder to sustain and easier to legally challenge</div><div class="phrase">large employers restructure compensation to reduce disclosure-related tension</div><div class="phrase">regulatory body gains data to identify systemic pay discrimination patterns</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if enforcement is strong, gender and racial pay gaps narrow measurably within five years</div><div class="phrase">if high earners leave transparent organizations, talent concentration in opaque firms increases</div><div class="phrase">if regulatory data enables targeted enforcement, systemic discrimination is addressed at scale</div><div class="phrase">if phased rollout reveals positive outcomes, political support for universal expansion increases</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should inheritance taxes be significantly increased?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if small business and farm exemptions are well-designed to prevent forced sales</div><div class="phrase">if the increased rate applies only above a high threshold protecting middle-class estates</div><div class="phrase">if trust and gifting loopholes are closed simultaneously</div><div class="phrase">if revenue is dedicated to equal opportunity investment — education, healthcare, housing</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">intergenerational wealth transfer among the very wealthy is significantly reduced</div><div class="phrase">estate planning industry expands to exploit remaining loopholes</div><div class="phrase">small business and farm transfers are protected from forced sale</div><div class="phrase">revenue funds public investment that partially offsets inherited advantage</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if loopholes are closed comprehensively, avoidance is limited and revenue is substantial</div><div class="phrase">if loopholes remain, wealthy families restructure into trusts and the tax is largely symbolic</div><div class="phrase">if revenue is invested in equal opportunity, long-term social mobility improves</div><div class="phrase">if threshold is set too low, politically damaging stories of family farm sales dominate the debate</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should there be stricter limits on political donations from corporations?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if limits apply to all organizational donors including unions and non-profits</div><div class="phrase">if disclosure requirements accompany any remaining donation allowances</div><div class="phrase">if Citizens United precedent is overturned or narrowed by the Supreme Court</div><div class="phrase">if dark money channels through 501(c)(4) organizations are simultaneously restricted</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">direct corporate political donation decreases significantly</div><div class="phrase">political spending shifts toward lobbying and dark money rather than disappearing</div><div class="phrase">disclosure requirements increase transparency for remaining legal donations</div><div class="phrase">if Citizens United is not addressed, spending returns through alternative channels</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if dark money is not restricted, corporate influence simply migrates rather than decreases</div><div class="phrase">if disclosure is comprehensive, voters gain meaningful information about donor influence</div><div class="phrase">if all organizational donors are included, labor unions lose political funding capacity</div><div class="phrase">if Supreme Court precedent changes, a broader campaign finance reform becomes legally viable</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should euthanasia be legalized in all countries?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if eligibility is strictly limited to terminal illness with confirmed prognosis</div><div class="phrase">if psychological assessment is mandatory before approval</div><div class="phrase">if physician participation remains voluntary</div><div class="phrase">if independent oversight body reviews every case</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">terminally ill patients gain legal access to a controlled end-of-life option</div><div class="phrase">palliative care investment faces reallocation pressure toward cheaper option</div><div class="phrase">physician refusal creates access inequality between patients in different practices</div><div class="phrase">oversight body creates accountability but also administrative burden and delay</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if eligibility criteria expand over time, vulnerable non-terminal populations face increased risk</div><div class="phrase">if palliative care is defunded, the quality of end-of-life care for those who decline euthanasia deteriorates</div><div class="phrase">if physician refusal is widespread, patients face geographic inequality of access</div><div class="phrase">if oversight is rigorous, abuse is prevented but access is slowed for those with urgent need</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the collection and use of biometric data?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulation includes mandatory deletion timelines for biometric data</div><div class="phrase">if facial recognition in public spaces is banned pending algorithmic bias review</div><div class="phrase">if consent is required for all non-essential biometric collection</div><div class="phrase">if independent audit of algorithmic accuracy across demographic groups is required before deployment</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">biometric surveillance infrastructure expansion is constrained</div><div class="phrase">facial recognition errors affecting minority communities are reduced</div><div class="phrase">consent requirement creates friction that reduces incidental biometric collection</div><div class="phrase">audit requirement surfaces and requires correction of demographic bias before public deployment</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if surveillance is constrained, law enforcement adapts to less accurate but less biased alternatives</div><div class="phrase">if bias is corrected through audit, accuracy improves equitably before public deployment</div><div class="phrase">if consent is required, biometric authentication for convenience applications declines</div><div class="phrase">if regulation is comprehensive, public trust in government digital systems increases over time</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should private prisons be banned?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if a transition period allows government to build capacity before contracts expire</div><div class="phrase">if rural economic impact is addressed through alternative public investment</div><div class="phrase">if rehabilitation outcome standards are mandated for replacement public facilities</div><div class="phrase">if existing contracts are honored until expiry rather than broken</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">profit motive is removed from incarceration management</div><div class="phrase">government corrections budget increases significantly during and after transition</div><div class="phrase">rural communities dependent on prison employment face economic disruption</div><div class="phrase">rehabilitation investment increases if mandated standards are enforced</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if rehabilitation standards are well-designed, recidivism decreases and reincarceration rate falls</div><div class="phrase">if rural economic disruption is not addressed, political reversal of the ban becomes likely</div><div class="phrase">if government capacity is insufficient, transition creates temporary capacity crisis</div><div class="phrase">if structural incentive to incarcerate is removed, advocacy for sentencing reform gains traction</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on the use of private military companies?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulations are binding under international humanitarian law</div><div class="phrase">if state liability for PMC actions is established alongside PMC liability</div><div class="phrase">if a licensing regime requires PMCs to meet minimum training and accountability standards</div><div class="phrase">if whistleblower protections are extended to PMC employees</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">PMC accountability gap for civilian harm narrows</div><div class="phrase">states face increased legal risk for PMC operations conducted on their behalf</div><div class="phrase">licensing regime raises the cost of entry and consolidates the PMC industry</div><div class="phrase">whistleblower protections create internal accountability pressure</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if state liability is established, states reduce PMC use to avoid legal exposure</div><div class="phrase">if industry consolidates, remaining PMCs are larger and more politically influential</div><div class="phrase">if whistleblowers are protected, internal violations are more likely to be reported</div><div class="phrase">if regulations are binding, proxy conflict via PMC becomes legally costly for major powers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with conditional language.</p>
+  <div class="example">"If CBDC is designed with strong privacy protections, the projected outcome is that financial inclusion improves — but if surveillance capacity grows alongside it, the extended scenario is that authoritarian misuse becomes structurally available, regardless of original intent."</div>
+  <p>Three chunks. Three connectors. A complete hypothetical argument with a second-order consequence. <strong>The Extended Scenario column is what separates an ILR 2+ response from an ILR 3 one</strong> — don't stop at the projected outcome.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

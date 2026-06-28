@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W2 — Scale &amp; Stakeholder · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-impact      { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-scale       { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder .legend-label { color: #0d9488; }
+  .leg-impact      .legend-label { color: #d97706; }
+  .leg-scale       .legend-label { color: #1e3a5f; }
+  .leg-stakeholder .legend-desc { color: #0d9488; }
+  .leg-impact      .legend-desc { color: #d97706; }
+  .leg-scale       .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+  .scale-reminder { margin: 0 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #dc2626; font-weight: 700; line-height: 1.5; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #0d9488; }
+  .col-impact      .col-header { background: #d97706; }
+  .col-scale       .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #0d9488; }
+  .col-impact      { border: 1.5px solid #d97706; }
+  .col-scale       { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #f0fdfa; }
+  .col-impact      .col-body { background: #fffbeb; }
+  .col-scale       .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .how-to-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .how-to-cell { border-radius: 8px; padding: 8px; font-size: 11px; line-height: 1.5; }
+  .how-to-cell strong { display: block; font-size: 11px; margin-bottom: 3px; }
+  .htc-who  { background: #f0fdfa; border: 1px solid #0d9488; color: #374151; }
+  .htc-what { background: #fffbeb; border: 1px solid #d97706; color: #374151; }
+  .htc-why  { background: #f0f4f8; border: 1px solid #1e3a5f; color: #374151; }
+  .htc-who  strong { color: #0d9488; }
+  .htc-what strong { color: #d97706; }
+  .htc-why  strong { color: #1e3a5f; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W2 — Scale &amp; Stakeholder · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify who is affected by a policy, what happens to them, and why the scale at which they operate changes the argument. A strong response must engage <em>at least two different scale levels</em>.
+</div>
+<div class="legend">
+  <div class="legend-item leg-stakeholder"><span class="legend-label">Stakeholder</span><span class="legend-desc">Who is affected and at what scale level</span></div>
+  <div class="legend-item leg-impact"><span class="legend-label">Impact</span><span class="legend-desc">What specifically happens to that stakeholder</span></div>
+  <div class="legend-item leg-scale"><span class="legend-label">Scale Consideration</span><span class="legend-desc">Why operating at this level changes the argument</span></div>
+</div>
+<div class="scale-reminder">
+  You must engage at least two scale levels: Individual &amp; Family · Organizational &amp; Community · National &amp; Global
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> at the individual level… · at the organizational level… · at the national level… · this affects not only… but also… · while the immediate impact falls on… · what begins as a concern for… quickly becomes… · from the perspective of… · those most directly affected are… · the burden falls disproportionately on…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should higher education be made tuition-free at public universities?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">students from low-income backgrounds — individual level</div><div class="phrase">students from wealthy families — individual level</div><div class="phrase">public universities — organizational level</div><div class="phrase">private universities — organizational level</div><div class="phrase">state governments and national labor force — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">reduced financial barrier to access</div><div class="phrase">benefit without financial need — untargeted subsidy</div><div class="phrase">dependence on government funding replacing tuition revenue</div><div class="phrase">competitive pressure and enrollment decline</div><div class="phrase">higher-skilled workforce over medium term; credential inflation risk</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the benefit is real but unevenly distributed — low-income students gain most, but they are not the majority of beneficiaries</div><div class="phrase">at the organizational level, quality maintenance depends on whether government funding is adequate and stable</div><div class="phrase">at the national level, the case shifts to workforce and economic competitiveness — stronger than the individual access argument alone</div><div class="phrase">scale matters because the distributional concern — wealthy students benefit equally — is only visible when you move from individual to population level</div><div class="phrase">the strongest argument operates across levels: individual access + national workforce return + organizational quality assurance</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should gig economy workers receive the same benefits as full-time employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">gig workers — individual level</div><div class="phrase">consumers — individual level</div><div class="phrase">gig platforms — organizational level</div><div class="phrase">traditional employers — organizational level</div><div class="phrase">national labor law frameworks — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">access to healthcare, retirement, and paid leave; potential loss of flexibility</div><div class="phrase">potential price increases as platform costs rise</div><div class="phrase">significant cost increase; possible business model disruption</div><div class="phrase">reduced competitive disadvantage from unregulated labor</div><div class="phrase">need for reclassification of employment categories</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the protection argument is strongest for low-income gig workers who have no real alternative</div><div class="phrase">at the individual level, the flexibility argument is most credible for high-income contractors who genuinely choose gig work</div><div class="phrase">at the organizational level, the platform disruption risk is real but concentrated in lower-margin businesses</div><div class="phrase">at the national level, the labor law framework cannot address individual worker needs without resolving the classification problem at scale</div><div class="phrase">scale reveals the distinction — what looks like a choice at the individual level is often a structural constraint visible only at the population level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should governments implement universal basic income?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">low-income individuals — individual level</div><div class="phrase">middle-income workers — individual level</div><div class="phrase">social service agencies — organizational level</div><div class="phrase">employers in low-wage sectors — organizational level</div><div class="phrase">national budgets and labor markets — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">potential poverty reduction; reduced precarity</div><div class="phrase">possible work disincentive vs. entrepreneurial freedom</div><div class="phrase">reduced demand for means-tested programs; possible redundancy</div><div class="phrase">labor supply tightening; upward wage pressure</div><div class="phrase">very high fiscal cost; trade-off with other social programs</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the floor argument is strongest for those in deepest poverty — UBI is their most direct benefit</div><div class="phrase">at the individual level, work disincentive risk is real but concentrated at the margin — most people work for reasons beyond income</div><div class="phrase">at the organizational level, low-wage employers face labor supply tightening — which is a feature for workers and a challenge for those employers</div><div class="phrase">at the national level, the fiscal cost argument dominates — individual benefit is real but insufficient to justify the cost without a credible funding mechanism</div><div class="phrase">scale matters because the individual dignity argument and the national fiscal argument point in different directions — the stronger case depends on which level you prioritize</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should social media companies be required to remove political misinformation?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual users — individual level</div><div class="phrase">marginalized and vulnerable users — individual level</div><div class="phrase">social media platforms — organizational level</div><div class="phrase">news organizations and civil society — organizational level</div><div class="phrase">democratic institutions and national electoral processes — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">protection from false information; potential speech restriction</div><div class="phrase">disproportionate exposure to targeted disinformation</div><div class="phrase">compliance cost; editorial liability; algorithmic complexity</div><div class="phrase">potential suppression of legitimate advocacy</div><div class="phrase">information integrity vs. free expression trade-off at scale</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the protection benefit is real but uneven — sophisticated users benefit less; vulnerable users benefit most</div><div class="phrase">at the individual level, the censorship risk is also real — over-removal affects individuals with legitimate minority viewpoints</div><div class="phrase">at the organizational level, compliance capacity varies — large platforms can absorb it; small platforms cannot</div><div class="phrase">at the national level, the democratic integrity argument is strongest — individual speech concerns do not outweigh systemic electoral harm</div><div class="phrase">scale reveals the asymmetry — what appears as a speech restriction at the individual level is a democratic protection at the national level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should alternative medicine be covered by public health insurance?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">patients seeking alternative treatment — individual level</div><div class="phrase">low-income patients — individual level</div><div class="phrase">alternative medicine practitioners — organizational level</div><div class="phrase">conventional healthcare providers — organizational level</div><div class="phrase">national public health systems — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">expanded access; risk of delayed conventional care</div><div class="phrase">financial relief; quality concerns remain</div><div class="phrase">legitimization and expanded client base</div><div class="phrase">competition for insurance reimbursement</div><div class="phrase">resource allocation trade-off without clear evidence-based justification</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, patient autonomy and cultural relevance are compelling — the choice argument is strongest here</div><div class="phrase">at the individual level, the delayed diagnosis risk is also individual — the harm falls on those who substitute rather than complement</div><div class="phrase">at the organizational level, coverage legitimizes practitioners whose evidence base varies enormously</div><div class="phrase">at the national level, resource allocation from public funds requires evidence standards that many alternatives do not meet</div><div class="phrase">scale matters because individual autonomy arguments that are strong at the personal level become resource allocation arguments at the national level — and those require different justification</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the development of artificial intelligence?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">workers in AI-affected industries — individual level</div><div class="phrase">consumers and users — individual level</div><div class="phrase">AI companies and startups — organizational level</div><div class="phrase">traditional industries and competitors — organizational level</div><div class="phrase">national economies and geopolitical competition — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">job displacement risk; new job creation possibility</div><div class="phrase">protection from algorithmic bias and unsafe AI products</div><div class="phrase">compliance cost; potential innovation slowdown</div><div class="phrase">reduced competitive disadvantage from unregulated AI rivals</div><div class="phrase">competitiveness vs. safety regulation trade-off at scale</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the protection argument is strongest for those subject to high-stakes algorithmic decisions — hiring, credit, healthcare</div><div class="phrase">at the individual level, innovation disruption harm is diffuse and long-term — harder to attribute than the concrete harm of algorithmic discrimination</div><div class="phrase">at the organizational level, regulatory burden falls unevenly — large firms can absorb compliance; startups cannot</div><div class="phrase">at the national level, the geopolitical argument dominates — domestic regulation without international coordination creates competitive asymmetry</div><div class="phrase">scale reveals the tension — individual protection arguments favor regulation; national competitiveness arguments complicate it</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments ban the development of new fossil fuel infrastructure?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">workers in fossil fuel industries — individual level</div><div class="phrase">low-income households — individual level</div><div class="phrase">energy companies — organizational level</div><div class="phrase">renewable energy sector — organizational level</div><div class="phrase">fossil fuel exporting nations — national level</div><div class="phrase">global climate system — global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">job loss; community economic collapse</div><div class="phrase">energy cost increases during transition</div><div class="phrase">stranded assets; business model disruption</div><div class="phrase">expanded market opportunity</div><div class="phrase">major economic threat to export-dependent economies</div><div class="phrase">reduced emissions trajectory over medium to long term</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the harm is immediate and concentrated — fossil fuel workers and low-income energy users bear the cost first</div><div class="phrase">at the individual level, the benefit is diffuse and long-term — future generations and climate-vulnerable populations gain most</div><div class="phrase">at the organizational level, the disruption is real but the energy transition investment opportunity is also organizational-scale</div><div class="phrase">at the national level, fossil fuel exporting economies face an existential economic challenge that domestic climate commitments alone cannot address</div><div class="phrase">scale matters because the individual-level harm is immediate and certain, while the global-level benefit is long-term and shared — the argument requires connecting those two levels explicitly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement stricter gun control measures?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">gun owners — individual level</div><div class="phrase">victims of gun violence and families — individual level</div><div class="phrase">rural residents — individual level</div><div class="phrase">law enforcement — organizational level</div><div class="phrase">gun manufacturers and retailers — organizational level</div><div class="phrase">public health systems and national constitutional frameworks — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">restriction of rights; enhanced safety for others</div><div class="phrase">direct safety benefit; reduced lethality of mass events</div><div class="phrase">different risk profile and cultural relationship with firearms</div><div class="phrase">complex relationship — fewer illegal weapons vs. enforcement burden</div><div class="phrase">economic impact of reduced sales</div><div class="phrase">public health cost of gun violence vs. constitutional constraints</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the argument splits by stakeholder — gun owners experience restriction; victims experience protection</div><div class="phrase">at the individual level, rural and urban residents face different risk profiles — a uniform national policy does not map onto both equally</div><div class="phrase">at the organizational level, law enforcement impact is mixed — fewer illegal guns benefits enforcement but compliance monitoring is costly</div><div class="phrase">at the national level, the public health argument is strongest — gun death rates are a population-level outcome that individual rights arguments do not fully address</div><div class="phrase">scale matters because the constitutional argument operates at the individual rights level, while the public health argument operates at the population level — the two frameworks require translation across levels</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Here is what each column is asking you to do:</p>
+  <div class="how-to-grid">
+    <div class="how-to-cell htc-who">
+      <strong>Stakeholder = Who</strong>
+      Name the specific group affected and the scale level they operate at. "People" and "society" are not stakeholders — name the group precisely.
+    </div>
+    <div class="how-to-cell htc-what">
+      <strong>Impact = What Happens</strong>
+      State the specific consequence for that stakeholder — what concretely changes for them as a result of the policy.
+    </div>
+    <div class="how-to-cell htc-why">
+      <strong>Scale Consideration = Why Scale Matters</strong>
+      Explain why operating at that particular level changes the argument — what is true at the individual level may be false at the national level, and vice versa.
+    </div>
+  </div>
+  <p>Pick one chunk from each column and connect them. You must engage at least two scale levels. A response that stays at one level does not demonstrate the analytical depth this frame requires.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

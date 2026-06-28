@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6 — Synthesis &amp; Judgment · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-tensions   { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-priorities { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-judgment   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-tensions   .legend-label { color: #dc2626; }
+  .leg-priorities .legend-label { color: #d97706; }
+  .leg-judgment   .legend-label { color: #1e3a5f; }
+  .leg-tensions   .legend-desc { color: #dc2626; }
+  .leg-priorities .legend-desc { color: #d97706; }
+  .leg-judgment   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0f4f8; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #1e3a5f; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #1e3a5f; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #1e3a5f; background: #f0f4f8; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-tensions   .col-header { background: #dc2626; }
+  .col-priorities .col-header { background: #d97706; }
+  .col-judgment   .col-header { background: #1e3a5f; }
+  .col-tensions   { border: 1.5px solid #dc2626; }
+  .col-priorities { border: 1.5px solid #d97706; }
+  .col-judgment   { border: 1.5px solid #1e3a5f; }
+  .col-tensions   .col-body { background: #fef2f2; }
+  .col-priorities .col-body { background: #fffbeb; }
+  .col-judgment   .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W6 — Synthesis &amp; Judgment · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> This is the culminating frame. Bring competing considerations together and arrive at a reasoned, defensible conclusion. Phrases in each column are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.
+</div>
+<div class="legend">
+  <div class="legend-item leg-tensions"><span class="legend-label">Tensions</span><span class="legend-desc">The competing claims that must be addressed</span></div>
+  <div class="legend-item leg-priorities"><span class="legend-label">Priorities</span><span class="legend-desc">Which consideration wins and why</span></div>
+  <div class="legend-item leg-judgment"><span class="legend-label">Judgment</span><span class="legend-desc">The defensible conclusion that follows</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> while both positions have merit… · the stronger case rests on… · although X is a legitimate concern… · on balance… · weighing X against Y… · the evidence suggests… · neither position is without weakness, but… · a defensible position acknowledges… while concluding that…
+</div>
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should vocational education be prioritized over academic preparation?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">documented skilled trades shortage vs. long-term value of academic preparation</div>
+        <div class="phrase">risk of tracking lower-income students vs. need to address labor market gaps</div>
+        <div class="phrase">employer co-investment aligns training vs. risk of narrowly job-specific curriculum</div>
+        <div class="phrase">cultural prestige of academic credentials vs. economic reality of skilled trades demand</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">workforce demand is immediate and structural; academic prestige is a cultural bias that policy can correct</div>
+        <div class="phrase">tracking risk is addressable through transfer rights; labor market gap is not addressable without structural change</div>
+        <div class="phrase">employer partnership is valuable but must be constrained to prevent curriculum capture by short-term market needs</div>
+        <div class="phrase">prestige is a cultural construct that policy has successfully changed in comparable economies</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, elevating vocational pathways is defensible — provided academic routes remain equally funded</div>
+        <div class="phrase">the stronger case is for integration, not prioritization — both pathways deserve equal investment and prestige</div>
+        <div class="phrase">a defensible model combines public funding, employer partnership, and transfer rights</div>
+        <div class="phrase">the German dual system demonstrates vocational and academic prestige can coexist — that is the more defensible model</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should the electoral college be abolished?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">democratic legitimacy requires popular vote winner wins vs. federalism requires small state protection</div>
+        <div class="phrase">constitutional amendment is practically impossible vs. normative case for abolition is strong</div>
+        <div class="phrase">campaign focus on swing states vs. risk of shifting entirely to large urban centers</div>
+        <div class="phrase">founders' design as deliberate check vs. founders' design reflected slavery-era compromises</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">small state protection already exists through Senate representation — it does not require the presidency as well</div>
+        <div class="phrase">the practical barrier does not strengthen the normative case — it only constrains the reform path</div>
+        <div class="phrase">swing state problem affects few states; urban concentration affects many voters currently without meaningful voice</div>
+        <div class="phrase">not all founding-era design choices deserve preservation; the slavery compromise does not strengthen the federalism argument</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, the democratic legitimacy argument is stronger — three popular vote losers as president is a legitimacy deficit federalism cannot offset</div>
+        <div class="phrase">the realistic path is the National Popular Vote Interstate Compact — imperfect but achievable without the amendment threshold</div>
+        <div class="phrase">net geographic equity favors popular vote — more voters are currently disenfranchised than would be under a popular vote</div>
+        <div class="phrase">original intent is not sufficient to maintain a system whose legitimacy deficits are now well-documented</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should judges be elected or appointed?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">judicial accountability to citizens vs. judicial independence from political pressure</div>
+        <div class="phrase">appointed judges reflect ideology of appointing authority vs. elected judges reflect donor preferences</div>
+        <div class="phrase">minority rights protection vs. democratic responsiveness of judicial decision-making</div>
+        <div class="phrase">merit-based appointment produces better judges vs. elections make judicial philosophy more transparent</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">independence is more foundational — a judge who fears electoral consequence cannot adjudicate impartially</div>
+        <div class="phrase">donor influence in elections is more directly transactional than ideological alignment in appointment</div>
+        <div class="phrase">minority rights are most at risk when majoritarian sentiment is strongest — when elected judges face the most pressure</div>
+        <div class="phrase">transparency can be achieved through confirmation hearings and published opinions without electoral exposure</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, appointment with retention review is more defensible — accountability without continuous political exposure</div>
+        <div class="phrase">appointment is the lesser distortion — ideological alignment is less corrosive than donor dependency</div>
+        <div class="phrase">the stronger case for appointment rests on minority rights — the judiciary's most important function is least compatible with electoral accountability</div>
+        <div class="phrase">transparency does not require elections — it requires a rigorous, public appointment process</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should education systems prioritize critical thinking over content knowledge?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">knowledge economy demands critical thinking vs. critical thinking requires content knowledge as its foundation</div>
+        <div class="phrase">content knowledge becomes obsolete quickly vs. critical thinking skills are durable</div>
+        <div class="phrase">assessment systems measure content recall, not reasoning vs. assessment reform is politically difficult</div>
+        <div class="phrase">employer demand for critical thinking vs. university admissions based on content mastery</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">the opposition is false — you cannot think critically about nothing; depth of content enables depth of analysis</div>
+        <div class="phrase">durability of critical thinking does not make content dispensable — it means content selected for depth rather than coverage</div>
+        <div class="phrase">assessment drives curriculum — curriculum reform without assessment reform produces compliance without change</div>
+        <div class="phrase">employer signal is more diagnostic of graduate outcomes, which is what education is ultimately for</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, the stronger case is for integration — the framing of the question is itself a false dichotomy</div>
+        <div class="phrase">the defensible curriculum reduces content breadth to enable critical engagement depth — less content, thought more carefully</div>
+        <div class="phrase">curriculum and assessment reform must be pursued together — one without the other produces the worst of both</div>
+        <div class="phrase">align curriculum with long-term graduate outcomes rather than short-term institutional gatekeeping requirements</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should there be stricter regulations on the use of cultural appropriation in art?</span></div>
+      <span class="q-tag">CUL</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">source community rights vs. artistic freedom to engage with other cultures</div>
+        <div class="phrase">no legal definition of appropriation exists vs. harm from commercial exploitation is documented</div>
+        <div class="phrase">source community self-determination vs. risk of government becoming cultural gatekeeper</div>
+        <div class="phrase">chilling effect on cross-cultural exchange vs. ongoing commercial harm to source communities</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">commercial exploitation without consent is meaningfully different from artistic borrowing — the law can distinguish between them</div>
+        <div class="phrase">definitional difficulty does not eliminate the obligation to try — IP law manages similar complexity</div>
+        <div class="phrase">vesting legal standing in source communities rather than government bodies addresses the gatekeeping risk directly</div>
+        <div class="phrase">a narrow commercial scope minimizes chilling effect while addressing the primary harm</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, regulations targeting commercial exploitation are defensible — scope matters as much as principle</div>
+        <div class="phrase">the stronger case is for a narrow, well-defined framework targeting commercial exploitation rather than broad prohibition</div>
+        <div class="phrase">the defensible model gives communities legal standing to pursue their own claims — not a government body determining what counts as their culture</div>
+        <div class="phrase">broadly drawn regulations are indefensible; narrowly drawn commercial exploitation frameworks are defensible and necessary</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should governments provide universal healthcare as an economic right?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">healthcare as a human right vs. healthcare as a service best delivered by markets</div>
+        <div class="phrase">fiscal cost of universal coverage vs. cost of medical bankruptcy under current system</div>
+        <div class="phrase">innovation incentive requires market pricing vs. universal access requires cost control</div>
+        <div class="phrase">transition disruption from existing system vs. long-term benefit of universal coverage</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">every high-income country except one concluded universal access produces better outcomes at lower cost — evidence favors the rights framework</div>
+        <div class="phrase">the current system's costs are distributed differently, not eliminated — universal systems reduce administrative inefficiency and uncompensated care</div>
+        <div class="phrase">pharmaceutical innovation occurs across universal systems — the trade-off is overstated by industry</div>
+        <div class="phrase">transition cost is a one-time political challenge; access inequality under the current system is permanent and ongoing</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, the case for universal healthcare as a right is stronger — market failure in healthcare is well-documented and international comparison is dispositive</div>
+        <div class="phrase">the stronger fiscal argument is for universal coverage — the question is not whether we pay, but how efficiently and equitably</div>
+        <div class="phrase">the innovation argument does not outweigh the access argument — universal systems can maintain incentives through regulated pricing</div>
+        <div class="phrase">a phased transition is the defensible path — the argument against transition is an argument for delay, not against the destination</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should tech companies be required to make their algorithms transparent?</span></div>
+      <span class="q-tag">TEC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">public accountability for high-stakes algorithms vs. trade secret protection for proprietary systems</div>
+        <div class="phrase">full transparency enables gaming vs. opacity enables unaccountable discrimination</div>
+        <div class="phrase">market competition as accountability mechanism vs. regulatory oversight as accountability mechanism</div>
+        <div class="phrase">technical complexity makes transparency meaningless vs. right to explanation is fundamental regardless of complexity</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">trade secret protection cannot shield systems making consequential decisions from any form of accountability</div>
+        <div class="phrase">unaccountable discrimination is more harmful than gaming risk — gaming can be managed through system design</div>
+        <div class="phrase">market competition does not produce accountability when harm is invisible — users cannot choose against what they cannot see</div>
+        <div class="phrase">meaningful explanation is achievable without full technical disclosure — the right is to understand the basis of a decision, not audit the entire system</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, third-party audit with confidentiality protections is more defensible than either full disclosure or no disclosure</div>
+        <div class="phrase">the stronger case is that unaccountable discrimination is more harmful — discrimination without accountability cannot be managed</div>
+        <div class="phrase">the market accountability argument fails for algorithmic systems — regulatory oversight is necessary because market signals are insufficient</div>
+        <div class="phrase">the defensible requirement is decision-level explanation for affected individuals — targeted, meaningful, and achievable</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should governments implement a carbon border tax on imports?</span></div>
+      <span class="q-tag">ENV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-tensions"><div class="col-header">Tensions</div><div class="col-body">
+        <div class="phrase">preventing carbon leakage vs. imposing trade barriers on developing nations</div>
+        <div class="phrase">WTO compatibility is uncertain vs. climate obligation requires action despite legal risk</div>
+        <div class="phrase">incentive for trading partners to adopt carbon pricing vs. risk of retaliatory tariffs</div>
+        <div class="phrase">administrative complexity of calculating embodied carbon vs. imprecision undermines the policy</div>
+      </div></div>
+      <div class="col col-priorities"><div class="col-header">Priorities</div><div class="col-body">
+        <div class="phrase">carbon leakage renders domestic climate policy ineffective — but developing nations should not bear costs without support</div>
+        <div class="phrase">legal risk is manageable through careful design — the EU CBAM demonstrates WTO-compatible design is achievable</div>
+        <div class="phrase">the incentive effect is documented — carbon border taxes have already prompted trading partners to accelerate domestic carbon pricing</div>
+        <div class="phrase">perfect precision is not required — default values based on sector averages provide sufficient incentive signal</div>
+      </div></div>
+      <div class="col col-judgment"><div class="col-header">Judgment</div><div class="col-body">
+        <div class="phrase">on balance, a carbon border tax with grace periods and capacity support for developing nations is defensible — leakage is real and equity concerns are addressable through design</div>
+        <div class="phrase">the legal argument does not outweigh the climate argument — pursue WTO-compatible design rather than abandon the policy on legal uncertainty</div>
+        <div class="phrase">the incentive argument strengthens the case — it is both a domestic climate protection measure and an international climate policy lever</div>
+        <div class="phrase">imperfect implementation of a sound policy is preferable to no policy in the face of documented carbon leakage</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Phrases are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain. For example, using row 1 from Q2:</p>
+  <div class="example">"While both the democratic legitimacy and federalism arguments have merit, the stronger case rests on legitimacy — small state protection already exists through Senate representation and does not require the presidency as well. On balance, a system that has produced three popular vote losers as president has a legitimacy deficit that federalism concerns cannot offset."</div>
+  <p>Three chunks, one number, one complete argument. <strong>The Priorities column is where ILR 3 performance lives</strong> — not identifying the tension, but explaining why one side carries more weight than the other.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

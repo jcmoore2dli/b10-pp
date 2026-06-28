@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 — Scale &amp; Stakeholder · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-impact      { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-scale       { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder .legend-label { color: #0d9488; }
+  .leg-impact      .legend-label { color: #d97706; }
+  .leg-scale       .legend-label { color: #1e3a5f; }
+  .leg-stakeholder .legend-desc { color: #0d9488; }
+  .leg-impact      .legend-desc { color: #d97706; }
+  .leg-scale       .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+  .scale-reminder { margin: 0 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #dc2626; font-weight: 700; line-height: 1.5; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #0d9488; }
+  .col-impact      .col-header { background: #d97706; }
+  .col-scale       .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #0d9488; }
+  .col-impact      { border: 1.5px solid #d97706; }
+  .col-scale       { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #f0fdfa; }
+  .col-impact      .col-body { background: #fffbeb; }
+  .col-scale       .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .how-to-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .how-to-cell { border-radius: 8px; padding: 8px; font-size: 11px; line-height: 1.5; }
+  .how-to-cell strong { display: block; font-size: 11px; margin-bottom: 3px; }
+  .htc-who   { background: #f0fdfa; border: 1px solid #0d9488; color: #374151; }
+  .htc-what  { background: #fffbeb; border: 1px solid #d97706; color: #374151; }
+  .htc-why   { background: #f0f4f8; border: 1px solid #1e3a5f; color: #374151; }
+  .htc-who   strong { color: #0d9488; }
+  .htc-what  strong { color: #d97706; }
+  .htc-why   strong { color: #1e3a5f; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>W1 — Scale &amp; Stakeholder · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify who is affected by a policy, what happens to them, and why the scale at which they operate changes the argument. A strong response must engage <em>at least two different scale levels</em> — do not stay at a single level throughout your response.
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-stakeholder">
+    <span class="legend-label">Stakeholder</span>
+    <span class="legend-desc">Who is affected and at what scale level</span>
+  </div>
+  <div class="legend-item leg-impact">
+    <span class="legend-label">Impact</span>
+    <span class="legend-desc">What specifically happens to that stakeholder</span>
+  </div>
+  <div class="legend-item leg-scale">
+    <span class="legend-label">Scale Consideration</span>
+    <span class="legend-desc">Why operating at this level changes the argument</span>
+  </div>
+</div>
+
+<div class="scale-reminder">
+  You must engage at least two scale levels: Individual &amp; Family · Organizational &amp; Community · National &amp; Global
+</div>
+
+<div class="connectors">
+  <strong>Key connectors:</strong>
+  at the individual level… · at the organizational level… · at the national level… · this affects not only… but also… · while the immediate impact falls on… · what begins as a concern for… quickly becomes… · from the perspective of… · those most directly affected are… · the burden falls disproportionately on…
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should students with disabilities always be fully included in mainstream classrooms?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">students with disabilities — individual level</div>
+        <div class="phrase">non-disabled classmates — individual level</div>
+        <div class="phrase">mainstream classroom teachers — organizational level</div>
+        <div class="phrase">schools and districts — organizational level</div>
+        <div class="phrase">national education policy — national level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">access to peer interaction and social development</div>
+        <div class="phrase">exposure to diversity; potential changes to instructional pace</div>
+        <div class="phrase">increased training demands and differentiated instruction burden</div>
+        <div class="phrase">resource allocation pressure and legal compliance requirements</div>
+        <div class="phrase">inclusion mandate in tension with specialized placement frameworks</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the benefit is social and developmental — not purely academic</div>
+        <div class="phrase">at the classroom level, inclusion without support shifts burden to teachers and peers</div>
+        <div class="phrase">at the organizational level, resource adequacy determines whether inclusion is genuine or nominal</div>
+        <div class="phrase">at the national level, a uniform mandate cannot account for the severity spectrum across individual students</div>
+        <div class="phrase">the argument shifts at each level — what is a right at the individual level becomes a resource question at the institutional level</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should companies be required to provide childcare for employees?</span></div>
+      <span class="q-tag">WRK</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">working parents — individual level</div>
+        <div class="phrase">employees without children — individual level</div>
+        <div class="phrase">small businesses — organizational level</div>
+        <div class="phrase">large employers — organizational level</div>
+        <div class="phrase">national labor policy and gender equity — national level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">reduced financial burden and improved workforce retention</div>
+        <div class="phrase">perception of unequal benefit distribution</div>
+        <div class="phrase">disproportionate compliance cost relative to large corporations</div>
+        <div class="phrase">talent retention advantage and productivity gains</div>
+        <div class="phrase">narrowing of gender gap in workforce participation</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the benefit is concrete and immediate for working parents</div>
+        <div class="phrase">at the organizational level, cost burden varies dramatically by employer size — a uniform mandate is structurally unequal</div>
+        <div class="phrase">at the national level, the gender equity argument is structural — individual benefit aggregates into a workforce participation shift</div>
+        <div class="phrase">the policy is more defensible at scale than at the individual employer level — the aggregate benefit justifies a burden that feels disproportionate at the firm level</div>
+        <div class="phrase">scale matters because childcare is a market failure — individual employers acting alone cannot solve it</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should countries adopt a global minimum corporate tax?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">individual taxpayers — individual level</div>
+        <div class="phrase">multinational corporations — organizational level</div>
+        <div class="phrase">domestic firms — organizational level</div>
+        <div class="phrase">high-tax nations — national level</div>
+        <div class="phrase">low-tax nations and tax havens — national level</div>
+        <div class="phrase">international institutions (OECD, G20) — global level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">potential tax relief if corporate base is restored</div>
+        <div class="phrase">reduced profit-shifting incentives and increased compliance costs</div>
+        <div class="phrase">more level playing field with multinationals</div>
+        <div class="phrase">recovery of lost corporate tax revenue</div>
+        <div class="phrase">loss of competitive economic model and fiscal sovereignty</div>
+        <div class="phrase">enforcement and coordination mechanism requirements</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the benefit is indirect — taxpayers benefit from restored public revenue, not from the tax itself</div>
+        <div class="phrase">at the organizational level, multinationals and domestic firms experience the policy differently — one loses an advantage, the other gains equity</div>
+        <div class="phrase">at the national level, the policy is a collective action solution — no single nation can solve race-to-the-bottom tax competition alone</div>
+        <div class="phrase">at the global level, the argument is about international norm-setting — the minimum tax creates a floor that individual nation action cannot</div>
+        <div class="phrase">scale is the central argument — this policy only makes sense as a global solution to a global problem</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should governments be required to consult citizens directly on major policy decisions?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">individual citizens — individual level</div>
+        <div class="phrase">marginalized individuals — individual level</div>
+        <div class="phrase">civil society organizations — organizational level</div>
+        <div class="phrase">local governments — organizational level</div>
+        <div class="phrase">national governments and democratic institutions — national level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">increased voice, agency, and political efficacy</div>
+        <div class="phrase">risk of majority preference overriding minority rights</div>
+        <div class="phrase">expanded influence or risk of being bypassed</div>
+        <div class="phrase">implementation burden and conflict with national mandates</div>
+        <div class="phrase">efficiency vs. democratic legitimacy trade-off</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the benefit is political empowerment — but participation rates are structurally uneven across income groups</div>
+        <div class="phrase">at the individual level, marginalized groups face a specific risk — consultation can legitimize majority overriding of minority interests</div>
+        <div class="phrase">at the organizational level, civil society gains or loses depending on whether consultation is open or structured</div>
+        <div class="phrase">at the national level, the tension is between speed of decision-making and legitimacy of outcomes — the two are in structural conflict</div>
+        <div class="phrase">scale matters because what empowers individuals at the micro level can destabilize governance at the macro level</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should mental health services be equally funded as physical health services?</span></div>
+      <span class="q-tag">HLT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">individuals with mental illness — individual level</div>
+        <div class="phrase">families of those with mental illness — individual level</div>
+        <div class="phrase">mental health providers — organizational level</div>
+        <div class="phrase">insurance companies — organizational level</div>
+        <div class="phrase">national health policy and workforce — national level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">access to care, stigma reduction, financial relief</div>
+        <div class="phrase">reduction of caregiver burden and economic strain</div>
+        <div class="phrase">workforce expansion and infrastructure investment required</div>
+        <div class="phrase">cost modeling and coverage restructuring</div>
+        <div class="phrase">parity legislation, budget implications, workforce pipeline</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the case is a matter of dignity and health equity — suffering is suffering regardless of its origin</div>
+        <div class="phrase">at the family level, the burden of untreated mental illness is economic and relational — it extends beyond the individual</div>
+        <div class="phrase">at the organizational level, workforce shortage is the binding constraint — funding without providers does not produce access</div>
+        <div class="phrase">at the national level, the cost of untreated mental illness is externalized — it appears in criminal justice, homelessness, and lost productivity budgets</div>
+        <div class="phrase">scale matters because the argument for parity is stronger at the national level than at the individual level — the aggregate social cost is the most compelling case</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should tech companies be required to pay taxes in every country they operate?</span></div>
+      <span class="q-tag">TEC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">individual users — individual level</div>
+        <div class="phrase">tech companies — organizational level</div>
+        <div class="phrase">domestic competitors — organizational level</div>
+        <div class="phrase">developed nations — national level</div>
+        <div class="phrase">developing nations — national level</div>
+        <div class="phrase">international regulatory bodies — global level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">indirect benefit through public services funded by recovered revenue</div>
+        <div class="phrase">compliance costs, profit impact, operational restructuring</div>
+        <div class="phrase">more level playing field with multinationals</div>
+        <div class="phrase">revenue recovery from digital economy</div>
+        <div class="phrase">access to tax base from companies profiting from their markets</div>
+        <div class="phrase">need for coordinated digital tax frameworks</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the benefit is diffuse — users do not directly receive the tax revenue</div>
+        <div class="phrase">at the organizational level, the impact differs by company type — multinationals lose an advantage, domestic firms gain equity</div>
+        <div class="phrase">at the national level, the strongest argument is for developing nations — they host users but currently receive no tax benefit from that activity</div>
+        <div class="phrase">at the global level, this requires a new framework — existing bilateral treaties were not designed for stateless digital commerce</div>
+        <div class="phrase">scale is the defining argument — the inequity is most visible at the national level, particularly for developing nations</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should countries be required to contribute to a global climate fund?</span></div>
+      <span class="q-tag">INT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">citizens in climate-vulnerable regions — individual level</div>
+        <div class="phrase">taxpayers in contributing countries — individual level</div>
+        <div class="phrase">national governments — organizational/national level</div>
+        <div class="phrase">NGOs and climate organizations — organizational level</div>
+        <div class="phrase">developed nations — national level</div>
+        <div class="phrase">developing nations — national level</div>
+        <div class="phrase">international institutions (UN, World Bank) — global level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">direct survival and livelihood stakes</div>
+        <div class="phrase">cost burden of mandatory contributions</div>
+        <div class="phrase">sovereignty vs. international obligation tension</div>
+        <div class="phrase">implementation and accountability roles</div>
+        <div class="phrase">historical emissions responsibility and financial capacity</div>
+        <div class="phrase">disproportionate climate impact with limited contribution capacity</div>
+        <div class="phrase">fund administration and conditionality design</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the stakes are existential for those in climate-vulnerable regions — not abstract</div>
+        <div class="phrase">at the national level, the argument shifts from moral to fiscal — contribution burden is concrete and politically contested</div>
+        <div class="phrase">at the global level, the case is a collective action problem — no nation acting alone can address climate adaptation at the scale required</div>
+        <div class="phrase">scale reveals the inequity — those least responsible for emissions bear the greatest individual-level consequences</div>
+        <div class="phrase">the argument is strongest when the individual vulnerability of climate victims is connected to the national capacity of high-emission contributors</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should governments fund the preservation of indigenous cultural practices?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-stakeholder"><div class="col-header">Stakeholder</div><div class="col-body">
+        <div class="phrase">indigenous community members — individual level</div>
+        <div class="phrase">indigenous youth — individual level</div>
+        <div class="phrase">non-indigenous taxpayers — individual level</div>
+        <div class="phrase">indigenous organizations and councils — organizational level</div>
+        <div class="phrase">cultural institutions — organizational level</div>
+        <div class="phrase">national governments — national level</div>
+        <div class="phrase">international human rights frameworks — global level</div>
+      </div></div>
+      <div class="col col-impact"><div class="col-header">Impact</div><div class="col-body">
+        <div class="phrase">cultural identity, language survival, dignity</div>
+        <div class="phrase">intergenerational transmission of knowledge and practice</div>
+        <div class="phrase">perception of fairness; cultural value of diversity</div>
+        <div class="phrase">self-determination vs. government dependency tension</div>
+        <div class="phrase">role in preservation vs. appropriation risk</div>
+        <div class="phrase">reconciliation obligations and treaty commitments</div>
+        <div class="phrase">UN Declaration on the Rights of Indigenous Peoples</div>
+      </div></div>
+      <div class="col col-scale"><div class="col-header">Scale Consideration</div><div class="col-body">
+        <div class="phrase">at the individual level, the case is personal — cultural identity is not separable from individual dignity and wellbeing</div>
+        <div class="phrase">at the community level, the question shifts to governance — who controls the funding and defines what preservation means</div>
+        <div class="phrase">at the national level, the obligation is legal and historical — dispossession creates a continuing duty that transcends individual preference</div>
+        <div class="phrase">at the global level, the framework is human rights — cultural continuity is recognized as a right, not a preference</div>
+        <div class="phrase">scale matters because the strongest argument shifts level by level — dignity at the individual, governance at the community, obligation at the national, rights at the global</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Here is what each column is asking you to do:</p>
+  <div class="how-to-grid">
+    <div class="how-to-cell htc-who">
+      <strong>Stakeholder = Who</strong>
+      Name the specific group affected and the scale level they operate at — individual, organizational, or national/global. "People" and "society" are not stakeholders. Name the group precisely.
+    </div>
+    <div class="how-to-cell htc-what">
+      <strong>Impact = What Happens</strong>
+      State the specific consequence for that stakeholder — not a general observation, but what concretely changes for them as a result of the policy.
+    </div>
+    <div class="how-to-cell htc-why">
+      <strong>Scale Consideration = Why Scale Matters</strong>
+      Explain why operating at that particular level changes the argument — what is true at the individual level may be false at the national level, and vice versa.
+    </div>
+  </div>
+  <p>Pick one chunk from each column and connect them. For example:</p>
+  <div class="example">"At the individual level, citizens in climate-vulnerable regions face existential survival stakes — not abstract environmental concerns. But the scale consideration here is that those least responsible for emissions bear the greatest individual-level consequences, which shifts the argument from individual responsibility to national obligation at the global level."</div>
+  <p>You must engage at least two scale levels in your response. A response that stays at one level — only individual, or only national — does not demonstrate the analytical depth this frame requires.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+
+</body>
+</html>

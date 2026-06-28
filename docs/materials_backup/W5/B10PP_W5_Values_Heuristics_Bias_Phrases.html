@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W5 — Values, Heuristics &amp; Bias · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-value      { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-assumption { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-competing  { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-value      .legend-label { color: #dc2626; }
+  .leg-assumption .legend-label { color: #d97706; }
+  .leg-competing  .legend-label { color: #1e3a5f; }
+  .leg-value      .legend-desc { color: #dc2626; }
+  .leg-assumption .legend-desc { color: #d97706; }
+  .leg-competing  .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-value      .col-header { background: #dc2626; }
+  .col-assumption .col-header { background: #d97706; }
+  .col-competing  .col-header { background: #1e3a5f; }
+  .col-value      { border: 1.5px solid #dc2626; }
+  .col-assumption { border: 1.5px solid #d97706; }
+  .col-competing  { border: 1.5px solid #1e3a5f; }
+  .col-value      .col-body { background: #fef2f2; }
+  .col-assumption .col-body { background: #fffbeb; }
+  .col-competing  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>W5 — Values, Heuristics &amp; Bias · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify the value framework that drives a stakeholder's position — what they believe is important, what they must assume to be true, and what a stakeholder on the other side believes instead. The analytical move is not stating your own opinion but <em>surfacing the values and assumptions that make different positions coherent on their own terms.</em>
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-value">
+    <span class="legend-label">Value</span>
+    <span class="legend-desc">The core value driving a stakeholder's position</span>
+  </div>
+  <div class="legend-item leg-assumption">
+    <span class="legend-label">Assumption</span>
+    <span class="legend-desc">What must be true for that value to justify the position</span>
+  </div>
+  <div class="legend-item leg-competing">
+    <span class="legend-label">Competing Framework</span>
+    <span class="legend-desc">The value a different stakeholder holds, leading to a different conclusion</span>
+  </div>
+</div>
+
+<div class="connectors">
+  <strong>Key connectors:</strong>
+  for those who prioritize… · from the perspective of… · this position assumes that… · those who hold this view believe that… · a stakeholder who values… would argue that… · the competing position rests on the assumption that… · while X stakeholders emphasize… those on the other side argue that… · this depends on whether one values… or…
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should universities limit legacy admissions?</span></div>
+      <span class="q-tag">EDU</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">merit as the basis for access to educational opportunity</div>
+        <div class="phrase">equal opportunity requires dismantling inherited advantage</div>
+        <div class="phrase">universities have a social equity obligation</div>
+        <div class="phrase">first-generation students deserve a level playing field</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">legacy preferences meaningfully reduce access for qualified non-legacy applicants</div>
+        <div class="phrase">eliminating legacy will not significantly reduce alumni donation rates</div>
+        <div class="phrase">admissions can be made merit-based without other structural biases remaining</div>
+        <div class="phrase">universities' social obligations override their private institutional interests</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">institutional sustainability depends on donor loyalty that legacy preference maintains</div>
+        <div class="phrase">private institutions should retain autonomy over their own selection processes</div>
+        <div class="phrase">family connection to an institution is a legitimate form of social capital</div>
+        <div class="phrase">true equity requires addressing upstream preparation inequality, not just admissions criteria</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should companies be required to disclose pay scales for all positions?</span></div>
+      <span class="q-tag">WRK</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">pay equity as a right, not a negotiating outcome</div>
+        <div class="phrase">transparency as a mechanism for structural discrimination reduction</div>
+        <div class="phrase">workers' right to information about the value of their labor</div>
+        <div class="phrase">gender and racial equity require systemic intervention, not individual negotiation</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">pay transparency reduces discriminatory gaps rather than creating internal resentment</div>
+        <div class="phrase">employees will use salary information to negotiate rather than simply feel demotivated</div>
+        <div class="phrase">employers cannot effectively standardize compensation to game disclosure requirements</div>
+        <div class="phrase">the benefit to underpaid workers outweighs disruption to existing compensation structures</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">compensation is a private matter between employer and employee</div>
+        <div class="phrase">market mechanisms and individual negotiation should determine pay outcomes</div>
+        <div class="phrase">forced transparency undermines managerial flexibility and organizational culture</div>
+        <div class="phrase">high performers deserve privacy around compensation that reflects their individual value</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should inheritance taxes be significantly increased?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">equal opportunity requires interrupting intergenerational wealth concentration</div>
+        <div class="phrase">accumulated wealth that was built with public infrastructure should contribute to public good</div>
+        <div class="phrase">dynastic wealth is incompatible with a genuinely meritocratic society</div>
+        <div class="phrase">fiscal capacity for public investment justifies redistribution at death</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">increased inheritance tax meaningfully reduces wealth concentration rather than being avoided</div>
+        <div class="phrase">wealth passed between generations primarily reflects luck rather than merit</div>
+        <div class="phrase">tax revenue will be invested in genuine equal opportunity programs</div>
+        <div class="phrase">work incentives are not significantly reduced by taxing wealth at death rather than during life</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">the right to pass accumulated wealth to one's family is a fundamental property right</div>
+        <div class="phrase">wealth was already taxed during accumulation — taxing it again at death is double taxation</div>
+        <div class="phrase">family businesses and farms should not face forced sale to meet estate tax liability</div>
+        <div class="phrase">individual economic freedom includes the freedom to determine the fate of one's own assets</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should there be stricter limits on political donations from corporations?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">political equality — one person, one vote — requires limiting concentrated financial influence</div>
+        <div class="phrase">democratic legitimacy depends on policy reflecting citizen rather than donor preferences</div>
+        <div class="phrase">corporations are not citizens and should not have equivalent political voice</div>
+        <div class="phrase">regulatory capture is a systemic democratic threat that donation limits help prevent</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">corporate donations demonstrably shift legislative outcomes in donors' favor</div>
+        <div class="phrase">limiting donations will not simply shift spending to harder-to-regulate channels</div>
+        <div class="phrase">the Supreme Court's equation of money with speech can be legally challenged or narrowed</div>
+        <div class="phrase">political equality is more important than freedom of political expenditure</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">political spending is a form of protected free speech that government cannot limit</div>
+        <div class="phrase">corporations represent the interests of shareholders and employees who have legitimate political stakes</div>
+        <div class="phrase">market competition among political donors produces better policy outcomes than restriction</div>
+        <div class="phrase">the same limits that restrict corporate donations also restrict union and civil society advocacy</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should euthanasia be legalized in all countries?</span></div>
+      <span class="q-tag">HLT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">individual autonomy over one's own body extends to end-of-life decisions</div>
+        <div class="phrase">dignity in dying is as important as dignity in living</div>
+        <div class="phrase">relief from intractable suffering is a legitimate medical and moral goal</div>
+        <div class="phrase">patient self-determination should be the governing principle of medical care</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">safeguards can reliably prevent coercion of vulnerable patients</div>
+        <div class="phrase">patients in terminal distress are capable of making fully autonomous decisions</div>
+        <div class="phrase">the availability of euthanasia does not reduce investment in palliative care alternatives</div>
+        <div class="phrase">legalizing euthanasia does not lead to expanding eligibility criteria over time</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">life has inherent value that medical professionals are obligated to preserve, not end</div>
+        <div class="phrase">the medical profession's duty of care is fundamentally incompatible with administering death</div>
+        <div class="phrase">vulnerable populations — elderly, disabled, economically dependent — face systemic coercion risk</div>
+        <div class="phrase">high-quality palliative care eliminates the suffering that drives euthanasia requests</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should governments regulate the collection and use of biometric data?</span></div>
+      <span class="q-tag">TEC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">bodily integrity extends to biometric data — it is uniquely personal and irreplaceable</div>
+        <div class="phrase">the state's surveillance capacity must be structurally limited to protect civil liberties</div>
+        <div class="phrase">racial and demographic equity requires preventing biased algorithmic identification</div>
+        <div class="phrase">citizens have a right to move through public space without being identified and tracked</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">biometric surveillance infrastructure, once built, will expand beyond its original purpose</div>
+        <div class="phrase">algorithmic bias in facial recognition produces demonstrably discriminatory outcomes</div>
+        <div class="phrase">government regulation can effectively constrain private sector biometric collection</div>
+        <div class="phrase">the convenience benefits of biometric authentication do not justify the privacy cost</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">public safety and security justify proportionate use of biometric identification tools</div>
+        <div class="phrase">biometric authentication provides security and convenience benefits that regulation would eliminate</div>
+        <div class="phrase">law enforcement effectiveness in preventing crime justifies facial recognition deployment</div>
+        <div class="phrase">citizens who have nothing to hide have nothing to fear from biometric identification</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should private prisons be banned?</span></div>
+      <span class="q-tag">JUS</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">justice is a public good that cannot be contracted to profit-seeking entities</div>
+        <div class="phrase">incarcerated individuals retain rights that profit incentives structurally undermine</div>
+        <div class="phrase">rehabilitation requires an institutional orientation that profit motive is incompatible with</div>
+        <div class="phrase">the state's monopoly on legitimate use of force cannot be outsourced to private interests</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">private prison profit motive demonstrably produces worse conditions and outcomes</div>
+        <div class="phrase">government can manage correctional facilities more effectively than private operators</div>
+        <div class="phrase">eliminating profit motive reduces systemic incentive to maintain high incarceration rates</div>
+        <div class="phrase">public sector corrections will invest savings from profit elimination into rehabilitation</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">market competition between public and private operators improves overall system efficiency</div>
+        <div class="phrase">private operators can deliver equivalent outcomes at lower cost to taxpayers</div>
+        <div class="phrase">rural communities that depend on prison employment have legitimate economic interests</div>
+        <div class="phrase">government bureaucracies are no less prone to poor outcomes than private contractors</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should there be stricter international regulations on the use of private military companies?</span></div>
+      <span class="q-tag">INT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-value"><div class="col-header">Value</div><div class="col-body">
+        <div class="phrase">civilian protection in conflict requires human accountability that profit motive undermines</div>
+        <div class="phrase">the state's monopoly on legitimate armed force is a foundational principle of international order</div>
+        <div class="phrase">those who cause harm in conflict must be legally accountable regardless of employment status</div>
+        <div class="phrase">democratic oversight of military action requires transparency that PMC use circumvents</div>
+      </div></div>
+      <div class="col col-assumption"><div class="col-header">Assumption</div><div class="col-body">
+        <div class="phrase">international regulations can be enforced meaningfully against PMCs operating across jurisdictions</div>
+        <div class="phrase">states will comply with regulations that limit their ability to use PMCs for deniable operations</div>
+        <div class="phrase">PMC accountability can be achieved without eliminating their legitimate security functions</div>
+        <div class="phrase">existing international humanitarian law can be extended to cover non-state armed actors</div>
+      </div></div>
+      <div class="col col-competing"><div class="col-header">Competing Framework</div><div class="col-body">
+        <div class="phrase">states need flexible security capacity that PMCs provide without the political cost of troop deployment</div>
+        <div class="phrase">PMCs fill legitimate security gaps that state militaries cannot or will not address</div>
+        <div class="phrase">over-regulation drives PMC activity to less accountable jurisdictions rather than eliminating it</div>
+        <div class="phrase">national security interests justify forms of military flexibility that strict regulation would eliminate</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Unlike the other frames, these three columns are <strong>parallel, not sequential</strong> — they don't chain into each other. Use them to construct an argument that surfaces the values and assumptions driving different stakeholder positions. For example:</p>
+  <div class="example">"For those who prioritize individual autonomy over end-of-life decisions, euthanasia legalization is defensible — but this position assumes that safeguards can reliably prevent coercion of vulnerable patients. Those operating from a competing framework argue that the medical profession's duty of care is fundamentally incompatible with administering death, and that high-quality palliative care eliminates the suffering that drives euthanasia requests in the first place."</div>
+  <p>You are not stating your own values. You are <strong>identifying the value frameworks that make each stakeholder's position coherent on its own terms</strong> — and then showing that the disagreement is not primarily empirical but normative.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+
+</body>
+</html>

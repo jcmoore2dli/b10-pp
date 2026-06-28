@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 — Hypothetical &amp; Conditional · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-condition { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-projected { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-extended  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-condition .legend-label { color: #16a34a; }
+  .leg-projected .legend-label { color: #d97706; }
+  .leg-extended  .legend-label { color: #7c3aed; }
+  .leg-condition .legend-desc { color: #16a34a; }
+  .leg-projected .legend-desc { color: #d97706; }
+  .leg-extended  .legend-desc { color: #7c3aed; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-condition .col-header { background: #16a34a; }
+  .col-projected .col-header { background: #d97706; }
+  .col-extended  .col-header { background: #7c3aed; }
+  .col-condition { border: 1.5px solid #16a34a; }
+  .col-projected { border: 1.5px solid #d97706; }
+  .col-extended  { border: 1.5px solid #7c3aed; }
+  .col-condition .col-body { background: #f0fdf4; }
+  .col-projected .col-body { background: #fffbeb; }
+  .col-extended  .col-body { background: #f5f3ff; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W1 — Hypothetical &amp; Conditional · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Project scenarios and trace what follows. The core move is the conditional: <em>if X under condition Y, then Z would likely follow — and if Z holds, then...</em> The Extended Scenario column is where ILR 2+/3 responses go further, chaining consequences and testing second-order assumptions.
+</div>
+<div class="legend">
+  <div class="legend-item leg-condition"><span class="legend-label">Condition</span><span class="legend-desc">The specific circumstance that must hold</span></div>
+  <div class="legend-item leg-projected"><span class="legend-label">Projected Outcome</span><span class="legend-desc">What would likely result if the condition holds</span></div>
+  <div class="legend-item leg-extended"><span class="legend-label">Extended Scenario</span><span class="legend-desc">What follows from the outcome — second-order consequences</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> if… were implemented… · were… to… then… · should… fail to… · in a scenario where… · assuming… the effect would be… · if that outcome holds, then… · this in turn would lead to… · the second-order consequence would be… · provided that… · on the condition that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should students with disabilities always be fully included in mainstream classrooms?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if adequate specialist support is embedded in mainstream classrooms</div><div class="phrase">if teacher training is provided before implementation</div><div class="phrase">if inclusion is applied selectively based on individual need assessment</div><div class="phrase">if resources are ring-fenced for inclusion infrastructure</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">social integration outcomes improve for students with disabilities</div><div class="phrase">mainstream classroom instruction becomes more differentiated</div><div class="phrase">teacher workload increases without sufficient support staffing</div><div class="phrase">some students with complex needs are underserved in mainstream settings</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if teacher workload is unsustainable, quality of instruction declines for all students</div><div class="phrase">if specialist support is withdrawn to fund inclusion, students with high needs face greater risk</div><div class="phrase">if outcomes improve, pressure to extend full inclusion without adequate resourcing follows</div><div class="phrase">if inclusion fails without support, political backlash reverses policy gains</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to provide childcare for employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if the mandate applies only to companies above a workforce size threshold</div><div class="phrase">if government subsidy offsets compliance cost for smaller employers</div><div class="phrase">if childcare quality standards are independently enforced</div><div class="phrase">if the benefit is extended to all caregiving arrangements, not only center-based care</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">workforce participation among parents with young children increases</div><div class="phrase">gender gap in employment narrows as childcare barrier falls</div><div class="phrase">small businesses below the threshold face no mandate but lose talent to larger employers</div><div class="phrase">childcare quality varies significantly without enforcement</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if quality is uneven, lower-income workers access lower-quality provision</div><div class="phrase">if participation increases, labor supply expands with downstream wage pressure</div><div class="phrase">if threshold creates two-tier system, small employers face structural disadvantage</div><div class="phrase">if mandate is extended universally without subsidy, small business closures follow</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should countries adopt a global minimum corporate tax?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if all OECD and G20 members ratify and implement simultaneously</div><div class="phrase">if the rate is set high enough to meaningfully reduce profit-shifting</div><div class="phrase">if enforcement mechanisms are binding rather than voluntary</div><div class="phrase">if developing nations are granted transition periods and capacity support</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">profit-shifting to tax havens becomes significantly less viable</div><div class="phrase">corporate tax revenue increases in high-tax jurisdictions</div><div class="phrase">tax haven economies face structural economic disruption</div><div class="phrase">large multinationals restructure to minimize remaining legal exposure</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if havens exit the agreement, competitive pressure to lower rates returns</div><div class="phrase">if rate is set too low, profit-shifting adapts rather than stops</div><div class="phrase">if developing nations are excluded from revenue gains, global inequality deepens</div><div class="phrase">if enforcement is weak, compliance is cosmetic and revenue gains are overstated</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments be required to consult citizens directly on major policy decisions?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if consultation is limited to decisions above a defined significance threshold</div><div class="phrase">if participation mechanisms are accessible across income and literacy levels</div><div class="phrase">if results are binding rather than advisory</div><div class="phrase">if safeguards against majority overriding minority rights are built in</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">policy legitimacy increases among engaged citizen groups</div><div class="phrase">decision timelines lengthen on time-sensitive issues</div><div class="phrase">participation rates are uneven across socioeconomic groups</div><div class="phrase">misinformation shapes consultation outcomes in poorly moderated processes</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if binding results conflict with expert consensus, harmful policy outcomes follow</div><div class="phrase">if participation is uneven, consultation legitimizes outcomes favorable to organized interests</div><div class="phrase">if timelines extend, urgent climate or security decisions are delayed at cost</div><div class="phrase">if minority rights are not protected, majoritarianism is institutionalized</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should mental health services be equally funded as physical health services?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if workforce training pipelines are expanded before funding increases</div><div class="phrase">if parity applies to both insurance reimbursement and public system budgets</div><div class="phrase">if quality standards for mental health services are enforced alongside funding</div><div class="phrase">if funding is protected from reallocation during fiscal pressure</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">patient access to mental health services improves significantly</div><div class="phrase">workforce shortage constrains impact in the short to medium term</div><div class="phrase">insurance restructuring creates transitional coverage disruption</div><div class="phrase">stigma around mental health treatment gradually decreases</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if workforce shortage persists, increased funding produces waitlists not outcomes</div><div class="phrase">if quality standards are not enforced, funding expands access to poor-quality care</div><div class="phrase">if stigma reduction lags, utilization remains below funded capacity</div><div class="phrase">if funding is reallocated during fiscal pressure, parity is nominal rather than real</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should tech companies be required to pay taxes in every country they operate?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if the definition of operational presence is internationally agreed</div><div class="phrase">if enforcement is coordinated across jurisdictions simultaneously</div><div class="phrase">if transfer pricing rules are reformed alongside the operational tax</div><div class="phrase">if developing nations gain proportional revenue share based on user base</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">tech companies face higher effective tax rates in markets where they earn revenue</div><div class="phrase">governments in developing nations gain access to previously untaxed digital economy revenue</div><div class="phrase">compliance costs increase and are passed to consumers through pricing</div><div class="phrase">some platforms reduce service availability in high-cost jurisdictions</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if developing nations gain revenue, fiscal capacity for public investment increases</div><div class="phrase">if platforms exit smaller markets, digital divide between rich and poor nations widens</div><div class="phrase">if compliance costs are passed to consumers, digital access becomes more expensive</div><div class="phrase">if enforcement is uneven, tax arbitrage shifts to remaining loopholes</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should countries be required to contribute to a global climate fund?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if contribution levels are set proportionally to historical emissions and GDP</div><div class="phrase">if fund governance is transparent and independently audited</div><div class="phrase">if contributions are legally binding under international law</div><div class="phrase">if adaptation funding is prioritized for most climate-vulnerable nations</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">climate-vulnerable nations gain access to adaptation and mitigation resources</div><div class="phrase">high-emission nations face domestic political resistance to mandatory contributions</div><div class="phrase">fund administration overhead reduces direct impact on vulnerable communities</div><div class="phrase">non-contributing nations free-ride on the climate action of others</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if high-emission nations resist, enforcement mechanism determines whether fund survives</div><div class="phrase">if governance is opaque, corruption risk undermines public and political support</div><div class="phrase">if vulnerable nations receive inadequate funding, climate migration accelerates</div><div class="phrase">if fund succeeds, it establishes precedent for other global commons governance</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments fund the preservation of indigenous cultural practices?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if funding is administered through indigenous-controlled governance structures</div><div class="phrase">if communities define what constitutes authentic preservation</div><div class="phrase">if funding is sustained over generational timescales rather than project cycles</div><div class="phrase">if language revitalization is included alongside material cultural practices</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">intergenerational transmission of cultural knowledge strengthens</div><div class="phrase">dependency on government funding creates tension with self-determination</div><div class="phrase">language loss rate slows in communities with sustained investment</div><div class="phrase">non-indigenous institutions gain influence over cultural definition if governance is external</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if self-determination is not embedded, government funding reproduces paternalism</div><div class="phrase">if funding cycles are short, communities build capacity then lose it</div><div class="phrase">if language is not prioritized, cultural knowledge loses its primary transmission medium</div><div class="phrase">if successful, model provides template for other minority cultural preservation programs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with conditional language.</p>
+  <div class="example">"If CBDC is designed with strong privacy protections, the projected outcome is that financial inclusion improves — but if surveillance capacity grows alongside it, the extended scenario is that authoritarian misuse becomes structurally available, regardless of original intent."</div>
+  <p>Three chunks. Three connectors. A complete hypothetical argument with a second-order consequence. <strong>The Extended Scenario column is what separates an ILR 2+ response from an ILR 3 one</strong> — don't stop at the projected outcome.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

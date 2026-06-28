@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentence Combining · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 14px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .stem-list { display: flex; flex-direction: column; gap: 6px; }
+  .stem { background: #f0fdf4; border: 1.5px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; font-style: italic; color: #1e3a5f; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+  .stem::before { content: '›'; font-style: normal; font-weight: 700; color: #16a34a; font-size: 14px; flex-shrink: 0; line-height: 1.4; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 6px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+  .close-btn-bar { background: #1e3a5f; padding: 8px 16px; display: flex; justify-content: flex-end; }
+  .close-btn { background: rgba(255,255,255,0.15); border: none; color: white; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="close-btn-bar">
+  <button class="close-btn" onclick="window.close()">✕ Close</button>
+</div>
+
+<header>
+  <h1>Sentence Combining · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Linguistic Flexibility · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this reference:</strong> Each question has six starter stems — different ways to open a complex sentence about that topic. Pick one, say it aloud, and finish the sentence in your own words. Each stem is designed to pull a complex structure with it. The finishing is yours.
+</div>
+
+<div class="connectors">
+  <strong>The move:</strong> A strong ILR 3 response doesn't open every sentence the same way. These stems give you six different entry points into the same argument — choose the one that fits where you are in your response.
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should all workers receive guaranteed paid family leave?</span></div>
+      <span class="q-tag">WRK</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">The absence of guaranteed leave means that workers who…</div>
+      <div class="stem">Workers who lack access to paid leave are disproportionately…</div>
+      <div class="stem">Although employers bear the immediate cost of providing leave…</div>
+      <div class="stem">What makes this policy significant is that it directly addresses…</div>
+      <div class="stem">Given that retention rates improve when workers have access to…</div>
+      <div class="stem">The burden of unpaid caregiving, which falls disproportionately on…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should public transportation receive higher subsidies?</span></div>
+      <span class="q-tag">ENV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">The communities most dependent on public transit are those least able to…</div>
+      <div class="stem">Reducing fares through subsidy produces a cascade of benefits that…</div>
+      <div class="stem">Although the upfront cost of transit subsidy is significant…</div>
+      <div class="stem">What is often overlooked in this debate is that the cost of not investing…</div>
+      <div class="stem">Given that congestion and emissions decline when ridership increases…</div>
+      <div class="stem">The decision to subsidize public transit is, at its core, a decision about…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should dental and vision care be included in public insurance?</span></div>
+      <span class="q-tag">HLT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">The exclusion of dental care from public insurance means that…</div>
+      <div class="stem">Untreated dental disease, which is strongly linked to systemic illness…</div>
+      <div class="stem">Although dental and vision care are often classified as optional…</div>
+      <div class="stem">What the evidence consistently shows is that the cost of prevention…</div>
+      <div class="stem">Given that low-income populations bear the greatest burden of untreated…</div>
+      <div class="stem">The separation of oral and visual health from the rest of the body reflects…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should debt relief programs be expanded worldwide?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">The debt burden carried by low-income nations, which crowds out investment in…</div>
+      <div class="stem">Nations that cannot service their debt are structurally prevented from…</div>
+      <div class="stem">Although creditors have legitimate interests in repayment…</div>
+      <div class="stem">What makes debt relief politically difficult is not the economics but…</div>
+      <div class="stem">Given that the conditions attached to relief often require reforms that…</div>
+      <div class="stem">The asymmetry between creditors with leverage and debtors with few alternatives…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should governments expand disaster risk reduction programs?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">The cost of responding to disasters consistently exceeds the cost of…</div>
+      <div class="stem">Communities that lack early warning infrastructure are disproportionately…</div>
+      <div class="stem">Although disaster risk reduction requires upfront investment…</div>
+      <div class="stem">What makes this policy politically difficult is that the benefits are…</div>
+      <div class="stem">Given that climate change is increasing the frequency and severity of…</div>
+      <div class="stem">The underinvestment in disaster preparedness, which reflects short-term political…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should skilled worker immigration be expanded?</span></div>
+      <span class="q-tag">INT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">The loss of skilled workers from developing economies, which is known as…</div>
+      <div class="stem">Skilled immigrants who fill documented labor shortages also contribute…</div>
+      <div class="stem">Although political resistance to expanded immigration is real…</div>
+      <div class="stem">What the economic evidence consistently shows is that skilled immigration…</div>
+      <div class="stem">Given that labor shortages in key sectors are structural rather than temporary…</div>
+      <div class="stem">The tension between the receiving country's economic interest and the sending country's…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should governments invest in carbon capture technology?</span></div>
+      <span class="q-tag">TEC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">Carbon capture technology, which remains unproven at the scale required…</div>
+      <div class="stem">In a scenario where renewable energy alone proves insufficient to meet…</div>
+      <div class="stem">Although the current cost of carbon capture is prohibitive…</div>
+      <div class="stem">What distinguishes carbon capture from other climate investments is that…</div>
+      <div class="stem">Given that private capital avoids high-risk, long-horizon technologies…</div>
+      <div class="stem">The decision to fund carbon capture is ultimately a decision about whether…</div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should endangered languages receive government funding?</span></div>
+      <span class="q-tag">CUL</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="stem-list">
+      <div class="stem">When a language ceases to be spoken, the cultural knowledge encoded within it…</div>
+      <div class="stem">Communities whose languages are disappearing face not only a linguistic loss but…</div>
+      <div class="stem">Although the cost of language revitalization programs is real…</div>
+      <div class="stem">What is frequently underestimated in this debate is the intergenerational…</div>
+      <div class="stem">Given that community will alone has proven insufficient to reverse language loss…</div>
+      <div class="stem">The decision to fund or defund endangered language programs is, in effect, a decision about…</div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Stems</h2>
+  <p>Tap a question to see six starter stems. Pick one — the one that fits where you are in your argument — say it aloud, and finish the sentence in your own words. Each stem is designed to pull a complex structure with it naturally.</p>
+  <p>Try using two or three different stems from the same question in a single response. Each one opens the sentence differently — and that variation is exactly what this scaffold is developing.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

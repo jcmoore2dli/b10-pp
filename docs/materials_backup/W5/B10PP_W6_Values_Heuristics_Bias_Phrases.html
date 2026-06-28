@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6 — Values, Heuristics &amp; Bias · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-value      { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-assumption { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-competing  { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-value      .legend-label { color: #dc2626; }
+  .leg-assumption .legend-label { color: #d97706; }
+  .leg-competing  .legend-label { color: #1e3a5f; }
+  .leg-value      .legend-desc { color: #dc2626; }
+  .leg-assumption .legend-desc { color: #d97706; }
+  .leg-competing  .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-value      .col-header { background: #dc2626; }
+  .col-assumption .col-header { background: #d97706; }
+  .col-competing  .col-header { background: #1e3a5f; }
+  .col-value      { border: 1.5px solid #dc2626; }
+  .col-assumption { border: 1.5px solid #d97706; }
+  .col-competing  { border: 1.5px solid #1e3a5f; }
+  .col-value      .col-body { background: #fef2f2; }
+  .col-assumption .col-body { background: #fffbeb; }
+  .col-competing  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W6 — Values, Heuristics &amp; Bias · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify the value framework that drives a stakeholder's position — what they believe is important, what they must assume to be true, and what a stakeholder on the other side believes instead. The analytical move is not stating your own opinion but <em>surfacing the values and assumptions that make different positions coherent on their own terms.</em>
+</div>
+<div class="legend">
+  <div class="legend-item leg-value"><span class="legend-label">Value</span><span class="legend-desc">The core value driving a stakeholder's position</span></div>
+  <div class="legend-item leg-assumption"><span class="legend-label">Assumption</span><span class="legend-desc">What must be true for that value to justify the position</span></div>
+  <div class="legend-item leg-competing"><span class="legend-label">Competing Framework</span><span class="legend-desc">The value a different stakeholder holds, leading to a different conclusion</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> for those who prioritize… · from the perspective of… · this position assumes that… · those who hold this view believe that… · a stakeholder who values… would argue that… · the competing position rests on the assumption that… · while X stakeholders emphasize… those on the other side argue that… · this depends on whether one values… or…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should vocational education be prioritized over academic preparation?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">the dignity and economic value of skilled trades work has been systematically undervalued by academic credential culture</div><div class="phrase">education systems should serve the actual labor market needs of the economy rather than reproduce social hierarchies</div><div class="phrase">students who learn through practical application deserve pathways as prestigious as those who learn through abstraction</div><div class="phrase">the workforce shortage in skilled trades is a structural problem that credential culture created and must solve</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">elevating vocational education will increase its uptake among students who would otherwise choose academic pathways</div><div class="phrase">employer demand for skilled trades workers is durable enough to justify the investment in vocational infrastructure</div><div class="phrase">the prestige gap between vocational and academic pathways can be closed through policy rather than requiring generational cultural change</div><div class="phrase">students who choose vocational pathways will not be disadvantaged in terms of lifetime earnings or social mobility</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">academic preparation develops critical thinking and adaptability that narrow vocational training cannot</div><div class="phrase">the false dichotomy between vocational and academic education obscures the need to integrate both</div><div class="phrase">prioritizing vocational education risks tracking lower-income students away from pathways to higher education</div><div class="phrase">a society that devalues academic knowledge in favor of immediate employability weakens its long-term intellectual capacity</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the electoral college be abolished?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">democratic legitimacy requires that the candidate who receives the most votes wins the election</div><div class="phrase">the electoral college was designed to protect slavery-era political interests that have no place in modern democracy</div><div class="phrase">all votes should carry equal weight in a presidential election regardless of the voter's state</div><div class="phrase">the current system produces presidents who govern for swing states rather than for the nation as a whole</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">abolition will increase rather than decrease democratic legitimacy by aligning outcomes with popular preference</div><div class="phrase">the federalism concerns addressed by the electoral college can be protected through other constitutional mechanisms</div><div class="phrase">campaign strategy under a popular vote will serve a broader geographic range of voters than the current swing state focus</div><div class="phrase">the risk of faithless electors and contingent elections outweighs any benefit of the current system</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">the electoral college protects small states and rural communities from being permanently outvoted by large urban centers</div><div class="phrase">the founders designed the electoral college as a deliberate check on pure majoritarianism</div><div class="phrase">abolition requires a constitutional amendment that small states will never ratify because it would reduce their influence</div><div class="phrase">the current system forces candidates to build geographically diverse coalitions rather than concentrating on population centers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should judges be elected or appointed?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">judicial accountability to the public requires that judges face electoral consequence for their decisions</div><div class="phrase">appointment processes controlled by political elites reproduce the values of appointing authorities, not citizens</div><div class="phrase">an elected judiciary is more responsive to evolving community values than a tenured appointed one</div><div class="phrase">democratic legitimacy of the legal system requires that those who interpret law be accountable to those subject to it</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">voters can evaluate judicial performance well enough to make meaningful choices in judicial elections</div><div class="phrase">campaign finance in judicial elections can be regulated effectively enough to prevent donor capture</div><div class="phrase">electoral accountability improves rather than undermines judicial decision-making quality</div><div class="phrase">community responsiveness is a legitimate judicial value that election better promotes than appointment</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">judicial independence from political pressure is the foundational condition for fair adjudication</div><div class="phrase">elected judges are vulnerable to donor influence and majority sentiment in ways that corrupt impartial decision-making</div><div class="phrase">merit-based appointment produces higher-quality judges than popularity-based elections</div><div class="phrase">minority rights are safer in the hands of independent appointed judges than electorally accountable ones</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should education systems prioritize critical thinking over content knowledge?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">the skills required for the modern knowledge economy are analytical and adaptive rather than fact-based</div><div class="phrase">content knowledge becomes obsolete quickly while critical thinking is a durable competency</div><div class="phrase">education's purpose is to produce capable thinkers, not repositories of information that can be retrieved digitally</div><div class="phrase">standardized content delivery reproduces existing knowledge rather than enabling its critique and extension</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">critical thinking can be developed effectively without sacrificing the content knowledge that grounds it</div><div class="phrase">assessment systems can be redesigned to measure reasoning rather than recall</div><div class="phrase">teachers can be trained to facilitate inquiry-based learning rather than deliver content</div><div class="phrase">employers and universities value critical thinking skills over content knowledge in evaluating candidates</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">critical thinking without deep content knowledge is shallow and ungrounded</div><div class="phrase">the apparent opposition between critical thinking and content knowledge is false — they are mutually dependent</div><div class="phrase">assessment reform required to measure critical thinking is politically and technically difficult to achieve</div><div class="phrase">education systems that abandon content knowledge in favor of skills produce graduates who lack the foundation to think critically about anything in particular</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should there be stricter regulations on the use of cultural appropriation in art?</span>
+      </div>
+      <span class="q-tag">CUL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">source communities have an economic and cultural right to control how their heritage is represented and commercialized</div><div class="phrase">cultural appropriation without attribution or compensation is a form of extraction that reproduces colonial power dynamics</div><div class="phrase">artistic freedom does not include the freedom to profit from the cultural production of communities that were historically dispossessed</div><div class="phrase">legal frameworks have failed to protect traditional knowledge and cultural expressions from commercial exploitation</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">regulations can distinguish between commercial exploitation and non-commercial artistic borrowing</div><div class="phrase">source communities can be given legal standing to define what constitutes appropriation without creating government cultural gatekeeping</div><div class="phrase">economic benefit from cultural licensing will flow to source communities rather than being captured by intermediaries</div><div class="phrase">the chilling effect on cross-cultural artistic exchange will be limited if regulations are narrowly and clearly defined</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">artistic freedom requires the ability to engage with, transform, and be inspired by cultures other than one's own</div><div class="phrase">culture is inherently fluid and the boundaries between appropriate borrowing and inappropriate appropriation cannot be legally defined</div><div class="phrase">government regulation of artistic content on cultural grounds opens the door to censorship of legitimate expression</div><div class="phrase">the appropriate response to cultural exploitation is education, attribution, and market pressure rather than legal prohibition</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments provide universal healthcare as an economic right?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">access to healthcare is a human right that cannot be made contingent on ability to pay</div><div class="phrase">a society that permits preventable suffering and death from lack of insurance does not reflect its stated values</div><div class="phrase">the economic productivity of citizens depends on their health in ways that justify collective investment</div><div class="phrase">the current system produces worse outcomes at higher cost than universal systems in comparable countries</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">universal healthcare can be implemented in a way that maintains quality and does not reduce innovation</div><div class="phrase">the fiscal cost is manageable through administrative savings and new revenue rather than requiring tax increases incompatible with growth</div><div class="phrase">the transition from the existing system can be managed without significant disruption to current coverage</div><div class="phrase">pharmaceutical and provider industries will adapt to a universal system without reducing the quality of care</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">healthcare is a service, not a right, and markets produce better outcomes in services than government provision</div><div class="phrase">the fiscal cost of universal healthcare is incompatible with other essential public expenditure</div><div class="phrase">government healthcare systems reduce innovation through price controls that eliminate the incentive for research investment</div><div class="phrase">individual responsibility for health choices means that collective provision subsidizes behaviors that individuals should bear the cost of</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should tech companies be required to make their algorithms transparent?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">citizens have a right to understand the automated systems that make decisions affecting their lives</div><div class="phrase">algorithmic accountability requires transparency as its precondition — you cannot audit what you cannot see</div><div class="phrase">the power that algorithmic systems exercise over access to jobs, credit, and information demands democratic oversight</div><div class="phrase">companies should not be permitted to externalize the harm of their systems while protecting the systems from scrutiny</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">meaningful transparency can be achieved without requiring full public disclosure of proprietary systems</div><div class="phrase">third-party auditors with appropriate technical expertise and legal access can evaluate systems effectively</div><div class="phrase">the competitive harm from disclosure can be managed through confidentiality protections in audit regimes</div><div class="phrase">the public interest in algorithmic accountability outweighs the private interest in protecting proprietary systems</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">trade secret protection is a legitimate property right that transparency mandates unconstitutionally abridge</div><div class="phrase">full transparency enables gaming of algorithmic systems by bad actors in ways that harm the users the system serves</div><div class="phrase">market competition and reputational incentives produce sufficient accountability without regulatory disclosure</div><div class="phrase">the technical complexity of modern AI systems means that disclosure produces the appearance of transparency without its substance</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement a carbon border tax on imports?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">domestic carbon pricing loses its effectiveness if imports face no equivalent cost, creating an unlevel playing field</div><div class="phrase">climate policy must address carbon leakage or risk exporting emissions rather than reducing them</div><div class="phrase">trading partners who do not price carbon are free-riding on the climate action of those who do</div><div class="phrase">border carbon adjustment is necessary to make domestic climate policy economically and politically sustainable</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">the carbon content of imports can be calculated with sufficient accuracy to enable fair and consistent application</div><div class="phrase">WTO compatibility can be achieved through careful legal design rather than requiring WTO rule changes</div><div class="phrase">the incentive effect on trading partners to adopt domestic carbon pricing justifies the trade friction cost</div><div class="phrase">developing nations can be granted grace periods and capacity support that make the measure equitable</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">carbon border taxes are trade barriers dressed in environmental language that violate free trade principles</div><div class="phrase">developing nations that are still industrializing should not bear the cost of climate constraints imposed by wealthy countries</div><div class="phrase">the administrative complexity of calculating embodied carbon makes consistent application practically impossible</div><div class="phrase">retaliatory tariffs from affected trading partners will create trade wars that harm more than the climate benefit justifies</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. These columns are <strong>parallel, not sequential</strong> — they don't chain into each other. Use them to surface the values and assumptions driving different stakeholder positions.</p>
+  <div class="example">"For those who prioritize individual autonomy over end-of-life decisions, legalization is defensible — but this position assumes that safeguards can reliably prevent coercion. Those operating from a competing framework argue that the medical profession's duty of care is fundamentally incompatible with administering death, and that high-quality palliative care eliminates the suffering that drives such requests."</div>
+  <p>You are not stating your own values. You are <strong>identifying the value frameworks that make each stakeholder's position coherent on its own terms</strong> — and showing that the disagreement is not primarily empirical but normative.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

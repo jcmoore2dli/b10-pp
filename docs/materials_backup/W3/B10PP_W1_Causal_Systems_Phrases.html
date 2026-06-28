@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 — Causal Systems · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #7c3aed; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-trigger { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-mechanism { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-downstream { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-trigger .legend-label { color: #0d9488; }
+  .leg-mechanism .legend-label { color: #7c3aed; }
+  .leg-downstream .legend-label { color: #1e3a5f; }
+  .leg-trigger .legend-desc { color: #0d9488; }
+  .leg-mechanism .legend-desc { color: #7c3aed; }
+  .leg-downstream .legend-desc { color: #374151; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #7c3aed; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #7c3aed; background: #f5f3ff; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-trigger .col-header { background: #0d9488; }
+  .col-mechanism .col-header { background: #7c3aed; }
+  .col-downstream .col-header { background: #1e3a5f; }
+  .col-trigger { border: 1.5px solid #0d9488; }
+  .col-mechanism { border: 1.5px solid #7c3aed; }
+  .col-downstream { border: 1.5px solid #1e3a5f; }
+  .col-trigger .col-body { background: #f0fdfa; }
+  .col-mechanism .col-body { background: #f5f3ff; }
+  .col-downstream .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W1 — Causal Systems · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Trace the mechanism — show not just that something happens, but <em>how</em> and <em>why</em>, step by step. Pick one chunk from each column and connect them with causal language.
+</div>
+<div class="legend">
+  <div class="legend-item leg-trigger"><span class="legend-label">Trigger</span><span class="legend-desc">What initiates the chain</span></div>
+  <div class="legend-item leg-mechanism"><span class="legend-label">Mechanism</span><span class="legend-desc">How the effect is produced</span></div>
+  <div class="legend-item leg-downstream"><span class="legend-label">Downstream Effect</span><span class="legend-desc">What results at the end</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> this triggers… · as a direct result of… · the mechanism here is… · this in turn leads to… · the downstream consequence is… · what drives this effect is… · the causal chain runs from… to… · this amplifies / suppresses / accelerates…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should students with disabilities always be fully included in mainstream classrooms?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mandatory full inclusion policy enacted</div><div class="phrase">removal of separate special education placement</div><div class="phrase">legal requirement for mainstream access</div><div class="phrase">disability rights framework applied to placement</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">schools must redesign classroom support structures</div><div class="phrase">teachers adapt instruction for wider ability range</div><div class="phrase">specialist staff are redeployed into mainstream settings</div><div class="phrase">resource allocation shifts from pull-out to in-class support</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">inclusion outcomes vary significantly by support quality</div><div class="phrase">social integration improves for students with disabilities</div><div class="phrase">teacher workload and stress increase without adequate resourcing</div><div class="phrase">long-term normalization of disability in educational settings</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to provide childcare for employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mandatory employer childcare provision enacted</div><div class="phrase">childcare benefit added to employment law requirements</div><div class="phrase">corporate childcare subsidy mandated by regulation</div><div class="phrase">on-site or subsidized childcare legally required</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">employer operating costs rise, especially for small firms</div><div class="phrase">workforce retention improves among working parents</div><div class="phrase">gender gap in workforce participation narrows</div><div class="phrase">childcare industry restructures around employer partnerships</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">higher female workforce participation over medium term</div><div class="phrase">small business compliance burden creates market pressure</div><div class="phrase">long-term reduction in gender pay gap downstream</div><div class="phrase">childcare quality becomes linked to employer financial capacity</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should countries adopt a global minimum corporate tax?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">global minimum corporate tax rate agreed and enacted</div><div class="phrase">profit-shifting to low-tax jurisdictions becomes non-viable</div><div class="phrase">OECD framework binding on participating nations</div><div class="phrase">uniform tax floor applied across signatory countries</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">multinationals restructure tax planning strategies</div><div class="phrase">tax haven economies lose competitive advantage</div><div class="phrase">corporate tax revenue increases in high-tax nations</div><div class="phrase">domestic firms face more level competitive playing field</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">global corporate tax revenue increases significantly</div><div class="phrase">race-to-the-bottom tax competition is slowed</div><div class="phrase">small tax haven economies face structural economic disruption</div><div class="phrase">long-term shift in where multinational profits are reported</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments be required to consult citizens directly on major policy decisions?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mandatory citizen consultation requirement enacted</div><div class="phrase">referendum or deliberative polling process legally required</div><div class="phrase">direct democracy mechanism embedded in policy process</div><div class="phrase">public consultation threshold defined by legislation</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">policy development timeline lengthens significantly</div><div class="phrase">citizen engagement with policy process increases</div><div class="phrase">special interest influence on policy is diluted</div><div class="phrase">majority preferences become more directly reflected in outcomes</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">democratic legitimacy of policy decisions increases</div><div class="phrase">minority rights risk being overridden by majority preference</div><div class="phrase">decision-making speed on urgent issues is structurally reduced</div><div class="phrase">long-term civic participation culture is strengthened</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should mental health services be equally funded as physical health services?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mental health parity legislation enacted</div><div class="phrase">equal funding mandate applied to insurance and public systems</div><div class="phrase">mental health budget allocation increased to match physical health</div><div class="phrase">parity requirement embedded in national health policy</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">mental health workforce demand increases beyond current supply</div><div class="phrase">insurance companies restructure coverage and reimbursement</div><div class="phrase">patients previously unable to afford care gain access</div><div class="phrase">stigma around mental health treatment gradually reduces</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">mental health outcomes improve at population level over time</div><div class="phrase">workforce shortage constrains impact in short to medium term</div><div class="phrase">downstream reduction in productivity loss from untreated illness</div><div class="phrase">long-term reduction in homelessness and incarceration linked to mental illness</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should tech companies be required to pay taxes in every country they operate?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">digital services tax applied in each country of operation</div><div class="phrase">physical presence rule replaced by user-base tax threshold</div><div class="phrase">OECD Pillar One framework enacted across jurisdictions</div><div class="phrase">tax liability linked to revenue earned in each market</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">tech companies restructure operations and pricing models</div><div class="phrase">governments in developing nations gain access to new tax base</div><div class="phrase">compliance costs increase significantly for global platforms</div><div class="phrase">transfer pricing strategies become less effective</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">tax revenue redistributed toward countries of user activity</div><div class="phrase">developing nations gain fiscal capacity from digital economy</div><div class="phrase">tech platform profitability decreases in higher-tax markets</div><div class="phrase">long-term shift in where digital economy value is taxed</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should countries be required to contribute to a global climate fund?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mandatory national contribution to global climate fund enacted</div><div class="phrase">contribution level set by emissions history and GDP capacity</div><div class="phrase">binding international climate finance agreement ratified</div><div class="phrase">climate fund governance structure established</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">high-emission nations transfer resources to climate-vulnerable ones</div><div class="phrase">developing nations gain access to adaptation and mitigation funding</div><div class="phrase">political resistance in high-contribution nations intensifies</div><div class="phrase">fund administration overhead absorbs portion of contributions</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">climate adaptation capacity increases in vulnerable regions</div><div class="phrase">global emissions reduction accelerates through funded green transition</div><div class="phrase">geopolitical tension around contribution compliance increases</div><div class="phrase">long-term reduction in climate refugee displacement downstream</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments fund the preservation of indigenous cultural practices?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">government funding allocated to indigenous cultural preservation</div><div class="phrase">national heritage budget extended to living indigenous practices</div><div class="phrase">indigenous language revitalization programs publicly funded</div><div class="phrase">cultural preservation infrastructure financially supported</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">indigenous communities gain resources for transmission programs</div><div class="phrase">younger generations have structured access to cultural knowledge</div><div class="phrase">dependency on government funding creates governance tension</div><div class="phrase">mainstream cultural institutions adapt to include indigenous content</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">intergenerational cultural transmission strengthens over time</div><div class="phrase">language loss rate slows in funded communities</div><div class="phrase">self-determination tension with government oversight persists</div><div class="phrase">long-term cultural diversity of national identity is enriched</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with causal language.</p>
+  <div class="example">"Mandatory curriculum integration triggers a process in which students develop habitual source-checking behavior — and the downstream effect, over a generation, is a population significantly more resistant to foreign disinformation campaigns."</div>
+  <p>Three chunks. Two connectors. One complete causal argument. <strong>Do not skip the Mechanism column.</strong> Going straight from trigger to effect is the most common weakness in Causal Systems responses.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  // Auto-expand if URL hash matches a question id
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

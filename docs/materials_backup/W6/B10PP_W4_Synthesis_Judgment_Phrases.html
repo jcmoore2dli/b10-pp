@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W4 — Synthesis &amp; Judgment · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-tensions   { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-priorities { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-judgment   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-tensions   .legend-label { color: #dc2626; }
+  .leg-priorities .legend-label { color: #d97706; }
+  .leg-judgment   .legend-label { color: #1e3a5f; }
+  .leg-tensions   .legend-desc { color: #dc2626; }
+  .leg-priorities .legend-desc { color: #d97706; }
+  .leg-judgment   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0f4f8; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #1e3a5f; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #1e3a5f; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #1e3a5f; background: #f0f4f8; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-tensions   .col-header { background: #dc2626; }
+  .col-priorities .col-header { background: #d97706; }
+  .col-judgment   .col-header { background: #1e3a5f; }
+  .col-tensions   { border: 1.5px solid #dc2626; }
+  .col-priorities { border: 1.5px solid #d97706; }
+  .col-judgment   { border: 1.5px solid #1e3a5f; }
+  .col-tensions   .col-body { background: #fef2f2; }
+  .col-priorities .col-body { background: #fffbeb; }
+  .col-judgment   .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W4 — Synthesis &amp; Judgment · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Bring competing considerations together and arrive at a reasoned, defensible conclusion. Phrases in each column are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.
+</div>
+<div class="legend">
+  <div class="legend-item leg-tensions"><span class="legend-label">Tensions</span><span class="legend-desc">The competing claims that must be addressed</span></div>
+  <div class="legend-item leg-priorities"><span class="legend-label">Priorities</span><span class="legend-desc">Which consideration wins and why</span></div>
+  <div class="legend-item leg-judgment"><span class="legend-label">Judgment</span><span class="legend-desc">The defensible conclusion that follows</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> while both positions have merit… · the stronger case rests on… · although X is a legitimate concern… · on balance… · weighing X against Y… · the evidence suggests… · neither position is without weakness, but… · a defensible position acknowledges… while concluding that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should AI teachers replace human instructors in some schools?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">access expansion in underserved areas vs. social-emotional development loss</div><div class="phrase">teacher shortage solution vs. teaching profession deskilling</div><div class="phrase">cost efficiency vs. equity of AI quality across income groups</div><div class="phrase">personalized learning benefit vs. human mentorship irreplaceability</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">access expansion argument is strongest where teacher shortage is most severe — rural and remote contexts with no alternatives</div><div class="phrase">teaching profession deskilling is a real long-term risk; augmentation framing addresses it better than replacement framing</div><div class="phrase">cost efficiency benefit is real but only defensible if savings are reinvested in student support rather than extracted as profit</div><div class="phrase">personalized learning benefit is context-dependent; human mentorship is most important for students with greatest social-emotional need — often the same students in underserved schools</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, AI augmentation rather than replacement is defensible in teacher-shortage contexts — replacement in well-resourced schools is not justified</div><div class="phrase">the stronger case is narrow and conditional: AI teaching is defensible where the alternative is no teaching, not where the alternative is human teaching</div><div class="phrase">the defensible position on cost efficiency is that the benefit accrues to students only if savings are reinvested — profit extraction from public education is the primary risk</div><div class="phrase">the judgment on social-emotional development is that it cannot be compensated by personalized content delivery — the most vulnerable students need human presence most</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should personalized learning algorithms be mandatory in public education?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">struggling student benefit vs. advanced student under-challenge risk</div><div class="phrase">evidence of effectiveness vs. vendor interest in mandatory market</div><div class="phrase">data-driven improvement vs. student privacy at scale</div><div class="phrase">teacher facilitation role vs. teacher deskilling risk</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">struggling student benefit is documented for some implementations; advanced student risk is addressable through teacher override authority</div><div class="phrase">evidence of effectiveness is mixed and context-dependent — mandatory adoption without evidence review serves vendor interests more than student interests</div><div class="phrase">data-driven improvement is genuinely valuable; student privacy at scale is a systemic risk that no current framework fully addresses</div><div class="phrase">teacher facilitation role can be enriching rather than deskilling — if teachers retain meaningful authority over algorithmic recommendations</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, voluntary adoption with evidence review is more defensible than mandatory adoption — the evidence base does not yet support mandate</div><div class="phrase">the stronger case against mandatory adoption is the vendor interest argument — mandatory markets without evidence review are policy capture by industry</div><div class="phrase">the defensible position on privacy is that it is a threshold requirement, not a trade-off — mandatory adoption without adequate privacy protection is not defensible regardless of learning outcomes</div><div class="phrase">the judgment on teacher authority is that meaningful override rights are necessary — algorithms that teachers cannot override are not augmentation tools, they are replacement tools</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should cryptocurrency be regulated as a financial instrument?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">consumer protection benefit vs. innovation restriction cost</div><div class="phrase">money laundering reduction vs. legitimate privacy use restriction</div><div class="phrase">institutional adoption enablement vs. retail investor access reduction</div><div class="phrase">domestic regulation vs. offshore migration of unregulated activity</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">consumer protection benefit is strongest for retail investors with least sophistication — it is least compelling for institutional investors who can protect themselves</div><div class="phrase">money laundering reduction is documented; legitimate privacy use is real but a small proportion of crypto activity — the balance favors regulation</div><div class="phrase">institutional adoption enablement is a genuine benefit of regulatory clarity; retail access reduction is addressable through proportional compliance thresholds</div><div class="phrase">offshore migration is real but partial — regulated platforms in major markets still dominate volume even when unregulated alternatives exist</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, proportional regulation that protects retail investors while enabling institutional adoption is defensible — blanket restriction or blanket exemption are both indefensible</div><div class="phrase">the stronger case leads with retail investor protection — the most concrete and documented harm from unregulated crypto is to unsophisticated investors</div><div class="phrase">the defensible position on money laundering is that regulation reduces it at the margin even if offshore alternatives persist — marginal deterrence is worth pursuing</div><div class="phrase">the judgment on offshore migration is that major market regulation still shapes global behavior — the EU and US markets are too large for platforms to ignore</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should central banks adopt digital currencies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">financial inclusion benefit vs. commercial bank disintermediation</div><div class="phrase">monetary policy precision vs. government financial surveillance risk</div><div class="phrase">payment system modernization vs. cybersecurity concentration risk</div><div class="phrase">programmable money benefit vs. government spending control risk</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">financial inclusion benefit is strongest where unbanked populations are largest; commercial bank disintermediation is manageable through hybrid distribution models</div><div class="phrase">monetary policy precision is genuinely valuable; surveillance risk is addressable through privacy-by-design but not eliminable without it</div><div class="phrase">payment system modernization benefit is real; cybersecurity concentration risk is the strongest technical objection — single point of failure is a genuine architectural concern</div><div class="phrase">programmable money benefit is real for specific use cases; spending control risk depends entirely on governance design — authoritarian misuse is a governance failure, not an inherent feature</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, CBDC with privacy-by-design, hybrid distribution, and strong governance is defensible — each element addresses one of the three strongest objections</div><div class="phrase">the stronger case leads with financial inclusion in high-unbanked contexts — it is the most compelling benefit and the hardest to achieve through other means</div><div class="phrase">the defensible position on surveillance risk is that privacy-by-design is a threshold requirement — CBDC without it is not defensible regardless of other benefits</div><div class="phrase">the judgment on programmable money is that governance design determines the risk — the feature is not inherently dangerous, but weak governance makes it so</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement a digital identity system for all citizens?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">service delivery efficiency vs. surveillance infrastructure expansion</div><div class="phrase">identity fraud reduction vs. data breach catastrophic risk</div><div class="phrase">financial inclusion for unbanked vs. exclusion of undocumented populations</div><div class="phrase">voluntary vs. mandatory adoption</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">service delivery efficiency is real and documented; surveillance infrastructure expansion is the strongest objection — the same infrastructure serves both purposes and mission creep is historically documented</div><div class="phrase">identity fraud reduction is valuable; catastrophic data breach risk is the strongest technical objection — biometric data cannot be changed if compromised</div><div class="phrase">financial inclusion benefit is strongest for populations currently excluded; exclusion of undocumented populations is a design failure that must be addressed proactively</div><div class="phrase">voluntary adoption with strong incentives is more defensible than mandatory adoption — it allows iterative trust-building and reduces coercion risk</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, voluntary digital identity with privacy-by-design, independent oversight, and non-digital alternatives is defensible — mandatory adoption without those safeguards is not</div><div class="phrase">the stronger case leads with the service delivery and financial inclusion benefits — they are most compelling for populations currently underserved by analog systems</div><div class="phrase">the defensible position on surveillance risk is that independent oversight with legal limits on data use is necessary but not sufficient — mission creep requires structural constraints, not just legal ones</div><div class="phrase">the judgment on voluntary vs. mandatory is that voluntary adoption with strong incentives achieves near-universal coverage while reducing coercion risk — the difference in coverage rate does not justify mandatory adoption</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments fund research into life extension technologies?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">reduction of age-related suffering vs. pension and retirement system insolvency</div><div class="phrase">healthspan extension vs. lifespan extension — different targets with different implications</div><div class="phrase">public good argument for research vs. equity of access to outcomes</div><div class="phrase">opportunity cost vs. long-term economic return from extended productive years</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">age-related suffering reduction is compelling; pension insolvency is a policy design challenge, not an inherent objection — systems can be reformed in parallel</div><div class="phrase">healthspan extension is more defensible than lifespan extension — it reduces suffering and increases productive years without compounding population dynamics</div><div class="phrase">public good argument is strongest for basic research; access equity is the critical condition — research that produces treatments accessible only to wealthy nations is a mixed good at best</div><div class="phrase">opportunity cost is real; long-term economic return is speculative but positive — the question is whether the speculative return justifies the certain cost at current funding levels</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, publicly funded healthspan extension research with access equity conditions is defensible — lifespan extension without equity conditions is not</div><div class="phrase">the stronger case distinguishes healthspan from lifespan — the suffering reduction argument is strongest for diseases of aging, not for radical life extension</div><div class="phrase">the defensible position on equity is that access conditions should be built into research funding agreements, not added as afterthoughts</div><div class="phrase">the judgment on opportunity cost is that the comparison is with other health research spending — healthspan extension competes favorably with many current research priorities on both suffering reduction and economic return grounds</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should there be a global moratorium on autonomous weapons development?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">civilian protection benefit vs. asymmetric disadvantage for signatory nations</div><div class="phrase">verification feasibility vs. scale of existential risk</div><div class="phrase">existing international law applicability vs. legal gap for autonomous systems</div><div class="phrase">moratorium on all autonomous weapons vs. moratorium on fully autonomous lethal systems only</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">civilian protection benefit is strongest; asymmetric disadvantage is real but manageable through broad multilateral adoption — narrow adoption creates the asymmetry</div><div class="phrase">verification is imperfect but the scale of potential harm from autonomous weapons justifies pursuing imperfect verification rather than no standard</div><div class="phrase">existing international law has significant gaps for autonomous systems — the principle of distinction and proportionality require human judgment that autonomous systems cannot exercise</div><div class="phrase">moratorium on fully autonomous lethal systems is more achievable and more clearly justified than moratorium on all autonomous defense systems</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a moratorium on fully autonomous lethal systems is defensible — it is achievable, clearly justified by existing international humanitarian law principles, and addresses the most serious risks</div><div class="phrase">the stronger case leads with the human accountability argument — it is grounded in existing international law and does not require new principles, only new application</div><div class="phrase">the defensible position on verification is that imperfect verification with consequences for violation is better than no standard — the same logic applies to all arms control agreements</div><div class="phrase">the judgment on scope is that fully autonomous vs. human-supervised is the critical distinction — the moratorium should target systems that select and engage targets without human decision, not systems that assist human decision-makers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be a global ban on nuclear weapons?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">existential risk elimination vs. deterrence framework collapse</div><div class="phrase">moral prohibition argument vs. strategic stability argument</div><div class="phrase">universal compliance requirement vs. partial adoption creating asymmetric vulnerability</div><div class="phrase">verification feasibility vs. scale of harm if ban fails</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">existential risk elimination is the strongest argument; deterrence framework collapse is the strongest objection — the question is whether alternative security frameworks can compensate</div><div class="phrase">moral prohibition is foundational; strategic stability argument is empirically contested — deterrence has prevented major war but also come close to catastrophic failure multiple times</div><div class="phrase">partial adoption creating asymmetric vulnerability is the strongest practical objection — a ban that major nuclear powers don't join leaves non-nuclear signatories at risk</div><div class="phrase">verification is imperfect but the scale of harm from nuclear war justifies pursuing imperfect verification — the same logic applies here as for autonomous weapons</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, universal nuclear disarmament is the right long-term goal but requires alternative security frameworks before it is achievable — the ban is defensible as aspiration and as incremental pressure</div><div class="phrase">the stronger case leads with the near-miss argument — deterrence has prevented war but has also come closer to catastrophic failure than is commonly acknowledged</div><div class="phrase">the defensible position on partial adoption is that the ban creates meaningful normative pressure even without universal compliance — the NPT demonstrates that partial frameworks have real effects</div><div class="phrase">the judgment on verification is that it is a technical challenge that improves over time — the argument from imperfect verification is an argument for building better verification, not for abandoning the goal</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Phrases are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.</p>
+  <div class="example">"While both the democratic legitimacy and federalism arguments have merit, the stronger case rests on legitimacy — small state protection already exists through Senate representation. On balance, a system that has produced three popular vote losers as president has a legitimacy deficit that federalism concerns cannot offset."</div>
+  <p>Three chunks, one number, one complete argument. <strong>The Priorities column is where ILR 3 performance lives</strong> — not identifying the tension, but explaining why one side carries more weight than the other.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

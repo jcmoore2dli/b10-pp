@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W5 — Synthesis &amp; Judgment · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-tensions   { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-priorities { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-judgment   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-tensions   .legend-label { color: #dc2626; }
+  .leg-priorities .legend-label { color: #d97706; }
+  .leg-judgment   .legend-label { color: #1e3a5f; }
+  .leg-tensions   .legend-desc { color: #dc2626; }
+  .leg-priorities .legend-desc { color: #d97706; }
+  .leg-judgment   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0f4f8; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #1e3a5f; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #1e3a5f; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #1e3a5f; background: #f0f4f8; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-tensions   .col-header { background: #dc2626; }
+  .col-priorities .col-header { background: #d97706; }
+  .col-judgment   .col-header { background: #1e3a5f; }
+  .col-tensions   { border: 1.5px solid #dc2626; }
+  .col-priorities { border: 1.5px solid #d97706; }
+  .col-judgment   { border: 1.5px solid #1e3a5f; }
+  .col-tensions   .col-body { background: #fef2f2; }
+  .col-priorities .col-body { background: #fffbeb; }
+  .col-judgment   .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W5 — Synthesis &amp; Judgment · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Bring competing considerations together and arrive at a reasoned, defensible conclusion. Phrases in each column are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.
+</div>
+<div class="legend">
+  <div class="legend-item leg-tensions"><span class="legend-label">Tensions</span><span class="legend-desc">The competing claims that must be addressed</span></div>
+  <div class="legend-item leg-priorities"><span class="legend-label">Priorities</span><span class="legend-desc">Which consideration wins and why</span></div>
+  <div class="legend-item leg-judgment"><span class="legend-label">Judgment</span><span class="legend-desc">The defensible conclusion that follows</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> while both positions have merit… · the stronger case rests on… · although X is a legitimate concern… · on balance… · weighing X against Y… · the evidence suggests… · neither position is without weakness, but… · a defensible position acknowledges… while concluding that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should universities limit legacy admissions?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">meritocratic access vs. institutional fundraising dependency</div><div class="phrase">first-generation student benefit vs. upstream preparation inequality persistence</div><div class="phrase">private institutional autonomy vs. social equity obligation</div><div class="phrase">short-term donor revenue loss vs. long-term reputational and mission benefit</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">meritocratic access argument is strong; fundraising dependency is a structural problem that requires solution on its own terms, not through admissions preference</div><div class="phrase">first-generation benefit is real but limited if upstream preparation inequality persists — eliminating legacy is necessary but not sufficient for genuine equity</div><div class="phrase">private institutional autonomy is legitimate; social equity obligation is also legitimate — the question is which is weightier for institutions that receive public subsidy</div><div class="phrase">short-term revenue loss is real; long-term reputational benefit of meritocratic mission alignment is harder to quantify but real</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, eliminating legacy preference is defensible for institutions receiving public subsidy — the equity obligation outweighs the autonomy argument in that context</div><div class="phrase">the stronger case acknowledges upstream preparation inequality while arguing that eliminating legacy is the necessary first step — necessary conditions can be satisfied sequentially</div><div class="phrase">the defensible position on institutional autonomy is that it does not apply without qualification to institutions receiving public funding and tax exemptions</div><div class="phrase">the judgment on revenue is that alternative fundraising models exist and have worked — the revenue argument does not justify the admissions preference</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to disclose pay scales for all positions?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">pay equity benefit vs. internal compensation tension</div><div class="phrase">discriminatory gap reduction vs. high earner retention risk</div><div class="phrase">market efficiency benefit vs. management flexibility loss</div><div class="phrase">evidence of effectiveness vs. cultural resistance to salary transparency</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">pay equity benefit is documented in jurisdictions with pay transparency laws; internal tension is real but manageable through communication and standardization</div><div class="phrase">discriminatory gap reduction is the strongest argument; high earner retention risk is real but limited to a specific segment and does not outweigh the equity benefit</div><div class="phrase">market efficiency benefit is genuine — transparency reduces information asymmetry that currently favors employers; management flexibility loss is modest in well-designed disclosure frameworks</div><div class="phrase">evidence from EU and state-level implementations supports effectiveness; cultural resistance is real but has been overcome in contexts with enforcement</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, mandatory pay scale disclosure is defensible — the equity benefit is documented and the internal tension is manageable</div><div class="phrase">the stronger case leads with the gender and racial pay gap evidence — it is the most concrete and politically compelling argument</div><div class="phrase">the defensible position on high earner retention is that organizations with large discriminatory gaps are the most vulnerable to retention pressure — a feature, not a bug</div><div class="phrase">the judgment on cultural resistance is that enforcement is the determining factor — disclosure without enforcement produces cosmetic compliance; disclosure with enforcement produces real change</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should inheritance taxes be significantly increased?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">wealth concentration reduction vs. individual property rights</div><div class="phrase">revenue for equal opportunity investment vs. avoidance through trusts and gifting</div><div class="phrase">family business and farm protection vs. tax rate increase</div><div class="phrase">meritocracy argument vs. double taxation argument</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">wealth concentration reduction is documented and significant; property rights argument is legitimate but does not preclude all inheritance taxation — the question is degree</div><div class="phrase">revenue for equal opportunity is compelling; avoidance is real but reducible through simultaneous loophole closure — the avoidance argument is strongest when loopholes remain open</div><div class="phrase">family business and farm protection is a legitimate design requirement; it is addressable through installment payment options and threshold design</div><div class="phrase">meritocracy argument is stronger than double taxation argument — wealth transferred at death is untaxed income to the recipient, not taxed income of the deceased</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, significantly increased inheritance tax with loophole closure and business protections is defensible — the wealth concentration argument is strong and the practical objections are addressable</div><div class="phrase">the stronger case leads with the meritocracy argument — it is the most resonant framing for audiences skeptical of redistribution</div><div class="phrase">the defensible position on avoidance is that it is a design challenge, not a fundamental objection — closing gift and trust loopholes simultaneously is the necessary complement</div><div class="phrase">the judgment on family business is that installment payment options address the liquidity problem without undermining the tax — the forced sale concern is real but addressable</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should there be stricter limits on political donations from corporations?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">political equality vs. free speech protection for political expenditure</div><div class="phrase">regulatory capture reduction vs. reduced information flow to legislators</div><div class="phrase">corporate donor restriction vs. equal restriction on unions and non-profits</div><div class="phrase">domestic donation limits vs. dark money channel persistence</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">political equality argument is stronger than free speech argument for corporate entities — corporations are not citizens and the constitutional equation of money with speech is contested</div><div class="phrase">regulatory capture reduction is the strongest practical argument; information flow concern is addressable through lobbying disclosure requirements separate from donation limits</div><div class="phrase">equal restriction on all organizational donors is the most defensible design — differential treatment creates asymmetry that undermines the principle</div><div class="phrase">dark money channel persistence is the strongest practical objection — donation limits without 501(c)(4) reform produce substitution rather than reduction</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, corporate donation limits with equal application and dark money closure is defensible — the political equality argument is strong and the practical objections are addressable through comprehensive design</div><div class="phrase">the stronger case leads with regulatory capture — it is the most concrete and documentable harm from unrestricted corporate political spending</div><div class="phrase">the defensible position on equal application is that it is both principled and strategically necessary — asymmetric restrictions will be challenged and struck down</div><div class="phrase">the judgment on dark money is that donation limits without dark money closure are insufficient — the reform package must be comprehensive or the substitution effect negates the benefit</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should euthanasia be legalized in all countries?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">individual autonomy at end of life vs. coercion risk for vulnerable populations</div><div class="phrase">dignity in dying vs. sanctity of life</div><div class="phrase">medical profession duty of care vs. patient self-determination</div><div class="phrase">safeguard effectiveness vs. eligibility criteria expansion over time</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">individual autonomy argument is strong for competent adults with terminal diagnosis; coercion risk is strongest for elderly, disabled, and economically dependent populations</div><div class="phrase">dignity in dying is a compelling value; sanctity of life is an equally compelling value in different moral traditions — the disagreement is normative, not empirical</div><div class="phrase">medical profession duty of care tension is real; voluntary participation addresses it for individual physicians but does not resolve the institutional tension</div><div class="phrase">safeguard effectiveness evidence is mixed — some jurisdictions show stability, others show eligibility expansion over time</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, legalization with strict terminal illness criteria and robust safeguards is defensible in jurisdictions where palliative care is well-developed — universal legalization is not defensible given variation in care quality</div><div class="phrase">the stronger case is conditional: autonomy argument is strongest where palliative care alternatives are genuinely available — without them, the choice is not genuinely free</div><div class="phrase">the defensible position on voluntary participation is that it is necessary but not sufficient — institutional culture and economic pressure on the medical profession require structural attention</div><div class="phrase">the judgment on eligibility expansion is that it is a design and governance challenge that must be addressed explicitly — sunset clauses and mandatory review periods are the appropriate response</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the collection and use of biometric data?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">civil liberties protection vs. public safety and security benefit</div><div class="phrase">algorithmic bias harm vs. security effectiveness</div><div class="phrase">surveillance infrastructure constraint vs. criminal investigation capability</div><div class="phrase">comprehensive regulation vs. use-case specific regulation</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">civil liberties protection argument is strong; public safety benefit is real but does not justify unlimited surveillance — proportionality is the governing principle</div><div class="phrase">algorithmic bias harm is documented and falls disproportionately on minority communities; security effectiveness is real but achievable through less biased means</div><div class="phrase">surveillance infrastructure constraint is the strongest argument — infrastructure built for one purpose is historically repurposed for others</div><div class="phrase">use-case specific regulation is more defensible than comprehensive ban — it allows beneficial applications while restricting harmful ones</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, use-case specific regulation with algorithmic bias audit, consent requirements, and independent oversight is defensible — comprehensive ban and comprehensive permission are both indefensible</div><div class="phrase">the stronger case leads with the algorithmic bias evidence — it is documented, disproportionate, and remediable through audit requirements</div><div class="phrase">the defensible position on surveillance infrastructure is that mission creep must be addressed through structural constraints, not just legal prohibitions — legal prohibitions are revisable, structural constraints are more durable</div><div class="phrase">the judgment on use-case specificity is that high-risk uses — mass surveillance, predictive policing — require stricter standards than low-risk uses — device authentication, border control</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should private prisons be banned?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">justice as public good vs. market efficiency argument</div><div class="phrase">profit motive misalignment vs. government management track record</div><div class="phrase">rural economic dependency vs. rehabilitation investment priority</div><div class="phrase">transition cost and disruption vs. long-term recidivism reduction benefit</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">justice as public good argument is strong; market efficiency argument fails because the outcomes that matter — rehabilitation, recidivism — are not what profit-seeking operators optimize for</div><div class="phrase">profit motive misalignment is the strongest argument; government management track record is mixed but improvable through investment — the comparison is between current private and reformed public, not current private and current public</div><div class="phrase">rural economic dependency is real and requires transition support; rehabilitation investment priority is the more important long-term consideration</div><div class="phrase">transition cost is one-time and manageable; long-term recidivism reduction benefit is ongoing and compounds over time</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, banning private prisons with robust just transition support is defensible — the profit motive misalignment argument is compelling and the transition concerns are addressable</div><div class="phrase">the stronger case leads with the structural incentive argument — private prisons have a documented financial interest in maintaining high incarceration rates that is incompatible with justice system goals</div><div class="phrase">the defensible position on government track record is that the comparison should be to well-resourced public facilities, not to current underfunded ones — the policy should include investment standards</div><div class="phrase">the judgment on transition is that rural economic impact is the binding political constraint — transition support is not optional, it is the necessary condition for political achievability</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on the use of private military companies?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">accountability gap closure vs. state operational flexibility loss</div><div class="phrase">civilian protection vs. legitimate security gap filling</div><div class="phrase">binding regulation vs. voluntary framework adequacy</div><div class="phrase">PMC industry consolidation risk vs. accountability improvement</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">accountability gap closure is the strongest argument; operational flexibility loss is real but manageable — states retain other instruments of flexible force projection</div><div class="phrase">civilian protection is the foundational argument; legitimate security gap filling is a real function that regulation should accommodate rather than eliminate</div><div class="phrase">voluntary framework inadequacy is documented — the Montreux Document and ICoC have minimal compliance effect; binding regulation with consequences is necessary</div><div class="phrase">industry consolidation is a risk of regulation but not a fatal objection — larger more accountable firms are preferable to smaller less accountable ones</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, binding international regulation with PMC licensing and state liability is defensible — the accountability gap is real and the voluntary framework has failed</div><div class="phrase">the stronger case leads with civilian harm documentation — it is concrete, credible, and directly attributable to the accountability gap</div><div class="phrase">the defensible position on operational flexibility is that states have sufficient legitimate instruments of flexible power — PMC use for deniable operations is the specific function that regulation should target</div><div class="phrase">the judgment on consolidation is that the direction of travel matters — more accountable consolidated firms are the appropriate outcome of regulation, not the unintended consequence to be avoided</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Phrases are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.</p>
+  <div class="example">"While both the democratic legitimacy and federalism arguments have merit, the stronger case rests on legitimacy — small state protection already exists through Senate representation. On balance, a system that has produced three popular vote losers as president has a legitimacy deficit that federalism concerns cannot offset."</div>
+  <p>Three chunks, one number, one complete argument. <strong>The Priorities column is where ILR 3 performance lives</strong> — not identifying the tension, but explaining why one side carries more weight than the other.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

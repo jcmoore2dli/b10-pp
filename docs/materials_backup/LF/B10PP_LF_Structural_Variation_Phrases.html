@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Structural Variation · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #7c3aed; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-structure { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-pattern   { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-context   { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-structure .legend-label { color: #7c3aed; }
+  .leg-pattern   .legend-label { color: #0d9488; }
+  .leg-context   .legend-label { color: #d97706; }
+  .leg-structure .legend-desc { color: #7c3aed; }
+  .leg-pattern   .legend-desc { color: #0d9488; }
+  .leg-context   .legend-desc { color: #d97706; }
+  .connectors { margin: 8px 12px 12px; background: #f5f3ff; border: 1px solid #7c3aed; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #7c3aed; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #7c3aed; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #7c3aed; background: #f5f3ff; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-structure .col-header { background: #7c3aed; }
+  .col-pattern   .col-header { background: #0d9488; }
+  .col-context   .col-header { background: #d97706; }
+  .col-structure { border: 1.5px solid #7c3aed; }
+  .col-pattern   { border: 1.5px solid #0d9488; }
+  .col-context   { border: 1.5px solid #d97706; }
+  .col-structure .col-body { background: #f5f3ff; }
+  .col-pattern   .col-body { background: #f0fdfa; }
+  .col-context   .col-body { background: #fffbeb; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .col-structure .phrase { font-weight: 700; font-style: normal; color: #7c3aed; font-size: 11px; }
+  .col-structure .phrase::before { color: #7c3aed; }
+  .col-pattern .phrase { font-style: italic; color: #0d9488; font-size: 11.5px; }
+  .col-context .phrase { font-style: italic; color: #374151; font-size: 11.5px; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+  .close-btn-bar { background: #1e3a5f; padding: 8px 16px; display: flex; justify-content: flex-end; }
+  .close-btn { background: rgba(255,255,255,0.15); border: none; color: white; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="close-btn-bar">
+  <button class="close-btn" onclick="window.close()">✕ Close</button>
+</div>
+
+<header>
+  <h1>Structural Variation · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Linguistic Flexibility · Tap a question to expand</p>
+</header>
+
+<div class="frame-box">
+  <strong>About this reference:</strong> Structural Variation is the ability to move between different sentence structures within a single response — rather than repeating the same pattern. A response built entirely on simple subject-verb-object sentences sounds flat at ILR 2+. Varying between relative clauses, passive constructions, nominalizations, and conditionals signals syntactic range and control.
+</div>
+
+<div class="legend">
+  <div class="legend-item leg-structure">
+    <span class="legend-label">Structure</span>
+    <span class="legend-desc">The grammatical structure being practiced</span>
+  </div>
+  <div class="legend-item leg-pattern">
+    <span class="legend-label">Pattern</span>
+    <span class="legend-desc">The stem or template showing how it works</span>
+  </div>
+  <div class="legend-item leg-context">
+    <span class="legend-label">In Context</span>
+    <span class="legend-desc">The pattern applied to this question's content</span>
+  </div>
+</div>
+
+<div class="connectors">
+  <strong>Key move:</strong> Don't build your whole response in one structure. Plan to use at least three different structures — for example: open with a <em>nominalization</em>, develop with a <em>relative clause</em>, concede with a <em>passive</em>, and conclude with a <em>conditional</em>. Structure variety signals fluency; structure repetition signals ceiling.
+</div>
+
+<div class="questions">
+
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q1</span><span class="q-text">Should countries adopt a single-payer healthcare system?</span></div>
+      <span class="q-tag">HLT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Conditional</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Those who cannot... / Citizens who rely on...</div>
+        <div class="phrase">The adoption of... / The transition to...</div>
+        <div class="phrase">Costs are borne by... / Care is rationed by...</div>
+        <div class="phrase">Were this implemented... / If coverage were universal...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">those who cannot afford private insurance</div>
+        <div class="phrase">the adoption of a single-payer model</div>
+        <div class="phrase">costs are borne by all taxpayers equally</div>
+        <div class="phrase">were this implemented without cost controls</div>
+        <div class="phrase">citizens who rely on employer-based coverage</div>
+        <div class="phrase">the transition to universal coverage</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q2</span><span class="q-text">Should antitrust laws be strengthened to break up technology monopolies?</span></div>
+      <span class="q-tag">ECN</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Adverbial Clause</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Companies that dominate... / Firms that control...</div>
+        <div class="phrase">The concentration of... / The strengthening of...</div>
+        <div class="phrase">Markets are controlled by... / Competition is suppressed by...</div>
+        <div class="phrase">As a result of consolidation... / Given that market power...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">companies that dominate multiple digital markets</div>
+        <div class="phrase">the concentration of market power in few firms</div>
+        <div class="phrase">competition is suppressed by acquisition strategies</div>
+        <div class="phrase">as a result of consolidation over two decades</div>
+        <div class="phrase">firms that control both platform and content</div>
+        <div class="phrase">the strengthening of antitrust enforcement</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q3</span><span class="q-text">Should governments regulate digital platforms to limit misinformation?</span></div>
+      <span class="q-tag">GOV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Purpose Clause</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Content that is demonstrably false... / Platforms that amplify...</div>
+        <div class="phrase">The spread of... / The regulation of...</div>
+        <div class="phrase">Information is amplified by... / Users are exposed to...</div>
+        <div class="phrase">In order to protect... / So as to prevent...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">content that is demonstrably and verifiably false</div>
+        <div class="phrase">the spread of misinformation at algorithmic scale</div>
+        <div class="phrase">users are exposed to manipulative content daily</div>
+        <div class="phrase">in order to protect democratic discourse</div>
+        <div class="phrase">platforms that amplify false content for engagement</div>
+        <div class="phrase">the regulation of content at platform level</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q4</span><span class="q-text">Should wealthy nations fund climate adaptation in developing countries?</span></div>
+      <span class="q-tag">INT</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Concessive Clause</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Nations that have contributed most... / Countries that bear...</div>
+        <div class="phrase">The responsibility of... / The failure to...</div>
+        <div class="phrase">Emissions are produced by... / Damage is suffered by...</div>
+        <div class="phrase">Although funding is costly... / Despite having caused...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">nations that have contributed most to cumulative emissions</div>
+        <div class="phrase">the responsibility of high-emission nations to fund adaptation</div>
+        <div class="phrase">damage is suffered by those least responsible for it</div>
+        <div class="phrase">although funding is costly, the moral obligation is clear</div>
+        <div class="phrase">countries that bear the greatest climate vulnerability</div>
+        <div class="phrase">the failure to fund adaptation has measurable consequences</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q5</span><span class="q-text">Should AI in healthcare require special regulation?</span></div>
+      <span class="q-tag">TEC</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Conditional</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Systems that make... / Algorithms that determine...</div>
+        <div class="phrase">The deployment of... / The regulation of...</div>
+        <div class="phrase">Patients are affected by... / Decisions are made by...</div>
+        <div class="phrase">Should an AI system fail... / Were errors to go undetected...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">systems that make life-and-death diagnostic decisions</div>
+        <div class="phrase">the deployment of AI in high-stakes medical contexts</div>
+        <div class="phrase">patients are affected by opaque algorithmic outputs</div>
+        <div class="phrase">should an AI system fail without human override</div>
+        <div class="phrase">algorithms that determine treatment pathways</div>
+        <div class="phrase">the regulation of AI-assisted clinical decision-making</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q6</span><span class="q-text">Should countries comply with international climate agreements?</span></div>
+      <span class="q-tag">ENV</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Adverbial Clause</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Nations that refuse... / Countries that have signed...</div>
+        <div class="phrase">The failure to comply... / Non-compliance with...</div>
+        <div class="phrase">Targets are set by... / Penalties are imposed by...</div>
+        <div class="phrase">Despite having signed... / Even though binding commitments...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">nations that refuse to meet their stated emissions targets</div>
+        <div class="phrase">the failure to comply undermines collective climate action</div>
+        <div class="phrase">targets are set by international consensus, not unilaterally</div>
+        <div class="phrase">despite having signed the agreement, enforcement is weak</div>
+        <div class="phrase">countries that have signed but not implemented commitments</div>
+        <div class="phrase">non-compliance with agreed reduction schedules</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q7</span><span class="q-text">Should rehabilitation be prioritized over punishment?</span></div>
+      <span class="q-tag">JUS</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Concessive Clause</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Offenders who reoffend... / Individuals who are incarcerated...</div>
+        <div class="phrase">The prioritization of... / The shift toward...</div>
+        <div class="phrase">Sentences are determined by... / Release is contingent on...</div>
+        <div class="phrase">While punishment serves a deterrent function... / Although recidivism...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">offenders who reoffend after purely punitive sentences</div>
+        <div class="phrase">the prioritization of rehabilitation over incarceration</div>
+        <div class="phrase">sentences are determined by mandatory minimums, not need</div>
+        <div class="phrase">while punishment serves a legitimate deterrent function</div>
+        <div class="phrase">individuals who are incarcerated without rehabilitation access</div>
+        <div class="phrase">the shift toward restorative approaches in criminal justice</div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left"><span class="q-num">Q8</span><span class="q-text">Should museums return cultural artifacts?</span></div>
+      <span class="q-tag">CUL</span><span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel"><div class="columns">
+      <div class="col col-structure"><div class="col-header">Structure</div><div class="col-body">
+        <div class="phrase">Relative Clause</div>
+        <div class="phrase">Nominalization</div>
+        <div class="phrase">Passive Voice</div>
+        <div class="phrase">Conditional</div>
+      </div></div>
+      <div class="col col-pattern"><div class="col-header">Pattern</div><div class="col-body">
+        <div class="phrase">Artifacts that were removed... / Objects that belong...</div>
+        <div class="phrase">The repatriation of... / The return of...</div>
+        <div class="phrase">Objects are held by... / Artifacts were acquired through...</div>
+        <div class="phrase">Were these artifacts returned... / If repatriation were required...</div>
+      </div></div>
+      <div class="col col-context"><div class="col-header">In Context</div><div class="col-body">
+        <div class="phrase">artifacts that were removed during the colonial period</div>
+        <div class="phrase">the repatriation of cultural heritage to source communities</div>
+        <div class="phrase">objects are held by institutions that did not create them</div>
+        <div class="phrase">were these artifacts returned, source nations would benefit</div>
+        <div class="phrase">objects that belong to living cultural traditions</div>
+        <div class="phrase">artifacts were acquired through coercion or legal ambiguity</div>
+      </div></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand. Before you record, plan to use at least three different structures from the list. A strong ILR 2+/3 response does not stay in one syntactic lane. For example, using Q1:</p>
+  <div class="example">"The adoption of a single-payer model would ensure that those who cannot afford private insurance gain access to care. Costs are borne by all taxpayers equally — which is precisely the objection. Were this implemented without cost controls, the fiscal burden on governments could become unsustainable."</div>
+  <p>Four structures in four sentences: <strong>nominalization → relative clause → passive → conditional</strong>. That is Structural Variation at ILR 2+/3.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

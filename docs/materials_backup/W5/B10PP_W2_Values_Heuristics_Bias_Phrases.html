@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W2 — Values, Heuristics &amp; Bias · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-value      { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-assumption { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-competing  { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-value      .legend-label { color: #dc2626; }
+  .leg-assumption .legend-label { color: #d97706; }
+  .leg-competing  .legend-label { color: #1e3a5f; }
+  .leg-value      .legend-desc { color: #dc2626; }
+  .leg-assumption .legend-desc { color: #d97706; }
+  .leg-competing  .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-value      .col-header { background: #dc2626; }
+  .col-assumption .col-header { background: #d97706; }
+  .col-competing  .col-header { background: #1e3a5f; }
+  .col-value      { border: 1.5px solid #dc2626; }
+  .col-assumption { border: 1.5px solid #d97706; }
+  .col-competing  { border: 1.5px solid #1e3a5f; }
+  .col-value      .col-body { background: #fef2f2; }
+  .col-assumption .col-body { background: #fffbeb; }
+  .col-competing  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W2 — Values, Heuristics &amp; Bias · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify the value framework that drives a stakeholder's position — what they believe is important, what they must assume to be true, and what a stakeholder on the other side believes instead. The analytical move is not stating your own opinion but <em>surfacing the values and assumptions that make different positions coherent on their own terms.</em>
+</div>
+<div class="legend">
+  <div class="legend-item leg-value"><span class="legend-label">Value</span><span class="legend-desc">The core value driving a stakeholder's position</span></div>
+  <div class="legend-item leg-assumption"><span class="legend-label">Assumption</span><span class="legend-desc">What must be true for that value to justify the position</span></div>
+  <div class="legend-item leg-competing"><span class="legend-label">Competing Framework</span><span class="legend-desc">The value a different stakeholder holds, leading to a different conclusion</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> for those who prioritize… · from the perspective of… · this position assumes that… · those who hold this view believe that… · a stakeholder who values… would argue that… · the competing position rests on the assumption that… · while X stakeholders emphasize… those on the other side argue that… · this depends on whether one values… or…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should higher education be made tuition-free at public universities?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">higher education is a public good that should be accessible regardless of financial means</div><div class="phrase">the economic returns of a degree should not be preceded by a debt burden that shapes life choices</div><div class="phrase">a society that benefits from an educated workforce has an obligation to fund the education that produces it</div><div class="phrase">tuition fees reproduce class advantage by making higher education a privilege rather than a right</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">free tuition will meaningfully increase access for lower-income students rather than primarily benefiting those already likely to attend</div><div class="phrase">quality can be maintained with government funding replacing tuition revenue</div><div class="phrase">credential inflation will not reduce the economic return of a degree if employer demand remains strong</div><div class="phrase">the fiscal cost is justified by the long-term economic and social returns of higher educational attainment</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">individuals who benefit from higher education should bear its cost rather than transferring it to all taxpayers</div><div class="phrase">income-contingent loans already address affordability without requiring universal subsidy</div><div class="phrase">free tuition primarily benefits middle and upper classes who are already most likely to attend</div><div class="phrase">government funding creates political interference in university autonomy and curriculum</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should gig economy workers receive the same benefits as full-time employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">workers deserve basic protections regardless of how their employment is legally classified</div><div class="phrase">platform companies have designed classification systems to extract labor without assuming its obligations</div><div class="phrase">the risk of irregular income and no benefits falls entirely on the most economically vulnerable workers</div><div class="phrase">labor rights should follow the nature of work, not the contractual form imposed by the employer</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">reclassification will not eliminate gig work but will make it more equitable</div><div class="phrase">the flexibility argument is primarily made by platforms, not by the majority of gig workers</div><div class="phrase">platforms can absorb benefit costs through pricing adjustments without exiting markets</div><div class="phrase">the economic value created by gig workers is sufficient to justify the cost of their benefits</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">gig work provides flexibility that full-time employment cannot, and regulation destroys that value</div><div class="phrase">independent contractors have chosen their status and should not have protections imposed on them</div><div class="phrase">market competition for gig workers will naturally produce better conditions without regulation</div><div class="phrase">reclassification will reduce overall gig work availability, harming the workers it claims to protect</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should governments implement universal basic income?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">every person deserves a guaranteed economic floor below which they cannot fall</div><div class="phrase">automation will eliminate work at a scale that existing safety nets were not designed to address</div><div class="phrase">the complexity and conditionality of existing welfare systems creates poverty traps that UBI eliminates</div><div class="phrase">economic security enables human flourishing and risk-taking that conditional support cannot provide</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">a UBI at subsistence level will reduce poverty without eliminating work incentive</div><div class="phrase">the fiscal cost is manageable through redistribution from existing programs and new taxation</div><div class="phrase">UBI will enable entrepreneurship and caregiving that increases total economic and social value</div><div class="phrase">the simplicity of universal transfers outweighs the targeting efficiency of means-tested alternatives</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">work is a social good and obligation that unconditional income undermines</div><div class="phrase">targeted support for those most in need is more fiscally efficient than universal transfers</div><div class="phrase">the fiscal cost of a meaningful UBI is incompatible with other essential public expenditure</div><div class="phrase">automation will create new forms of work as it always has, making UBI unnecessary</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should social media companies be required to remove political misinformation?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">platforms that profit from the spread of false information bear responsibility for its harm</div><div class="phrase">democratic processes require a shared factual foundation that misinformation systematically destroys</div><div class="phrase">the scale and speed of misinformation spread online requires regulatory intervention</div><div class="phrase">harmful speech is not protected speech — and election-distorting misinformation causes demonstrable harm</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">misinformation can be defined with sufficient precision to enable consistent enforcement</div><div class="phrase">removal of false content does not constitute censorship of legitimate political speech</div><div class="phrase">platforms have both the technical capacity and the obligation to moderate at scale</div><div class="phrase">the harm from misinformation outweighs the risk of over-removal in the design of any enforcement system</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">government-mandated speech removal is censorship regardless of the content being removed</div><div class="phrase">the marketplace of ideas, not regulatory removal, is the appropriate response to false speech</div><div class="phrase">platforms are private companies with the right to set their own content policies without government mandate</div><div class="phrase">defining political misinformation gives governments a tool they will inevitably use against legitimate dissent</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should alternative medicine be covered by public health insurance?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">patient autonomy includes the right to choose treatments aligned with cultural and personal values</div><div class="phrase">the evidence hierarchy in conventional medicine reflects historical bias as much as objective efficacy</div><div class="phrase">integrative approaches to health recognize the limitations of purely biomedical treatment</div><div class="phrase">insurance should reflect what patients actually use, not only what the medical establishment endorses</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">some alternative treatments have sufficient evidence of benefit to justify insurance coverage</div><div class="phrase">patient choice and cultural relevance improve treatment adherence and outcomes</div><div class="phrase">coverage will not significantly displace investment in evidence-based care</div><div class="phrase">the regulatory framework can distinguish between more and less evidence-supported alternatives</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">public insurance funds must be allocated to treatments with demonstrated clinical efficacy</div><div class="phrase">covering unproven treatments legitimizes them and misleads patients about their relative value</div><div class="phrase">patient autonomy to choose alternative treatments does not require public subsidy of those choices</div><div class="phrase">the evidence standards that alternative medicine fails to meet exist to protect patients, not exclude traditions</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the development of artificial intelligence?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">powerful technologies that affect fundamental rights require democratic accountability</div><div class="phrase">the speed of AI development outpaces markets' ability to self-correct for harm</div><div class="phrase">algorithmic systems that shape access to jobs, credit, and information must be publicly accountable</div><div class="phrase">the companies developing AI have a financial interest in minimizing safety constraints</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">regulation can be designed to address harm without significantly slowing beneficial innovation</div><div class="phrase">governments have sufficient technical capacity to evaluate AI systems meaningfully</div><div class="phrase">the risks of unregulated AI development are greater than the risks of regulatory overreach</div><div class="phrase">international coordination can prevent regulatory arbitrage from undermining domestic standards</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">innovation in AI is best governed by market competition and user choice rather than regulation</div><div class="phrase">premature regulation locks in today's assumptions and prevents tomorrow's solutions</div><div class="phrase">AI companies have strong reputational and liability incentives to self-regulate effectively</div><div class="phrase">government regulators lack the technical capacity to oversee AI systems without harming innovation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments ban the development of new fossil fuel infrastructure?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">the climate emergency requires immediate structural constraints on fossil fuel expansion</div><div class="phrase">new fossil fuel infrastructure creates carbon lock-in that makes climate targets structurally unachievable</div><div class="phrase">the rights of future generations to a habitable planet outweigh the economic interests of current fossil fuel industries</div><div class="phrase">governments have a duty to align public infrastructure policy with their international climate commitments</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">the ban will accelerate rather than disrupt the energy transition by forcing investment into alternatives</div><div class="phrase">renewable energy capacity can expand fast enough to prevent energy security gaps during the transition</div><div class="phrase">the economic cost to fossil fuel communities can be managed through transition support</div><div class="phrase">carbon leakage can be addressed through border adjustment mechanisms</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">energy security requires that governments maintain diverse fuel sources during the transition</div><div class="phrase">fossil fuel communities have legitimate economic interests that cannot be eliminated by regulatory fiat</div><div class="phrase">the ban will increase energy prices in ways that fall disproportionately on lower-income households</div><div class="phrase">technology and market mechanisms will phase out fossil fuels more efficiently than prohibition</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement stricter gun control measures?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">the right to public safety outweighs the individual right to unrestricted firearm access</div><div class="phrase">governments have an obligation to use available policy tools to reduce preventable death</div><div class="phrase">the constitutional right to bear arms does not preclude reasonable regulation any more than other rights do</div><div class="phrase">the scale of gun violence in high-gun-availability societies is a public health emergency that demands intervention</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">stricter controls will reduce access for high-risk individuals without eliminating access for law-abiding owners</div><div class="phrase">the evidence from international comparison shows that stricter regulation correlates with lower gun death rates</div><div class="phrase">legal firearms are a significant source of illegal firearms through theft and straw purchases</div><div class="phrase">the constitutional framework permits meaningful regulation that falls short of confiscation</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">the right to bear arms is a fundamental constitutional right that cannot be regulated away by legislative majority</div><div class="phrase">gun ownership is a legitimate means of self-defense, particularly in rural areas with limited law enforcement response</div><div class="phrase">stricter controls will disarm law-abiding citizens while criminals obtain firearms through illegal channels</div><div class="phrase">the causes of gun violence are social and economic, not regulatory, and should be addressed accordingly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. These columns are <strong>parallel, not sequential</strong> — they don't chain into each other. Use them to surface the values and assumptions driving different stakeholder positions.</p>
+  <div class="example">"For those who prioritize individual autonomy over end-of-life decisions, legalization is defensible — but this position assumes that safeguards can reliably prevent coercion. Those operating from a competing framework argue that the medical profession's duty of care is fundamentally incompatible with administering death, and that high-quality palliative care eliminates the suffering that drives such requests."</div>
+  <p>You are not stating your own values. You are <strong>identifying the value frameworks that make each stakeholder's position coherent on its own terms</strong> — and showing that the disagreement is not primarily empirical but normative.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>
