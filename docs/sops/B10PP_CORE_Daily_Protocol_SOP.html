@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · CORE Bundle — Daily Protocol SOP</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --gold-light: #f5e9c8;
+    --slate: #4a5568;
+    --light-bg: #f7f8fa;
+    --border: #dde1e9;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --amber: #7b4f00;
+    --amber-light: #fff3cd;
+    --red: #7b1a1a;
+    --red-light: #fde8e8;
+    --blue: #1a3a5c;
+    --blue-light: #dbeafe;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  /* HEADER */
+  .doc-header {
+    border-top: 5px solid var(--navy);
+    border-bottom: 2px solid var(--gold);
+    padding: 20px 0 16px;
+    margin-bottom: 32px;
+  }
+  .doc-header .system { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--slate); margin-bottom: 4px; }
+  .doc-header h1 { font-size: 22px; color: var(--navy); font-weight: 700; line-height: 1.25; }
+  .doc-header .meta { font-size: 12px; color: var(--slate); margin-top: 8px; font-family: 'Courier New', monospace; }
+
+  /* SECTION LABELS */
+  h2 {
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin: 36px 0 16px;
+    font-family: Arial, sans-serif;
+  }
+
+  h3 {
+    font-size: 15px;
+    color: var(--navy);
+    margin: 24px 0 10px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+  }
+
+  p { margin-bottom: 12px; }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-left: 4px solid var(--gold);
+    background: var(--gold-light);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout.green {
+    border-left-color: var(--green);
+    background: var(--green-light);
+  }
+  .callout.amber {
+    border-left-color: #d08800;
+    background: var(--amber-light);
+  }
+  .callout.blue {
+    border-left-color: #2563eb;
+    background: var(--blue-light);
+  }
+  .callout.red {
+    border-left-color: #b91c1c;
+    background: var(--red-light);
+  }
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-family: Arial, sans-serif;
+    color: var(--slate);
+  }
+
+  /* PROCEDURE STEPS */
+  .steps { counter-reset: step; margin: 0; padding: 0; list-style: none; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 26px;
+    height: 26px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .steps li .step-body { flex: 1; }
+  .steps li .step-body strong { display: block; margin-bottom: 2px; color: var(--navy); font-family: Arial, sans-serif; }
+
+  /* DAY ARC TABLE */
+  .day-arc {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .day-arc th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 12px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: .06em;
+  }
+  .day-arc td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .day-arc tr:nth-child(even) td { background: var(--light-bg); }
+  .day-arc td:first-child {
+    font-weight: 700;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
+    color: var(--navy);
+    width: 110px;
+  }
+
+  /* PHASE BADGE */
+  .phase {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .phase.assign { background: var(--navy); color: #fff; }
+  .phase.debrief { background: var(--green); color: #fff; }
+  .phase.share { background: #7c3aed; color: #fff; }
+  .phase.forthcoming { background: #6b7280; color: #fff; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* FOOTER */
+  .doc-footer {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    font-size: 11px;
+    color: var(--slate);
+    font-family: Arial, sans-serif;
+  }
+
+  ul.plain { list-style: disc; padding-left: 20px; margin-bottom: 12px; }
+  ul.plain li { margin-bottom: 6px; }
+
+  .tag {
+    display: inline-block;
+    background: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 1px 6px;
+    font-family: 'Courier New', monospace;
+    color: var(--amber);
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="system">B10 Practice Platform · Standard Operating Procedure</div>
+  <h1>CORE Bundle Practice — Daily Protocol</h1>
+  <div class="meta">Role: Main Instructor &nbsp;|&nbsp; Track: CORE Bundle &nbsp;|&nbsp; Version 1.0 &nbsp;|&nbsp; Effective: July 27, 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>1. Purpose and Scope</h2>
+
+<p>This SOP governs the daily instructional cycle for the CORE Bundle track of the B10 Practice Platform (B10-PP). It applies to all Main Instructors assigned to classes in which students are completing CORE Bundle assignments as part of ILR 2+/3 oral English proficiency development.</p>
+
+<p>This document covers two interlocking instructor actions: the <strong>evening assignment</strong> (assigning tonight's bundle to students) and the <strong>morning debrief</strong> (reviewing the previous night's attempts with the class). These two actions form a single instructional cycle. The instructor is always working one day ahead: today's debrief addresses last night's assignment; today's assignment prepares tomorrow's debrief.</p>
+
+<div class="callout">
+  <div class="callout-label">Design Rationale</div>
+  CORE Bundle passages are completed by students independently, outside of class. The platform records their spoken responses and scores them automatically. The instructor's role during class time is not to supervise recording — it is to debrief the attempt and build proficiency through structured review, peer comparison, and targeted discussion of what separates a scored 3/4 from a scored 4/4 response.
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>2. What You Are Doing Right Now</h2>
+
+<p>At any given moment in the CORE daily cycle, you are in one of two procedural positions:</p>
+
+<table class="day-arc">
+  <tr>
+    <th>Position</th>
+    <th>When</th>
+    <th>Your Task</th>
+    <th>Go to Section</th>
+  </tr>
+  <tr>
+    <td>Morning Debrief</td>
+    <td>Start of class — students completed a bundle the night before</td>
+    <td>Review submissions, lead structured debrief, facilitate peer sharing</td>
+    <td>Section 4</td>
+  </tr>
+  <tr>
+    <td>Evening Assignment</td>
+    <td>End of class — you are assigning tonight's bundle</td>
+    <td>Assign bundle via dashboard, brief students, set MTS (Memory Training Strategies) focus</td>
+    <td>Section 5</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">Note</div>
+  On Day 1 of a new class or a new student group, there is no prior attempt to debrief. Begin with Section 5 (Evening Assignment) and return to Section 4 starting on Day 2.
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>3. Platform Overview — CORE Bundle</h2>
+
+<p>CORE Bundle passages are ILR-level 3 English texts (approximately 70–85 words) drawn from academic, professional, and policy domains. Students listen to the passage once via the platform, then record an immediate spoken paraphrase. The platform scores each attempt on a 1–4 integer scale using the REDS rubric framework (Range, Elaboration, Detail, and Structure). Scores are visible to both student and instructor via the platform dashboard.</p>
+
+<p><strong>The core proficiency demand:</strong> Students must retain and immediately reproduce the main idea plus supporting details from a single listening, without notes. This is a high cognitive load task — particularly for paraphrase of propositional density at ILR 3 — and is the primary proficiency target of this track.</p>
+
+<div class="callout blue">
+  <div class="callout-label">Memory Training Strategies (MTS)</div>
+  Memory Training Strategies are student-facing HTML reference documents available in the CORE Bundle Reference Materials folder on the platform. Each document presents a specific listening and retention strategy for students to apply during their bundle attempt. Each nightly assignment includes a designated MTS. See Section 5, Step 3 for the assignment procedure and Section 4, Steps 3a–3b for the morning debrief procedure.
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>4. Morning Debrief Procedure</h2>
+
+<p><span class="phase debrief">Debrief Phase</span></p>
+
+<p>You are at the start of class. Students completed a CORE Bundle assignment the previous evening. Proceed in the following order.</p>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Confirm submissions via instructor dashboard.</strong>
+      Open the B10-PP instructor dashboard. Verify that student submissions for the assigned bundle have been received. Note any students who did not submit — follow up privately; do not address publicly at this stage.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Announce the debrief focus.</strong>
+      State the passage title or ID from last night's bundle. Briefly restate the proficiency demand: "Last night you listened once and paraphrased. Today we are looking at what made the strongest responses strong."
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Select an exemplar response (Option A — Instructor-Selected).</strong>
+      From the dashboard, identify one student response scored 3/4 or 4/4. Select a response that clearly illustrates the main idea plus strong detail retention. This is the default debrief method. Proceed to Step 4.
+      <div class="callout green" style="margin-top:10px;">
+        <div class="callout-label">Instructor Discretion — Option B (Volunteer)</div>
+        As an alternative or on a subsequent day, invite a student volunteer to share their response. Option B surfaces a wider range of responses — including those with productive gaps — and generates student-led discussion. Option B is most effective after the class has already heard an exemplar via Option A and has a calibration reference. Consider alternating: Option A on Day 1 of a new bundle set, Option B on Day 2 or 3.
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Play the selected audio response to the class.</strong>
+      Use the instructor dashboard to play the selected student's audio. Instruct students to listen actively — they are not evaluating the speaker, they are identifying what information was retained and how it was expressed.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Display and discuss the transcript.</strong>
+      After playing the audio, display or read the transcript. Lead a brief class discussion using the following anchoring questions:
+      <ul class="plain" style="margin-top:8px;">
+        <li>Was the main idea captured accurately?</li>
+        <li>Which details were retained? Which were missing?</li>
+        <li>What specific language made this response clear or precise?</li>
+        <li>What would move this response from a 3 to a 4, or confirm it as a 4?</li>
+      </ul>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Connect to scoring explicitly.</strong>
+      Reference the score displayed on the dashboard for the exemplar response. Name what the score reflects. Avoid vague praise — be specific about what linguistic or content feature earned the score shown.
+    </div>
+  </li>
+</ol>
+
+<div class="callout blue">
+  <div class="callout-label">MTS Pair Debrief — Steps 3a and 3b</div>
+  Between Steps 2 and 3 above, conduct the MTS pair debrief as follows. (3a) Announce the MTS assigned last night and restate its core strategy in one sentence. Students pair with a partner for 3–4 minutes to debrief efficacy — what worked, where retrieval broke down. (3b) One pair briefs back to the class before the exemplar is played. Default: instructor assigns a specific MTS for each night. Student-selected MTS is available at instructor discretion after all MTS types have been introduced.
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>5. Evening Assignment Procedure</h2>
+
+<p><span class="phase assign">Assignment Phase</span></p>
+
+<p>You are at or near the end of class. You are assigning tonight's CORE Bundle. Proceed in the following order.</p>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Select the bundle via the instructor dashboard.</strong>
+      Navigate to the student's assignment panel. Select the CORE Bundle for tonight's practice. Assign to the full class roster or to specific students as appropriate.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Brief students on the assignment.</strong>
+      State the passage ID or bundle title. Confirm the listening-and-paraphrase task format: one listen, immediate spoken response, no notes. Remind students that the platform records and scores automatically — they do not need to wait for instructor review before seeing their score.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Designate tonight's Memory Training Strategy (MTS).</strong>
+      Open the CORE Bundle Reference Materials folder on the platform and identify the MTS assigned for tonight's attempt. Inform students which MTS they should apply and direct them to the corresponding reference document. Briefly restate the strategy in one sentence so students know what to focus on before they begin listening.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Set student expectations for tomorrow's debrief.</strong>
+      Inform students that a strong response from tonight's attempt will be played and discussed tomorrow. Students who are willing to share their response should note this — or the instructor will select from submissions. This prepares students to engage in tomorrow's debrief as active participants, not passive listeners.
+    </div>
+  </li>
+</ol>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>6. The Daily Cycle at a Glance</h2>
+
+<table class="day-arc">
+  <tr>
+    <th>Phase</th>
+    <th>When</th>
+    <th>Instructor Action</th>
+    <th>Student Action</th>
+  </tr>
+  <tr>
+    <td>Assignment</td>
+    <td>End of class (today)</td>
+    <td>Assign bundle via dashboard; brief students; set MTS (forthcoming)</td>
+    <td>Complete bundle at home; apply designated MTS</td>
+  </tr>
+  <tr>
+    <td>Debrief</td>
+    <td>Start of class (next day)</td>
+    <td>Confirm submissions; select exemplar; lead discussion</td>
+    <td>MTS pair debrief; listen to exemplar; discuss</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <div class="callout-label">Scheduling Note</div>
+  The assignment and debrief are separated by an overnight period. On any given class day, the instructor both debriefs last night's bundle (morning) and assigns tonight's bundle (end of class). These are distinct procedural events and should not be collapsed into a single activity.
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>7. Scoring Reference</h2>
+
+<p>CORE Bundle responses are scored 1–4. The platform score is holistic, not a checklist. For debrief purposes, orient discussion around the following general descriptors:</p>
+
+<table class="day-arc">
+  <tr>
+    <th>Score</th>
+    <th>What It Reflects</th>
+  </tr>
+  <tr>
+    <td>4 / 4</td>
+    <td>Main idea accurately captured; strong detail retention; precise and varied language; response is coherent and well-organized</td>
+  </tr>
+  <tr>
+    <td>3 / 4</td>
+    <td>Main idea present; some supporting detail; language is adequate but may lack precision or range; minor gaps in coherence</td>
+  </tr>
+  <tr>
+    <td>2 / 4</td>
+    <td>Main idea partially captured or imprecise; limited detail; language constraints visible; response may be brief or fragmented</td>
+  </tr>
+  <tr>
+    <td>1 / 4</td>
+    <td>Main idea absent or significantly distorted; minimal or no detail; language significantly limits communication</td>
+  </tr>
+</table>
+
+<div class="callout red">
+  <div class="callout-label">Instructor Note</div>
+  Do not share score descriptors directly with students as a rubric. Scoring is holistic and instructor-mediated. Use these descriptors to guide your own selection of exemplar responses and to frame debrief discussion — not as a student-facing checklist.
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>8. Administrative Notes</h2>
+
+<ul class="plain">
+  <li><strong>Dashboard access:</strong> Use the B10-PP instructor dashboard at <span class="tag">b10-practice-platform.web.app/b10_practice_platform/</span>. Log in with your assigned B10 instructor ID.</li>
+  <li><strong>Submission window:</strong> Student audio is retained on the platform for 72 hours. Plan debriefs within this window.</li>
+  <li><strong>Non-submitting students:</strong> Follow up privately. Do not delay the class debrief for missing submissions.</li>
+  <li><strong>Score visibility:</strong> Students see their own scores immediately after submission. Do not withhold scores — the platform is designed for immediate feedback. Your debrief adds interpretive value, not score gatekeeping.</li>
+  <li><strong>Reference Materials folder:</strong> Memory Training Strategy (MTS) reference documents are located in the CORE Bundle Reference Materials folder on the platform. Direct students to this folder at the start of the course and when introducing each new MTS.</li>
+</ul>
+
+<div class="doc-footer">
+  B10 Practice Platform · CORE Bundle Daily Protocol SOP · Version 1.0 · Effective July 27, 2026<br>
+  Defense Language Institute English Language Center · JBSA-Lackland, San Antonio, TX<br>
+  For platform support, contact your B10-PP administrator.
+</div>
+
+</body>
+</html>

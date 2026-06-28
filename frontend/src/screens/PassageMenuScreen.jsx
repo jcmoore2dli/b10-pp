@@ -28,6 +28,7 @@ function normalizePassage(doc) {
     pil_level:            d.pil || null,
     suggestedPrimaryFrame: d.suggestedPrimaryFrame || null,
     framesWeek:           d.framesWeek || null,
+    lfSubcategory:        d.lfSubcategory || null,
   }
 }
 
@@ -314,7 +315,7 @@ export default function PassageMenuScreen() {
 
       <main className="px-4 py-4 max-w-2xl mx-auto">
         {activeTab === 'assigned' && (
-          <AssignedSetView passages={assignedPassages} onSelect={handleSelectPassage} submissions={mySubmissions} />
+          <AssignedSetView passages={assignedPassages} allPassages={allPassages} onSelect={handleSelectPassage} submissions={mySubmissions} />
         )}
         {activeTab === 'progress' && (
           <MyProgressView submissions={mySubmissions} loading={submissionsLoading} />
@@ -334,7 +335,7 @@ export default function PassageMenuScreen() {
   )
 }
 
-function AssignedSetView({ passages, onSelect, submissions = [] }) {
+function AssignedSetView({ passages, allPassages = [], onSelect, submissions = [] }) {
   const [expandedSets, setExpandedSets] = useState({})
   const [bundleSectionOpen, setBundleSectionOpen] = useState(false)
   const [framesSectionOpen, setFramesSectionOpen] = useState(false)
@@ -621,17 +622,43 @@ function AssignedSetView({ passages, onSelect, submissions = [] }) {
               { id: 'SV',  label: 'Structural Variation' },
               { id: 'SC',  label: 'Sentence Combining' },
               { id: 'PI',  label: 'Perspective Integration' },
-            ].map(({ id, label }) => (
-              <div key={id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="w-full flex items-center justify-between px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#d97706' }}>{id}</span>
-                    <span className="text-xs text-gray-600 font-medium">{label}</span>
-                  </div>
-                  <span className="text-xs text-gray-400 italic">coming soon</span>
+            ].map(({ id, label }) => {
+              const group = allPassages.filter(p => p.lfSubcategory === id)
+              const isOpen = expandedSets[id] === true
+              const groupDone = group.filter(p => attemptedIds.has(p.passage_id)).length
+              return (
+                <div key={id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => toggleSet(id)}
+                    className="w-full flex items-center justify-between px-4 py-3 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#d97706' }}>{id}</span>
+                      <span className="text-xs text-gray-600 font-medium">{label}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {group.length > 0
+                        ? <span className="text-xs text-gray-500">{groupDone}/{group.length} done</span>
+                        : <span className="text-xs text-gray-400 italic">loading…</span>
+                      }
+                      <span className="text-gray-400 text-xs">{isOpen ? '▲' : '▼'}</span>
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="flex flex-col gap-2 px-3 pb-3">
+                      {group.map(p => (
+                        <PassageCard
+                          key={p.passage_id}
+                          passage={p}
+                          onSelect={onSelect}
+                          status={attemptedIds.has(p.passage_id) ? 'completed' : 'not_started'}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MTS 3 — Gist-First / Details-Second · CORE Bundle Memory Strategy</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --slate: #4a5568;
+    --light-bg: #f7f8fa;
+    --border: #dde1e9;
+    --teal: #0f766e;
+    --teal-light: #ccfbf1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: var(--light-bg);
+    color: #1a1a1a;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+  }
+  .close-bar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  .close-btn { background: none; border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 13px; color: var(--slate); cursor: pointer; font-family: inherit; }
+  .close-btn:hover { background: #fff; }
+  .page-header { background: var(--navy); color: #fff; border-radius: 8px 8px 0 0; padding: 20px 20px 16px; }
+  .page-header .system { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; opacity: .6; margin-bottom: 4px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+  .page-header .subtitle { font-size: 12px; opacity: .7; }
+  .about-band { background: var(--teal); color: #fff; padding: 12px 20px; font-size: 14px; line-height: 1.5; }
+  .about-band strong { font-weight: 700; }
+  .card { background: #fff; border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; overflow: hidden; margin-bottom: 16px; }
+  .step { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-timing { width: 90px; flex-shrink: 0; background: var(--light-bg); padding: 14px 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-right: 1px solid var(--border); gap: 6px; }
+  .step-num { width: 28px; height: 28px; background: var(--navy); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .step-when { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--slate); text-align: center; line-height: 1.3; }
+  .step-content { flex: 1; padding: 14px 16px; }
+  .step-content .step-title { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 5px; }
+  .step-content p { font-size: 14px; color: #333; margin-bottom: 0; line-height: 1.55; }
+  .example-box { background: var(--teal-light); border-left: 3px solid var(--teal); border-radius: 0 4px 4px 0; padding: 10px 14px; margin-top: 10px; font-size: 13px; color: #1a1a1a; line-height: 1.5; }
+  .example-box .ex-label { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+  .caution-box { background: #fff8e1; border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; padding: 10px 14px; margin-top: 10px; font-size: 13px; color: #1a1a1a; line-height: 1.5; }
+  .caution-box .ca-label { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #92600a; margin-bottom: 4px; }
+  .two-col { display: flex; gap: 10px; margin-top: 10px; }
+  .col-box { flex: 1; border-radius: 4px; padding: 10px 12px; font-size: 13px; line-height: 1.5; }
+  .col-box .col-label { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .col-box.pass1 { background: #e0f2fe; border-left: 3px solid #0284c7; }
+  .col-box.pass1 .col-label { color: #0284c7; }
+  .col-box.pass2 { background: var(--teal-light); border-left: 3px solid var(--teal); }
+  .col-box.pass2 .col-label { color: var(--teal); }
+  .bottom-note { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 13px; color: var(--slate); line-height: 1.55; }
+  .bottom-note strong { color: #1a1a1a; }
+  .platform-note { text-align: center; font-size: 11px; color: var(--slate); margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="close-bar">
+  <button class="close-btn" onclick="window.history.back()">✕ Close</button>
+</div>
+
+<div class="page-header">
+  <div class="system">B10 Practice Platform · CORE Bundle · Memory Training Strategy 3 of 5</div>
+  <h1>Gist-First / Details-Second</h1>
+  <div class="subtitle">Catch the main point on the first pass. Let the details come back from it.</div>
+</div>
+
+<div class="about-band">
+  <strong>What this strategy does:</strong> You separate your listening into two goals — first pass is main idea only, second pass is details. This reduces cognitive overload by giving your memory one job at a time instead of two.
+</div>
+
+<div class="card">
+
+  <div class="step">
+    <div class="step-timing">
+      <div class="step-num">1</div>
+      <div class="step-when">Before you listen</div>
+    </div>
+    <div class="step-content">
+      <div class="step-title">Decide that your only job on the first pass is the main point.</div>
+      <p>Tell yourself: <em>"I am not going to try to catch the details yet. I am going to ask one question while I listen: what is this passage mainly about?"</em> Let the details wash over you on the first pass — your brain will hold more than you think if you are not fighting to hold everything at once.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-timing">
+      <div class="step-num">2</div>
+      <div class="step-when">First pass — while you listen</div>
+    </div>
+    <div class="step-content">
+      <div class="step-title">Listen for the one-sentence answer to: "What is this mainly about?"</div>
+      <p>Do not try to catch specific facts, numbers, or supporting points on this pass. Follow the overall direction of the passage — what is it arguing, reporting, or describing? By the end, you should be able to complete this sentence: <em>"This passage is mainly about ___."</em></p>
+      <div class="example-box">
+        <div class="ex-label">Example</div>
+        After listening: <strong>"This passage is mainly about why remote work policies increase productivity but create new management challenges."</strong> That is your gist — one sentence, main point only.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-timing">
+      <div class="step-num">3</div>
+      <div class="step-when">Right after first pass</div>
+    </div>
+    <div class="step-content">
+      <div class="step-title">Lock in your gist sentence — then ask what supports it.</div>
+      <p>Say your gist sentence to yourself once. Then ask: <em>"What did the passage say to support or explain this?"</em> You will find that details come back more easily now that the main idea is anchored. Pull back 2–3 supporting points from memory.</p>
+      <div class="two-col">
+        <div class="col-box pass1">
+          <div class="col-label">First pass — gist</div>
+          "Remote work increases productivity but creates management challenges."
+        </div>
+        <div class="col-box pass2">
+          <div class="col-label">Details pulled back from gist</div>
+          Output data cited · communication gaps named · middle managers most affected
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-timing">
+      <div class="step-num">4</div>
+      <div class="step-when">Before you record</div>
+    </div>
+    <div class="step-content">
+      <div class="step-title">Build your response structure: main point first, details after.</div>
+      <p>Plan your response in the same order as your memory process: open with the gist, then add the 2–3 supporting details you recovered. This is not just a memory strategy — it is also the correct response structure for this task. Main idea first, details second, every time.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-timing">
+      <div class="step-num">5</div>
+      <div class="step-when">When you record</div>
+    </div>
+    <div class="step-content">
+      <div class="step-title">State the main point, then develop it with your recovered details.</div>
+      <p>Open your response with your gist sentence — stated clearly and directly. Then move through your supporting details in whatever order feels most logical. If a detail is fuzzy, state what you remember and move on. Do not pause — the gist is always your anchor if you lose your place.</p>
+      <div class="caution-box">
+        <div class="ca-label">Watch out for this</div>
+        Starting your response with a detail instead of the main point. Many students begin with the first thing they remember — which is often a specific fact, not the main idea. Always lead with the gist. The score depends on the main idea being clearly present, not on the volume of details.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-note">
+  <strong>Remember:</strong> Gist-First works best when the passage has one clear central argument or finding. If the passage covers several equally weighted ideas without a clear main point, try <em>Chunking + Immediate Rehearsal</em> instead, which treats each idea as its own unit rather than looking for a single gist.
+  <br><br>Scaffold feedback is diagnostic only — your score is always holistic.
+</div>
+
+<div class="platform-note">B10 Practice Platform · CORE Bundle Memory Training Strategies</div>
+
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · Linguistic Flexibility Practice — SLT Instructor Protocol SOP</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --gold-light: #f5e9c8;
+    --slate: #4a5568;
+    --light-bg: #f7f8fa;
+    --border: #dde1e9;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --amber-light: #fff3cd;
+    --amber-bdr: #d08800;
+    --red-light: #fde8e8;
+    --red-bdr: #b91c1c;
+    --blue-light: #dbeafe;
+    --blue-bdr: #2563eb;
+    --purple-light: #ede9fe;
+    --purple-bdr: #7c3aed;
+    --teal: #0f766e;
+    --teal-light: #ccfbf1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  .doc-header {
+    border-top: 5px solid var(--navy);
+    border-bottom: 2px solid var(--gold);
+    padding: 20px 0 16px;
+    margin-bottom: 32px;
+  }
+  .doc-header .system { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--slate); margin-bottom: 4px; font-family: Arial, sans-serif; }
+  .doc-header h1 { font-size: 22px; color: var(--navy); font-weight: 700; line-height: 1.25; }
+  .doc-header .meta { font-size: 12px; color: var(--slate); margin-top: 8px; font-family: 'Courier New', monospace; }
+
+  h2 {
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin: 36px 0 16px;
+    font-family: Arial, sans-serif;
+  }
+
+  h3 {
+    font-size: 15px;
+    color: var(--navy);
+    margin: 22px 0 8px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+  }
+
+  p { margin-bottom: 12px; }
+
+  .callout {
+    border-left: 4px solid var(--gold);
+    background: var(--gold-light);
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout.green  { border-left-color: var(--green);      background: var(--green-light); }
+  .callout.amber  { border-left-color: var(--amber-bdr);  background: var(--amber-light); }
+  .callout.blue   { border-left-color: var(--blue-bdr);   background: var(--blue-light); }
+  .callout.red    { border-left-color: var(--red-bdr);    background: var(--red-light); }
+  .callout.purple { border-left-color: var(--purple-bdr); background: var(--purple-light); }
+  .callout.teal   { border-left-color: var(--teal);       background: var(--teal-light); }
+
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-family: Arial, sans-serif;
+    color: var(--slate);
+  }
+
+  .steps { counter-reset: step; margin: 0; padding: 0; list-style: none; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 26px;
+    height: 26px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .steps li .step-body { flex: 1; }
+  .steps li .step-body strong { display: block; margin-bottom: 3px; color: var(--navy); font-family: Arial, sans-serif; font-size: 14px; }
+
+  table.arc {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  table.arc th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 12px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: .05em;
+  }
+  table.arc td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.arc tr:nth-child(even) td { background: var(--light-bg); }
+  table.arc td:first-child {
+    font-weight: 700;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
+    color: var(--navy);
+  }
+
+  /* LF SUBCATEGORY CARDS */
+  .lf-card {
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--teal);
+    border-radius: 0 0 6px 6px;
+    margin: 24px 0;
+    padding: 20px 22px 18px;
+    background: #fff;
+  }
+  .lf-card .lf-seq {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    color: var(--slate);
+    margin-bottom: 2px;
+  }
+  .lf-card h3 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    color: var(--navy);
+  }
+  .lf-card .lf-tag {
+    display: inline-block;
+    background: var(--teal);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: .08em;
+    margin-bottom: 12px;
+  }
+  .passage-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+  }
+  .passage-pill {
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    color: var(--navy);
+  }
+
+  .phase-badge {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 10px;
+  }
+  .phase-badge.intro  { background: var(--navy);  color: #fff; }
+  .phase-badge.follow { background: var(--teal);  color: #fff; }
+  .phase-badge.mastery{ background: var(--green); color: #fff; }
+
+  .decision-box {
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin: 14px 0;
+    background: var(--light-bg);
+  }
+  .decision-box .decision-label {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 8px;
+  }
+  .decision-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .decision-branch {
+    flex: 1;
+    border-left: 3px solid var(--border);
+    padding: 8px 12px;
+    background: #fff;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
+  }
+  .decision-branch.yes { border-left-color: var(--green); }
+  .decision-branch.no  { border-left-color: var(--amber-bdr); }
+  .decision-branch .branch-label {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .decision-branch.yes .branch-label { color: var(--green); }
+  .decision-branch.no  .branch-label { color: var(--amber-bdr); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  ul.plain { list-style: disc; padding-left: 20px; margin-bottom: 12px; }
+  ul.plain li { margin-bottom: 6px; }
+
+  .tag {
+    display: inline-block;
+    background: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 1px 6px;
+    font-family: 'Courier New', monospace;
+    color: #7b4f00;
+  }
+
+  .doc-footer {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    font-size: 11px;
+    color: var(--slate);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="system">B10 Practice Platform · Standard Operating Procedure</div>
+  <h1>Linguistic Flexibility Practice — SLT Instructor Protocol</h1>
+  <div class="meta">Role: SLT Instructor &nbsp;|&nbsp; Track: Linguistic Flexibility &nbsp;|&nbsp; Version 1.0 &nbsp;|&nbsp; Effective: July 27, 2026</div>
+</div>
+
+<!-- ═══ 1. PURPOSE ═══════════════════════════════════════════ -->
+<h2>1. Purpose and Scope</h2>
+
+<p>This SOP governs the Linguistic Flexibility (LF) practice cycle for SLT instructors using the B10 Practice Platform (B10-PP). It applies to pull-out sessions with individual students or very small groups working toward ILR 2+/3 oral English proficiency.</p>
+
+<p>The LF track addresses the sub-sentential and syntactic features that distinguish ILR 2+ production from ILR 3 production: control of word forms across derivational families, syntactic variety, the ability to combine ideas into well-connected arguments, and stance and perspective marking. These features are frequently the limiting factor in students who demonstrate adequate content knowledge in ESO practice but cannot yet sustain ILR 3 register across a full response.</p>
+
+<p>The LF track is organized around <strong>four subcategories</strong>, each targeting a distinct linguistic skill. Practice is structured as a <strong>skill cycle</strong> — the SLT instructor introduces one subcategory per cycle, assigns independent practice between sessions, and evaluates mastery before moving to the next. Depth of practice within each subcategory takes priority over coverage of all four.</p>
+
+<div class="callout amber">
+  <div class="callout-label">LF Questions — Pre-Pilot Status</div>
+  The 32 LF practice questions (8 per subcategory) have been identified, sequenced, approved, and are available in the four LF subcategory folders in the Linguistic Flexibility section of the platform.
+</div>
+
+<hr>
+
+<!-- ═══ 2. THE FOUR LF SUBCATEGORIES ════════════════════════ -->
+<h2>2. The Four LF Subcategories</h2>
+
+<p>The four subcategories are presented below in the recommended default sequence. This sequence follows a bottom-up linguistic complexity progression — each subcategory builds on the skills developed in the previous one. SLT instructors may enter the sequence at any point based on diagnostic observation or scaffold feedback from a student's ESO/Frames attempts, but should document which subcategories have been skipped for targeting in subsequent cycles.</p>
+
+<table class="arc">
+  <tr>
+    <th>Order</th>
+    <th>Subcategory</th>
+    <th>Tag</th>
+    <th>Core Skill</th>
+    <th>Prerequisite</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Word Form Flexibility</td>
+    <td><span style="font-family:monospace; font-size:12px;">WFF</span></td>
+    <td>Morphological control — derivational families, nominalization, adjectival and verbal forms</td>
+    <td>None — recommended starting point</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Structural Variation</td>
+    <td><span style="font-family:monospace; font-size:12px;">SV</span></td>
+    <td>Syntactic reordering — clause fronting, embedding, coordination, avoiding repetitive structure</td>
+    <td>Word Form Flexibility</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Sentence Combining</td>
+    <td><span style="font-family:monospace; font-size:12px;">SC</span></td>
+    <td>Idea integration — combining arguments into complex, cohesive utterances</td>
+    <td>Structural Variation</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Perspective Integration</td>
+    <td><span style="font-family:monospace; font-size:12px;">PI</span></td>
+    <td>Register and stance — embedding multiple viewpoints, signaling stance lexically and syntactically</td>
+    <td>Sentence Combining</td>
+  </tr>
+</table>
+
+<div class="callout teal">
+  <div class="callout-label">On the Sequence</div>
+  Word Form Flexibility is the recommended starting point for all students new to the LF track, regardless of apparent proficiency level. Errors at the word form level are frequently masked in fluent speakers and only become visible under the production demands of ILR 3 ESO tasks. Beginning here ensures the foundation is solid before syntactic and discourse-level demands are introduced.
+</div>
+
+<div class="callout blue">
+  <div class="callout-label">Diagnostic Override</div>
+  If scaffold feedback from a student's ESO/Frames attempts on the instructor dashboard consistently flags a specific LF subcategory as the limiting factor — or if instructor observation identifies a clear gap — the SLT instructor may enter the sequence at that subcategory. Document the entry point and note skipped subcategories as targets for the next cycle.
+</div>
+
+<hr>
+
+<!-- ═══ 3. THE SKILL CYCLE ═══════════════════════════════════ -->
+<h2>3. The Skill Cycle</h2>
+
+<p>Each LF subcategory is practiced through a two-phase skill cycle. The cycle length is determined by student mastery, not by a fixed number of sessions. A student who demonstrates clear command of a subcategory after two sessions advances; a student who requires more practice remains in the cycle until the mastery standard is met.</p>
+
+<table class="arc">
+  <tr>
+    <th>Phase</th>
+    <th>When</th>
+    <th>What Happens</th>
+    <th>Go to Section</th>
+  </tr>
+  <tr>
+    <td>Phase 1 — Introduction Session</td>
+    <td>First session on a new LF subcategory</td>
+    <td>Introduce the subcategory; in-session attempt(s); immediate debrief; assign between-session practice</td>
+    <td>Section 4.1</td>
+  </tr>
+  <tr>
+    <td>Phase 2 — Follow-up Session(s)</td>
+    <td>Subsequent sessions on the same subcategory</td>
+    <td>Debrief between-session attempts; mastery check; assign remaining questions or advance to next subcategory</td>
+    <td>Section 4.2</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <div class="callout-label">Session Frequency and Pacing</div>
+  SLT sessions typically occur once or twice per week. Between-session practice (3–5 questions assigned after Phase 1) provides the primary volume of independent production. The instructor's role in Phase 2 is evaluation and direction, not re-instruction — if a student requires re-instruction on the same subcategory, that is a signal to slow the pacing, not to skip ahead.
+</div>
+
+<hr>
+
+<!-- ═══ 4. SESSION PROCEDURES ════════════════════════════════ -->
+<h2>4. Session Procedures</h2>
+
+<!-- PHASE 1 -->
+<h3><span class="phase-badge intro">Phase 1</span> &nbsp;Introduction Session</h3>
+
+<p>You are beginning a session on a new LF subcategory. The student has not yet practiced this skill on the platform. Proceed in the following order.</p>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Identify the target subcategory.</strong>
+      Select the LF subcategory for this cycle based on the default sequence (Section 2) or diagnostic observation. If this is the student's first session on the LF track, begin with Word Form Flexibility unless a specific gap has been identified.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Open the subcategory's reference HTML together.</strong>
+      Navigate to the Linguistic Flexibility section of the platform at <span class="tag">b10-practice-platform.web.app/b10_practice_platform/</span>. Open the reference HTML for the target subcategory. Read through it with the student — do not lecture from it. The reference is the instructional material; your role is to orient the student to how it works and what it is asking them to do.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Model the skill with one question in-session.</strong>
+      Select the first question from the subcategory's question bank. Walk through the task with the student before they record: identify the specific LF demand in the question, apply the reference HTML's guidance to plan a response, then have the student record. Do not record yourself — the model is the planning process, not the response.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Debrief the in-session attempt immediately.</strong>
+      After the student records, review the transcript together on the platform. Focus the debrief on the specific LF skill targeted by this subcategory:
+      <ul class="plain" style="margin-top:8px;">
+        <li><strong>WFF:</strong> Did the student deploy varied word forms from the same derivational family? Where did they default to a single form when a different form would have been more precise or varied?</li>
+        <li><strong>SV:</strong> Did sentence structure vary across the response? Were there opportunities for fronting, embedding, or subordination that the student did not take?</li>
+        <li><strong>SC:</strong> Were ideas combined into connected utterances, or did the student produce a series of short, unconnected sentences? Where could two or three ideas have been merged into one statement?</li>
+        <li><strong>PI:</strong> Did the student signal stance and perspective explicitly? Were multiple viewpoints embedded within the same utterance, or presented sequentially as separate claims?</li>
+      </ul>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign between-session practice (3–5 questions).</strong>
+      Assign 3–5 questions from the current subcategory's question bank for the student to complete independently before the next session. For a student with a once-weekly session, 4–5 questions is appropriate. For twice-weekly, 3 questions is sufficient to maintain quality without overloading. Remind the student to use the reference HTML while practicing — the goal at this stage is accurate application of the skill, not speed or independence.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Set expectations for the next session.</strong>
+      Inform the student that the next session will begin by reviewing their between-session attempts. They should be prepared to discuss what they found easy or difficult about applying the skill independently.
+    </div>
+  </li>
+</ol>
+
+<!-- PHASE 2 -->
+<h3><span class="phase-badge follow">Phase 2</span> &nbsp;Follow-up Session(s)</h3>
+
+<p>You are beginning a session on a subcategory the student has already been introduced to. They have completed between-session practice attempts. Proceed in the following order.</p>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Review between-session attempts via the instructor dashboard.</strong>
+      Before the session begins, open the instructor dashboard and locate the student's recent submissions in the LF subcategory folder. Note the scores and review one or two transcripts. Identify a strong attempt and an attempt with a visible gap — you will use both in the debrief.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Open the debrief with the strong attempt.</strong>
+      Play the audio of the strongest between-session attempt. Review the transcript with the student. Identify specifically what the student did well — name the LF feature and where in the response it appears. This calibrates the student to the target standard before gaps are discussed.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Debrief a gap attempt.</strong>
+      Play the audio of an attempt with a visible LF gap. Review the transcript. Use the same subcategory-specific debrief questions from Phase 1, Step 4. Ask the student to identify the gap before naming it yourself — productive self-diagnosis is the target skill at this stage.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Conduct the mastery check.</strong>
+      Based on the between-session attempts and the in-session debrief, evaluate whether the student has demonstrated sufficient command of this LF subcategory to advance. Apply the mastery standard below.
+      <div class="decision-box" style="margin-top:12px;">
+        <div class="decision-label">Mastery Check — Advance or Continue?</div>
+        <p style="font-size:14px; margin-bottom:8px;"><strong>Standard:</strong> The student consistently demonstrates the target LF skill across multiple attempts without instructor prompting. Errors are occasional, not systematic. The skill is visible in the response without the student having to stop and apply it consciously.</p>
+        <div class="decision-row">
+          <div class="decision-branch yes">
+            <div class="branch-label">✓ Mastery met — Advance</div>
+            Move to the next LF subcategory in the sequence. Begin a new Phase 1 Introduction Session at the next meeting. Note the completed subcategory in your session records.
+          </div>
+          <div class="decision-branch no">
+            <div class="branch-label">→ Mastery not yet met — Continue</div>
+            Assign the remaining questions from the current subcategory's bank (up to the 8-question limit). Schedule another follow-up session. If the student has exhausted all 8 questions without meeting the mastery standard, conduct an additional in-session attempt and discuss the specific persistent gap before reassigning selected questions for a second pass.
+          </div>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign next between-session practice.</strong>
+      If continuing in the same subcategory: assign 2–3 remaining questions from the bank. If advancing: inform the student which subcategory is next and direct them to preview the reference HTML before the next session.
+    </div>
+  </li>
+</ol>
+
+<hr>
+
+<!-- ═══ 5. LF SUBCATEGORY REFERENCE ═════════════════════════ -->
+<h2>5. LF Subcategory Reference</h2>
+
+<p>Each card below provides a concise skill description, the ILR 3 rationale, the platform question bank for that subcategory, and the debrief focus for use during sessions.</p>
+
+<!-- WFF -->
+<div class="lf-card">
+  <div class="lf-seq">Subcategory 1 of 4 — Recommended Starting Point</div>
+  <h3>Word Form Flexibility</h3>
+  <span class="lf-tag">WFF</span>
+
+  <p><strong>Skill description:</strong> The student varies word forms across a derivational family — moving fluidly between nominal, adjectival, verbal, and adverbial forms of the same root — to achieve precision, cohesion, and register appropriate to ILR 3 academic/policy discourse.</p>
+
+  <p><strong>ILR 3 rationale:</strong> ILR 3 production requires sustained use of abstract, precise vocabulary. Students who are locked into a single word form (e.g., always using the verb form when a nominalization would be more precise) produce output that reads as ILR 2+ in register even when the content is adequate. Word form control is the most discrete and teachable LF skill — errors are visible and correction is concrete.</p>
+
+  <div class="callout teal">
+    <div class="callout-label">Debrief Focus</div>
+    Did the student deploy varied word forms from the same derivational family? Where did they default to a single form? Where would a nominalization, adjectival form, or alternate verb form have increased precision or register?
+  </div>
+
+  <p><strong>Question bank (8 questions):</strong></p>
+  <div class="passage-list">
+    <span class="passage-pill">EDU-013</span>
+    <span class="passage-pill">GOV-019</span>
+    <span class="passage-pill">TEC-009</span>
+    <span class="passage-pill">ENV-006</span>
+    <span class="passage-pill">HLT-029</span>
+    <span class="passage-pill">ECN-003</span>
+    <span class="passage-pill">JUS-016</span>
+    <span class="passage-pill">SOC-003</span>
+  </div>
+  <p style="font-size:13px; color:var(--slate); margin-top:4px;">Suggested Phase 1 in-session question: EDU-013. Suggested between-session assignment: GOV-019, TEC-009, ENV-006, HLT-029 (4 questions for once-weekly; 3 for twice-weekly).</p>
+</div>
+
+<!-- SV -->
+<div class="lf-card">
+  <div class="lf-seq">Subcategory 2 of 4</div>
+  <h3>Structural Variation</h3>
+  <span class="lf-tag">SV</span>
+
+  <p><strong>Skill description:</strong> The student varies clause and sentence structure across a response — using fronting, subordination, embedding, and coordination to avoid syntactic repetition and to foreground information rhetorically.</p>
+
+  <p><strong>ILR 3 rationale:</strong> Repetitive subject-verb-object structure signals ILR 2+ even when vocabulary is strong. ILR 3 production requires syntactic flexibility — the ability to reorder, subordinate, and embed in ways that serve the argument rather than the speaker's default processing pattern. Structural variation is the syntactic counterpart to word form control: once forms are varied, the structures that carry them must be varied as well.</p>
+
+  <div class="callout teal">
+    <div class="callout-label">Debrief Focus</div>
+    Did sentence structure vary across the response? Were there opportunities for fronting, embedding, or subordination that the student did not take? Where did repetitive structure flatten the argument or reduce register?
+  </div>
+
+  <p><strong>Question bank (8 questions):</strong></p>
+  <div class="passage-list">
+    <span class="passage-pill">HLT-002</span>
+    <span class="passage-pill">ECN-019</span>
+    <span class="passage-pill">GOV-020</span>
+    <span class="passage-pill">INT-010</span>
+    <span class="passage-pill">TEC-005</span>
+    <span class="passage-pill">ENV-004</span>
+    <span class="passage-pill">JUS-006</span>
+    <span class="passage-pill">CUL-004</span>
+  </div>
+  <p style="font-size:13px; color:var(--slate); margin-top:4px;">Suggested Phase 1 in-session question: HLT-002. Suggested between-session assignment: ECN-019, GOV-020, INT-010, TEC-005.</p>
+</div>
+
+<!-- SC -->
+<div class="lf-card">
+  <div class="lf-seq">Subcategory 3 of 4</div>
+  <h3>Sentence Combining</h3>
+  <span class="lf-tag">SC</span>
+
+  <p><strong>Skill description:</strong> The student combines multiple ideas into complex, cohesive utterances — using relative clauses, participial phrases, apposition, and logical connectors to connect ideas that would otherwise appear as a series of short, disconnected sentences.</p>
+
+  <p><strong>ILR 3 rationale:</strong> A connected, well-organized argument is a defining feature of ILR 3 production. A response consisting of well-formed but unconnected sentences reads as ILR 2+ — the ideas are present but the reasoning does not hang together. Sentence combining is the productive skill that makes idea integration visible in spoken output. It requires both word form control and structural flexibility, which is why it follows those subcategories in the default sequence.</p>
+
+  <div class="callout teal">
+    <div class="callout-label">Debrief Focus</div>
+    Were ideas combined into complex utterances, or did the student produce a series of short, unconnected sentences? Where could two or three ideas have been connected into one statement? Where does the lack of combining weaken the argument's flow and coherence?
+  </div>
+
+  <p><strong>Question bank (8 questions):</strong></p>
+  <div class="passage-list">
+    <span class="passage-pill">WRK-001</span>
+    <span class="passage-pill">ENV-021</span>
+    <span class="passage-pill">HLT-030</span>
+    <span class="passage-pill">ECN-015</span>
+    <span class="passage-pill">GOV-017</span>
+    <span class="passage-pill">INT-015</span>
+    <span class="passage-pill">TEC-021</span>
+    <span class="passage-pill">CUL-009</span>
+  </div>
+  <p style="font-size:13px; color:var(--slate); margin-top:4px;">Suggested Phase 1 in-session question: WRK-001. Suggested between-session assignment: ENV-021, HLT-030, ECN-015, GOV-017.</p>
+</div>
+
+<!-- PI -->
+<div class="lf-card">
+  <div class="lf-seq">Subcategory 4 of 4 — Most Cognitively Demanding</div>
+  <h3>Perspective Integration</h3>
+  <span class="lf-tag">PI</span>
+
+  <p><strong>Skill description:</strong> The student embeds multiple viewpoints within a single utterance — using reported speech frames, concessive structures, epistemic markers, and stance adverbials to signal whose perspective is being represented and how the speaker positions themselves relative to it.</p>
+
+  <p><strong>ILR 3 rationale:</strong> ILR 3 ESO production requires the speaker to manage multiple perspectives simultaneously — presenting a position, acknowledging counterarguments, and signaling their own stance, all within a coherent argument. Students who can only present viewpoints sequentially ("Some people think X. Other people think Y. I think Z.") are operating at ILR 2+. Perspective integration — embedding viewpoints syntactically and marking stance lexically — is the capstone LF skill. It presupposes all three prior subcategories.</p>
+
+  <div class="callout teal">
+    <div class="callout-label">Debrief Focus</div>
+    Did the student signal stance and perspective explicitly? Were multiple viewpoints embedded within the same utterance, or presented sequentially as separate claims? Where did the student miss an opportunity to use a concessive structure, epistemic marker, or reported speech frame to integrate perspective?
+  </div>
+
+  <p><strong>Question bank (8 questions):</strong></p>
+  <div class="passage-list">
+    <span class="passage-pill">EDU-008</span>
+    <span class="passage-pill">HLT-003</span>
+    <span class="passage-pill">SOC-002</span>
+    <span class="passage-pill">JUS-013</span>
+    <span class="passage-pill">ECN-002</span>
+    <span class="passage-pill">ENV-020</span>
+    <span class="passage-pill">CUL-003</span>
+    <span class="passage-pill">GOV-016</span>
+  </div>
+  <p style="font-size:13px; color:var(--slate); margin-top:4px;">Suggested Phase 1 in-session question: EDU-008. Suggested between-session assignment: HLT-003, SOC-002, JUS-013, ECN-002.</p>
+</div>
+
+<hr>
+
+<!-- ═══ 6. CYCLE RESET AND RE-ENTRY ══════════════════════════ -->
+<h2>6. Cycle Reset and Re-Entry</h2>
+
+<p>After a student completes all four subcategories, the cycle resets. Re-entry follows the same default sequence (WFF → SV → SC → PI), but the demand level increases: the student is now expected to deploy each LF skill with greater fluency, less reliance on the reference HTML, and greater integration across subcategories within a single response.</p>
+
+<div class="callout purple">
+  <div class="callout-label">Re-Entry Standard</div>
+  On a second pass through a subcategory, the mastery standard is higher: the reference HTML should function as confirmation, not initiation. A student who still requires the reference HTML to produce the target LF feature has not fully proceduralized the skill from the first cycle. Note this and adjust pacing — more in-session practice, fewer between-session questions assigned at once.
+</div>
+
+<div class="callout blue">
+  <div class="callout-label">LF Scoring Rubrics — In Development</div>
+  Scoring rubrics for each LF subcategory are in development and will be integrated into the platform scaffold feedback system prior to full pilot expansion. Once deployed, scaffold feedback for LF attempts will function identically to discourse frame scaffold feedback — diagnostic and subcategory-specific, with the score remaining holistic. Until rubrics are deployed, SLT instructors should use the debrief focus questions in Section 5 as the primary evaluative framework.
+</div>
+
+<hr>
+
+<!-- ═══ 7. RELATIONSHIP TO ESO/FRAMES TRACK ══════════════════ -->
+<h2>7. Relationship to the ESO/Frames Track</h2>
+
+<p>The LF track is a support track, not a parallel track. Its purpose is to develop the sub-sentential and syntactic skills that allow a student to execute discourse frame structures at ILR 3 register. Students who are struggling to achieve ILR 3 scores on ESO/Frames attempts despite adequate content knowledge are the primary referral population for SLT pull-out sessions.</p>
+
+<ul class="plain">
+  <li><strong>Referral source:</strong> Main Instructor observation, scaffold feedback patterns on the instructor dashboard, or student self-report of difficulty with specific LF features.</li>
+  <li><strong>Coordination:</strong> SLT instructors should communicate mastery progress to the Main Instructor so that LF gains can be reinforced in ESO/Frames practice. A student who has completed WFF, for example, should be expected to demonstrate improved word form control in their next ESO attempt.</li>
+  <li><strong>Dashboard access:</strong> SLT instructors use the same instructor dashboard at <span class="tag">b10-practice-platform.web.app/b10_practice_platform/</span> to view student submissions, scores, transcripts, and scaffold feedback across all tracks — not only LF attempts.</li>
+</ul>
+
+<hr>
+
+<!-- ═══ 8. ADMINISTRATIVE NOTES ═══════════════════════════════ -->
+<h2>8. Administrative Notes</h2>
+
+<ul class="plain">
+  <li><strong>Session length:</strong> Pull-out sessions are typically 30–50 minutes. Phase 1 Introduction Sessions require the full session. Phase 2 Follow-up Sessions may be shorter depending on the number of between-session attempts to debrief.</li>
+  <li><strong>Student credentials:</strong> Students log in with their B10-PP ID and password. If a student cannot log in, contact the Main Instructor — passwords cannot be reset and re-enrollment requires the student's B10-PP ID.</li>
+  <li><strong>Submission window:</strong> Student audio is retained for 72 hours. Review between-session attempts before this window closes.</li>
+  <li><strong>Session records:</strong> Maintain a brief record of which LF subcategory each student is working on, their current phase, and the number of questions completed. This is especially important for students who see multiple SLT instructors across a course.</li>
+  <li><strong>Question bank limit:</strong> Each subcategory contains 8 questions. If a student exhausts the bank without meeting the mastery standard, conduct an additional in-session attempt using a question from the general ESO bank and apply the same LF debrief focus.</li>
+  <li><strong>LF reference HTMLs:</strong> Available in the Linguistic Flexibility section of the platform. Each HTML is subcategory-specific and contains skill guidance, examples, and phrase-level support. Students may use these as a reference during between-session practice.</li>
+</ul>
+
+<div class="doc-footer">
+  B10 Practice Platform · Linguistic Flexibility SLT Instructor Protocol SOP · Version 1.0 · Effective July 27, 2026<br>
+  Defense Language Institute English Language Center · JBSA-Lackland, San Antonio, TX<br>
+  For platform support, contact your B10-PP administrator.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10-PP · ESO/Frames Practice — Daily Protocol SOP</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --gold-light: #f5e9c8;
+    --slate: #4a5568;
+    --light-bg: #f7f8fa;
+    --border: #dde1e9;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --amber-light: #fff3cd;
+    --amber-bdr: #d08800;
+    --red-light: #fde8e8;
+    --red-bdr: #b91c1c;
+    --blue-light: #dbeafe;
+    --blue-bdr: #2563eb;
+    --purple-light: #ede9fe;
+    --purple-bdr: #7c3aed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  .doc-header {
+    border-top: 5px solid var(--navy);
+    border-bottom: 2px solid var(--gold);
+    padding: 20px 0 16px;
+    margin-bottom: 32px;
+  }
+  .doc-header .system { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--slate); margin-bottom: 4px; font-family: Arial, sans-serif; }
+  .doc-header h1 { font-size: 22px; color: var(--navy); font-weight: 700; line-height: 1.25; }
+  .doc-header .meta { font-size: 12px; color: var(--slate); margin-top: 8px; font-family: 'Courier New', monospace; }
+
+  h2 {
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin: 36px 0 16px;
+    font-family: Arial, sans-serif;
+  }
+
+  h3 {
+    font-size: 15px;
+    color: var(--navy);
+    margin: 22px 0 8px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+  }
+
+  p { margin-bottom: 12px; }
+
+  .callout {
+    border-left: 4px solid var(--gold);
+    background: var(--gold-light);
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout.green  { border-left-color: var(--green);       background: var(--green-light); }
+  .callout.amber  { border-left-color: var(--amber-bdr);   background: var(--amber-light); }
+  .callout.blue   { border-left-color: var(--blue-bdr);    background: var(--blue-light); }
+  .callout.red    { border-left-color: var(--red-bdr);     background: var(--red-light); }
+  .callout.purple { border-left-color: var(--purple-bdr);  background: var(--purple-light); }
+
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-family: Arial, sans-serif;
+    color: var(--slate);
+  }
+
+  .steps { counter-reset: step; margin: 0; padding: 0; list-style: none; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 26px;
+    height: 26px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .steps li .step-body { flex: 1; }
+  .steps li .step-body strong { display: block; margin-bottom: 3px; color: var(--navy); font-family: Arial, sans-serif; font-size: 14px; }
+
+  table.arc {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  table.arc th {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 12px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: .05em;
+  }
+  table.arc td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.arc tr:nth-child(even) td { background: var(--light-bg); }
+  table.arc td:first-child {
+    font-weight: 700;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
+    color: var(--navy);
+  }
+
+  /* WEEK CARDS */
+  .week-card {
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--navy);
+    border-radius: 0 0 6px 6px;
+    margin: 24px 0;
+    padding: 20px 22px 18px;
+    background: #fff;
+  }
+  .week-card .week-label {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    color: var(--slate);
+    margin-bottom: 2px;
+  }
+  .week-card h3 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    color: var(--navy);
+  }
+  .week-card .frame-steps {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0 14px;
+    flex-wrap: wrap;
+  }
+  .frame-step {
+    background: var(--navy);
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    font-weight: 600;
+  }
+  .frame-step span {
+    font-weight: 300;
+    opacity: .75;
+    font-size: 10px;
+    display: block;
+    line-height: 1.2;
+  }
+  .sample-q {
+    background: var(--light-bg);
+    border-left: 3px solid var(--gold);
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-style: italic;
+    font-size: 14px;
+  }
+  .sample-q .q-label { font-style: normal; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-family: Arial, sans-serif; color: var(--slate); margin-bottom: 3px; font-weight: 700; }
+
+  .day-badge {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 3px;
+    letter-spacing: .06em;
+    margin-bottom: 8px;
+  }
+  .day-badge.green  { background: var(--green); }
+  .day-badge.gold   { background: var(--gold); color: var(--navy); }
+  .day-badge.purple { background: #7c3aed; }
+  .day-badge.amber  { background: var(--amber-bdr); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  ul.plain { list-style: disc; padding-left: 20px; margin-bottom: 12px; }
+  ul.plain li { margin-bottom: 6px; }
+
+  .tag {
+    display: inline-block;
+    background: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 1px 6px;
+    font-family: 'Courier New', monospace;
+    color: #7b4f00;
+  }
+
+  .spiral-pill {
+    display: inline-block;
+    background: var(--purple-light);
+    border: 1px solid var(--purple-bdr);
+    border-radius: 12px;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    padding: 2px 10px;
+    color: #5b21b6;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .doc-footer {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    font-size: 11px;
+    color: var(--slate);
+    font-family: Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="system">B10 Practice Platform · Standard Operating Procedure</div>
+  <h1>ESO/Frames Practice — Daily Protocol</h1>
+  <div class="meta">Role: Main Instructor &nbsp;|&nbsp; Track: ESO Discourse Frames &nbsp;|&nbsp; Version 1.0 &nbsp;|&nbsp; Effective: July 27, 2026</div>
+</div>
+
+<!-- ═══ 1. PURPOSE ═══════════════════════════════════════════ -->
+<h2>1. Purpose and Scope</h2>
+
+<p>This SOP governs the daily instructional cycle for the ESO Discourse Frames track of the B10 Practice Platform (B10-PP). It applies to all Main Instructors assigned to classes in which students are completing ESO Frames practice as part of ILR 2+/3 oral English proficiency development.</p>
+
+<p>The ESO Frames track is organized around a <strong>6-week repeating cycle</strong>, one discourse frame per week. Each week follows a <strong>5-day arc</strong> that moves students from fully scaffolded attempts on Day 1 toward independent, cold production by Day 5. The weekend bridge assignment at the end of each week consolidates that week's frame while beginning to spiral in previously learned frames.</p>
+
+<p>This document is the primary procedural reference for daily classroom decisions. It is organized by day within the week. Consult Section 5 for the week-specific frame reference (three-step process, sample ESO question, and spiral requirements by week).</p>
+
+<hr>
+
+<!-- ═══ 2. LOCATOR ════════════════════════════════════════════ -->
+<h2>2. What You Are Doing Right Now</h2>
+
+<p>Identify your current position in the weekly arc and go directly to the corresponding section.</p>
+
+<table class="arc">
+  <tr>
+    <th>Day</th>
+    <th>Your Task</th>
+    <th>Go to Section</th>
+  </tr>
+  <tr>
+    <td>Day 1</td>
+    <td>Orientation (first week only) or launch new frame; assign D1 ESO questions</td>
+    <td>Section 3.1</td>
+  </tr>
+  <tr>
+    <td>Day 2</td>
+    <td>Debrief D1 attempts; assign D2 ESO questions; introduce spiral (W2+)</td>
+    <td>Section 3.2</td>
+  </tr>
+  <tr>
+    <td>Day 3</td>
+    <td>Debrief D2 attempts; begin scaffold fading; assign D3 questions</td>
+    <td>Section 3.3</td>
+  </tr>
+  <tr>
+    <td>Day 4</td>
+    <td>Debrief D3 attempts; student-selected questions; cold/near-cold production</td>
+    <td>Section 3.4</td>
+  </tr>
+  <tr>
+    <td>Day 5</td>
+    <td>Debrief D4 attempts; assign weekend bridge from ESO bank</td>
+    <td>Section 3.5</td>
+  </tr>
+</table>
+
+<div class="callout amber">
+  <div class="callout-label">First Week on This Track</div>
+  If this is a student's first week on the ESO Frames track — whether that is calendar Week 1 of the course or a later entry point — follow the Day 1 orientation procedure in Section 3.1 and treat this week as a single-frame week with no spiral requirement. The spiral begins in the student's second week on the track, regardless of which frame they started on.
+</div>
+
+<hr>
+
+<!-- ═══ 3. DAILY PROCEDURES ══════════════════════════════════ -->
+<h2>3. Daily Procedures</h2>
+
+<!-- ─── DAY 1 ─────────────────────────────────────────────── -->
+<h3><span class="day-badge">Day 1</span> &nbsp;Frame Launch</h3>
+
+<div class="callout blue">
+  <div class="callout-label">First Week on Track — Orientation Required</div>
+  If this is a student's or class's first week on the ESO Frames track, begin with the B10-PP enrollment and orientation procedure below before proceeding to the frame launch steps. If students are already enrolled and familiar with the platform, skip directly to Step 1.
+</div>
+
+<div class="callout" style="margin-bottom:18px;">
+  <div class="callout-label">B10-PP Enrollment and Orientation (First Week Only)</div>
+  <ul class="plain" style="margin-top:6px; margin-bottom:0;">
+    <li>Confirm that each student has been added to your roster using their assigned B10-PP ID. Students cannot self-enroll.</li>
+    <li>Direct students to the platform at <span class="tag">b10-practice-platform.web.app/b10_practice_platform/</span> and have them log in with their B10-PP ID and password.</li>
+    <li>Instruct students to record their B10-PP ID and password and store them securely. <strong>Passwords cannot be reset.</strong> Loss of credentials requires re-enrollment by the instructor.</li>
+    <li>The B10-PP ID is the permanent student identifier used across all platform tracks. It is required whenever a student is added to a new roster — for SLT sessions, for Main Instructor transitions, or for enrollment in future courses using the platform. Students should treat their B10-PP ID as a persistent credential, not a one-time login.</li>
+    <li>Briefly orient students to the platform interface: passage navigation, the recording screen, and where to find their scores and feedback after submission.</li>
+    <li>Direct students to the ESO/Frames section and confirm they can locate the current week's Phrase Reference HTML and the Frames Argument Builder.</li>
+  </ul>
+</div>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Introduce the week's discourse frame.</strong>
+      State the frame name and its three-step process (see Section 5 for the current week). Explain what kind of analytical move this frame requires. Do not lecture — keep the introduction to 3–5 minutes. Students will develop understanding through practice, not through explanation.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Direct students to the week's Phrase Reference HTML.</strong>
+      Students open the current week's reference document in the ESO/Frames section of the platform. This is their primary scaffold for the week. Instruct them to read the frame description and review the sample questions and phrase chunks before attempting any ESO question.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Walk through the Frames Argument Builder together.</strong>
+      Open the Frames Argument Builder (available in the Frames Practice section). With the class, work through the three-step sequence for this week's frame using one of the Day 1 ESO questions as a model. Do not produce a full response — demonstrate the planning process only: identify each step, apply it to the question, stop before recording.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign Day 1 ESO questions (1–2 questions).</strong>
+      Assign 1–2 questions from the current week's ESO folder — select the most accessible questions in the set. Students complete these at home tonight. Full scaffold is in effect: the Phrase Reference HTML and Frames Argument Builder are open during planning. Students plan mentally using the three-step process detailed in the current week's Phrase Reference HTML. They do not write out their response before recording.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Set expectations for tomorrow's debrief.</strong>
+      Inform students that a strong response from tonight's attempt will be played and discussed tomorrow. Students willing to share should note this — or the instructor will select from submissions.
+    </div>
+  </li>
+</ol>
+
+<!-- ─── DAY 2 ─────────────────────────────────────────────── -->
+<h3><span class="day-badge green">Day 2</span> &nbsp;Debrief D1 · Reinforce Frame · Assign D2</h3>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Confirm D1 submissions via instructor dashboard.</strong>
+      Verify submissions received. Note non-submitting students — follow up privately.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Select a D1 exemplar response (Option A — Instructor-Selected).</strong>
+      Identify a 3/4 or 4/4 response from last night's attempts. Select one that clearly engages all three steps of this week's frame. Play the audio to the class.
+      <div class="callout green" style="margin-top:10px;">
+        <div class="callout-label">Instructor Discretion — Option B (Volunteer)</div>
+        As an alternative or on a subsequent day, invite a student volunteer to share. Option B surfaces a range including responses with productive gaps. Most effective after the class has a calibration reference from Option A. Consider alternating across the week.
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Display and discuss the transcript.</strong>
+      After playing the audio, lead discussion using these anchoring questions:
+      <ul class="plain" style="margin-top:8px;">
+        <li>Which of the three frame steps are clearly present in this response?</li>
+        <li>Where is the middle step — the mechanism, trade-off, projected outcome, assumption, or priority — most visible? Where is it missing or thin?</li>
+        <li>What specific language carried the argument at each step?</li>
+        <li>What would move this response from a 3 to a 4?</li>
+      </ul>
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Introduce the spiral requirement (Week 2+ only).</strong> <span class="spiral-pill">Spiral</span>
+      Beginning in a student's second week on the track, previously learned frames must be incorporated into every ESO response — not as separate responses, but woven into the same argument. The current week's frame is primary; prior frames are secondary but mandatory. Students are expected to incorporate 1–2 prior frames alongside the current week's frame — bringing the total active frames in any response to 2–3. The student selects whichever prior frames are most naturally activated by the specific question. A response that makes no attempt to integrate prior frames does not meet the standard for that week. Name the relevant prior frames students should draw on (see Section 5).
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign Day 2 ESO questions (2 questions).</strong>
+      Assign 2 questions from the current week's ESO folder. Select questions of moderate difficulty. Full scaffold remains in effect. Remind students of the spiral requirement if applicable.
+    </div>
+  </li>
+</ol>
+
+<!-- ─── DAY 3 ─────────────────────────────────────────────── -->
+<h3><span class="day-badge gold">Day 3</span> &nbsp;Debrief D2 · Begin Fading · Assign D3</h3>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Confirm D2 submissions and debrief.</strong>
+      Follow the same debrief procedure as Day 2, Steps 1–3. On Day 3, prioritize Option B (volunteer) if the class has not yet had a student-led debrief — students are now calibrated enough to evaluate each other's responses productively.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Introduce scaffold fading.</strong>
+      Explain to students that beginning tonight, the Phrase Reference HTML remains available as a reference but students should attempt to plan their response mentally before consulting it. The Frames Argument Builder three-step sequence should now be internalized enough to apply without reading it line by line. The goal: use the reference to confirm or recover, not to initiate.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign Day 3 ESO questions (1–2 questions).</strong>
+      Assign 1–2 questions of increasing difficulty from the weekly folder. Scaffold is fading: the Phrase Reference HTML is available but students plan mentally first. No written outline before recording.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Reinforce spiral explicitly.</strong> <span class="spiral-pill">Spiral</span>
+      Remind students (Week 2+) that prior frames must appear in tonight's responses. Name the specific frames. A useful prompt for students: "Before you record, identify which prior frame is most naturally activated by this question — then build it in."
+    </div>
+  </li>
+</ol>
+
+<!-- ─── DAY 4 ─────────────────────────────────────────────── -->
+<h3><span class="day-badge purple">Day 4</span> &nbsp;Debrief D3 · Student Choice · Cold Production</h3>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Confirm D3 submissions and debrief.</strong>
+      Follow the debrief procedure. On Day 4, focus debrief discussion on the quality of spiral integration — not just whether prior frames appeared, but whether they were woven organically into the argument or felt appended.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Move to cold production.</strong>
+      Inform students that tonight's attempt is cold or near-cold: the Phrase Reference HTML is available only as a last resort. Students should plan mentally — taking deliberate time to work through the frame's three steps and identify relevant prior frames — before recording. No written notes, no open reference during planning.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Students select their own question(s) from the weekly folder.</strong>
+      Students choose 1–2 questions from the remaining questions in the current week's ESO folder. Inform them that attempting more than one question tonight is encouraged — this is the highest-volume production night of the week. The option to attempt 2 questions is available to all students; it is not an enrichment activity for advanced students only.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Reinforce spiral — cold integration.</strong> <span class="spiral-pill">Spiral</span>
+      Students (Week 2+) are expected to integrate prior frames without prompting. Remind them: the planning pause before recording is the moment to select 1–2 prior frames the question most naturally activates and to decide how to sequence them within the response. Three frames total — current week plus two prior — is the ceiling, not the floor.
+    </div>
+  </li>
+</ol>
+
+<!-- ─── DAY 5 ─────────────────────────────────────────────── -->
+<h3><span class="day-badge amber">Day 5</span> &nbsp;Debrief D4 · Weekend Bridge Assignment</h3>
+
+<ol class="steps">
+  <li>
+    <div class="step-body">
+      <strong>Confirm D4 submissions and debrief.</strong>
+      Follow the debrief procedure. On Day 5, the debrief focus is cold production quality: did students demonstrate internalized frame structure without scaffolding? Did spiral frames appear organically? Select or solicit a response that illustrates both.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign the weekend bridge question.</strong>
+      Select one question from the <strong>general ESO bank</strong> — not from the current week's weekly folder. The question should be domain-appropriate and at ILR 3 difficulty. See Section 5 for a suggested weekend bridge question per week.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Assign the combo scaffold for the weekend bridge.</strong>
+      The weekend bridge always uses a two-frame scaffold combination: the <strong>current week's frame + one prior frame</strong>. State both frames explicitly. Instruct students to plan their response using both frame sequences from the Frames Argument Builder — the current week's frame as primary, the prior frame woven in. See Section 5 for the recommended scaffold combo per week.
+    </div>
+  </li>
+  <li>
+    <div class="step-body">
+      <strong>Brief students on the weekend bridge purpose.</strong>
+      The weekend bridge is not additional homework — it is the first step in proceduralization. Students are not just practicing this week's frame; they are beginning to deploy frames in combination, which is what ILR 3 ESO production requires. Encountering an unfamiliar question from the general bank with a multi-frame scaffold is the closest simulation of actual test conditions this track provides.
+    </div>
+  </li>
+</ol>
+
+<hr>
+
+<!-- ═══ 4. THE WEEKLY ARC AT A GLANCE ════════════════════════ -->
+<h2>4. The Weekly Arc at a Glance</h2>
+
+<table class="arc">
+  <tr>
+    <th>Day</th>
+    <th>Scaffold Level</th>
+    <th>Questions Assigned</th>
+    <th>Source</th>
+    <th>Spiral</th>
+  </tr>
+  <tr>
+    <td>D1</td>
+    <td>Full — HTML + Argument Builder open</td>
+    <td>1–2 (most accessible)</td>
+    <td>Weekly folder</td>
+    <td>No (first week) / Yes (W2+)</td>
+  </tr>
+  <tr>
+    <td>D2</td>
+    <td>Full</td>
+    <td>2 (moderate)</td>
+    <td>Weekly folder</td>
+    <td>Yes (W2+)</td>
+  </tr>
+  <tr>
+    <td>D3</td>
+    <td>Fading — plan mentally first; HTML available to confirm</td>
+    <td>1–2 (increasing difficulty)</td>
+    <td>Weekly folder</td>
+    <td>Yes (W2+)</td>
+  </tr>
+  <tr>
+    <td>D4</td>
+    <td>Cold — HTML last resort only</td>
+    <td>Student selects 1–2; may attempt more</td>
+    <td>Weekly folder</td>
+    <td>Yes (W2+)</td>
+  </tr>
+  <tr>
+    <td>D5 (weekend)</td>
+    <td>Combo scaffold — current + 1 prior frame</td>
+    <td>1</td>
+    <td>General ESO bank</td>
+    <td>Yes — built into scaffold</td>
+  </tr>
+</table>
+
+<div class="callout purple">
+  <div class="callout-label">On the Spiral — Fundamental Principle</div>
+  Spiraling is not enrichment. It is the mechanism by which frames become proceduralized — available for deployment in any ESO context without conscious retrieval effort. A student in Week 4 who responds only with the Hypothetical &amp; Conditional frame has not met the standard for that week. Students are expected to incorporate 1–2 prior frames alongside the current week's frame — 2–3 frames total per response. The goal is not exhaustiveness but selection: students choose the prior frames most naturally activated by the question and deploy them as integrated analytical moves, not as afterthoughts appended at the end.
+</div>
+
+<hr>
+
+<!-- ═══ 5. WEEK-BY-WEEK REFERENCE ════════════════════════════ -->
+<h2>5. Week-by-Week Frame Reference</h2>
+
+<p>Each section below is self-contained for that week. It includes the three-step frame process, a sample ESO question from the weekly folder, the spiral requirement, and the recommended weekend bridge assignment.</p>
+
+<!-- W1 -->
+<div class="week-card">
+  <div class="week-label">Week 1</div>
+  <h3>Scale &amp; Stakeholder</h3>
+  <div class="frame-steps">
+    <div class="frame-step">Stakeholder<span>Who is affected and at what level?</span></div>
+    <div class="frame-step">Impact<span>What specifically happens to them?</span></div>
+    <div class="frame-step">Scale Consideration<span>Why does operating at that level change the argument?</span></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-label">Key Requirement</div>
+    Students must engage at least two scale levels (Individual &amp; Family · Organizational &amp; Community · National &amp; Global). A response that stays at one scale level does not meet the standard for this frame.
+  </div>
+  <div class="sample-q">
+    <div class="q-label">Sample ESO Question — Week 1 Folder</div>
+    "Should companies be required to provide childcare for employees?"
+  </div>
+  <p><strong>Spiral requirement:</strong> None — this is the first frame. Students focus exclusively on Scale &amp; Stakeholder this week.</p>
+  <p><strong>Weekend bridge:</strong> Assign one question from the general ESO bank. Scaffold: Scale &amp; Stakeholder only (no combo required for Week 1). Example question: <em>"Should governments prioritize economic growth over environmental protection?"</em></p>
+</div>
+
+<!-- W2 -->
+<div class="week-card">
+  <div class="week-label">Week 2</div>
+  <h3>Trade-offs &amp; Constraints</h3>
+  <div class="frame-steps">
+    <div class="frame-step">Benefit<span>What does the policy achieve?</span></div>
+    <div class="frame-step">Trade-off<span>What competing good is sacrificed?</span></div>
+    <div class="frame-step">Constraint<span>Why can't the trade-off simply be avoided?</span></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-label">Key Requirement</div>
+    The middle step is where most responses fall short. Naming a trade-off is insufficient — students must explain why the competing good cannot simply be preserved alongside the benefit. The constraint is structural, not incidental.
+  </div>
+  <div class="sample-q">
+    <div class="q-label">Sample ESO Question — Week 2 Folder</div>
+    "Should governments fund the arts during periods of economic austerity?"
+  </div>
+  <p><strong>Spiral requirement:</strong> Scale &amp; Stakeholder (W1). Students identify who bears the trade-off and at what scale — this activates the W1 frame naturally within a trade-offs analysis.</p>
+  <p><strong>Weekend bridge:</strong> General ESO bank. Combo scaffold: Trade-offs &amp; Constraints (primary) + Scale &amp; Stakeholder (secondary). Example question: <em>"Should foreign investment in farmland be restricted?"</em></p>
+</div>
+
+<!-- W3 -->
+<div class="week-card">
+  <div class="week-label">Week 3</div>
+  <h3>Causal Systems</h3>
+  <div class="frame-steps">
+    <div class="frame-step">Trigger<span>What sets the causal chain in motion?</span></div>
+    <div class="frame-step">Mechanism<span>How does the effect actually get produced?</span></div>
+    <div class="frame-step">Downstream Effect<span>What results at the end of the chain?</span></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-label">Key Requirement</div>
+    The mechanism step is the analytical core. Students who jump from trigger to downstream effect without explaining the process by which the effect is produced are operating at ILR 2+, not ILR 3. The mechanism must be explicit.
+  </div>
+  <div class="sample-q">
+    <div class="q-label">Sample ESO Question — Week 3 Folder</div>
+    "Should governments regulate the use of artificial intelligence in hiring decisions?"
+  </div>
+  <p><strong>Spiral requirement:</strong> Draw on 1–2 prior frames (W1 and/or W2) as the question activates them. The causal chain naturally invites stakeholder identification (W1) and often surfaces a trade-off within the mechanism (W2). Students select whichever prior frame fits most organically — total active frames: 2–3.</p>
+  <p><strong>Weekend bridge:</strong> General ESO bank. Combo scaffold: Causal Systems (primary) + Trade-offs &amp; Constraints (secondary). Example question: <em>"Should countries ban single-use plastics?"</em></p>
+</div>
+
+<!-- W4 -->
+<div class="week-card">
+  <div class="week-label">Week 4</div>
+  <h3>Hypothetical &amp; Conditional</h3>
+  <div class="frame-steps">
+    <div class="frame-step">Condition<span>What must hold for this scenario to follow?</span></div>
+    <div class="frame-step">Projected Outcome<span>What would likely result?</span></div>
+    <div class="frame-step">Extended Scenario<span>And if that outcome holds, then what?</span></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-label">Key Requirement</div>
+    The extended scenario step requires students to project beyond the immediate outcome — to reason one step further. A response that stops at the projected outcome is a two-step response, not a three-step one. Students must extend the chain.
+  </div>
+  <div class="sample-q">
+    <div class="q-label">Sample ESO Question — Week 4 Folder</div>
+    "Should universities eliminate standardized testing as an admissions requirement?"
+  </div>
+  <p><strong>Spiral requirement:</strong> Draw on 1–2 prior frames (W1, W2, or W3) as the question activates them. A strong response typically anchors the condition in specific stakeholders (W1) or names the trade-off embedded in the projected outcome (W2). Total active frames: 2–3.</p>
+  <p><strong>Weekend bridge:</strong> General ESO bank. Combo scaffold: Hypothetical &amp; Conditional (primary) + Causal Systems (secondary). Example question: <em>"Should governments provide a universal basic income?"</em></p>
+</div>
+
+<!-- W5 -->
+<div class="week-card">
+  <div class="week-label">Week 5</div>
+  <h3>Values, Heuristics &amp; Bias</h3>
+  <div class="frame-steps">
+    <div class="frame-step">Value<span>What does this stakeholder believe is important?</span></div>
+    <div class="frame-step">Assumption<span>What must be true for that value to justify their position?</span></div>
+    <div class="frame-step">Competing Framework<span>What does a stakeholder on the other side believe instead?</span></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-label">Key Requirement</div>
+    The assumption step is the analytical hinge. Naming a value is easy; identifying what must be empirically or normatively true for that value to justify the specific position taken is the ILR 3 move. Students must make the assumption explicit, not implied.
+  </div>
+  <div class="sample-q">
+    <div class="q-label">Sample ESO Question — Week 5 Folder</div>
+    "Should social media platforms be held legally responsible for content posted by users?"
+  </div>
+  <p><strong>Spiral requirement:</strong> Draw on 1–2 prior frames (W1–W4) as the question activates them. By Week 5, students have a full toolkit — the selection decision is itself an analytical move. A strong response typically grounds the values analysis in specific stakeholders (W1) or traces the causal mechanism by which a value produces a policy position (W3). Total active frames: 2–3.</p>
+  <p><strong>Weekend bridge:</strong> General ESO bank. Combo scaffold: Values, Heuristics &amp; Bias (primary) + Scale &amp; Stakeholder (secondary). Example question: <em>"Should wealthy nations accept more refugees?"</em></p>
+</div>
+
+<!-- W6 -->
+<div class="week-card">
+  <div class="week-label">Week 6</div>
+  <h3>Synthesis &amp; Judgment</h3>
+  <div class="frame-steps">
+    <div class="frame-step">Tensions<span>What competing claims must be addressed?</span></div>
+    <div class="frame-step">Priorities<span>Which consideration carries more weight and why?</span></div>
+    <div class="frame-step">Judgment<span>What is the most defensible conclusion?</span></div>
+  </div>
+  <div class="callout blue">
+    <div class="callout-label">Key Requirement</div>
+    Week 6 is the integration frame — it does not replace prior frames, it organizes them. Tensions are named using prior frames (stakes, trade-offs, causal consequences, conditional scenarios, competing values). Priorities are argued, not asserted. The judgment is the most defensible conclusion the student can reach given the tensions named — not a restatement of position.
+  </div>
+  <div class="sample-q">
+    <div class="q-label">Sample ESO Question — Week 6 Folder</div>
+    "Should governments prioritize national security over individual privacy rights?"
+  </div>
+  <p><strong>Spiral requirement:</strong> Draw on 1–2 prior frames (W1–W5) as the question activates them. The tensions named in Step 1 should be articulated using the analytical vocabulary of prior frames — stakeholders, trade-offs, causal consequences, conditional scenarios, or competing values. Students select the 1–2 prior frames that most sharpen the tension being named. Total active frames: 2–3. W6 is the frame in which spiral selection quality is most visible and most assessable.</p>
+  <p><strong>Weekend bridge:</strong> General ESO bank. Combo scaffold: Synthesis &amp; Judgment (primary) + any two prior frames student selects (this is the first week students choose their own spiral combination). Example question: <em>"Should countries be required to contribute to a global climate fund?"</em></p>
+</div>
+
+<hr>
+
+<!-- ═══ 6. STUDENT PRE-RECORDING PROTOCOL ════════════════════ -->
+<h2>6. Student Pre-Recording Protocol</h2>
+
+<p>Post this protocol in your classroom or share it with students at the start of the track. It describes the student-facing procedure for every ESO Frames attempt.</p>
+
+<div class="callout green">
+  <div class="callout-label">Student Pre-Recording Steps — All Weeks</div>
+  <ol class="steps" style="margin-top:8px;">
+    <li><div class="step-body"><strong>Open the current week's Phrase Reference HTML.</strong> Locate it in the ESO/Frames section of the platform under the current week's folder.</div></li>
+    <li><div class="step-body"><strong>Read the ESO question carefully.</strong> Do not begin planning until you have read the full question and understood what position or analysis it requires.</div></li>
+    <li><div class="step-body"><strong>Work through the three-step frame process mentally.</strong> Use the Frames Argument Builder sequence for this week. Identify your answer to each step — stakeholder, impact, scale consideration; or trigger, mechanism, downstream effect; etc. Do not write your response out.</div></li>
+    <li><div class="step-body"><strong>Identify your spiral frames (Week 2+).</strong> Before recording, name which prior frames are activated by this question. Decide where they will appear in your response — not as an ending summary, but woven into the argument.</div></li>
+    <li><div class="step-body"><strong>Record.</strong> Speak from your mental plan. If you lose your place, use the frame steps as recovery anchors — return to the step you were on and continue.</div></li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ═══ 7. SCORING REFERENCE ══════════════════════════════════ -->
+<h2>7. Scoring Reference</h2>
+
+<p>ESO Frames responses are scored 1–4. The platform score is holistic. For debrief purposes, orient discussion around the following descriptors.</p>
+
+<table class="arc">
+  <tr><th>Score</th><th>What It Reflects</th></tr>
+  <tr><td>4 / 4</td><td>All three frame steps clearly present and developed; middle step analytical and explicit; spiral frames integrated organically (W2+); argument is coherent and well-supported</td></tr>
+  <tr><td>3 / 4</td><td>Frame structure present; middle step present but may be underdeveloped; spiral frames present but may feel appended rather than integrated; language adequate</td></tr>
+  <tr><td>2 / 4</td><td>Frame partially applied; middle step thin or missing; spiral absent or nominal; argument incomplete or loses coherence</td></tr>
+  <tr><td>1 / 4</td><td>Frame not identifiable in response; argument absent or significantly distorted; language significantly limits communication</td></tr>
+</table>
+
+<div class="callout red">
+  <div class="callout-label">Instructor Note</div>
+  Do not share score descriptors directly with students as a rubric. Use them to guide your selection of exemplar responses and to frame debrief discussion. The scaffold feedback on the platform is diagnostic — the score is always holistic.
+</div>
+
+<hr>
+
+<!-- ═══ 8. ADMINISTRATIVE NOTES ═══════════════════════════════ -->
+<h2>8. Administrative Notes</h2>
+
+<ul class="plain">
+  <li><strong>Dashboard access:</strong> <span class="tag">b10-practice-platform.web.app/b10_practice_platform/</span> — log in with your assigned B10-PP instructor ID.</li>
+  <li><strong>Submission window:</strong> Student audio is retained for 72 hours. Plan debriefs within this window.</li>
+  <li><strong>Non-submitting students:</strong> Follow up privately. Do not delay the class debrief.</li>
+  <li><strong>8-question limit per weekly folder:</strong> Each weekly ESO folder contains 8 questions. The pacing in this SOP (1–2 on D1, 2 on D2, 1–2 on D3, 1–2 on D4) is designed to distribute questions across the week without exhausting the folder. The weekend bridge always draws from the general ESO bank — not the weekly folder.</li>
+  <li><strong>Score visibility:</strong> Students see scores immediately after submission. Your debrief adds interpretive value — it does not gate scores.</li>
+  <li><strong>Cycle reset:</strong> After Week 6, the cycle repeats from Week 1. Students entering the second cycle carry full spiral knowledge — all six frames are active from Day 1 of the repeat cycle.</li>
+</ul>
+
+<div class="doc-footer">
+  B10 Practice Platform · ESO/Frames Daily Protocol SOP · Version 1.0 · Effective July 27, 2026<br>
+  Defense Language Institute English Language Center · JBSA-Lackland, San Antonio, TX<br>
+  For platform support, contact your B10-PP administrator.
+</div>
+
+</body>
+</html>

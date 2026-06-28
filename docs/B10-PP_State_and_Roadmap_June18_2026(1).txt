@@ -1,0 +1,217 @@
+# B10-PP State and Roadmap — June 18, 2026
+
+(Supersedes June 7, 2026 version)
+
+---
+
+## PLATFORM STATUS
+
+**Live URL:** https://b10-practice-platform.web.app/b10_practice_platform/
+**Firebase project:** b10-practice-platform (nam5, Blaze plan)
+**Repo:** github.com/jcmoore2dli/b10-pp
+**Project root:** ~/b10_corpus/b10_practice_platform/
+**Frontend:** frontend/src/
+**Functions:** functions/index.js, functions/lib/claudeScorer.js
+**Latest commit:** f1b3048 (instructor Summary/Scaffold Feedback/Transcript Note parity — deployed and verified live)
+**Pilot launch date:** July 27, 2026 — confirmed as a hard date by supervisor (Vidal), not a target
+
+---
+
+## IST OUTCOME — June 5, 2026 (unchanged, retained for record)
+
+- **Result:** Adoption declared a foregone conclusion in the room
+- **Supervisor commitment:** Will provide instructor account setup timeline
+- **Instructors:** ~6 want practice accounts; instructor practice account access intended to begin ~June 19, giving a 2-week head start before launch — this is not a separate launch event, just instructor familiarization time ahead of the single launch date below
+- **Launch date:** July 27 — confirmed hard date, the only launch milestone on this roadmap
+- **TESOL 2027 proposal:** Submitted
+- **MTT instructor meeting:** Held; relationship/scheduling resolved. The dedicated "CORE-only restricted account" feature originally scoped for this (see June 7 item 8) has been removed from the roadmap — see KNOWN ISSUES / PENDING below for why.
+
+---
+
+## BILLING STATUS (as of June 7 — not re-checked this session)
+
+- **Anthropic:** $18.80 balance, auto-reload ON ($10 trigger, $20 add)
+- **Deepgram:** $199.55 balance, Pay As You Go
+- **Firebase:** Blaze plan, billing card confirmed
+- **AssemblyAI:** Card on file — still unverified as of June 18; carry forward to next billing check
+
+---
+
+## CORPUS STATUS
+
+No changes since June 7 — 816 total passages live in Firestore (ORIENT 18, CORE 120, EXT 72, ESO-Bundled 60, ESO-Frames 48, ESO-General 192, NAR/DES/INS 306).
+
+---
+
+## COMPLETED JUNE 8–18
+
+This covers two work blocks: the mid-June sprint (Week 13 scaffold domain work and cascading bug fixes) and the June 18 session (deploy bug discovery/fix, instructor-side UI and feedback parity work, and the AI provider portability audit).
+
+### Linguistic Flexibility Scaffold Domain (FLEX_01–04)
+- Fourth scaffold domain added alongside FRAME_01–06 and STRUCT_01–07
+- Total scaffold criteria now 17 (was 13 as of June 7)
+- Integrated into claudeScorer.js scaffold rubric lookup and prompt injection, same pattern as existing FRAME/STRUCT criteria
+
+### Firebase Hosting Deploy Bug — found and fixed
+- Manual `cp -r frontend/dist/* hosting/` deploys (used earlier in the sprint) didn't match the path structure Vite's `base: '/b10_practice_platform/'` config expects, causing fresh/uncached visitors to receive 404s on JS assets (browser would silently serve HTML instead, with MIME-type and "expected expression" console errors)
+- Any browser with prior cache kept working, which masked the bug for hours — only fully fresh sessions or new devices showed it
+- Root fix: `frontend/package.json`'s existing `npm run deploy` script (which nests output correctly under `hosting/b10_practice_platform/`) is now the only sanctioned deploy path, hardened with a `mkdir -p` safeguard so a missing destination folder can't silently skip the actual `firebase deploy` step
+- Verification standard established: confirm via `curl -sI` on the actual deployed asset hash, checking for `HTTP/2 200` and `content-type: text/javascript` — never trust "Deploy complete!" or browser testing in an already-used tab alone
+
+### Instructor-Side Bundle Sequence and Frames Practice Folders
+- Instructor dashboard now mirrors the student-side collapsible folder pattern: a "Bundle Sequence" section (CORE passages grouped by `setNumber`, collapsed by default, shows attempted/total counts) and a "Frames Practice" section (grouped by `aesopWeek` W1–W6)
+- Resolves the unwieldy flat-list roster view that was a known issue as of June 7
+
+### S#.# Sub-Identifier Labeling
+- Both the instructor's and student's Bundle Sequence views now show the `S{set}.{day}` triplet label (e.g., "S1.1") on each passage row, matching the label already shown in the assignment dropdown
+- No new data required — assignment docs already carried `setNumber`/`dayNumber`
+- This is what let the dedicated MTT CORE-only mode feature be dropped: an instructor can now just say "do Set 1, skip the ESO" using the existing structure, the same way a textbook page reference works, instead of needing a separate restricted account type
+
+### Instructor Feedback Parity with Student FeedbackScreen
+- The instructor's expanded attempt view previously showed only Transcript, Strengths, Gaps, Language Feedback, and Scoring Notes — a real mismatch with the richer feedback students see
+- Added Summary (B2 student language note), the full Scaffold/Focus Feedback box (primary + secondary targets, Sustained/Developing/Emerging level pill, descriptor, evidence quote — same teal styling as the student view), and Transcript Note
+- No new data plumbing needed: the `attempt` objects in the instructor dashboard already carry the complete submission document, including `summary` and `scaffold_feedback`, since they're queried directly from Firestore with no field-selection narrowing
+- Applies retroactively to all previously completed scaffolded submissions — this is a display change reading already-stored data, not a scoring change, so nothing needs to be resubmitted
+- Resolves June 7 item 5 ("scaffold feedback heading harmonization"), which turned out to be a larger gap than originally scoped — the actual fix was full content parity, not just matching headings
+
+### AI Provider Portability Audit
+- Read-only code audit confirmed the Anthropic dependency is genuinely architecturally swappable, not just nominally so
+- Exactly three LLM call sites in the whole backend (`scoreTranscript`, `validateFeedbackGrammar` in claudeScorer.js; `generateProgressSummary` in index.js), all structurally identical, none using tool-use or system-prompt features
+- Full findings and the specific mechanical edits a swap would require are documented in `governance/B10-PP_AI_Provider_Portability_Audit_v1.md`
+- This gives the privacy compliance supplemental's "model-agnostic architecture" mitigation claim actual code-level evidence
+
+### Other items confirmed complete this period (carried over from mid-June sprint, verified working end-to-end)
+- B2 student language summary — tested end-to-end, working well
+- Progress summary by week / 4-week — tested end-to-end, working well
+- Email/login migration — fully complete; B10 ID only, no real email anywhere in the login flow for new accounts (resolves June 7 item 10's stale "Gap" framing)
+
+---
+
+## ARCHITECTURE — CURRENT STATE
+
+### Login Flow, Roster System, Scaffold Pipeline, Audio Retention
+Unchanged from June 7 — see that document's Architecture section for full detail. The scaffold pipeline now also routes FLEX_01–04 through the same `SCAFFOLD_RUBRICS` lookup mechanism as FRAME/STRUCT criteria.
+
+### Bundle/Frames Reference Pattern (new since June 7)
+- Assignment docs' existing `setNumber`/`dayNumber` fields now drive both a collapsible grouped folder view (instructor and student) and an `S{set}.{day}` label shown inline on each passage row
+- This reference-style pattern (instructor says "do Set 3" the way one would reference a textbook page) is what de-scoped both the MTT CORE-only mode feature and lowered urgency on bulk student assignment — see below
+
+### Instructor/Student Feedback Parity (new since June 7)
+- Both `FeedbackScreen.jsx` (student) and the instructor's expanded attempt panel in `InstructorDashboardScreen.jsx` now render the same fields (`summary`, `strengths`, `gaps`, `language_feedback`, `scaffold_feedback.primary`/`.secondary`, `transcript_note`, `transcriptText`) directly from the same submission document shape, with matching visual styling. The instructor view additionally retains a Scoring Notes panel (`monitor_notes`) that has no student-facing equivalent.
+
+### AI Provider Dependency (new since June 7)
+- See `governance/B10-PP_AI_Provider_Portability_Audit_v1.md` for the full architecture audit. Summary: three call sites, all using `@anthropic-ai/sdk`'s `client.messages.create()` with a single plain-text user message and no provider-specific features, API key bound via Firebase Secret Manager (`defineSecret("ANTHROPIC_API_KEY")`).
+
+---
+
+## KNOWN ISSUES / PENDING
+
+### Resolved since June 7 (moved out of pending):
+- ✅ B2 student language summary — done, tested
+- ✅ Progress summary by week/month — done, tested
+- ✅ Scaffold feedback heading harmonization — superseded by full instructor/student feedback parity fix
+- ✅ Email/login migration — done, ID-only
+
+### Removed from roadmap:
+- MTT CORE-only mode with time limit — the underlying need (an MTT instructor restricting students to CORE passages only) is now met by S#.# labeling plus existing time-limit functionality (already built, can be enabled if needed), without requiring a dedicated restricted account type. One remaining operational task, not a feature build: pre-load the specific CORE passages this mobile training instructor's students will use, and enable time limits for that group before launch.
+
+### Reframed, lower urgency (not removed, just de-scoped given the new folder/reference pattern):
+- **Bulk student assignment** — still not built. Lower urgency now that instructors can reference a whole Set or Week the way they'd reference a textbook section, rather than needing to multi-select and assign individually.
+- **Pre-load sequence assignment** — same reframing; the Bundle Sequence folders reduce the practical need for a dedicated bulk pre-load mechanism.
+
+### Resolved since June 7 (additional):
+- ✅ Set sub-identifier granularity — the S#.# labeling work is confirmed to fully resolve this; no further work needed showing the ESO + policy-CORE + legacy-listening triplet structure beyond the current label
+
+### Still open, unchanged:
+- **Scaffold rubric norming** — ongoing, tied to real pilot data; now covers 17 scaffold criteria (13 + the new FLEX domain), not counting the holistic 1–4 score, which is a separate scoring dimension scored alongside but independent of the scaffold criteria
+- **Audio playback re-enable** — still blocked on formal privacy guidance
+- **PII transcript filter** — timeframe confirmed as Sept–Oct 2026, post-pilot (more specific than June 7's vague "post-pilot")
+
+### Known bugs (low priority, unchanged):
+- Hard reload 404 on deep routes — do not fix before pilot
+- URL simplification (root path) — post-pilot
+- AssemblyAI billing card — still unverified
+
+---
+
+## PILOT PARAMETERS
+
+- **Launch date:** July 27 — confirmed hard date by supervisor, the single launch milestone
+- **Instructor practice account access:** intended to begin ~June 19, ahead of launch — preparation time, not a separate launch
+- **Duration:** 6 weeks
+- **Students:** 10–20
+- **Instructors:** 2–3 main + SLT
+- **Frames track:** W1–W6, one frame per week
+- **ESO pool:** 300 questions (60 bundled + 48 Frames + 192 general)
+- **Scaffold criteria for norming:** 17 (FRAME 6 + STRUCT 7 + FLEX 4), up from 13 as of June 7 — this count excludes the holistic 1–4 score, which is tracked separately
+- **Six-week rationale:** One frame per week = complete sequence, generating a performance arc per student and a norming dataset across all scaffold rubrics
+
+---
+
+## PRE-LAUNCH LOGISTICS (new section)
+
+- Distribute instructor and demo student IDs to the six IST instructors who want practice accounts
+- Send newsletter to IST cohort
+- In-person handoffs as needed
+- Implementation meeting scheduled for the week of July 27
+- One resistant colleague (existing Snorkl user) — deprioritized, not blocking
+- Mobile training instructor: pre-load relevant CORE passages and enable time-limit functionality for that group (see "Removed from roadmap" above)
+
+**Calendar constraint:** Professional conference in Orlando June 27–July 1, followed by a family trip to NYC July 6–9. Effectively narrows the pre-pilot development window to now through June 26, then a gap, before the July 27 launch. Worth being explicit in planning about what must land before Orlando versus what can wait until the return.
+
+---
+
+## POST-IST FEATURE REQUESTS (from instructors) — status update
+
+1. ✅ Scaffold feedback box (Emerging/Developing/Sustained) — DONE
+2. ✅ B2-register student language summary — DONE
+3. ✅ Progress summary by week/month — DONE
+4. ✅ SLT vs main instructor toggle with color-coded student feed — DONE
+5. Bulk assignment and pre-load sequence — pending, lower urgency (see above)
+6. ✅ Instructor practice accounts — DONE
+
+---
+
+## SECURITY / COMPLIANCE STATUS
+
+- B10 ID pseudonyms — in place
+- No email collected for new accounts — in place (and now fully migrated, no passthrough email remaining in the active login flow)
+- Audio deleted within 72 hours — in place
+- Transcripts removed after 30 days — in place
+- Enterprise-grade storage (ISO 27001, SOC 1/2/3) — in place
+- SORN: Not Applicable by design — established position, documented in B10PP Privacy Compliance Supplemental v4.2
+- ATO: Gap — required before institutional deployment at scale
+- PIA: Gap — recommended before broad deployment
+- Third-party processors (Deepgram/Anthropic): DPA status to confirm
+- PII transcript filter: planned, Sept–Oct 2026 (post-pilot)
+- **NSM / AI vendor diversification:** Anthropic supply-chain-risk exposure now has a documented, code-verified mitigation — see `governance/B10-PP_AI_Provider_Portability_Audit_v1.md`. The model-agnostic architecture claim is no longer just asserted; it's been audited against the live codebase.
+
+---
+
+## NEXT SESSION PRIORITIES
+
+1. Pre-launch logistics: instructor/demo ID distribution, IST newsletter, implementation meeting prep for week of July 27
+2. Mobile training instructor setup: pre-load CORE passages, enable time limits for that group
+3. Resolve the open design question on Set sub-identifier granularity (confirm whether S#.# labeling fully addresses it)
+4. Scaffold rubric norming, as real pilot data starts coming in
+5. Bulk assignment / pre-load sequence — lower priority backlog item, revisit if time allows before Orlando
+
+---
+
+## KEY FILES
+
+- functions/index.js — processSubmission, cleanupAudio, createInstructorAccount, lookupStudent, generateProgressSummary
+- functions/lib/claudeScorer.js — all scoring prompts + SCAFFOLD_RUBRICS (now including FLEX_01–04)
+- frontend/src/screens/LoginScreen.jsx — B10 ID login
+- frontend/src/screens/InstructorDashboardScreen.jsx — instructor dashboard, roster, assignments, Bundle Sequence/Frames Practice folders, expanded attempt feedback view (now at parity with student FeedbackScreen)
+- frontend/src/screens/PassageMenuScreen.jsx — student passage menu, My Progress, Bundle Sequence/Frames Practice folders with S#.# labels
+- frontend/src/screens/RecordingScreen.jsx — recording + speaking guides
+- frontend/src/screens/FeedbackScreen.jsx — immediate feedback display (student)
+- frontend/src/screens/AdminScreen.jsx — access code + instructor account creation
+- frontend/src/context/AuthProvider.jsx — auth context with refreshClaims
+- firebase/firestore.rules — security rules
+- governance/B10-PP_AI_Provider_Portability_Audit_v1.md — AI provider portability audit (new)
+
+---
+
+END OF DOCUMENT — June 18, 2026
