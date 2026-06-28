@@ -357,7 +357,7 @@ function AssignedSetView({ passages, allPassages = [], onSelect, submissions = [
   // Split into CORE bundles vs instructor-assigned practice
   const bundlePassages = passages.filter(p => p.corpusType === 'COR')
   const framesPassages = passages.filter(p => p.aesopWeek)
-  const practicePassages = passages.filter(p => p.corpusType !== 'COR' && !p.aesopWeek)
+  const practicePassages = passages.filter(p => p.corpusType !== 'COR' && !p.aesopWeek && !p.lfSubcategory)
 
   // Group Frames by week, sorted W1-W6
   const framesGroups = {}
