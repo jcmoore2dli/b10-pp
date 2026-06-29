@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { collection, doc, setDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore'
+import { collection, doc, setDoc, getDocs, query, where, serverTimestamp, orderBy } from 'firebase/firestore'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
@@ -18,6 +18,85 @@ import { useAuth } from '../context/useAuth'
 function getCurrentYearCode() {
   const yr = new Date().getFullYear().toString().slice(-2)
   return yr
+}
+
+
+function FeedbackView({ db }) {
+  const [items, setItems] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    async function load() {
+      try {
+        const snap = await getDocs(
+          query(collection(db, 'feedback'), orderBy('timestamp', 'desc'))
+        )
+        setItems(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+      } catch (e) {
+        console.error('Failed to load feedback:', e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
+
+  const CATEGORY_LABELS = {
+    level_concern: 'Level Concern',
+    content_error: 'Content Error',
+    scoring_issue: 'Scoring Issue',
+    platform_problem: 'Platform Problem',
+    suggestion: 'Suggestion',
+    other: 'Other',
+  }
+
+  const TYPE_COLORS = {
+    core: '#1e40af',
+    eso: '#0d9488',
+    general: '#7c3aed',
+  }
+
+  function formatTs(ts) {
+    if (!ts) return '—'
+    const d = ts.toDate ? ts.toDate() : new Date(ts)
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  }
+
+  if (loading) return (
+    <div className="flex justify-center py-8">
+      <div className="w-8 h-8 rounded-full border-4 border-blue-200 border-t-blue-700 animate-spin" />
+    </div>
+  )
+
+  if (items.length === 0) return (
+    <p className="text-sm text-gray-400 text-center py-6">No feedback submitted yet.</p>
+  )
+
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold">{items.length} submission{items.length !== 1 ? 's' : ''}</p>
+      {items.map(item => (
+        <div key={item.id} className="border border-gray-100 rounded-lg p-3">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
+              style={{ backgroundColor: TYPE_COLORS[item.type] || '#6b7280' }}>
+              {item.type?.toUpperCase()}
+            </span>
+            <span className="text-xs font-semibold text-gray-600">{CATEGORY_LABELS[item.category] || item.category}</span>
+            <span className="text-xs text-gray-400 ml-auto">{formatTs(item.timestamp)}</span>
+          </div>
+          <p className="text-sm text-gray-800 leading-relaxed mb-1">{item.description}</p>
+          {item.transcript && (
+            <div className="bg-gray-50 rounded p-2 mt-1">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Transcript</p>
+              <p className="text-xs text-gray-700 font-mono leading-relaxed whitespace-pre-wrap">{item.transcript}</p>
+            </div>
+          )}
+          <p className="text-xs text-gray-400 mt-1">{item.submittedBy} · {item.role}</p>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default function AdminScreen() {
@@ -519,6 +598,13 @@ export default function AdminScreen() {
           </button>
         </div>
 
+        {/* Feedback */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
+            Pilot Feedback
+          </p>
+          <FeedbackView db={db} />
+        </div>
       </main>
     </div>
   )

@@ -364,6 +364,22 @@ match /accessCodes/{codeId} {
       allow update: if false;
     }
 
+    // ── feedback ──────────────────────────────────────────────────────────
+    match /feedback/{feedbackId} {
+      allow read: if isAdminOrInstructor();
+      allow create: if signedIn()
+        && request.resource.data.submittedBy == request.auth.token.b10Id
+        && request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.type in ["core", "eso", "general"]
+        && request.resource.data.category in [
+             "level_concern", "content_error", "scoring_issue",
+             "platform_problem", "suggestion", "other"
+           ];
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
     // ── attempts ──────────────────────────────────────────────────────────
     // Permanent performance record. Anchored to studentId.
     // Written by Cloud Function (admin SDK) after pipeline completes.

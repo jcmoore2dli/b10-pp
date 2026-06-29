@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth, db } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore'
+import { collection, query, where, getDocs, orderBy, addDoc, serverTimestamp } from 'firebase/firestore'
 import { ref, getDownloadURL } from 'firebase/storage'
 import { storage } from '../services/firebase'
 import { useRef } from 'react'
@@ -66,9 +66,113 @@ const LAYER_ORDER = ['ORIENT', 'CORE', 'EXT', 'ESO', 'NAR', 'DES', 'INS']
 
 
 
+
+function FeedbackModal({ onClose, claims }) {
+  const [type, setType] = React.useState('general')
+  const [category, setCategory] = React.useState('other')
+  const [description, setDescription] = React.useState('')
+  const [transcript, setTranscript] = React.useState('')
+  const [submitting, setSubmitting] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+  const [error, setError] = React.useState(null)
+
+  async function handleSubmit() {
+    if (!description.trim()) { setError('Please enter a description.'); return }
+    setSubmitting(true)
+    setError(null)
+    try {
+      await addDoc(collection(db, 'feedback'), {
+        type,
+        category,
+        description: description.trim(),
+        transcript: transcript.trim() || null,
+        submittedBy: claims?.b10Id || 'unknown',
+        role: claims?.role || 'unknown',
+        timestamp: serverTimestamp(),
+      })
+      setSuccess(true)
+    } catch (e) {
+      setError('Submission failed. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      zIndex: 1000, padding: '16px'
+    }}>
+      <div style={{
+        background: '#fff', borderRadius: '12px', padding: '24px',
+        width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '14px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <p style={{ fontWeight: '700', fontSize: '15px', color: '#1e3a5f' }}>Submit Feedback</p>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#6b7280' }}>✕</button>
+        </div>
+        {success ? (
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <p style={{ color: '#2d6a4f', fontWeight: '600', fontSize: '15px' }}>✓ Feedback submitted. Thank you.</p>
+            <button onClick={onClose} style={{ marginTop: '16px', padding: '8px 24px', background: '#1e3a5f', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>Close</button>
+          </div>
+        ) : (
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5568' }}>Type</label>
+              <select value={type} onChange={e => setType(e.target.value)}
+                style={{ border: '1px solid #dde1e9', borderRadius: '8px', padding: '8px 10px', fontSize: '14px' }}>
+                <option value="core">Core Passage</option>
+                <option value="eso">ESO Question</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5568' }}>Category</label>
+              <select value={category} onChange={e => setCategory(e.target.value)}
+                style={{ border: '1px solid #dde1e9', borderRadius: '8px', padding: '8px 10px', fontSize: '14px' }}>
+                <option value="level_concern">Level Concern</option>
+                <option value="content_error">Content Error</option>
+                <option value="scoring_issue">Scoring Issue</option>
+                <option value="platform_problem">Platform Problem</option>
+                <option value="suggestion">Suggestion</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5568' }}>Description <span style={{ color: '#b91c1c' }}>*</span></label>
+              <textarea value={description} onChange={e => setDescription(e.target.value)}
+                placeholder="Describe the issue or suggestion..."
+                rows={4}
+                style={{ border: '1px solid #dde1e9', borderRadius: '8px', padding: '8px 10px', fontSize: '14px', resize: 'vertical', fontFamily: 'inherit' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5568' }}>Transcript <span style={{ color: '#9ca3af', fontWeight: '400' }}>(optional — paste if relevant)</span></label>
+              <textarea value={transcript} onChange={e => setTranscript(e.target.value)}
+                placeholder="Paste transcript here if relevant..."
+                rows={3}
+                style={{ border: '1px solid #dde1e9', borderRadius: '8px', padding: '8px 10px', fontSize: '13px', resize: 'vertical', fontFamily: 'monospace' }} />
+            </div>
+            {error && <p style={{ color: '#b91c1c', fontSize: '13px' }}>{error}</p>}
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <button onClick={onClose} style={{ padding: '8px 18px', background: '#f3f4f6', border: '1px solid #dde1e9', borderRadius: '8px', fontSize: '14px', cursor: 'pointer' }}>Cancel</button>
+              <button onClick={handleSubmit} disabled={submitting}
+                style={{ padding: '8px 18px', background: submitting ? '#9ca3af' : '#1e3a5f', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', cursor: 'pointer', fontWeight: '600' }}>
+                {submitting ? 'Submitting…' : 'Submit'}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function PassageMenuScreen() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(() => sessionStorage.getItem('b10pp_active_tab') || 'assigned')
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [clusterFilter, setClusterFilter] = useState('ALL')
   const [layerFilter, setLayerFilter] = useState('ALL')
 
@@ -269,6 +373,12 @@ export default function PassageMenuScreen() {
             </button>
           )}
             <button
+              onClick={() => setFeedbackOpen(true)}
+              className="text-xs text-blue-200 underline"
+            >
+              Feedback
+            </button>
+            <button
               onClick={handleSignOut}
               className="text-xs text-blue-200 underline"
             >
@@ -331,6 +441,7 @@ export default function PassageMenuScreen() {
           />
         )}
       </main>
+    {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} claims={claims} />}
     </div>
   )
 }
