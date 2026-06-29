@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W5 — Trade-offs &amp; Constraints · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #d97706; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-benefit    { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-tradeoff   { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-constraint { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-benefit    .legend-label { color: #16a34a; }
+  .leg-tradeoff   .legend-label { color: #d97706; }
+  .leg-constraint .legend-label { color: #dc2626; }
+  .leg-benefit    .legend-desc { color: #16a34a; }
+  .leg-tradeoff   .legend-desc { color: #d97706; }
+  .leg-constraint .legend-desc { color: #dc2626; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #d97706; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #d97706; background: #fffbeb; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-benefit    .col-header { background: #16a34a; }
+  .col-tradeoff   .col-header { background: #d97706; }
+  .col-constraint .col-header { background: #dc2626; }
+  .col-benefit    { border: 1.5px solid #16a34a; }
+  .col-tradeoff   { border: 1.5px solid #d97706; }
+  .col-constraint { border: 1.5px solid #dc2626; }
+  .col-benefit    .col-body { background: #f0fdf4; }
+  .col-tradeoff   .col-body { background: #fffbeb; }
+  .col-constraint .col-body { background: #fef2f2; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W5 — Trade-offs &amp; Constraints · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Show what is gained, what is lost, and what structural limit prevents a cleaner solution. These chunks are building blocks — combine them with grammar stems to construct your own sentences.
+</div>
+<div class="legend">
+  <div class="legend-item leg-benefit"><span class="legend-label">Benefit</span><span class="legend-desc">What the policy achieves — who gains, what improves</span></div>
+  <div class="legend-item leg-tradeoff"><span class="legend-label">Trade-off</span><span class="legend-desc">What is sacrificed — the competing good that is reduced or lost</span></div>
+  <div class="legend-item leg-constraint"><span class="legend-label">Constraint</span><span class="legend-desc">The structural limit — why the trade-off cannot simply be avoided</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> although… nevertheless · at the expense of · while X, Y is sacrificed · the cost falls on · cannot simultaneously · this comes with the constraint that · a win-win outcome is unavailable because
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should universities limit legacy admissions?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">increases access for first-generation students</div><div class="phrase">strengthens meritocratic admissions standards</div><div class="phrase">reduces institutionalized class advantage</div><div class="phrase">improves diversity of student population</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">reduces fundraising revenue from alumni donors</div><div class="phrase">disrupts alumni network loyalty and giving culture</div><div class="phrase">may reduce institutional financial capacity</div><div class="phrase">perceived as unfair by legacy-eligible families</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining merit independent of preparation advantage is complex</div><div class="phrase">donor dependence is structurally embedded in private university finance</div><div class="phrase">legal challenge to alumni preferences is limited in private institutions</div><div class="phrase">eliminating legacy does not address upstream preparation inequality</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to disclose pay scales for all positions?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces discriminatory pay gaps by race and gender</div><div class="phrase">increases worker bargaining power</div><div class="phrase">improves market efficiency in wage-setting</div><div class="phrase">builds trust through organizational transparency</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">creates internal tension among employees at different pay levels</div><div class="phrase">may reduce flexibility in individual salary negotiation</div><div class="phrase">compliance burden is significant for HR departments</div><div class="phrase">high earners may seek employment elsewhere</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">salary structure complexity makes standardized disclosure difficult</div><div class="phrase">defining comparable roles across organizations is contested</div><div class="phrase">cultural resistance to pay transparency is deeply embedded</div><div class="phrase">enforcement mechanisms are limited without audit capacity</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should inheritance taxes be significantly increased?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces intergenerational wealth concentration</div><div class="phrase">generates significant fiscal revenue</div><div class="phrase">challenges the structural reproduction of class advantage</div><div class="phrase">funds public investment in equal opportunity</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">restricts ability to pass accumulated wealth to family</div><div class="phrase">may force sale of family businesses or farms</div><div class="phrase">reduces incentive for wealth creation and saving</div><div class="phrase">wealthy families redirect to charitable giving to avoid tax</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">tax avoidance through trusts and gifting is structurally available</div><div class="phrase">estate valuation of illiquid assets is technically complex</div><div class="phrase">political resistance from donor class is substantial</div><div class="phrase">defining fair threshold between small and large estates is contested</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should there be stricter limits on political donations from corporations?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces undue corporate influence on legislation</div><div class="phrase">improves political equality between citizens and corporations</div><div class="phrase">reduces regulatory capture risk</div><div class="phrase">strengthens public trust in electoral process</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">restricts a form of speech protected under Citizens United</div><div class="phrase">same restrictions may apply to unions and NGOs</div><div class="phrase">political parties lose significant funding capacity</div><div class="phrase">enforcement creates administrative and legal complexity</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">First Amendment jurisprudence limits regulatory scope in US context</div><div class="phrase">dark money flows through non-profit intermediaries to avoid limits</div><div class="phrase">international corporate donations are difficult to trace</div><div class="phrase">defining corporate political activity is legally contested</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should euthanasia be legalized in all countries?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">upholds individual autonomy at end of life</div><div class="phrase">reduces prolonged suffering for terminal patients</div><div class="phrase">provides legal clarity for medical practitioners</div><div class="phrase">acknowledges patient dignity as a healthcare value</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">creates risk of coercion of elderly and disabled persons</div><div class="phrase">conflicts with medical profession duty to preserve life</div><div class="phrase">religious and cultural communities face value imposition</div><div class="phrase">palliative care investment may be deprioritized</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">safeguard design against coercion is structurally difficult</div><div class="phrase">universal legalization ignores cultural and legal variation</div><div class="phrase">physician willingness to participate cannot be mandated</div><div class="phrase">slippery slope to expanded eligibility is documented in some systems</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the collection and use of biometric data?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">protects uniquely sensitive personal data</div><div class="phrase">reduces algorithmic bias against minority groups</div><div class="phrase">limits surveillance infrastructure expansion</div><div class="phrase">builds public trust in digital government systems</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">restricts legitimate use in healthcare and security applications</div><div class="phrase">compliance costs are substantial for public and private sector</div><div class="phrase">may slow adoption of beneficial authentication technologies</div><div class="phrase">enforcement requires significant technical regulatory capacity</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">biometric data is already widely collected and stored</div><div class="phrase">retroactive regulation of existing databases is legally complex</div><div class="phrase">international data flows complicate domestic enforcement</div><div class="phrase">defining biometric data scope is technically contested</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should private prisons be banned?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">removes profit motive from incarceration decisions</div><div class="phrase">improves conditions and rehabilitation outcomes</div><div class="phrase">reduces structural incentive to maintain high incarceration rates</div><div class="phrase">aligns justice system with public rather than private interest</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">eliminates significant capacity in overcrowded prison systems</div><div class="phrase">job losses in rural communities dependent on prison employment</div><div class="phrase">transition costs for government to absorb facilities are high</div><div class="phrase">shorter-term disruption to incarcerated individuals during transition</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">government capacity to absorb private prison population rapidly is limited</div><div class="phrase">rural economic dependency on prison jobs creates political resistance</div><div class="phrase">defining adequate conditions for comparison is contested</div><div class="phrase">existing contracts include significant early termination penalties</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on the use of private military companies?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">closes accountability gap for civilian harm in conflict</div><div class="phrase">reduces use of PMCs to circumvent democratic oversight</div><div class="phrase">strengthens international humanitarian law application</div><div class="phrase">limits plausible deniability in proxy conflict</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">reduces operational flexibility for states facing capacity gaps</div><div class="phrase">PMC industry has significant political and economic leverage</div><div class="phrase">stricter rules may drive PMC activity to less regulated jurisdictions</div><div class="phrase">definition of regulated activities may restrict legitimate security work</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">PMCs operate across jurisdictions where enforcement is limited</div><div class="phrase">major powers use PMCs precisely to avoid accountability</div><div class="phrase">existing frameworks are voluntary and widely ignored</div><div class="phrase">defining PMC versus military contractor is structurally ambiguous</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one or two chunks from each column and connect them with trade-off language. For example:</p>
+  <div class="example">"Although this policy removes the financial barrier for low-income students, it shifts the cost to taxpayers — and the constraint here is that fiscal sustainability varies significantly by state, making a uniform national mandate structurally difficult."</div>
+  <p>Three chunks. Two connectors. One ILR 2+/3 argument move. <strong>The Constraint column is what separates a basic trade-off observation from an ILR 3 response</strong> — don't stop at naming what is lost. Explain why the trade-off cannot simply be avoided.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

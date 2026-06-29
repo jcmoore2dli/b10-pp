@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 — Values, Heuristics &amp; Bias · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-value      { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-assumption { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-competing  { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-value      .legend-label { color: #dc2626; }
+  .leg-assumption .legend-label { color: #d97706; }
+  .leg-competing  .legend-label { color: #1e3a5f; }
+  .leg-value      .legend-desc { color: #dc2626; }
+  .leg-assumption .legend-desc { color: #d97706; }
+  .leg-competing  .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-value      .col-header { background: #dc2626; }
+  .col-assumption .col-header { background: #d97706; }
+  .col-competing  .col-header { background: #1e3a5f; }
+  .col-value      { border: 1.5px solid #dc2626; }
+  .col-assumption { border: 1.5px solid #d97706; }
+  .col-competing  { border: 1.5px solid #1e3a5f; }
+  .col-value      .col-body { background: #fef2f2; }
+  .col-assumption .col-body { background: #fffbeb; }
+  .col-competing  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W1 — Values, Heuristics &amp; Bias · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify the value framework that drives a stakeholder's position — what they believe is important, what they must assume to be true, and what a stakeholder on the other side believes instead. The analytical move is not stating your own opinion but <em>surfacing the values and assumptions that make different positions coherent on their own terms.</em>
+</div>
+<div class="legend">
+  <div class="legend-item leg-value"><span class="legend-label">Value</span><span class="legend-desc">The core value driving a stakeholder's position</span></div>
+  <div class="legend-item leg-assumption"><span class="legend-label">Assumption</span><span class="legend-desc">What must be true for that value to justify the position</span></div>
+  <div class="legend-item leg-competing"><span class="legend-label">Competing Framework</span><span class="legend-desc">The value a different stakeholder holds, leading to a different conclusion</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> for those who prioritize… · from the perspective of… · this position assumes that… · those who hold this view believe that… · a stakeholder who values… would argue that… · the competing position rests on the assumption that… · while X stakeholders emphasize… those on the other side argue that… · this depends on whether one values… or…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should students with disabilities always be fully included in mainstream classrooms?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">inclusion as a civil right regardless of academic or practical cost</div><div class="phrase">equal participation in society begins with equal participation in education</div><div class="phrase">disability is a form of human diversity that mainstream settings must accommodate</div><div class="phrase">segregated education reproduces social exclusion regardless of instructional quality</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">mainstream settings can be adequately resourced to support full inclusion</div><div class="phrase">social integration benefits outweigh any instructional trade-offs for students with disabilities</div><div class="phrase">teachers can be trained to meet the full range of needs without specialized staff</div><div class="phrase">the stigma of separate placement outweighs the benefit of specialized instruction</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">specialized settings deliver better academic and developmental outcomes for some students</div><div class="phrase">mainstream inclusion without adequate support harms both disabled and non-disabled students</div><div class="phrase">parents of students with complex needs should retain the right to choose specialized placement</div><div class="phrase">the goal of inclusion must be balanced against the right to an appropriate education</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to provide childcare for employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">childcare is a shared social responsibility, not solely a family burden</div><div class="phrase">gender equity in the workforce requires structural support for caregiving</div><div class="phrase">employers who benefit from parental labor have an obligation to support it</div><div class="phrase">access to affordable childcare is a precondition for genuine workforce participation</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">employer-provided childcare meaningfully increases workforce participation among parents</div><div class="phrase">the economic benefit to employers from reduced turnover offsets compliance cost</div><div class="phrase">uniform mandates can be applied across employer sizes without disproportionate burden</div><div class="phrase">childcare provision is a legitimate part of the employment relationship</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">childcare is a personal responsibility that government should not compel employers to subsidize</div><div class="phrase">market mechanisms and voluntary benefit competition will produce better childcare outcomes than mandates</div><div class="phrase">small business owners cannot absorb the cost of mandatory childcare without significant harm</div><div class="phrase">government subsidies rather than employer mandates are the appropriate policy instrument</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should countries adopt a global minimum corporate tax?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">tax competition that drives rates toward zero undermines the fiscal capacity of all states</div><div class="phrase">multinational corporations have an obligation to contribute to the societies where they earn profit</div><div class="phrase">a race to the bottom in corporate taxation is a collective action failure that requires collective solution</div><div class="phrase">tax base erosion through profit-shifting is a form of free-riding on public infrastructure</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">a global minimum tax can be enforced without significant evasion through restructuring</div><div class="phrase">the rate can be set high enough to meaningfully reduce profit-shifting</div><div class="phrase">large economies have sufficient leverage to bring holdout jurisdictions into compliance</div><div class="phrase">revenue gains will be invested in public goods rather than absorbed into existing budgets</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">tax competition between nations is a legitimate form of policy competition that attracts investment</div><div class="phrase">small nations depend on low tax rates as their comparative economic advantage</div><div class="phrase">corporate taxes are ultimately paid by consumers and workers, not abstract entities</div><div class="phrase">harmonization reduces the incentive for governments to manage public finances efficiently</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments be required to consult citizens directly on major policy decisions?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">democratic legitimacy requires that citizens be directly involved in decisions that affect them</div><div class="phrase">representative democracy alone is insufficient when representatives serve narrow interests</div><div class="phrase">an informed and engaged citizenry produces better policy outcomes than elite decision-making</div><div class="phrase">direct consultation builds trust in government that representative processes alone cannot restore</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">citizens have sufficient information and capacity to make meaningful judgments on complex policy</div><div class="phrase">consultation processes can be designed to resist manipulation by organized interests</div><div class="phrase">the time cost of consultation is justified by the legitimacy and durability of outcomes</div><div class="phrase">majority preferences, when well-informed, produce better outcomes than technocratic decision-making</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">representative democracy was designed specifically to buffer against uninformed majority preferences</div><div class="phrase">direct consultation on complex policy produces outcomes distorted by emotion and misinformation</div><div class="phrase">the deliberative capacity of elected representatives exceeds that of the general public on technical matters</div><div class="phrase">frequent referenda produce referendum fatigue and declining participation over time</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should mental health services be equally funded as physical health services?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">mental and physical health are equally real and equally deserving of medical attention and resources</div><div class="phrase">the historical underfunding of mental health reflects stigma rather than clinical evidence</div><div class="phrase">a just health system treats all forms of human suffering as equally worthy of intervention</div><div class="phrase">the downstream social costs of untreated mental illness justify equivalent upstream investment</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">equal funding will translate into equal access and equivalent outcomes across mental and physical health</div><div class="phrase">workforce and infrastructure can be expanded to meet increased demand within a reasonable timeframe</div><div class="phrase">parity legislation can be enforced against resistant insurance companies</div><div class="phrase">mental health outcomes are measurable and improvable through funded intervention</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">healthcare resources are limited and must be allocated where evidence of impact is strongest</div><div class="phrase">physical illness involves a more directly measurable biological burden that justifies prioritization</div><div class="phrase">expanding mental health funding without workforce expansion produces funded but inaccessible services</div><div class="phrase">personal responsibility and social support networks should bear more of the mental health burden</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should tech companies be required to pay taxes in every country they operate?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">digital companies that extract economic value from a society have an obligation to fund its public goods</div><div class="phrase">tax avoidance by profitable tech companies is a form of free-riding that undermines public trust</div><div class="phrase">the existing tax framework was designed for a physical economy and must be updated for the digital one</div><div class="phrase">developing nations have a right to tax revenue from companies profiting from their citizens</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">digital presence in a market is equivalent to physical presence for the purposes of tax obligation</div><div class="phrase">the tax can be applied in a way that prevents double taxation rather than adding to it</div><div class="phrase">tech companies will not simply exit smaller markets to avoid compliance</div><div class="phrase">revenue from digital taxation will be invested in the public goods that enable digital markets</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">tax jurisdiction should follow physical presence, not the location of customers or users</div><div class="phrase">existing bilateral tax treaties are the appropriate framework for resolving digital taxation questions</div><div class="phrase">unilateral digital taxes risk trade retaliation that harms other sectors</div><div class="phrase">tech companies already pay taxes where they are legally incorporated and should not face additional liability</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should countries be required to contribute to a global climate fund?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">high-emission nations bear a historical responsibility for climate damage they did not suffer</div><div class="phrase">climate change is a collective action problem that requires mandatory rather than voluntary response</div><div class="phrase">global justice requires that wealthy nations fund adaptation for those who contributed least to the crisis</div><div class="phrase">the survival of climate-vulnerable nations is a moral obligation of the international community</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">mandatory contributions will be honored by signatories rather than circumvented through political resistance</div><div class="phrase">the fund can be administered transparently and efficiently enough to justify compulsory contributions</div><div class="phrase">the amount required to address climate adaptation needs is fiscally achievable for contributing nations</div><div class="phrase">a mandatory framework will produce more durable commitments than voluntary pledges</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">national sovereignty over fiscal policy cannot be overridden by international climate commitments</div><div class="phrase">voluntary pledges aligned with national interest produce more reliable contributions than mandates</div><div class="phrase">developed nations are already contributing through bilateral climate finance and technology transfer</div><div class="phrase">mandatory contributions without democratic consent in contributing nations are politically unsustainable</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments fund the preservation of indigenous cultural practices?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">historical dispossession creates a continuing obligation to support cultural restoration</div><div class="phrase">cultural diversity is a public good that government has a legitimate interest in sustaining</div><div class="phrase">indigenous communities have a right to self-determination that includes cultural continuity</div><div class="phrase">the state that suppressed indigenous culture bears responsibility for funding its restoration</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">government funding can support cultural preservation without controlling its content or direction</div><div class="phrase">indigenous communities can manage public funds in ways that strengthen rather than compromise self-determination</div><div class="phrase">the cultural practices in question are genuinely at risk without external financial support</div><div class="phrase">the social and cultural benefits of preservation justify the public expenditure</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">cultural preservation is the responsibility of the communities themselves, not the state</div><div class="phrase">government funding creates dependency that ultimately undermines the self-determination it claims to support</div><div class="phrase">taxpayers without indigenous ancestry should not be compelled to fund the cultural practices of specific groups</div><div class="phrase">the market for indigenous cultural products and tourism can sustain preservation without public subsidy</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. These columns are <strong>parallel, not sequential</strong> — they don't chain into each other. Use them to surface the values and assumptions driving different stakeholder positions.</p>
+  <div class="example">"For those who prioritize individual autonomy over end-of-life decisions, legalization is defensible — but this position assumes that safeguards can reliably prevent coercion. Those operating from a competing framework argue that the medical profession's duty of care is fundamentally incompatible with administering death, and that high-quality palliative care eliminates the suffering that drives such requests."</div>
+  <p>You are not stating your own values. You are <strong>identifying the value frameworks that make each stakeholder's position coherent on its own terms</strong> — and showing that the disagreement is not primarily empirical but normative.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

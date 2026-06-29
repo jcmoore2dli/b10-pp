@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6 — Scale &amp; Stakeholder · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-impact      { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-scale       { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder .legend-label { color: #0d9488; }
+  .leg-impact      .legend-label { color: #d97706; }
+  .leg-scale       .legend-label { color: #1e3a5f; }
+  .leg-stakeholder .legend-desc { color: #0d9488; }
+  .leg-impact      .legend-desc { color: #d97706; }
+  .leg-scale       .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+  .scale-reminder { margin: 0 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #dc2626; font-weight: 700; line-height: 1.5; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #0d9488; }
+  .col-impact      .col-header { background: #d97706; }
+  .col-scale       .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #0d9488; }
+  .col-impact      { border: 1.5px solid #d97706; }
+  .col-scale       { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #f0fdfa; }
+  .col-impact      .col-body { background: #fffbeb; }
+  .col-scale       .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .how-to-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .how-to-cell { border-radius: 8px; padding: 8px; font-size: 11px; line-height: 1.5; }
+  .how-to-cell strong { display: block; font-size: 11px; margin-bottom: 3px; }
+  .htc-who  { background: #f0fdfa; border: 1px solid #0d9488; color: #374151; }
+  .htc-what { background: #fffbeb; border: 1px solid #d97706; color: #374151; }
+  .htc-why  { background: #f0f4f8; border: 1px solid #1e3a5f; color: #374151; }
+  .htc-who  strong { color: #0d9488; }
+  .htc-what strong { color: #d97706; }
+  .htc-why  strong { color: #1e3a5f; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W6 — Scale &amp; Stakeholder · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify who is affected by a policy, what happens to them, and why the scale at which they operate changes the argument. A strong response must engage <em>at least two different scale levels</em>.
+</div>
+<div class="legend">
+  <div class="legend-item leg-stakeholder"><span class="legend-label">Stakeholder</span><span class="legend-desc">Who is affected and at what scale level</span></div>
+  <div class="legend-item leg-impact"><span class="legend-label">Impact</span><span class="legend-desc">What specifically happens to that stakeholder</span></div>
+  <div class="legend-item leg-scale"><span class="legend-label">Scale Consideration</span><span class="legend-desc">Why operating at this level changes the argument</span></div>
+</div>
+<div class="scale-reminder">
+  You must engage at least two scale levels: Individual &amp; Family · Organizational &amp; Community · National &amp; Global
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> at the individual level… · at the organizational level… · at the national level… · this affects not only… but also… · while the immediate impact falls on… · what begins as a concern for… quickly becomes… · from the perspective of… · those most directly affected are… · the burden falls disproportionately on…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should vocational education be prioritized over academic preparation?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">students with practical skill orientations — individual level</div><div class="phrase">students from lower-income families — individual level</div><div class="phrase">employers in skilled trades — organizational level</div><div class="phrase">universities — organizational level</div><div class="phrase">national workforce and social mobility — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">direct benefit from vocational pathways</div><div class="phrase">vocational training may offer faster economic return</div><div class="phrase">significant unmet demand for trained workers</div><div class="phrase">potential enrollment decline</div><div class="phrase">skilled trades shortage addressed; credential prestige shift required</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the benefit is most concrete for students who learn through application rather than abstraction — but tracking risk is also individual</div><div class="phrase">at the individual level, lower-income students may benefit from faster economic return — or may be tracked away from higher education pathways</div><div class="phrase">at the organizational level, employer demand is documented and structural — vocational education directly addresses a supply problem</div><div class="phrase">at the national level, the workforce argument is strongest — skilled trades shortage is a documented systemic problem that credential culture created</div><div class="phrase">scale matters because the individual tracking risk and the national workforce benefit operate at different levels — the policy must address both simultaneously</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the electoral college be abolished?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">voters in small states — individual level</div><div class="phrase">voters in large urban states — individual level</div><div class="phrase">political parties — organizational level</div><div class="phrase">swing state economies — organizational level</div><div class="phrase">democratic institutions and national electoral legitimacy — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">current system amplifies their individual vote weight</div><div class="phrase">votes are currently devalued relative to small states</div><div class="phrase">Democrats more likely to benefit from popular vote; Republicans from electoral college</div><div class="phrase">currently receive disproportionate policy attention</div><div class="phrase">three presidents have won without popular vote majority; legitimacy deficit</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual voter level, the equity argument cuts both ways — small state voters gain, large state voters lose under the current system</div><div class="phrase">at the individual voter level, the argument for popular vote is that every vote should carry equal weight regardless of geography</div><div class="phrase">at the organizational level, partisan interests shape the reform debate — the policy argument should be separated from the partisan interest argument</div><div class="phrase">at the national level, the democratic legitimacy argument is strongest — a system that produces popular vote losers as presidents has a structural legitimacy deficit</div><div class="phrase">scale matters because the individual vote weight argument and the national legitimacy argument reinforce each other — making both simultaneously is the strongest case</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should judges be elected or appointed?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual litigants — individual level</div><div class="phrase">voters — individual level</div><div class="phrase">minority communities — individual level</div><div class="phrase">legal profession — organizational level</div><div class="phrase">democratic institutions and rule of law — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">concern that elected judges are influenced by donor interests in cases</div><div class="phrase">democratic accountability argument for judicial elections</div><div class="phrase">appointed judges may be more insulated from majoritarian bias</div><div class="phrase">strong preference for merit-based appointment over political election</div><div class="phrase">judicial independence as foundational to functioning legal systems</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual litigant level, the impartiality argument is most direct — a judge influenced by donors cannot adjudicate fairly</div><div class="phrase">at the individual voter level, the accountability argument is real — but electoral accountability for judges has different implications than for legislators</div><div class="phrase">at the individual minority community level, appointed judges are more insulated from majoritarian pressure — the protection argument is strongest here</div><div class="phrase">at the organizational level, the legal profession's preference for merit-based appointment reflects expertise about how judicial quality is produced</div><div class="phrase">at the national level, rule of law depends on judicial independence — the accountability argument, while legitimate, must not override the independence argument</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should education systems prioritize critical thinking over content knowledge?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">students — individual level</div><div class="phrase">parents — individual level</div><div class="phrase">teachers — organizational level</div><div class="phrase">testing industry — organizational level</div><div class="phrase">national workforce and knowledge economy — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">critical thinking skills transfer; content knowledge provides the foundation for thinking</div><div class="phrase">different cultural orientations toward rote learning vs. inquiry-based education</div><div class="phrase">significant pedagogical shift required; neither skill is achievable without the other</div><div class="phrase">standardized tests often measure content recall; shift requires assessment reform</div><div class="phrase">knowledge economy demands both deep expertise and adaptable thinking</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual student level, the false dichotomy is most visible — students need both, and the framing of the question obscures that</div><div class="phrase">at the individual parent level, cultural expectations shape what counts as educational success — the policy debate must engage that, not ignore it</div><div class="phrase">at the teacher level, the pedagogical shift is structural — curriculum mandate without teacher development produces compliance without change</div><div class="phrase">at the national level, the workforce argument resolves the false dichotomy — knowledge economy demands deep domain knowledge and critical thinking simultaneously</div><div class="phrase">scale matters because the individual student benefit of critical thinking and the national workforce demand for it are aligned — the strongest case makes both arguments together</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should there be stricter regulations on the use of cultural appropriation in art?</span>
+      </div>
+      <span class="q-tag">CUL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">artists from dominant cultures — individual level</div><div class="phrase">members of source cultures — individual level</div><div class="phrase">arts institutions — organizational level</div><div class="phrase">indigenous and minority cultural organizations — organizational level</div><div class="phrase">national intellectual property frameworks — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">concern about restriction of creative freedom</div><div class="phrase">concern about exploitation, misrepresentation, economic harm</div><div class="phrase">difficult to enforce without becoming cultural gatekeepers</div><div class="phrase">seek recognition and economic benefit from their cultural production</div><div class="phrase">existing frameworks do not adequately protect traditional cultural expressions</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual artist level, the creative freedom argument is real — artistic borrowing is how culture develops</div><div class="phrase">at the individual source culture member level, commercial exploitation without consent is a concrete economic harm</div><div class="phrase">at the organizational level, arts institutions cannot enforce appropriation standards without becoming cultural gatekeepers — the governance challenge is structural</div><div class="phrase">at the national level, intellectual property law has a documented gap — traditional knowledge and cultural expressions are not protected by existing frameworks</div><div class="phrase">scale matters because individual creative freedom and national IP framework gaps operate at different levels — the solution requires a national framework that source communities control, not a restriction on individual artists</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments provide universal healthcare as an economic right?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">uninsured individuals — individual level</div><div class="phrase">chronically ill patients — individual level</div><div class="phrase">healthcare providers — organizational level</div><div class="phrase">insurance industry — organizational level</div><div class="phrase">national health system and economy — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">direct access to care; elimination of medical bankruptcy</div><div class="phrase">protection from coverage denial or cost-driven undertreatment</div><div class="phrase">payment rate changes; administrative simplification vs. government pricing pressure</div><div class="phrase">existential disruption if single-payer; expanded role in supplemental coverage</div><div class="phrase">population health outcomes; long-term fiscal sustainability</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the access argument is strongest for the uninsured and chronically ill — medical bankruptcy is a concrete individual harm</div><div class="phrase">at the individual level, high-income individuals face a tax burden increase — but this is a distributional argument, not an access argument</div><div class="phrase">at the organizational level, provider and insurer impacts differ — providers may gain from administrative simplification; insurers face structural disruption</div><div class="phrase">at the national level, the population health argument is most compelling — international comparison shows universal systems produce better outcomes at lower cost</div><div class="phrase">scale transforms the individual access argument into a national efficiency argument — the strongest case connects individual harm under the current system to national cost and outcome evidence</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should tech companies be required to make their algorithms transparent?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual users — individual level</div><div class="phrase">vulnerable groups — individual level</div><div class="phrase">tech companies — organizational level</div><div class="phrase">civil society auditors — organizational level</div><div class="phrase">democratic accountability and national AI governance — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">right to understand decisions that affect them</div><div class="phrase">algorithmic bias affects marginalized populations disproportionately</div><div class="phrase">trade secret concerns; competitive advantage in proprietary algorithms</div><div class="phrase">third-party audit model as compromise between disclosure and trade secrecy</div><div class="phrase">algorithmic systems now shape access to information, jobs, and credit at societal scale</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the right to explanation argument is most direct — people subject to algorithmic decisions should understand the basis for them</div><div class="phrase">at the individual vulnerable group level, the bias argument is strongest — algorithmic discrimination falls disproportionately on those already disadvantaged</div><div class="phrase">at the organizational level, trade secret protection is legitimate — but it cannot shield systems that make consequential decisions about people's lives from any accountability</div><div class="phrase">at the national level, the democratic accountability argument is most compelling — algorithmic systems have become infrastructure for social and economic participation</div><div class="phrase">scale matters because individual explanation rights and national accountability requirements are different policy instruments — both are necessary and neither is sufficient alone</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement a carbon border tax on imports?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">consumers — individual level</div><div class="phrase">workers in domestic carbon-intensive industries — individual level</div><div class="phrase">workers in export-dependent industries of developing countries — individual level</div><div class="phrase">domestic manufacturers — organizational level</div><div class="phrase">trading partners — organizational/national level</div><div class="phrase">global climate system — global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">potential price increases on imported goods</div><div class="phrase">protection from unfair competition</div><div class="phrase">risk of market access loss</div><div class="phrase">competitive protection from lower-standard imports</div><div class="phrase">diplomatic friction; potential retaliation</div><div class="phrase">carbon leakage prevention; global emissions reduction</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual consumer level, the price impact is real but modest — the distributional concern is manageable</div><div class="phrase">at the individual worker level in domestic industries, protection from carbon leakage is a concrete job security argument</div><div class="phrase">at the individual worker level in developing country export industries, the access risk is real — equity concerns must be addressed through design</div><div class="phrase">at the organizational level, domestic manufacturers gain competitive equity; trading partner organizations face adjustment costs</div><div class="phrase">at the global level, the carbon leakage argument is the strongest policy justification — domestic carbon pricing is undermined without border protection</div><div class="phrase">scale reveals the equity tension — individual workers in developing nations bear costs they did not create; connecting that to the global emissions argument requires explicit equity design</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Here is what each column is asking you to do:</p>
+  <div class="how-to-grid">
+    <div class="how-to-cell htc-who">
+      <strong>Stakeholder = Who</strong>
+      Name the specific group affected and the scale level they operate at. "People" and "society" are not stakeholders — name the group precisely.
+    </div>
+    <div class="how-to-cell htc-what">
+      <strong>Impact = What Happens</strong>
+      State the specific consequence for that stakeholder — what concretely changes for them as a result of the policy.
+    </div>
+    <div class="how-to-cell htc-why">
+      <strong>Scale Consideration = Why Scale Matters</strong>
+      Explain why operating at that particular level changes the argument — what is true at the individual level may be false at the national level, and vice versa.
+    </div>
+  </div>
+  <p>Pick one chunk from each column and connect them. You must engage at least two scale levels. A response that stays at one level does not demonstrate the analytical depth this frame requires.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

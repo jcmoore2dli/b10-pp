@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 — Trade-offs &amp; Constraints · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #d97706; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-benefit    { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-tradeoff   { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-constraint { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-benefit    .legend-label { color: #16a34a; }
+  .leg-tradeoff   .legend-label { color: #d97706; }
+  .leg-constraint .legend-label { color: #dc2626; }
+  .leg-benefit    .legend-desc { color: #16a34a; }
+  .leg-tradeoff   .legend-desc { color: #d97706; }
+  .leg-constraint .legend-desc { color: #dc2626; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #d97706; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #d97706; background: #fffbeb; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-benefit    .col-header { background: #16a34a; }
+  .col-tradeoff   .col-header { background: #d97706; }
+  .col-constraint .col-header { background: #dc2626; }
+  .col-benefit    { border: 1.5px solid #16a34a; }
+  .col-tradeoff   { border: 1.5px solid #d97706; }
+  .col-constraint { border: 1.5px solid #dc2626; }
+  .col-benefit    .col-body { background: #f0fdf4; }
+  .col-tradeoff   .col-body { background: #fffbeb; }
+  .col-constraint .col-body { background: #fef2f2; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W3 — Trade-offs &amp; Constraints · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Show what is gained, what is lost, and what structural limit prevents a cleaner solution. These chunks are building blocks — combine them with grammar stems to construct your own sentences.
+</div>
+<div class="legend">
+  <div class="legend-item leg-benefit"><span class="legend-label">Benefit</span><span class="legend-desc">What the policy achieves — who gains, what improves</span></div>
+  <div class="legend-item leg-tradeoff"><span class="legend-label">Trade-off</span><span class="legend-desc">What is sacrificed — the competing good that is reduced or lost</span></div>
+  <div class="legend-item leg-constraint"><span class="legend-label">Constraint</span><span class="legend-desc">The structural limit — why the trade-off cannot simply be avoided</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> although… nevertheless · at the expense of · while X, Y is sacrificed · the cost falls on · cannot simultaneously · this comes with the constraint that · a win-win outcome is unavailable because
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should schools integrate media literacy education into their curricula?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces susceptibility to misinformation</div><div class="phrase">builds long-term critical evaluation skills</div><div class="phrase">strengthens democratic participation capacity</div><div class="phrase">improves source credibility assessment</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">crowds out existing curriculum content</div><div class="phrase">requires significant teacher retraining</div><div class="phrase">competes with core subject instructional time</div><div class="phrase">outcomes are difficult to measure short-term</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">teacher capacity is currently insufficient</div><div class="phrase">curriculum reform cycles are slow</div><div class="phrase">no agreed media literacy standards exist</div><div class="phrase">digital environment evolves faster than curricula</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the gig economy be more strictly regulated?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">extends worker protections to precarious labor</div><div class="phrase">reduces exploitation of low-wage gig workers</div><div class="phrase">increases tax compliance in gig sector</div><div class="phrase">levels the playing field with traditional employers</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">increases platform operating costs significantly</div><div class="phrase">may reduce availability of gig work overall</div><div class="phrase">flexibility valued by workers is reduced</div><div class="phrase">smaller platforms may exit regulated markets</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">employment classification threshold is structurally contested</div><div class="phrase">cross-jurisdictional enforcement is limited</div><div class="phrase">platforms restructure to avoid reclassification</div><div class="phrase">one-size regulation ignores sector variation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should there be stronger antitrust laws to break up monopolies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">increases market competition</div><div class="phrase">reduces consumer price inflation</div><div class="phrase">lowers barriers to market entry</div><div class="phrase">reduces concentration of economic power</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">forced divestiture disrupts existing operations</div><div class="phrase">weakens national champions in global markets</div><div class="phrase">compliance and litigation costs are substantial</div><div class="phrase">innovation may be disrupted during restructuring</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining market dominance is legally contested</div><div class="phrase">global operations complicate domestic enforcement</div><div class="phrase">antitrust litigation timelines are structurally long</div><div class="phrase">network effects make breakup outcomes unpredictable</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments implement stricter regulations on lobbying?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces undue corporate influence on legislation</div><div class="phrase">improves policy equity for ordinary citizens</div><div class="phrase">increases public trust in democratic institutions</div><div class="phrase">reduces perception of regulatory capture</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">restricts legitimate stakeholder access to policymakers</div><div class="phrase">may disadvantage NGOs and civil society equally</div><div class="phrase">drives lobbying activity underground or offshore</div><div class="phrase">reduces information flow to legislators</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining lobbying versus advocacy is structurally ambiguous</div><div class="phrase">enforcement capacity in regulatory agencies is limited</div><div class="phrase">revolving door between government and industry persists</div><div class="phrase">First Amendment protections limit scope in US context</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement sugar taxes on processed foods?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">creates price signal to reduce consumption</div><div class="phrase">generates revenue for public health programs</div><div class="phrase">incentivizes product reformulation by manufacturers</div><div class="phrase">reduces long-term obesity-related healthcare costs</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">disproportionate cost burden on low-income consumers</div><div class="phrase">processed foods are cheaper alternatives for food-insecure households</div><div class="phrase">manufacturers may simply absorb cost without reformulating</div><div class="phrase">consumer substitution may shift to equally unhealthy alternatives</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">price elasticity varies significantly by income group</div><div class="phrase">defining taxable products is administratively complex</div><div class="phrase">political resistance from food industry is substantial</div><div class="phrase">tax alone cannot address food environment structural factors</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the use of social media algorithms?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces algorithmic amplification of harmful content</div><div class="phrase">limits filter bubble and radicalization effects</div><div class="phrase">increases platform accountability for content outcomes</div><div class="phrase">protects mental health of vulnerable users</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">disrupts engagement-based business models significantly</div><div class="phrase">reduces advertiser targeting precision</div><div class="phrase">risks unintended suppression of legitimate content</div><div class="phrase">compliance costs are substantial for smaller platforms</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">algorithmic transparency is technically complex to mandate</div><div class="phrase">platforms adapt faster than regulatory frameworks</div><div class="phrase">no international consensus on acceptable algorithm design</div><div class="phrase">defining harmful amplification without viewpoint bias is difficult</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments implement a carbon tax on all fossil fuel usage?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">creates economy-wide price signal for emissions</div><div class="phrase">generates revenue for green transition investment</div><div class="phrase">incentivizes fuel switching across all sectors</div><div class="phrase">reduces long-term climate risk at scale</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">disproportionate cost burden on low-income households</div><div class="phrase">energy-intensive industries face competitiveness loss</div><div class="phrase">rural communities with limited transport alternatives pay more</div><div class="phrase">short-term economic pain precedes long-term benefit</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">carbon leakage shifts production to unregulated countries</div><div class="phrase">political feasibility is limited in fossil fuel-dependent economies</div><div class="phrase">revenue recycling design is structurally contested</div><div class="phrase">border carbon adjustments are legally complex under WTO rules</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on deep-sea fishing?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">protects marine biodiversity from collapse</div><div class="phrase">supports long-term food security through sustainable stocks</div><div class="phrase">reduces bycatch and ecosystem disruption</div><div class="phrase">creates framework for shared ocean governance</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">immediate income loss for commercial fishing fleets</div><div class="phrase">food security implications for protein-dependent populations</div><div class="phrase">disproportionate impact on artisanal fishing communities</div><div class="phrase">higher seafood prices for consumers globally</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">high seas jurisdiction is a structural enforcement gap</div><div class="phrase">flag state compliance is voluntary and inconsistent</div><div class="phrase">monitoring fishing activity in international waters is costly</div><div class="phrase">defining sustainable catch levels is scientifically contested</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one or two chunks from each column and connect them with trade-off language. For example:</p>
+  <div class="example">"Although this policy removes the financial barrier for low-income students, it shifts the cost to taxpayers — and the constraint here is that fiscal sustainability varies significantly by state, making a uniform national mandate structurally difficult."</div>
+  <p>Three chunks. Two connectors. One ILR 2+/3 argument move. <strong>The Constraint column is what separates a basic trade-off observation from an ILR 3 response</strong> — don't stop at naming what is lost. Explain why the trade-off cannot simply be avoided.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W5 — Scale &amp; Stakeholder · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-impact      { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-scale       { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder .legend-label { color: #0d9488; }
+  .leg-impact      .legend-label { color: #d97706; }
+  .leg-scale       .legend-label { color: #1e3a5f; }
+  .leg-stakeholder .legend-desc { color: #0d9488; }
+  .leg-impact      .legend-desc { color: #d97706; }
+  .leg-scale       .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+  .scale-reminder { margin: 0 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #dc2626; font-weight: 700; line-height: 1.5; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #0d9488; }
+  .col-impact      .col-header { background: #d97706; }
+  .col-scale       .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #0d9488; }
+  .col-impact      { border: 1.5px solid #d97706; }
+  .col-scale       { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #f0fdfa; }
+  .col-impact      .col-body { background: #fffbeb; }
+  .col-scale       .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .how-to-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .how-to-cell { border-radius: 8px; padding: 8px; font-size: 11px; line-height: 1.5; }
+  .how-to-cell strong { display: block; font-size: 11px; margin-bottom: 3px; }
+  .htc-who  { background: #f0fdfa; border: 1px solid #0d9488; color: #374151; }
+  .htc-what { background: #fffbeb; border: 1px solid #d97706; color: #374151; }
+  .htc-why  { background: #f0f4f8; border: 1px solid #1e3a5f; color: #374151; }
+  .htc-who  strong { color: #0d9488; }
+  .htc-what strong { color: #d97706; }
+  .htc-why  strong { color: #1e3a5f; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W5 — Scale &amp; Stakeholder · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify who is affected by a policy, what happens to them, and why the scale at which they operate changes the argument. A strong response must engage <em>at least two different scale levels</em>.
+</div>
+<div class="legend">
+  <div class="legend-item leg-stakeholder"><span class="legend-label">Stakeholder</span><span class="legend-desc">Who is affected and at what scale level</span></div>
+  <div class="legend-item leg-impact"><span class="legend-label">Impact</span><span class="legend-desc">What specifically happens to that stakeholder</span></div>
+  <div class="legend-item leg-scale"><span class="legend-label">Scale Consideration</span><span class="legend-desc">Why operating at this level changes the argument</span></div>
+</div>
+<div class="scale-reminder">
+  You must engage at least two scale levels: Individual &amp; Family · Organizational &amp; Community · National &amp; Global
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> at the individual level… · at the organizational level… · at the national level… · this affects not only… but also… · while the immediate impact falls on… · what begins as a concern for… quickly becomes… · from the perspective of… · those most directly affected are… · the burden falls disproportionately on…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should universities limit legacy admissions?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">legacy applicants — individual level</div><div class="phrase">non-legacy applicants from underrepresented groups — individual level</div><div class="phrase">universities — organizational level</div><div class="phrase">alumni networks — organizational level</div><div class="phrase">social mobility and higher education access — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">direct loss of admissions advantage</div><div class="phrase">potential increase in access and competitive equity</div><div class="phrase">tension between fundraising dependency and meritocratic mission</div><div class="phrase">identity investment in legacy system; heuristic that success is self-made</div><div class="phrase">long-term shift in who gains access to elite institutional networks</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the harm to legacy applicants is real but represents the loss of an unearned advantage, not a right</div><div class="phrase">at the individual level, the benefit to non-legacy applicants is concrete — a more competitive pool produces different outcomes</div><div class="phrase">at the organizational level, the fundraising dependency is structural — eliminating legacy requires a parallel fundraising model redesign</div><div class="phrase">at the national level, the social mobility argument is strongest — access to elite institutions shapes lifetime outcomes at population scale</div><div class="phrase">scale matters because the individual admissions decision aggregates into a national pattern of who accesses institutional power</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to disclose pay scales for all positions?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">workers — individual level</div><div class="phrase">women and minority workers — individual level</div><div class="phrase">HR departments — organizational level</div><div class="phrase">companies — organizational level</div><div class="phrase">national labor market and gender pay gap — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">reduced information asymmetry; potential discomfort from salary comparisons</div><div class="phrase">evidence suggests pay transparency reduces discriminatory gaps</div><div class="phrase">significant compliance and communication burden</div><div class="phrase">heuristic that salary secrecy protects morale; evidence suggests transparency improves it</div><div class="phrase">long-term shift toward market-visible compensation norms; narrowing of pay gaps</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the benefit is informational — workers gain leverage they currently lack</div><div class="phrase">at the individual level, high earners may experience discomfort — but discomfort from knowing colleagues earn more is not equivalent to harm</div><div class="phrase">at the organizational level, companies face a management culture shift — the heuristic that secrecy prevents conflict is empirically challenged</div><div class="phrase">at the national level, the gender and racial pay gap arguments are strongest — disclosure is a systemic equity intervention, not just an individual information right</div><div class="phrase">scale transforms an individual information benefit into a national equity mechanism — the argument is strongest when made at the population level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should inheritance taxes be significantly increased?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">wealthy families — individual level</div><div class="phrase">small business and farm owners — individual level</div><div class="phrase">estate planning industry — organizational level</div><div class="phrase">philanthropic sector — organizational level</div><div class="phrase">wealth concentration and social mobility — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">direct financial impact; value placed on passing on accumulated wealth</div><div class="phrase">fear of forced sale; often cited but statistically rare</div><div class="phrase">significant economic interest in maintaining complexity and loopholes</div><div class="phrase">wealthy donors often prefer charitable giving to taxation</div><div class="phrase">reduction of intergenerational wealth concentration at population scale</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the property rights argument is strongest — passing wealth to family is a deeply held value</div><div class="phrase">at the individual level, the small business concern is real but statistically narrow — it applies to a small proportion of estates</div><div class="phrase">at the organizational level, the estate planning industry has a structural interest in maintaining loopholes — their advocacy should be read in that context</div><div class="phrase">at the national level, the dynastic wealth argument is most compelling — intergenerational concentration is a structural barrier to social mobility</div><div class="phrase">scale matters because individual property rights arguments and national social mobility arguments operate at different levels — the policy debate requires explicitly connecting them</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should there be stricter limits on political donations from corporations?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual voters — individual level</div><div class="phrase">corporate executives — individual level</div><div class="phrase">corporations — organizational level</div><div class="phrase">political parties — organizational level</div><div class="phrase">democratic legitimacy and regulatory capture — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">concern that corporate money drowns out citizen voice</div><div class="phrase">value placed on political access as legitimate business interest</div><div class="phrase">political donations as investment in favorable regulation</div><div class="phrase">campaign finance dependency creates structural bias toward donor interests</div><div class="phrase">reduced regulatory capture; risk that same restrictions apply to unions and NGOs</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual voter level, the political equality argument is intuitive — one person, one vote is undermined by unequal financial influence</div><div class="phrase">at the individual executive level, political access is experienced as a legitimate professional activity — the heuristic is that business and politics are appropriately connected</div><div class="phrase">at the organizational level, corporations and political parties are both affected — the regulation cannot target one without affecting the other</div><div class="phrase">at the national level, the regulatory capture argument is most compelling — policies shaped by donor interests systematically diverge from public interest</div><div class="phrase">scale reveals the structural problem — what looks like individual political speech at the donor level becomes systemic democratic distortion at the national level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should euthanasia be legalized in all countries?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">terminally ill individuals — individual level</div><div class="phrase">families — individual level</div><div class="phrase">elderly and disabled persons — individual level</div><div class="phrase">medical profession — organizational level</div><div class="phrase">national legal and cultural frameworks — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">autonomy and dignity; risk of coercion</div><div class="phrase">relief from prolonged suffering; moral and religious objection</div><div class="phrase">fear of being pressured toward death as a burden</div><div class="phrase">tension between duty to heal and duty to relieve suffering</div><div class="phrase">legal frameworks balancing autonomy and protection of vulnerable populations</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the autonomy argument is strongest for competent adults with terminal diagnosis — it is weakest for those who may be coerced</div><div class="phrase">at the individual level, the coercion risk falls most heavily on vulnerable populations — elderly, disabled, economically dependent</div><div class="phrase">at the family level, relief from prolonged suffering is real but so is the risk of implicit pressure on family members</div><div class="phrase">at the organizational level, the medical profession tension is structural — voluntary participation addresses individual physician conscience but not institutional culture</div><div class="phrase">scale matters because what is a genuine autonomous choice for one individual may become a systemic pressure on vulnerable populations at the national level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the collection and use of biometric data?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual citizens — individual level</div><div class="phrase">marginalized groups — individual level</div><div class="phrase">tech companies — organizational level</div><div class="phrase">law enforcement — organizational level</div><div class="phrase">national civil liberties frameworks and surveillance infrastructure — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">biometric data as uniquely personal; cannot be changed if compromised</div><div class="phrase">facial recognition shown to have higher error rates for darker-skinned individuals</div><div class="phrase">significant commercial interest in biometric data collection</div><div class="phrase">facial recognition as crime-fighting tool vs. civil liberties concern</div><div class="phrase">biometric surveillance as qualitatively different from other data collection</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, biometric data is uniquely sensitive — unlike passwords, it cannot be reset if compromised</div><div class="phrase">at the individual level, the algorithmic bias harm falls disproportionately on minority populations — the individual harm is unequally distributed</div><div class="phrase">at the organizational level, tech companies and law enforcement have directly competing interests — one wants more data, the other wants more tools</div><div class="phrase">at the national level, the surveillance infrastructure argument is strongest — infrastructure built for one purpose is historically repurposed for others</div><div class="phrase">scale matters because individual convenience benefits and national surveillance risks operate at different levels — the convenience argument is strongest at the individual level; the civil liberties argument is strongest at the national level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should private prisons be banned?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">incarcerated individuals — individual level</div><div class="phrase">prison workers — individual level</div><div class="phrase">families of incarcerated people — individual level</div><div class="phrase">private prison companies — organizational level</div><div class="phrase">rural communities — organizational level</div><div class="phrase">mass incarceration and justice system — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">evidence of worse conditions and outcomes in private facilities</div><div class="phrase">labor conditions and union representation differ significantly</div><div class="phrase">placement decisions may prioritize cost over proximity to family</div><div class="phrase">direct financial interest in maintaining incarceration rates</div><div class="phrase">economic dependency on prison employment</div><div class="phrase">profit motive as structural incentive to maintain high incarceration rates</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual incarcerated person level, the conditions and outcomes argument is most direct — private facilities perform worse on measurable rehabilitation metrics</div><div class="phrase">at the individual worker level, labor conditions differ — private facilities typically have weaker union representation</div><div class="phrase">at the family level, placement decisions made for cost rather than proximity have real individual consequences</div><div class="phrase">at the organizational level, the profit motive misalignment is structural — private prisons have a financial interest in high incarceration rates</div><div class="phrase">at the national level, the mass incarceration argument is strongest — private prisons are not the cause but they are a structural incentive that reinforces it</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on the use of private military companies?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">civilian populations in conflict zones — individual level</div><div class="phrase">PMC employees — individual level</div><div class="phrase">families of conflict victims — individual level</div><div class="phrase">private military companies — organizational level</div><div class="phrase">state militaries — organizational level</div><div class="phrase">international humanitarian law and state sovereignty — national/global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">operate outside rules of engagement; civilian harm without accountability</div><div class="phrase">legal ambiguity about protections and accountability</div><div class="phrase">no clear legal recourse when PMCs cause harm</div><div class="phrase">significant financial interest in maintaining legal ambiguity</div><div class="phrase">PMCs as force multiplier vs. accountability threat</div><div class="phrase">existing humanitarian law not designed for non-state armed actors</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual civilian level, the accountability gap is the most concrete harm — there is no legal recourse when PMCs cause harm</div><div class="phrase">at the individual PMC employee level, legal ambiguity cuts both ways — they lack protections as well as accountability</div><div class="phrase">at the organizational level, PMC companies and state militaries have different interests — states want flexibility; international law wants accountability</div><div class="phrase">at the national level, major powers use PMCs specifically to project force while maintaining plausible deniability — regulation threatens that capacity</div><div class="phrase">scale reveals the structural problem — individual civilian harm and national-level plausible deniability are both real; they are features of the same system, not separate issues</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Here is what each column is asking you to do:</p>
+  <div class="how-to-grid">
+    <div class="how-to-cell htc-who">
+      <strong>Stakeholder = Who</strong>
+      Name the specific group affected and the scale level they operate at. "People" and "society" are not stakeholders — name the group precisely.
+    </div>
+    <div class="how-to-cell htc-what">
+      <strong>Impact = What Happens</strong>
+      State the specific consequence for that stakeholder — what concretely changes for them as a result of the policy.
+    </div>
+    <div class="how-to-cell htc-why">
+      <strong>Scale Consideration = Why Scale Matters</strong>
+      Explain why operating at that particular level changes the argument — what is true at the individual level may be false at the national level, and vice versa.
+    </div>
+  </div>
+  <p>Pick one chunk from each column and connect them. You must engage at least two scale levels. A response that stays at one level does not demonstrate the analytical depth this frame requires.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

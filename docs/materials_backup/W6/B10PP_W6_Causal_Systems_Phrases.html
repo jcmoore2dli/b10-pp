@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6 — Causal Systems · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #7c3aed; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-trigger { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-mechanism { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-downstream { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-trigger .legend-label { color: #0d9488; }
+  .leg-mechanism .legend-label { color: #7c3aed; }
+  .leg-downstream .legend-label { color: #1e3a5f; }
+  .leg-trigger .legend-desc { color: #0d9488; }
+  .leg-mechanism .legend-desc { color: #7c3aed; }
+  .leg-downstream .legend-desc { color: #374151; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #7c3aed; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #7c3aed; background: #f5f3ff; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-trigger .col-header { background: #0d9488; }
+  .col-mechanism .col-header { background: #7c3aed; }
+  .col-downstream .col-header { background: #1e3a5f; }
+  .col-trigger { border: 1.5px solid #0d9488; }
+  .col-mechanism { border: 1.5px solid #7c3aed; }
+  .col-downstream { border: 1.5px solid #1e3a5f; }
+  .col-trigger .col-body { background: #f0fdfa; }
+  .col-mechanism .col-body { background: #f5f3ff; }
+  .col-downstream .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W6 — Causal Systems · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Trace the mechanism — show not just that something happens, but <em>how</em> and <em>why</em>, step by step. Pick one chunk from each column and connect them with causal language.
+</div>
+<div class="legend">
+  <div class="legend-item leg-trigger"><span class="legend-label">Trigger</span><span class="legend-desc">What initiates the chain</span></div>
+  <div class="legend-item leg-mechanism"><span class="legend-label">Mechanism</span><span class="legend-desc">How the effect is produced</span></div>
+  <div class="legend-item leg-downstream"><span class="legend-label">Downstream Effect</span><span class="legend-desc">What results at the end</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> this triggers… · as a direct result of… · the mechanism here is… · this in turn leads to… · the downstream consequence is… · what drives this effect is… · the causal chain runs from… to… · this amplifies / suppresses / accelerates…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should vocational education be prioritized over academic preparation?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">national curriculum rebalanced toward vocational pathways</div><div class="phrase">public funding shifted from academic to vocational programs</div><div class="phrase">vocational qualifications elevated in status by policy</div><div class="phrase">employer-education partnership programs expanded at scale</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">skilled trades pipeline increases in priority sectors</div><div class="phrase">academic program enrollment decreases as alternatives gain prestige</div><div class="phrase">employer demand for technical skills is more directly met</div><div class="phrase">class-based educational tracking risk increases without safeguards</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">skilled trades workforce shortage narrows over medium term</div><div class="phrase">university enrollment decreases with downstream credential implications</div><div class="phrase">social mobility pathways diversify beyond academic route</div><div class="phrase">long-term shift in cultural prestige of vocational versus academic credentials</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the electoral college be abolished?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">electoral college abolished by constitutional amendment</div><div class="phrase">presidential election converted to national popular vote</div><div class="phrase">winner-take-all state system replaced by proportional allocation</div><div class="phrase">National Popular Vote Interstate Compact reaches threshold</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">campaign strategy shifts entirely toward high-population centers</div><div class="phrase">small state voters lose amplified influence in presidential elections</div><div class="phrase">third-party viability increases without winner-take-all dynamic</div><div class="phrase">electoral fraud concerns shift from swing states to national total</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">presidential outcomes align more consistently with popular will</div><div class="phrase">small state political interests receive less campaign attention</div><div class="phrase">constitutional amendment threshold creates near-insurmountable barrier</div><div class="phrase">long-term shift in which voters and regions determine presidential outcomes</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should judges be elected or appointed?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">judicial selection converted from appointment to election</div><div class="phrase">merit-based appointment system enacted to replace elections</div><div class="phrase">nonpartisan judicial nominating commission established</div><div class="phrase">judicial retention elections added to appointment system</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">elected judges respond to donor and voter preferences in rulings</div><div class="phrase">appointed judges reflect ideology of appointing authority</div><div class="phrase">campaign finance in judicial races creates conflict of interest</div><div class="phrase">judicial independence varies significantly by selection mechanism</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">judicial decision-making is influenced by selection system over time</div><div class="phrase">public trust in judiciary varies by perceived independence</div><div class="phrase">minority rights protection differs between elected and appointed systems</div><div class="phrase">long-term judicial quality correlates with rigor of selection process</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should education systems prioritize critical thinking over content knowledge?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">curriculum reoriented toward critical thinking skills</div><div class="phrase">content coverage reduced to create space for inquiry-based learning</div><div class="phrase">assessment systems redesigned to measure reasoning over recall</div><div class="phrase">teacher training shifted toward facilitation rather than instruction</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">students develop stronger analytical and evaluative capacity</div><div class="phrase">content knowledge base narrows as coverage is reduced</div><div class="phrase">assessment reform lags curriculum change creating misalignment</div><div class="phrase">teacher capacity for inquiry-based instruction varies significantly</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">graduates are better equipped for adaptive problem-solving</div><div class="phrase">foundational content knowledge gaps emerge in some subject areas</div><div class="phrase">standardized assessment scores may decline during transition</div><div class="phrase">long-term workforce performance improves in knowledge economy roles</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should there be stricter regulations on the use of cultural appropriation in art?</span>
+      </div>
+      <span class="q-tag">CUL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">cultural appropriation regulations enacted with enforcement mechanism</div><div class="phrase">artistic use of cultural elements subject to consent or licensing</div><div class="phrase">traditional knowledge protection extended to cultural expression</div><div class="phrase">independent body established to adjudicate appropriation claims</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">artists seek permission or licensing for cross-cultural elements</div><div class="phrase">source communities gain legal standing and economic benefit</div><div class="phrase">enforcement bodies face definitional and jurisdictional complexity</div><div class="phrase">chilling effect on cross-cultural artistic collaboration emerges</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">source community economic benefit from cultural production increases</div><div class="phrase">artistic freedom is constrained in regulated domains</div><div class="phrase">cultural exchange slows where legal risk is high</div><div class="phrase">long-term shift in who controls the narrative around cultural representation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments provide universal healthcare as an economic right?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">universal healthcare enacted as legally guaranteed right</div><div class="phrase">single-payer or national health service model implemented</div><div class="phrase">private insurance replaced or supplemented by public system</div><div class="phrase">healthcare access decoupled from employment status</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">uninsured population gains access to care</div><div class="phrase">administrative complexity of multi-payer system decreases</div><div class="phrase">private insurance industry faces structural displacement</div><div class="phrase">healthcare cost control becomes government responsibility</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">population health outcomes improve across income distribution</div><div class="phrase">government healthcare expenditure increases significantly</div><div class="phrase">pharmaceutical and provider industries restructure around public pricing</div><div class="phrase">long-term reduction in health-related bankruptcy and poverty</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should tech companies be required to make their algorithms transparent?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">algorithmic transparency requirements legally mandated</div><div class="phrase">high-risk algorithm disclosure required before deployment</div><div class="phrase">third-party audit of decision-making systems required</div><div class="phrase">affected individuals gain right to algorithmic explanation</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">companies redesign systems to enable compliant disclosure</div><div class="phrase">discriminatory patterns in algorithms are identified and challenged</div><div class="phrase">trade secret protection is partially eroded by disclosure requirements</div><div class="phrase">gaming of disclosed algorithms by bad actors increases</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">accountability for algorithmic harm is structurally strengthened</div><div class="phrase">innovation pace slows in categories subject to pre-deployment disclosure</div><div class="phrase">public trust in automated decision systems increases over time</div><div class="phrase">long-term shift toward interpretable AI design as industry norm</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement a carbon border tax on imports?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">carbon border adjustment mechanism enacted on imports</div><div class="phrase">import tariff applied based on embodied carbon content</div><div class="phrase">domestic carbon price extended to imported goods via border levy</div><div class="phrase">trading partner carbon standards subject to tariff equivalence assessment</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">importers from high-carbon production countries face higher costs</div><div class="phrase">trading partners face pressure to adopt domestic carbon pricing</div><div class="phrase">carbon leakage from domestic industry is partially prevented</div><div class="phrase">WTO challenge process is triggered by affected exporters</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">domestic carbon pricing effectiveness increases with border protection</div><div class="phrase">developing nation exporters face market access barriers</div><div class="phrase">international trade friction increases in transition period</div><div class="phrase">long-term incentive for global carbon pricing adoption is strengthened</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with causal language.</p>
+  <div class="example">"Mandatory curriculum integration triggers a process in which students develop habitual source-checking behavior — and the downstream effect, over a generation, is a population significantly more resistant to foreign disinformation campaigns."</div>
+  <p>Three chunks. Two connectors. One complete causal argument. <strong>Do not skip the Mechanism column.</strong> Going straight from trigger to effect is the most common weakness in Causal Systems responses.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  // Auto-expand if URL hash matches a question id
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

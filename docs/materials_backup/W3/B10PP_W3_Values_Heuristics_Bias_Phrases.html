@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 — Values, Heuristics &amp; Bias · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-value      { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-assumption { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-competing  { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-value      .legend-label { color: #dc2626; }
+  .leg-assumption .legend-label { color: #d97706; }
+  .leg-competing  .legend-label { color: #1e3a5f; }
+  .leg-value      .legend-desc { color: #dc2626; }
+  .leg-assumption .legend-desc { color: #d97706; }
+  .leg-competing  .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-value      .col-header { background: #dc2626; }
+  .col-assumption .col-header { background: #d97706; }
+  .col-competing  .col-header { background: #1e3a5f; }
+  .col-value      { border: 1.5px solid #dc2626; }
+  .col-assumption { border: 1.5px solid #d97706; }
+  .col-competing  { border: 1.5px solid #1e3a5f; }
+  .col-value      .col-body { background: #fef2f2; }
+  .col-assumption .col-body { background: #fffbeb; }
+  .col-competing  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W3 — Values, Heuristics &amp; Bias · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify the value framework that drives a stakeholder's position — what they believe is important, what they must assume to be true, and what a stakeholder on the other side believes instead. The analytical move is not stating your own opinion but <em>surfacing the values and assumptions that make different positions coherent on their own terms.</em>
+</div>
+<div class="legend">
+  <div class="legend-item leg-value"><span class="legend-label">Value</span><span class="legend-desc">The core value driving a stakeholder's position</span></div>
+  <div class="legend-item leg-assumption"><span class="legend-label">Assumption</span><span class="legend-desc">What must be true for that value to justify the position</span></div>
+  <div class="legend-item leg-competing"><span class="legend-label">Competing Framework</span><span class="legend-desc">The value a different stakeholder holds, leading to a different conclusion</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> for those who prioritize… · from the perspective of… · this position assumes that… · those who hold this view believe that… · a stakeholder who values… would argue that… · the competing position rests on the assumption that… · while X stakeholders emphasize… those on the other side argue that… · this depends on whether one values… or…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should schools integrate media literacy education into their curricula?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">an informed citizenry is a prerequisite for democratic health and requires deliberate cultivation</div><div class="phrase">schools have a civic obligation to prepare students for the information environment they will navigate</div><div class="phrase">critical thinking about information sources is as fundamental as literacy and numeracy</div><div class="phrase">the commercial media ecosystem creates harms that education must equip students to recognize</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">media literacy skills can be taught effectively within existing curriculum and teacher capacity</div><div class="phrase">early intervention in critical evaluation habits produces durable effects on information behavior</div><div class="phrase">the skills transfer beyond the classroom to civic and consumer decision-making</div><div class="phrase">the benefit to democratic discourse justifies the curriculum space and teacher training investment</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">media literacy education risks privileging particular sources or viewpoints as more credible</div><div class="phrase">parents, not schools, should be responsible for teaching children how to evaluate information</div><div class="phrase">the media environment changes faster than curricula can adapt, making formal media literacy instruction quickly obsolete</div><div class="phrase">critical thinking is better developed through deep engagement with established subjects than through a standalone media course</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the gig economy be more strictly regulated?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">platforms have deliberately designed classification systems to extract labor without assuming its obligations</div><div class="phrase">workers' rights should not depend on the legal form of the employment relationship</div><div class="phrase">the gig economy's growth represents a structural shift in labor risk from employers to workers</div><div class="phrase">regulatory intervention is required when market power asymmetry prevents workers from protecting their own interests</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">reclassification will improve conditions without eliminating the gig work model entirely</div><div class="phrase">workers prefer the security of benefits to the flexibility that platforms emphasize</div><div class="phrase">platforms can absorb the cost of compliance without exiting regulated markets</div><div class="phrase">the flexibility argument is a platform narrative that does not reflect the preferences of most gig workers</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">independent contracting is a legitimate form of work that regulation should not restrict</div><div class="phrase">flexibility and autonomy are genuine values that many gig workers actively prefer</div><div class="phrase">regulation will reduce the availability of gig work, harming the workers it claims to protect</div><div class="phrase">competitive market pressure, not regulation, is the appropriate mechanism for improving gig work conditions</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should there be stronger antitrust laws to break up monopolies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">concentrated market power is a threat to both economic efficiency and democratic governance</div><div class="phrase">the consumer welfare standard has failed to prevent the emergence of monopolistic digital markets</div><div class="phrase">antitrust law exists to preserve competitive markets as a structural good, not only to reduce prices</div><div class="phrase">the political power that accompanies economic monopoly is itself a democratic threat</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">breaking up monopolies will increase competition and reduce consumer prices</div><div class="phrase">structural remedies are more effective than behavioral ones in producing durable competition</div><div class="phrase">the benefits to competition and innovation outweigh the disruption of divestiture</div><div class="phrase">international coordination can prevent broken-up firms from reconsolidating in less regulated jurisdictions</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">large firms achieve scale efficiencies that benefit consumers through lower prices and better products</div><div class="phrase">market dominance earned through innovation and consumer preference should not be punished</div><div class="phrase">antitrust intervention disrupts successful businesses without guaranteeing that the resulting competitive landscape is better</div><div class="phrase">the existing consumer welfare standard correctly focuses antitrust on the outcomes that matter most</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments implement stricter regulations on lobbying?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">democratic government should be accountable to citizens, not to the most organized and well-funded interests</div><div class="phrase">the revolving door between government and industry is a structural corruption of public decision-making</div><div class="phrase">transparency and access constraints are necessary to prevent legislative capture by narrow interests</div><div class="phrase">the current lobbying system systematically amplifies the voices of the wealthy at the expense of the general public</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">lobbying regulations can be designed and enforced effectively without eliminating legitimate stakeholder input</div><div class="phrase">reduced corporate access to legislators will produce policy outcomes more aligned with public interest</div><div class="phrase">the information that lobbyists provide can be obtained through other channels if direct access is constrained</div><div class="phrase">the political will to regulate lobbying exists when the public understands its effect on policy outcomes</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">lobbying is a form of constitutionally protected petition to government that cannot be meaningfully restricted</div><div class="phrase">lobbyists provide legislators with specialized information that improves policy design</div><div class="phrase">restricting lobbying reduces the quality of information available to decision-makers without improving outcomes</div><div class="phrase">the solution to regulatory capture is better elected officials, not restrictions on political communication</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement sugar taxes on processed foods?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">government has a legitimate role in correcting market failures that produce preventable public health harm</div><div class="phrase">the food industry's marketing of high-sugar products to children constitutes a form of harm that policy must address</div><div class="phrase">the public healthcare costs of diet-related disease justify intervention in individual consumption choices</div><div class="phrase">price signals are an efficient and non-coercive mechanism for shifting population-level behavior</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">the tax will reduce consumption among price-sensitive groups where diet-related disease is most prevalent</div><div class="phrase">manufacturers will reformulate rather than simply pass costs to consumers</div><div class="phrase">the regressive burden on low-income households can be offset through targeted revenue recycling</div><div class="phrase">the long-term healthcare cost savings outweigh the short-term fiscal and political costs of implementation</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">individual food choices are a matter of personal freedom that government should not manipulate through taxation</div><div class="phrase">the tax falls disproportionately on lower-income households who have fewer alternatives</div><div class="phrase">industry self-regulation and consumer education are less coercive and equally effective alternatives</div><div class="phrase">governments should address the structural causes of food insecurity rather than taxing the coping mechanisms of the poor</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the use of social media algorithms?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">platforms that shape the information environment of democratic societies must be publicly accountable for that power</div><div class="phrase">engagement-maximizing algorithms systematically amplify harmful content because harm drives engagement</div><div class="phrase">the right to a non-manipulative information environment is a democratic and human rights concern</div><div class="phrase">market mechanisms will not correct algorithmic harm because harm is profitable</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">algorithmic regulation can be designed to reduce specific harms without requiring platforms to determine the truth of content</div><div class="phrase">transparency requirements will enable meaningful oversight by regulators and researchers</div><div class="phrase">the harm caused by unregulated algorithms outweighs the innovation cost of compliance</div><div class="phrase">platforms have demonstrated that they will not self-regulate to reduce harm when engagement is the revenue driver</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">free speech requires that platforms not be compelled to curate or suppress content by government mandate</div><div class="phrase">users have the right and the capacity to choose their own information environments</div><div class="phrase">algorithmic regulation gives governments tools for content control that will be used against political opponents</div><div class="phrase">market competition between platforms with different algorithmic approaches is the appropriate governance mechanism</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments implement a carbon tax on all fossil fuel usage?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">the social cost of carbon is currently externalized onto future generations and must be internalized through pricing</div><div class="phrase">market mechanisms can drive the energy transition if fossil fuel prices reflect their true cost</div><div class="phrase">a price signal is the most economically efficient and non-distortive form of climate intervention</div><div class="phrase">governments have an obligation to align energy prices with their climate commitments</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">the price signal will drive meaningful behavior change in consumption and investment across the economy</div><div class="phrase">revenue recycling can offset the regressive distributional effects of the tax</div><div class="phrase">border adjustments can prevent carbon leakage to unregulated markets</div><div class="phrase">the long-term economic cost of unmitigated climate change exceeds the short-term cost of carbon pricing</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">carbon taxes impose disproportionate burdens on working families and rural communities with limited alternatives</div><div class="phrase">technological innovation rather than price signals is the appropriate driver of the energy transition</div><div class="phrase">a carbon tax without international coordination simply relocates emissions rather than reducing them</div><div class="phrase">energy affordability is a social priority that carbon taxes undermine without guaranteeing climate benefit</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on deep-sea fishing?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">the global commons require international governance because market actors have no incentive to conserve shared resources</div><div class="phrase">ocean ecosystems have intrinsic value that transcends their value as a source of economic extraction</div><div class="phrase">current fishing practices are depleting marine biodiversity at a rate that threatens long-term food security</div><div class="phrase">the nations that benefit most from deep-sea fishing have an obligation to contribute to its sustainable governance</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">binding regulations will reduce fishing pressure enough to allow stock recovery within a meaningful timeframe</div><div class="phrase">monitoring technology makes enforcement in international waters feasible at reasonable cost</div><div class="phrase">compensation mechanisms can address the economic impact on fishing-dependent communities</div><div class="phrase">the long-term food security benefit of sustainable stocks outweighs the short-term economic cost of quota reduction</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">fishing-dependent nations have a sovereign right to access marine resources that international regulations restrict</div><div class="phrase">existing voluntary frameworks and bilateral agreements are sufficient to address unsustainable fishing practices</div><div class="phrase">enforcement in international waters is practically impossible without the cooperation of flag states</div><div class="phrase">the economic interests of fishing communities in developing nations must not be sacrificed to environmental goals set by wealthier nations</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. These columns are <strong>parallel, not sequential</strong> — they don't chain into each other. Use them to surface the values and assumptions driving different stakeholder positions.</p>
+  <div class="example">"For those who prioritize individual autonomy over end-of-life decisions, legalization is defensible — but this position assumes that safeguards can reliably prevent coercion. Those operating from a competing framework argue that the medical profession's duty of care is fundamentally incompatible with administering death, and that high-quality palliative care eliminates the suffering that drives such requests."</div>
+  <p>You are not stating your own values. You are <strong>identifying the value frameworks that make each stakeholder's position coherent on its own terms</strong> — and showing that the disagreement is not primarily empirical but normative.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

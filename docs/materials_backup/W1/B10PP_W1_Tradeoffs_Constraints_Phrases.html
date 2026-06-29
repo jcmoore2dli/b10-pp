@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 — Trade-offs &amp; Constraints · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #d97706; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-benefit    { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-tradeoff   { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-constraint { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-benefit    .legend-label { color: #16a34a; }
+  .leg-tradeoff   .legend-label { color: #d97706; }
+  .leg-constraint .legend-label { color: #dc2626; }
+  .leg-benefit    .legend-desc { color: #16a34a; }
+  .leg-tradeoff   .legend-desc { color: #d97706; }
+  .leg-constraint .legend-desc { color: #dc2626; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #d97706; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #d97706; background: #fffbeb; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-benefit    .col-header { background: #16a34a; }
+  .col-tradeoff   .col-header { background: #d97706; }
+  .col-constraint .col-header { background: #dc2626; }
+  .col-benefit    { border: 1.5px solid #16a34a; }
+  .col-tradeoff   { border: 1.5px solid #d97706; }
+  .col-constraint { border: 1.5px solid #dc2626; }
+  .col-benefit    .col-body { background: #f0fdf4; }
+  .col-tradeoff   .col-body { background: #fffbeb; }
+  .col-constraint .col-body { background: #fef2f2; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W1 — Trade-offs &amp; Constraints · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Show what is gained, what is lost, and what structural limit prevents a cleaner solution. These chunks are building blocks — combine them with grammar stems to construct your own sentences.
+</div>
+<div class="legend">
+  <div class="legend-item leg-benefit"><span class="legend-label">Benefit</span><span class="legend-desc">What the policy achieves — who gains, what improves</span></div>
+  <div class="legend-item leg-tradeoff"><span class="legend-label">Trade-off</span><span class="legend-desc">What is sacrificed — the competing good that is reduced or lost</span></div>
+  <div class="legend-item leg-constraint"><span class="legend-label">Constraint</span><span class="legend-desc">The structural limit — why the trade-off cannot simply be avoided</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> although… nevertheless · at the expense of · while X, Y is sacrificed · the cost falls on · cannot simultaneously · this comes with the constraint that · a win-win outcome is unavailable because
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should students with disabilities always be fully included in mainstream classrooms?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">expands peer interaction opportunities</div><div class="phrase">reduces institutional segregation</div><div class="phrase">normalizes disability in schools</div><div class="phrase">improves social outcomes long-term</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">increases differentiated instruction burden</div><div class="phrase">may slow pacing for other students</div><div class="phrase">risks marginalizing special education staff</div><div class="phrase">demands significant teacher retraining</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">resource allocation varies by district</div><div class="phrase">legal compliance requirements are complex</div><div class="phrase">one-size policy cannot address severity spectrum</div><div class="phrase">parental consent adds implementation friction</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to provide childcare for employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces financial burden on working parents</div><div class="phrase">improves workforce retention rates</div><div class="phrase">supports gender equity in employment</div><div class="phrase">reduces absenteeism and stress</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">disproportionate cost burden on small businesses</div><div class="phrase">perceived as unequal benefit by non-parents</div><div class="phrase">may reduce overall compensation elsewhere</div><div class="phrase">risks crowding out private childcare market</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">uniform mandate ignores employer size variation</div><div class="phrase">quality standards are difficult to enforce</div><div class="phrase">cross-sector implementation is structurally uneven</div><div class="phrase">definition of eligible childcare varies widely</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should countries adopt a global minimum corporate tax?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces profit-shifting to tax havens</div><div class="phrase">recovers lost corporate tax revenue</div><div class="phrase">levels the playing field for domestic firms</div><div class="phrase">supports public investment capacity</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">reduces fiscal sovereignty of low-tax nations</div><div class="phrase">compliance costs fall on all firms equally</div><div class="phrase">may disadvantage emerging market economies</div><div class="phrase">risks economic model disruption for tax havens</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">enforcement mechanism is not yet agreed</div><div class="phrase">political buy-in from holdout nations is limited</div><div class="phrase">defining taxable profit across jurisdictions is complex</div><div class="phrase">transfer pricing abuse remains structurally difficult to detect</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments be required to consult citizens directly on major policy decisions?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">increases democratic legitimacy</div><div class="phrase">strengthens citizen political efficacy</div><div class="phrase">improves policy responsiveness</div><div class="phrase">reduces perception of elite capture</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">slows decision-making on time-sensitive issues</div><div class="phrase">risks majority overriding minority rights</div><div class="phrase">increases referendum fatigue over time</div><div class="phrase">amplifies populist pressure on technical decisions</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining major policy is inherently contested</div><div class="phrase">participation rates are structurally uneven</div><div class="phrase">misinformation distorts consultation outcomes</div><div class="phrase">costs of consultation are substantial at scale</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should mental health services be equally funded as physical health services?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces access gap for mental health patients</div><div class="phrase">decreases caregiver and family burden</div><div class="phrase">reduces downstream costs of untreated illness</div><div class="phrase">addresses longstanding funding disparity</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">requires significant reallocation of existing health budgets</div><div class="phrase">mental health workforce shortage limits impact</div><div class="phrase">may create tension with physical health resource needs</div><div class="phrase">insurance restructuring is costly and slow</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">parity in funding does not guarantee parity in outcomes</div><div class="phrase">workforce training pipeline takes years to expand</div><div class="phrase">stigma limits utilization even when access improves</div><div class="phrase">measurement of mental health outcomes is less standardized</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should tech companies be required to pay taxes in every country they operate?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">recovers tax revenue from digital economy</div><div class="phrase">levels playing field with domestic firms</div><div class="phrase">reduces fiscal dependence on physical presence rules</div><div class="phrase">benefits developing nations with large user bases</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">compliance costs increase significantly for platforms</div><div class="phrase">may reduce investment in smaller markets</div><div class="phrase">risks double taxation without treaty coordination</div><div class="phrase">administrative burden falls unevenly on smaller firms</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">defining operational presence is legally contested</div><div class="phrase">no unified international enforcement mechanism exists</div><div class="phrase">transfer pricing rules are difficult to apply to digital services</div><div class="phrase">bilateral tax treaties complicate multilateral implementation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should countries be required to contribute to a global climate fund?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">mobilizes resources for climate adaptation</div><div class="phrase">supports developing nation resilience</div><div class="phrase">creates shared accountability for emissions</div><div class="phrase">funds technology transfer to vulnerable regions</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">mandatory contributions challenge fiscal sovereignty</div><div class="phrase">burden falls on countries regardless of capacity</div><div class="phrase">political resistance in high-contribution nations</div><div class="phrase">fund governance and conditionality are contested</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">no enforcement mechanism for non-compliance exists</div><div class="phrase">defining contribution levels by responsibility is contested</div><div class="phrase">fund administration overhead reduces direct impact</div><div class="phrase">political will is structurally insufficient at current scale</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments fund the preservation of indigenous cultural practices?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">protects intergenerational cultural transmission</div><div class="phrase">supports linguistic and cultural diversity</div><div class="phrase">addresses historical dispossession</div><div class="phrase">strengthens indigenous community cohesion</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">government funding risks creating dependency</div><div class="phrase">definition of authentic practice is contested</div><div class="phrase">non-indigenous taxpayers may resist funding allocation</div><div class="phrase">risks state control over cultural self-determination</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">self-determination and government funding are in structural tension</div><div class="phrase">what counts as preservation is difficult to define</div><div class="phrase">existing treaty obligations vary significantly by country</div><div class="phrase">funding without community control undermines the goal</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one or two chunks from each column and connect them with trade-off language. For example:</p>
+  <div class="example">"Although this policy removes the financial barrier for low-income students, it shifts the cost to taxpayers — and the constraint here is that fiscal sustainability varies significantly by state, making a uniform national mandate structurally difficult."</div>
+  <p>Three chunks. Two connectors. One ILR 2+/3 argument move. <strong>The Constraint column is what separates a basic trade-off observation from an ILR 3 response</strong> — don't stop at naming what is lost. Explain why the trade-off cannot simply be avoided.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W4 — Values, Heuristics &amp; Bias · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #dc2626; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-value      { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-assumption { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-competing  { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-value      .legend-label { color: #dc2626; }
+  .leg-assumption .legend-label { color: #d97706; }
+  .leg-competing  .legend-label { color: #1e3a5f; }
+  .leg-value      .legend-desc { color: #dc2626; }
+  .leg-assumption .legend-desc { color: #d97706; }
+  .leg-competing  .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #dc2626; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #dc2626; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #dc2626; background: #fef2f2; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-value      .col-header { background: #dc2626; }
+  .col-assumption .col-header { background: #d97706; }
+  .col-competing  .col-header { background: #1e3a5f; }
+  .col-value      { border: 1.5px solid #dc2626; }
+  .col-assumption { border: 1.5px solid #d97706; }
+  .col-competing  { border: 1.5px solid #1e3a5f; }
+  .col-value      .col-body { background: #fef2f2; }
+  .col-assumption .col-body { background: #fffbeb; }
+  .col-competing  .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W4 — Values, Heuristics &amp; Bias · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify the value framework that drives a stakeholder's position — what they believe is important, what they must assume to be true, and what a stakeholder on the other side believes instead. The analytical move is not stating your own opinion but <em>surfacing the values and assumptions that make different positions coherent on their own terms.</em>
+</div>
+<div class="legend">
+  <div class="legend-item leg-value"><span class="legend-label">Value</span><span class="legend-desc">The core value driving a stakeholder's position</span></div>
+  <div class="legend-item leg-assumption"><span class="legend-label">Assumption</span><span class="legend-desc">What must be true for that value to justify the position</span></div>
+  <div class="legend-item leg-competing"><span class="legend-label">Competing Framework</span><span class="legend-desc">The value a different stakeholder holds, leading to a different conclusion</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> for those who prioritize… · from the perspective of… · this position assumes that… · those who hold this view believe that… · a stakeholder who values… would argue that… · the competing position rests on the assumption that… · while X stakeholders emphasize… those on the other side argue that… · this depends on whether one values… or…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should AI teachers replace human instructors in some schools?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">access to quality instruction is a right that AI can extend to underserved populations</div><div class="phrase">technology-mediated learning can personalize education in ways that human instructors cannot at scale</div><div class="phrase">the teacher shortage is a structural problem that AI offers a structural solution to</div><div class="phrase">learning outcomes, not the human delivery mechanism, are what education is ultimately for</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">AI can deliver instruction of sufficient quality to meaningfully replace human teachers in some contexts</div><div class="phrase">the social-emotional development deficit from reduced human contact is manageable or overstated</div><div class="phrase">the cost savings from AI instruction will be reinvested in student support rather than extracted as profit</div><div class="phrase">equity of AI quality can be guaranteed across socioeconomic contexts</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">education is fundamentally a human relationship that cannot be mediated by technology without loss</div><div class="phrase">the social-emotional development that human teachers provide is not a supplement but a core educational outcome</div><div class="phrase">AI replacement will be used to cut costs in under-resourced schools, deepening rather than reducing educational inequality</div><div class="phrase">the teaching profession should be strengthened and resourced rather than replaced</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should personalized learning algorithms be mandatory in public education?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">personalized instruction is more effective than one-size-fits-all delivery and technology makes it scalable</div><div class="phrase">the data generated by personalized learning enables evidence-based improvement of educational practice</div><div class="phrase">students who fall behind under standardized instruction would benefit from adaptive content delivery</div><div class="phrase">the public interest in educational outcomes justifies mandating effective instructional technology</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">algorithm quality is sufficient to produce better outcomes than standardized instruction for most students</div><div class="phrase">student data can be protected adequately under existing or new privacy frameworks</div><div class="phrase">teacher capacity to work alongside algorithmic systems can be developed through training</div><div class="phrase">the benefit to struggling students outweighs the privacy and autonomy costs of mandatory data collection</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">parents and students have the right to opt out of algorithmic instruction and data collection</div><div class="phrase">mandatory technology adoption serves vendor interests more than student interests</div><div class="phrase">the evidence base for personalized learning algorithms does not yet justify mandatory deployment</div><div class="phrase">educational data collected at scale creates risks that no privacy framework can fully mitigate</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should cryptocurrency be regulated as a financial instrument?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">consumer protection requires that financial instruments be subject to oversight regardless of their technology</div><div class="phrase">the anonymity features of cryptocurrency are primarily used for illegal activity rather than legitimate privacy</div><div class="phrase">financial stability requires that significant asset classes be subject to regulatory monitoring</div><div class="phrase">the same rules that apply to traditional finance should apply to digital finance</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">regulation will increase rather than decrease adoption by providing the institutional legitimacy that attracts mainstream investment</div><div class="phrase">compliance costs are manageable for legitimate crypto businesses and primarily harm bad actors</div><div class="phrase">the unbanked population can be served through regulated crypto rather than losing access</div><div class="phrase">international coordination can prevent regulatory arbitrage from undermining domestic standards</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">cryptocurrency was designed specifically to operate outside the existing financial regulatory framework</div><div class="phrase">regulation will stifle the innovation that makes crypto valuable as an alternative to legacy financial systems</div><div class="phrase">the privacy features of crypto are a legitimate response to government financial surveillance</div><div class="phrase">the market should determine which crypto assets have value without regulatory intervention</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should central banks adopt digital currencies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">central banks have an obligation to modernize monetary infrastructure for the digital economy</div><div class="phrase">a state-issued digital currency provides financial inclusion without relying on private intermediaries</div><div class="phrase">monetary policy effectiveness requires that central banks have direct transmission mechanisms to citizens</div><div class="phrase">the payment system is critical public infrastructure that should not be dominated by private platforms</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">CBDC can be designed with privacy protections that prevent government surveillance of transactions</div><div class="phrase">financial inclusion benefits for unbanked populations justify the disruption to commercial banking</div><div class="phrase">the technical infrastructure required for CBDC can be built securely and resiliently</div><div class="phrase">democratic governance of CBDC design will prevent its use as a tool of financial control</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">citizens have a right to financial privacy that a government-issued digital currency fundamentally undermines</div><div class="phrase">the risks of government control over digital money outweigh the efficiency and inclusion benefits</div><div class="phrase">commercial banks provide credit intermediation that CBDCs would disrupt without replacing</div><div class="phrase">existing private payment systems and cryptocurrencies already provide the innovation that CBDCs claim to offer</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement a digital identity system for all citizens?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">digital government services require secure identity infrastructure to function efficiently and equitably</div><div class="phrase">identity fraud causes real harm to citizens that a robust digital identity system would prevent</div><div class="phrase">a government-issued digital identity is more secure and equitable than market-provided alternatives</div><div class="phrase">the efficiency gains from digital identity justify the infrastructure investment</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">the system can be designed to serve citizens without enabling surveillance</div><div class="phrase">marginalized populations without existing documentation can be enrolled through alternative pathways</div><div class="phrase">independent oversight mechanisms can prevent scope creep toward social control</div><div class="phrase">the security of a centralized system can be made robust enough to prevent catastrophic data breach</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">the infrastructure required for digital identity is also the infrastructure required for comprehensive surveillance</div><div class="phrase">governments have consistently expanded the scope of identity systems beyond their original purpose</div><div class="phrase">citizens have a right to anonymity in public space that a mandatory digital identity eliminates</div><div class="phrase">the centralization of identity infrastructure creates a single point of failure with catastrophic breach potential</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments fund research into life extension technologies?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">reducing human suffering from age-related disease is a legitimate and compelling public health goal</div><div class="phrase">the economic returns from extending healthy productive years justify significant public research investment</div><div class="phrase">fundamental biomedical research requires public funding because its returns are too long-term for private markets</div><div class="phrase">governments have an obligation to pursue technologies that reduce suffering and extend human flourishing</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">the research can be directed toward extending healthspan rather than lifespan, avoiding population growth concerns</div><div class="phrase">equitable global access can be ensured through technology transfer and intellectual property frameworks</div><div class="phrase">the fiscal systems that would be strained by longer lifespans can be reformed in parallel</div><div class="phrase">the social benefits of reduced age-related suffering outweigh the systemic costs of extended lifespan</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">public research funds should be directed toward diseases that cause immediate suffering in large populations</div><div class="phrase">life extension technologies will be captured by wealthy individuals and nations, deepening global inequality</div><div class="phrase">extending lifespan without extending quality of life produces suffering rather than flourishing</div><div class="phrase">the social systems built for current life expectancies cannot be reformed fast enough to accommodate radical extension</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should there be a global moratorium on autonomous weapons development?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">weapons that can select and engage targets without human judgment violate the principle of human accountability in conflict</div><div class="phrase">the development of autonomous weapons will trigger an arms race that is harder to reverse than nuclear proliferation</div><div class="phrase">the laws of war require human judgment in targeting decisions that autonomous systems cannot exercise</div><div class="phrase">the international community has a responsibility to prevent categories of weapons whose risks outweigh their military utility</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">a moratorium can be negotiated and enforced through existing international arms control frameworks</div><div class="phrase">the military utility of autonomous weapons is insufficient to justify the humanitarian risk they pose</div><div class="phrase">major military powers have sufficient shared interest in preventing autonomous weapons proliferation to support a moratorium</div><div class="phrase">verification of compliance is technically feasible for the most dangerous categories of autonomous weapons</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">autonomous weapons reduce human casualties by removing soldiers from the battlefield</div><div class="phrase">nations that forgo autonomous weapons development cede military advantage to adversaries who do not</div><div class="phrase">the same autonomy features that concern critics also enable more precise and proportionate targeting than human combatants</div><div class="phrase">arms control agreements only constrain compliant nations while enabling non-signatories to gain decisive advantage</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be a global ban on nuclear weapons?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-value">
+          <div class="col-header">Value</div>
+          <div class="col-body"><div class="phrase">nuclear weapons pose an existential risk to humanity that no strategic doctrine can adequately manage</div><div class="phrase">the moral prohibition on weapons of mass destruction applies to nuclear weapons regardless of deterrence arguments</div><div class="phrase">a world without nuclear weapons is safer than one in which their proliferation continues</div><div class="phrase">the international community has an obligation to future generations to eliminate existential weapons</div></div>
+        </div>
+        <div class="col col-assumption">
+          <div class="col-header">Assumption</div>
+          <div class="col-body"><div class="phrase">universal disarmament, verified through inspection, is technically and politically achievable</div><div class="phrase">the elimination of nuclear deterrence will not result in increased conventional conflict</div><div class="phrase">the security guarantees that nuclear weapons currently provide can be replaced through conventional defense and international law</div><div class="phrase">the risk of nuclear use through accident or miscalculation outweighs the deterrence benefit of nuclear possession</div></div>
+        </div>
+        <div class="col col-competing">
+          <div class="col-header">Competing Framework</div>
+          <div class="col-body"><div class="phrase">nuclear deterrence has prevented major power conflict for over seventy years and should not be abandoned</div><div class="phrase">a ban that nuclear-armed states do not join leaves non-nuclear signatories at a permanent strategic disadvantage</div><div class="phrase">the verification required for universal disarmament is technically impossible given the potential for hidden stockpiles</div><div class="phrase">the security environment that produced nuclear weapons has not changed enough to make their elimination safe</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. These columns are <strong>parallel, not sequential</strong> — they don't chain into each other. Use them to surface the values and assumptions driving different stakeholder positions.</p>
+  <div class="example">"For those who prioritize individual autonomy over end-of-life decisions, legalization is defensible — but this position assumes that safeguards can reliably prevent coercion. Those operating from a competing framework argue that the medical profession's duty of care is fundamentally incompatible with administering death, and that high-quality palliative care eliminates the suffering that drives such requests."</div>
+  <p>You are not stating your own values. You are <strong>identifying the value frameworks that make each stakeholder's position coherent on its own terms</strong> — and showing that the disagreement is not primarily empirical but normative.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

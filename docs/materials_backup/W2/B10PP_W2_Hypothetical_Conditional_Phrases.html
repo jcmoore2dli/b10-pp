@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W2 — Hypothetical &amp; Conditional · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-condition { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-projected { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-extended  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-condition .legend-label { color: #16a34a; }
+  .leg-projected .legend-label { color: #d97706; }
+  .leg-extended  .legend-label { color: #7c3aed; }
+  .leg-condition .legend-desc { color: #16a34a; }
+  .leg-projected .legend-desc { color: #d97706; }
+  .leg-extended  .legend-desc { color: #7c3aed; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-condition .col-header { background: #16a34a; }
+  .col-projected .col-header { background: #d97706; }
+  .col-extended  .col-header { background: #7c3aed; }
+  .col-condition { border: 1.5px solid #16a34a; }
+  .col-projected { border: 1.5px solid #d97706; }
+  .col-extended  { border: 1.5px solid #7c3aed; }
+  .col-condition .col-body { background: #f0fdf4; }
+  .col-projected .col-body { background: #fffbeb; }
+  .col-extended  .col-body { background: #f5f3ff; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W2 — Hypothetical &amp; Conditional · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Project scenarios and trace what follows. The core move is the conditional: <em>if X under condition Y, then Z would likely follow — and if Z holds, then...</em> The Extended Scenario column is where ILR 2+/3 responses go further, chaining consequences and testing second-order assumptions.
+</div>
+<div class="legend">
+  <div class="legend-item leg-condition"><span class="legend-label">Condition</span><span class="legend-desc">The specific circumstance that must hold</span></div>
+  <div class="legend-item leg-projected"><span class="legend-label">Projected Outcome</span><span class="legend-desc">What would likely result if the condition holds</span></div>
+  <div class="legend-item leg-extended"><span class="legend-label">Extended Scenario</span><span class="legend-desc">What follows from the outcome — second-order consequences</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> if… were implemented… · were… to… then… · should… fail to… · in a scenario where… · assuming… the effect would be… · if that outcome holds, then… · this in turn would lead to… · the second-order consequence would be… · provided that… · on the condition that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should higher education be made tuition-free at public universities?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if funding is replaced through progressive taxation rather than flat levies</div><div class="phrase">if quality standards are maintained through independent accreditation</div><div class="phrase">if graduate and professional programs are included in the mandate</div><div class="phrase">if private universities are not subject to the same requirement</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">enrollment increases across all income groups</div><div class="phrase">credential inflation reduces the labor market premium of a degree</div><div class="phrase">private universities gain selective advantage in prestige-driven markets</div><div class="phrase">government education budget expands significantly</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if credential inflation deepens, degree value declines for all graduates</div><div class="phrase">if private universities gain prestige advantage, two-tier system entrenches class division</div><div class="phrase">if quality falls with expanded enrollment, employers shift to alternative credential signals</div><div class="phrase">if fiscal pressure mounts, funding is cut and quality deteriorates</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should gig economy workers receive the same benefits as full-time employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if reclassification applies only above an income threshold</div><div class="phrase">if platforms are given transition time to restructure their cost base</div><div class="phrase">if flexibility is preserved through opt-out provisions for high-earning contractors</div><div class="phrase">if enforcement is coordinated across jurisdictions to prevent regulatory arbitrage</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">lower-income gig workers gain healthcare and retirement access</div><div class="phrase">platforms restructure pricing and workforce models to offset costs</div><div class="phrase">high-earning contractors opt out, preserving flexibility for that segment</div><div class="phrase">some platforms exit smaller or lower-margin markets</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if platforms exit, gig work opportunities decrease in affected markets</div><div class="phrase">if opt-out is widely used, protection gains are limited to lowest-income workers</div><div class="phrase">if enforcement is uneven, platforms relocate operations to less regulated jurisdictions</div><div class="phrase">if costs are passed to consumers, gig service prices rise with downstream demand effects</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should governments implement universal basic income?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if UBI is funded through wealth and carbon taxes rather than income tax</div><div class="phrase">if existing means-tested programs are maintained alongside UBI rather than replaced</div><div class="phrase">if the UBI level is set at subsistence rather than replacement income</div><div class="phrase">if implementation is phased with evidence review at each stage</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">poverty floor is raised without eliminating targeted support for high-need groups</div><div class="phrase">entrepreneurial activity and risk-taking increase at lower income levels</div><div class="phrase">tax base required is substantial and politically difficult to sustain</div><div class="phrase">labor supply tightens modestly in low-wage sectors</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if tax base is insufficient, UBI is funded through borrowing and inflation risk rises</div><div class="phrase">if labor supply tightens, wages rise in low-wage sectors with downstream price effects</div><div class="phrase">if targeted programs are maintained, administrative complexity and cost remain high</div><div class="phrase">if phased evidence review reveals negative effects, political exit from UBI is costly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should social media companies be required to remove political misinformation?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if an independent non-governmental body defines misinformation standards</div><div class="phrase">if removal applies only to demonstrably false factual claims, not contested opinions</div><div class="phrase">if appeals processes are fast and transparent</div><div class="phrase">if the same standards apply across all political affiliations equally</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">demonstrably false content decreases on regulated platforms</div><div class="phrase">platforms invest heavily in moderation infrastructure to comply</div><div class="phrase">contested political speech faces increased removal risk at the margins</div><div class="phrase">false content migrates to unregulated platforms and offshore alternatives</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if migration to unregulated platforms accelerates, regulated platforms lose the most engaged users</div><div class="phrase">if contested speech is removed, legitimate political dissent is chilled</div><div class="phrase">if appeals are slow, incorrect removals persist and trust in platforms decreases</div><div class="phrase">if standards are applied unevenly, regulated platforms become politically captured</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should alternative medicine be covered by public health insurance?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if coverage is limited to treatments with evidence of at least comparative effectiveness</div><div class="phrase">if reimbursement rates are lower than conventional care equivalents</div><div class="phrase">if coverage is conditioned on licensed practitioners only</div><div class="phrase">if patient disclosure requirements prevent substitution for conventional care</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">patient access to preferred treatments broadens within evidence boundaries</div><div class="phrase">practitioners with marginal evidence bases gain institutional legitimacy</div><div class="phrase">insurance costs increase modestly with expanded coverage scope</div><div class="phrase">some patients substitute alternative for conventional care despite disclosure requirements</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if substitution occurs, delayed diagnosis increases downstream treatment costs</div><div class="phrase">if legitimacy of marginal treatments grows, evidence standards are further eroded</div><div class="phrase">if costs increase without outcome improvement, insurance fund sustainability is pressured</div><div class="phrase">if coverage is well-designed, it reduces out-of-pocket spending without quality risk</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the development of artificial intelligence?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulation is risk-tiered rather than applied uniformly to all AI systems</div><div class="phrase">if regulatory sandboxes allow innovation to continue under supervised conditions</div><div class="phrase">if international coordination prevents competitive regulatory arbitrage</div><div class="phrase">if technical experts are embedded in regulatory bodies to enable meaningful oversight</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">high-risk AI deployment is slowed and made safer</div><div class="phrase">low-risk AI innovation continues with minimal compliance burden</div><div class="phrase">regulatory arbitrage drives some development to less regulated jurisdictions</div><div class="phrase">public trust in AI increases as accountability mechanisms become visible</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if arbitrage is significant, domestic firms are disadvantaged without global safety benefit</div><div class="phrase">if sandboxes enable learning, regulation improves iteratively rather than locking in outdated rules</div><div class="phrase">if technical capacity in regulators is insufficient, oversight is nominal</div><div class="phrase">if trust increases, AI adoption accelerates with downstream productivity and efficiency gains</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments ban the development of new fossil fuel infrastructure?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if the ban is accompanied by a just transition fund for affected workers and communities</div><div class="phrase">if existing infrastructure is allowed to operate until end of economic life</div><div class="phrase">if renewable energy capacity investment is mandated simultaneously</div><div class="phrase">if the ban applies to domestic development but not to imports</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">new carbon lock-in from additional fossil fuel infrastructure is prevented</div><div class="phrase">fossil fuel dependent communities face economic disruption without transition support</div><div class="phrase">energy security risk increases during the transition period</div><div class="phrase">carbon leakage occurs if production shifts to countries without the ban</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if just transition support is inadequate, political backlash reverses the ban</div><div class="phrase">if renewable investment lags, energy price spikes create economic and social instability</div><div class="phrase">if carbon leakage is significant, global emissions are not reduced — only relocated</div><div class="phrase">if ban succeeds with transition support, it becomes a model for other high-carbon sectors</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement stricter gun control measures?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if measures target the highest-risk purchase pathways specifically</div><div class="phrase">if red flag laws are accompanied by due process protections</div><div class="phrase">if rural and urban contexts are treated differently in implementation</div><div class="phrase">if buy-back programs reduce existing stock alongside purchase restrictions</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">legal purchase by high-risk individuals becomes significantly harder</div><div class="phrase">mass casualty event lethality decreases with capacity restrictions</div><div class="phrase">rural gun owners bear disproportionate compliance burden relative to urban risk profile</div><div class="phrase">illegal firearms market expands to meet displaced legal demand</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if illegal market expands, gun availability for criminals is not significantly reduced</div><div class="phrase">if rural burden is disproportionate, political resistance makes enforcement impossible</div><div class="phrase">if buy-back programs reduce stock, long-term reduction in gun-related homicide follows</div><div class="phrase">if red flag laws lack due process, constitutional challenge succeeds and laws are struck down</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with conditional language.</p>
+  <div class="example">"If CBDC is designed with strong privacy protections, the projected outcome is that financial inclusion improves — but if surveillance capacity grows alongside it, the extended scenario is that authoritarian misuse becomes structurally available, regardless of original intent."</div>
+  <p>Three chunks. Three connectors. A complete hypothetical argument with a second-order consequence. <strong>The Extended Scenario column is what separates an ILR 2+ response from an ILR 3 one</strong> — don't stop at the projected outcome.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

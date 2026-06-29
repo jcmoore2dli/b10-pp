@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W4 — Scale &amp; Stakeholder · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #0d9488; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-stakeholder { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-impact      { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-scale       { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-stakeholder .legend-label { color: #0d9488; }
+  .leg-impact      .legend-label { color: #d97706; }
+  .leg-scale       .legend-label { color: #1e3a5f; }
+  .leg-stakeholder .legend-desc { color: #0d9488; }
+  .leg-impact      .legend-desc { color: #d97706; }
+  .leg-scale       .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdfa; border: 1px solid #0d9488; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #0d9488; }
+  .scale-reminder { margin: 0 12px 12px; background: #fef2f2; border: 1px solid #dc2626; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #dc2626; font-weight: 700; line-height: 1.5; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #0d9488; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #0d9488; background: #f0fdfa; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-stakeholder .col-header { background: #0d9488; }
+  .col-impact      .col-header { background: #d97706; }
+  .col-scale       .col-header { background: #1e3a5f; }
+  .col-stakeholder { border: 1.5px solid #0d9488; }
+  .col-impact      { border: 1.5px solid #d97706; }
+  .col-scale       { border: 1.5px solid #1e3a5f; }
+  .col-stakeholder .col-body { background: #f0fdfa; }
+  .col-impact      .col-body { background: #fffbeb; }
+  .col-scale       .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .how-to-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .how-to-cell { border-radius: 8px; padding: 8px; font-size: 11px; line-height: 1.5; }
+  .how-to-cell strong { display: block; font-size: 11px; margin-bottom: 3px; }
+  .htc-who  { background: #f0fdfa; border: 1px solid #0d9488; color: #374151; }
+  .htc-what { background: #fffbeb; border: 1px solid #d97706; color: #374151; }
+  .htc-why  { background: #f0f4f8; border: 1px solid #1e3a5f; color: #374151; }
+  .htc-who  strong { color: #0d9488; }
+  .htc-what strong { color: #d97706; }
+  .htc-why  strong { color: #1e3a5f; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W4 — Scale &amp; Stakeholder · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Identify who is affected by a policy, what happens to them, and why the scale at which they operate changes the argument. A strong response must engage <em>at least two different scale levels</em>.
+</div>
+<div class="legend">
+  <div class="legend-item leg-stakeholder"><span class="legend-label">Stakeholder</span><span class="legend-desc">Who is affected and at what scale level</span></div>
+  <div class="legend-item leg-impact"><span class="legend-label">Impact</span><span class="legend-desc">What specifically happens to that stakeholder</span></div>
+  <div class="legend-item leg-scale"><span class="legend-label">Scale Consideration</span><span class="legend-desc">Why operating at this level changes the argument</span></div>
+</div>
+<div class="scale-reminder">
+  You must engage at least two scale levels: Individual &amp; Family · Organizational &amp; Community · National &amp; Global
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> at the individual level… · at the organizational level… · at the national level… · this affects not only… but also… · while the immediate impact falls on… · what begins as a concern for… quickly becomes… · from the perspective of… · those most directly affected are… · the burden falls disproportionately on…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should AI teachers replace human instructors in some schools?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">students — individual level</div><div class="phrase">teachers — individual/organizational level</div><div class="phrase">schools and ed-tech companies — organizational level</div><div class="phrase">national education systems and workforce — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">personalized pacing; social-emotional development loss</div><div class="phrase">job displacement; role redefinition toward facilitation</div><div class="phrase">infrastructure costs replace salary costs; market expansion</div><div class="phrase">potential reduction of teacher shortage; equity of AI quality risk</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual student level, outcome varies dramatically — personalization benefits some while social-emotional development loss harms others</div><div class="phrase">at the teacher level, the profession faces structural redefinition — augmentation and replacement have very different individual implications</div><div class="phrase">at the organizational level, cost structure shifts from labor to infrastructure — the equity of that shift depends on who controls the AI</div><div class="phrase">at the national level, the teacher shortage argument is most compelling in under-resourced regions — AI replacement is defensible where the alternative is no teacher, not where it replaces human teaching</div><div class="phrase">scale reveals the equity problem — AI quality inequality at the organizational level becomes educational outcome inequality at the national level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should personalized learning algorithms be mandatory in public education?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">students — individual level</div><div class="phrase">students with learning differences — individual level</div><div class="phrase">teachers — organizational level</div><div class="phrase">ed-tech vendors — organizational level</div><div class="phrase">national education systems and data governance — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">adaptive content; privacy exposure; potential under-challenge for advanced students</div><div class="phrase">potential benefit from tailored content delivery</div><div class="phrase">role shift from instructor to facilitator; potential deskilling</div><div class="phrase">guaranteed market if mandated; vendor lock-in risk</div><div class="phrase">student data at scale creates systemic privacy risk; learning outcome variation</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, struggling students may benefit while advanced students may be under-challenged — the policy is not uniformly beneficial</div><div class="phrase">at the teacher level, the role shift is structural — meaningful override authority determines whether this is augmentation or replacement</div><div class="phrase">at the organizational level, vendor dependency is the most serious risk — mandatory adoption without competitive procurement creates lock-in</div><div class="phrase">at the national level, student data at scale is a systemic privacy risk that no current framework fully addresses</div><div class="phrase">scale transforms individual benefit into systemic risk — what helps one student is manageable; what collects data on all students is a national governance challenge</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should cryptocurrency be regulated as a financial instrument?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual retail investors — individual level</div><div class="phrase">unbanked populations — individual level</div><div class="phrase">crypto exchanges and businesses — organizational level</div><div class="phrase">traditional financial institutions — organizational level</div><div class="phrase">national monetary systems and global financial stability — national/global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">greater consumer protection; narrowed access if smaller platforms exit</div><div class="phrase">potential financial inclusion tool; risk of regulatory exclusion</div><div class="phrase">compliance costs; market consolidation around compliant large players</div><div class="phrase">competitive pressure; playing field leveling</div><div class="phrase">financial stability risk if unregulated at scale; tax revenue implications</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, retail investor protection is the strongest argument — unsophisticated investors bear disproportionate risk in unregulated markets</div><div class="phrase">at the individual level, unbanked populations face a genuine access trade-off — regulation that protects investors may exclude those who need alternative finance most</div><div class="phrase">at the organizational level, compliance costs consolidate the market — large compliant exchanges win; small innovative ones exit</div><div class="phrase">at the national level, financial stability and tax compliance arguments dominate — individual access concerns do not outweigh systemic risk at scale</div><div class="phrase">scale matters because individual financial inclusion arguments and national financial stability arguments point in different directions — the policy must resolve that tension explicitly</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should central banks adopt digital currencies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual citizens — individual level</div><div class="phrase">unbanked populations — individual level</div><div class="phrase">commercial banks — organizational level</div><div class="phrase">payment processors — organizational level</div><div class="phrase">national monetary systems and governments — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">financial surveillance concerns; convenience of digital payment</div><div class="phrase">financial inclusion without traditional banking infrastructure</div><div class="phrase">disintermediation risk if citizens hold CBDC directly</div><div class="phrase">significant disruption to existing payment infrastructure</div><div class="phrase">greater monetary policy precision; surveillance capacity increase</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the surveillance concern and the inclusion benefit are both real — they fall on different populations</div><div class="phrase">at the individual level, unbanked populations stand to gain most — CBDC provides access without the barriers of traditional banking</div><div class="phrase">at the organizational level, commercial banks face a structural threat — disintermediation is not a side effect but a central feature of direct CBDC</div><div class="phrase">at the national level, the monetary policy precision argument is strongest — but so is the government surveillance capacity argument</div><div class="phrase">scale reveals the governance challenge — individual inclusion benefit and national surveillance risk both become more visible at larger scale</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement a digital identity system for all citizens?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individual citizens — individual level</div><div class="phrase">marginalized groups without documentation — individual level</div><div class="phrase">government agencies — organizational level</div><div class="phrase">technology contractors — organizational level</div><div class="phrase">national state capacity and civil liberties frameworks — national level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">streamlined service access; surveillance and exclusion risks</div><div class="phrase">risk of being excluded from enrollment and therefore from services</div><div class="phrase">improved service delivery and fraud reduction</div><div class="phrase">significant implementation contracts</div><div class="phrase">stronger state capacity; surveillance infrastructure expansion</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, enrolled citizens gain service access while undocumented individuals face deeper exclusion — the policy has opposite effects on different populations</div><div class="phrase">at the individual level, the privacy concern is biometric — the data cannot be changed if compromised, making the risk qualitatively different from other data</div><div class="phrase">at the organizational level, government agencies gain efficiency but surveillance infrastructure is built alongside it — the two are not separable</div><div class="phrase">at the national level, the state capacity argument is strongest for service delivery; the civil liberties argument is strongest for surveillance risk</div><div class="phrase">scale matters because the surveillance infrastructure built at the national level serves purposes beyond the individual service delivery benefit that justified it</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments fund research into life extension technologies?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">individuals with terminal or age-related illness — individual level</div><div class="phrase">families — individual level</div><div class="phrase">pension and retirement systems — organizational level</div><div class="phrase">research institutions — organizational level</div><div class="phrase">global population dynamics and inequality — national/global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">potential benefit from extended healthy life</div><div class="phrase">reduced grief and caregiving burden</div><div class="phrase">structural insolvency if life expectancy increases significantly</div><div class="phrase">significant funding and research opportunities</div><div class="phrase">global inequality deepens if access is limited to wealthy nations</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the suffering reduction argument is compelling — age-related disease causes real and preventable harm</div><div class="phrase">at the family level, the benefit is relational — extended healthy years reduce caregiver burden</div><div class="phrase">at the organizational level, pension systems face structural insolvency if lifespans extend without reform — the benefit creates a simultaneous institutional crisis</div><div class="phrase">at the global level, the equity argument is strongest — if only wealthy nations access life extension, it becomes the ultimate marker of global inequality</div><div class="phrase">scale reveals the distribution problem — individual benefit is clear; global equity risk is equally clear — the two must be addressed together</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should there be a global moratorium on autonomous weapons development?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">soldiers — individual level</div><div class="phrase">civilians in conflict zones — individual level</div><div class="phrase">defense contractors — organizational level</div><div class="phrase">military institutions — organizational level</div><div class="phrase">international security system and non-signatory nations — national/global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">reduced human casualties if autonomous systems replace combatants; accountability disappears</div><div class="phrase">risk of algorithmic targeting errors without human oversight</div><div class="phrase">significant revenue at stake; opposition to moratorium likely</div><div class="phrase">doctrine and command structure disrupted by autonomous systems</div><div class="phrase">arms race dynamics if moratorium fails; precedent for AI weapons governance</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual soldier level, autonomous weapons reduce human risk — but shift accountability away from human decision-makers</div><div class="phrase">at the individual civilian level, algorithmic targeting errors create a new category of harm without clear legal recourse</div><div class="phrase">at the organizational level, defense contractor interests are directly threatened — their opposition is structural, not incidental</div><div class="phrase">at the national level, non-signatory nations gain asymmetric advantage — the moratorium only works if adoption is broad</div><div class="phrase">scale is the defining challenge — individual protection benefits at the soldier level become collective security risks at the global level if compliance is partial</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be a global ban on nuclear weapons?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-stakeholder">
+          <div class="col-header">Stakeholder</div>
+          <div class="col-body"><div class="phrase">civilian populations near nuclear sites — individual level</div><div class="phrase">citizens of nuclear states — individual level</div><div class="phrase">defense and nuclear industries — organizational level</div><div class="phrase">verification agencies — organizational level</div><div class="phrase">non-nuclear signatory nations — national level</div><div class="phrase">global security architecture — global level</div></div>
+        </div>
+        <div class="col col-impact">
+          <div class="col-header">Impact</div>
+          <div class="col-body"><div class="phrase">reduced long-term radiation and accident risk</div><div class="phrase">loss of deterrence protection if ban is uneven</div><div class="phrase">significant economic disruption from disarmament</div><div class="phrase">massive expansion of monitoring responsibilities</div><div class="phrase">asymmetric vulnerability if nuclear states do not comply</div><div class="phrase">existential risk reduction if universal; destabilization if partial</div></div>
+        </div>
+        <div class="col col-scale">
+          <div class="col-header">Scale Consideration</div>
+          <div class="col-body"><div class="phrase">at the individual level, the risk reduction benefit is real — accident and miscalculation risk decreases with fewer weapons</div><div class="phrase">at the individual level, deterrence loss is also real — citizens of nuclear states lose protection they currently have</div><div class="phrase">at the organizational level, verification is the binding constraint — the IAEA expansion required is significant</div><div class="phrase">at the national level, non-nuclear signatories face the greatest risk if nuclear states do not comply — they lose deterrence protection without gaining safety</div><div class="phrase">scale is the central challenge — the ban is beneficial at the global level only if compliance is universal; partial adoption creates asymmetric harm at the national level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Here is what each column is asking you to do:</p>
+  <div class="how-to-grid">
+    <div class="how-to-cell htc-who">
+      <strong>Stakeholder = Who</strong>
+      Name the specific group affected and the scale level they operate at. "People" and "society" are not stakeholders — name the group precisely.
+    </div>
+    <div class="how-to-cell htc-what">
+      <strong>Impact = What Happens</strong>
+      State the specific consequence for that stakeholder — what concretely changes for them as a result of the policy.
+    </div>
+    <div class="how-to-cell htc-why">
+      <strong>Scale Consideration = Why Scale Matters</strong>
+      Explain why operating at that particular level changes the argument — what is true at the individual level may be false at the national level, and vice versa.
+    </div>
+  </div>
+  <p>Pick one chunk from each column and connect them. You must engage at least two scale levels. A response that stays at one level does not demonstrate the analytical depth this frame requires.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

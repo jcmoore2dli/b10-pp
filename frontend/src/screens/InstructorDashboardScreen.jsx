@@ -452,6 +452,10 @@ Use professional instructor register. You may reference ILR levels if relevant. 
   const [expandedCoreSets, setExpandedCoreSets] = useState({})
   const [framesSectionOpen, setFramesSectionOpen] = useState(false)
   const [expandedFrameWeeks, setExpandedFrameWeeks] = useState({})
+  const [coreMaterialsOpen, setCoreMaterialsOpen] = useState(false)
+  const [framesMaterialsOpen, setFramesMaterialsOpen] = useState(false)
+  const [lfSectionOpen, setLfSectionOpen] = useState(false)
+  const [lfRefOpen, setLfRefOpen] = useState(false)
 
   const attemptedPassageIdsTop = new Set(attempts.map(a => a.passageId))
   const corePassages = assignmentHistory.filter(a => a.corpusType === 'COR')
@@ -859,6 +863,40 @@ Use professional instructor register. You may reference ILR levels if relevant. 
           </button>
           {coreSectionOpen && (
             <div className="flex flex-col gap-2 mt-3">
+              {/* CORE Reference Materials */}
+              <div className="border border-gray-100 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setCoreMaterialsOpen(o => !o)}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 text-left"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#1e3a5f', color: 'white' }}>📁</span>
+                    <span className="text-xs text-gray-600 font-medium">Reference Materials</span>
+                  </div>
+                  <span className="text-gray-400 text-xs">{coreMaterialsOpen ? '▲' : '▼'}</span>
+                </button>
+                {coreMaterialsOpen && (
+                  <div className="flex flex-col gap-1 px-3 py-2">
+                    {[
+                      { label: 'MTS 1 — Keyword Anchoring',              file: 'B10PP_MTS1_Keyword_Anchoring.html' },
+                      { label: 'MTS 2 — Chunking + Immediate Rehearsal', file: 'B10PP_MTS2_Chunking_Rehearsal.html' },
+                      { label: 'MTS 3 — Gist-First / Details-Second',    file: 'B10PP_MTS3_Gist_First.html' },
+                      { label: 'MTS 4 — Idea Skeleton',                  file: 'B10PP_MTS4_Idea_Skeleton.html' },
+                      { label: 'MTS 5 — Response Template',              file: 'B10PP_MTS5_Response_Template.html' },
+                    ].map(({ label, file }) => (
+                       <a
+                        key={file}
+                        href={`https://b10-practice-platform.web.app/b10_practice_platform/materials/CORE/${file}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-teal-700 underline py-0.5"
+                      >
+                        {label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
               {sortedCoreSets.map(setNum => {
                 const group = coreSetGroups[setNum]
                 const groupPassageIds = group.flatMap(a => a.passageIds || [])
@@ -917,6 +955,58 @@ Use professional instructor register. You may reference ILR levels if relevant. 
           </button>
           {framesSectionOpen && (
             <div className="flex flex-col gap-2 mt-3">
+              {/* Frames Reference Materials */}
+              <div className="border border-gray-100 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setFramesMaterialsOpen(o => !o)}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 text-left"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#4f46e5', color: 'white' }}>📁</span>
+                    <span className="text-xs text-gray-600 font-medium">Reference Materials</span>
+                  </div>
+                  <span className="text-gray-400 text-xs">{framesMaterialsOpen ? '▲' : '▼'}</span>
+                </button>
+                {framesMaterialsOpen && (
+                  <div className="flex flex-col gap-1 px-3 py-2">
+                    {['W1','W2','W3','W4','W5','W6'].map(w => {
+                      const wLabel = { W1:'Scale & Stakeholder', W2:'Trade-offs & Constraints', W3:'Causal Systems', W4:'Hypothetical & Conditional', W5:'Values, Heuristics & Bias', W6:'Synthesis & Judgment' }[w]
+                      const base = `https://b10-practice-platform.web.app/b10_practice_platform/materials/${w}`
+                      const links = [
+                        { label: `${w} — Scale & Stakeholder Phrases`,       file: `B10PP_${w}_Scale_Stakeholder_Phrases.html` },
+                        { label: `${w} — Trade-offs & Constraints Phrases`,   file: `B10PP_${w}_Tradeoffs_Constraints_Phrases.html` },
+                        { label: `${w} — Causal Systems Phrases`,             file: `B10PP_${w}_Causal_Systems_Phrases.html` },
+                        { label: `${w} — Hypothetical & Conditional Phrases`, file: `B10PP_${w}_Hypothetical_Conditional_Phrases.html` },
+                        { label: `${w} — Values, Heuristics & Bias Phrases`,  file: `B10PP_${w}_Values_Heuristics_Bias_Phrases.html` },
+                        { label: `${w} — Synthesis & Judgment Phrases`,       file: `B10PP_${w}_Synthesis_Judgment_Phrases.html` },
+                        { label: 'Grammar Stems — All Weeks',                 file: `B10PP_Grammar_Stems_All_Weeks.html` },
+                        { label: 'Frames Argument Builder',                   file: `B10PP_Frames_Argument_Builder.html` },
+                      ]
+                      return (
+                        <div key={w} className="rounded border border-gray-100 overflow-hidden mt-1">
+                          <div className="flex items-center gap-2 px-2 py-1.5 bg-gray-50">
+                            <span className="text-xs font-bold px-1.5 py-0.5 rounded-full text-white" style={{ backgroundColor: '#4f46e5' }}>{w}</span>
+                            <span className="text-xs text-gray-600">{wLabel}</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5 px-3 py-1.5">
+                            {links.map(({ label, file }) => (
+                                <a
+                                key={file}
+                                href={`${base}/${file}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-teal-700 underline py-0.5"
+                              >
+                                {label}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
               {sortedFrameWeeks.map(week => {
                 const group = frameWeekGroups[week]
                 const groupPassageIds = group.flatMap(a => a.passageIds || [])
@@ -962,6 +1052,73 @@ Use professional instructor register. You may reference ILR levels if relevant. 
         </div>
       )}
 
+      {/* Linguistic Flexibility */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <button
+          onClick={() => setLfSectionOpen(o => !o)}
+          className="w-full flex items-center justify-between"
+        >
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+            Linguistic Flexibility
+          </p>
+          <span className="text-gray-400 text-xs">{lfSectionOpen ? '▲' : '▼'}</span>
+        </button>
+        {lfSectionOpen && (
+          <div className="flex flex-col gap-2 mt-3">
+            {/* LF Reference Materials */}
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setLfRefOpen(o => !o)}
+                className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: '#4f46e5', color: 'white' }}>📁</span>
+                  <span className="text-xs text-gray-600 font-medium">Reference Materials</span>
+                </div>
+                <span className="text-gray-400 text-xs">{lfRefOpen ? '▲' : '▼'}</span>
+              </button>
+              {lfRefOpen && (
+                <div className="flex flex-col gap-1 px-3 py-2">
+                  {[
+                    { label: 'Frames Argument Builder',           file: 'B10PP_Frames_Argument_Builder.html' },
+                    { label: 'Word Form Flexibility Phrases',      file: 'B10PP_LF_Word_Form_Flexibility_Phrases.html' },
+                    { label: 'Structural Variation Phrases',       file: 'B10PP_LF_Structural_Variation_Phrases.html' },
+                    { label: 'Sentence Combining Phrases',         file: 'B10PP_LF_Sentence_Combining_Phrases.html' },
+                    { label: 'Perspective Integration Phrases',    file: 'B10PP_LF_Perspective_Integration_Phrases.html' },
+                    { label: 'Grammar Stems — All Weeks',          file: 'B10PP_Grammar_Stems_All_Weeks.html' },
+                  ].map(({ label, file }) => (
+                     <a
+                      key={file}
+                      href={`https://b10-practice-platform.web.app/b10_practice_platform/materials/LF/${file}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-teal-700 underline py-0.5"
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* LF Subcategory folders */}
+            {[
+              { id: 'WFF', label: 'Word Form Flexibility' },
+              { id: 'SV',  label: 'Structural Variation' },
+              { id: 'SC',  label: 'Sentence Combining' },
+              { id: 'PI',  label: 'Perspective Integration' },
+            ].map(({ id, label }) => (
+              <div key={id} className="border border-gray-100 rounded-lg overflow-hidden">
+                <div className="w-full flex items-center justify-between px-3 py-2 bg-gray-50">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ backgroundColor: '#d97706' }}>{id}</span>
+                    <span className="text-xs text-gray-600 font-medium">{label}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       {/* Assignment history */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">

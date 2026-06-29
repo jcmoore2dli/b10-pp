@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6 — Hypothetical &amp; Conditional · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-condition { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-projected { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-extended  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-condition .legend-label { color: #16a34a; }
+  .leg-projected .legend-label { color: #d97706; }
+  .leg-extended  .legend-label { color: #7c3aed; }
+  .leg-condition .legend-desc { color: #16a34a; }
+  .leg-projected .legend-desc { color: #d97706; }
+  .leg-extended  .legend-desc { color: #7c3aed; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-condition .col-header { background: #16a34a; }
+  .col-projected .col-header { background: #d97706; }
+  .col-extended  .col-header { background: #7c3aed; }
+  .col-condition { border: 1.5px solid #16a34a; }
+  .col-projected { border: 1.5px solid #d97706; }
+  .col-extended  { border: 1.5px solid #7c3aed; }
+  .col-condition .col-body { background: #f0fdf4; }
+  .col-projected .col-body { background: #fffbeb; }
+  .col-extended  .col-body { background: #f5f3ff; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W6 — Hypothetical &amp; Conditional · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Project scenarios and trace what follows. The core move is the conditional: <em>if X under condition Y, then Z would likely follow — and if Z holds, then...</em> The Extended Scenario column is where ILR 2+/3 responses go further, chaining consequences and testing second-order assumptions.
+</div>
+<div class="legend">
+  <div class="legend-item leg-condition"><span class="legend-label">Condition</span><span class="legend-desc">The specific circumstance that must hold</span></div>
+  <div class="legend-item leg-projected"><span class="legend-label">Projected Outcome</span><span class="legend-desc">What would likely result if the condition holds</span></div>
+  <div class="legend-item leg-extended"><span class="legend-label">Extended Scenario</span><span class="legend-desc">What follows from the outcome — second-order consequences</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> if… were implemented… · were… to… then… · should… fail to… · in a scenario where… · assuming… the effect would be… · if that outcome holds, then… · this in turn would lead to… · the second-order consequence would be… · provided that… · on the condition that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should vocational education be prioritized over academic preparation?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if prioritization means increased funding and prestige, not elimination of academic pathways</div><div class="phrase">if employer co-investment in vocational programs is mandated alongside public funding</div><div class="phrase">if students retain the right to transfer between vocational and academic tracks</div><div class="phrase">if vocational credentials are made stackable toward higher education qualifications</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">skilled trades pipeline expands to meet documented workforce shortages</div><div class="phrase">academic pathways remain viable but receive proportionally less public investment</div><div class="phrase">employer co-investment aligns vocational training with actual labor market demand</div><div class="phrase">stackable credentials reduce the penalty of choosing vocational over academic track</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if transfer rights are robust, students can correct initial track choices without penalty</div><div class="phrase">if employer co-investment shapes curriculum, training becomes too narrowly job-specific</div><div class="phrase">if academic funding decreases, research and innovation capacity declines over time</div><div class="phrase">if credentials are stackable, the false dichotomy between vocational and academic is structurally resolved</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the electoral college be abolished?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if a constitutional amendment achieves the required supermajority threshold</div><div class="phrase">if the National Popular Vote Interstate Compact reaches the 270 electoral vote threshold</div><div class="phrase">if ranked choice voting is adopted alongside popular vote to address third-party dynamics</div><div class="phrase">if small state concerns are addressed through Senate representation rather than electoral college</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">presidential outcomes align consistently with popular vote majority</div><div class="phrase">campaign strategy shifts toward high-population urban centers</div><div class="phrase">third-party viability increases without winner-take-all state dynamics</div><div class="phrase">small state political attention decreases in presidential campaigns</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if urban concentration of campaign attention increases, rural policy interests are further marginalized</div><div class="phrase">if third parties gain viability, coalition government dynamics emerge in the executive branch</div><div class="phrase">if amendment threshold is insurmountable, NPVIC becomes the practical reform path</div><div class="phrase">if small state concerns are not addressed, the constitutional amendment fails at ratification</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should judges be elected or appointed?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if appointed judges face retention elections after an initial term</div><div class="phrase">if nominating commissions are composed of legal professionals rather than political appointees</div><div class="phrase">if campaign finance in judicial elections is strictly limited</div><div class="phrase">if judicial terms are long enough to insulate from short-term political pressure</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">retention elections preserve some accountability while insulating initial appointment from politics</div><div class="phrase">nominating commissions reduce but do not eliminate political influence on selection</div><div class="phrase">campaign finance limits reduce donor influence but are subject to First Amendment challenge</div><div class="phrase">long terms allow judicial philosophy to develop independently of appointing authority</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if retention elections are competitive, they reintroduce political pressure on sitting judges</div><div class="phrase">if commission composition is itself politically determined, independence is illusory</div><div class="phrase">if campaign finance limits are struck down, judicial elections become highly donor-dependent</div><div class="phrase">if terms are too long, accountability for judicial performance is eliminated rather than reduced</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should education systems prioritize critical thinking over content knowledge?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if critical thinking is developed through deep engagement with content rather than in the abstract</div><div class="phrase">if assessment reform accompanies curriculum reform</div><div class="phrase">if teacher professional development precedes implementation</div><div class="phrase">if the framing shifts from priority to integration rather than replacement</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">students develop stronger analytical capacity grounded in domain knowledge</div><div class="phrase">assessment systems lag curriculum change and create misalignment</div><div class="phrase">teacher capacity for inquiry-based instruction varies significantly without development</div><div class="phrase">integration framing resolves the false dichotomy without sacrificing either dimension</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if assessment reform follows curriculum, alignment improves and the transition is sustainable</div><div class="phrase">if teacher development is inadequate, implementation is inconsistent and reform goals are not met</div><div class="phrase">if integration is genuine, both critical thinking and content knowledge improve</div><div class="phrase">if assessment does not change, schools revert to content-focused teaching regardless of curriculum mandate</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should there be stricter regulations on the use of cultural appropriation in art?</span>
+      </div>
+      <span class="q-tag">CUL</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulations distinguish between commercial exploitation and artistic borrowing</div><div class="phrase">if source communities are given standing to define what constitutes appropriation</div><div class="phrase">if licensing frameworks provide economic benefit to source communities rather than prohibition</div><div class="phrase">if regulations apply to commercial rather than non-commercial artistic contexts</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">source communities gain economic benefit from their cultural production</div><div class="phrase">commercial exploitation of cultural elements without consent becomes legally actionable</div><div class="phrase">non-commercial artistic exchange continues without legal risk</div><div class="phrase">source community standing creates self-determination rather than external gatekeeping</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if licensing is well-designed, cross-cultural collaboration increases with appropriate attribution</div><div class="phrase">if standing is vested in source communities, internal community disputes about authenticity emerge</div><div class="phrase">if commercial boundary is clear, the chilling effect on non-commercial art is avoided</div><div class="phrase">if regulations are too broad, international artistic exchange is significantly constrained</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments provide universal healthcare as an economic right?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if the system includes robust cost control mechanisms from the outset</div><div class="phrase">if private supplemental insurance is permitted alongside the universal system</div><div class="phrase">if pharmaceutical pricing is negotiated at the national level</div><div class="phrase">if the transition from the existing system is phased to prevent coverage disruption</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">uninsured and underinsured populations gain access to care</div><div class="phrase">administrative costs decrease with consolidation to a single payer</div><div class="phrase">pharmaceutical industry revenue decreases with national price negotiation</div><div class="phrase">transition disruption is minimized with phased implementation</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if cost control is effective, the system is fiscally sustainable over the long term</div><div class="phrase">if pharmaceutical revenue decreases significantly, research and development investment follows</div><div class="phrase">if transition is well-managed, public trust in the new system builds during implementation</div><div class="phrase">if private supplemental insurance is permitted, two-tier care quality re-emerges over time</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should tech companies be required to make their algorithms transparent?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if transparency is required only for high-risk algorithmic decisions</div><div class="phrase">if third-party auditors rather than public disclosure fulfill the transparency requirement</div><div class="phrase">if trade secret protection is preserved for proprietary elements not related to decision logic</div><div class="phrase">if affected individuals receive personalized explanations rather than full algorithmic disclosure</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">accountability for high-risk algorithmic decisions increases without exposing proprietary systems</div><div class="phrase">third-party auditors develop expertise to evaluate systems that regulators cannot</div><div class="phrase">trade secret protection reduces industry resistance to transparency requirements</div><div class="phrase">personalized explanations give individuals meaningful recourse without public disclosure</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if auditors are captured by the industry they audit, accountability is nominal</div><div class="phrase">if trade secret protection is too broad, meaningful transparency is avoided through classification</div><div class="phrase">if personalized explanations are well-designed, individuals can challenge incorrect algorithmic decisions</div><div class="phrase">if high-risk classification is too narrow, the most consequential systems remain unaccountable</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement a carbon border tax on imports?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if the tax is calculated on verified embodied carbon rather than country-of-origin proxies</div><div class="phrase">if developing nations are given a grace period and capacity support for transition</div><div class="phrase">if revenue is dedicated to climate finance for vulnerable nations</div><div class="phrase">if WTO compatibility is secured through negotiated agreement rather than unilateral imposition</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">carbon leakage from domestic industry is significantly reduced</div><div class="phrase">developing nation exporters face market access barriers during transition</div><div class="phrase">climate finance revenue supports the nations most affected by climate change</div><div class="phrase">WTO-compatible design reduces trade retaliation risk</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if carbon leakage is reduced, domestic carbon pricing achieves its intended emissions reduction</div><div class="phrase">if developing nations face barriers without support, climate equity concerns undermine political sustainability</div><div class="phrase">if revenue is dedicated to climate finance, the measure gains international legitimacy</div><div class="phrase">if WTO compatibility is not secured, retaliatory tariffs create trade war risk that undermines the policy</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with conditional language.</p>
+  <div class="example">"If CBDC is designed with strong privacy protections, the projected outcome is that financial inclusion improves — but if surveillance capacity grows alongside it, the extended scenario is that authoritarian misuse becomes structurally available, regardless of original intent."</div>
+  <p>Three chunks. Three connectors. A complete hypothetical argument with a second-order consequence. <strong>The Extended Scenario column is what separates an ILR 2+ response from an ILR 3 one</strong> — don't stop at the projected outcome.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

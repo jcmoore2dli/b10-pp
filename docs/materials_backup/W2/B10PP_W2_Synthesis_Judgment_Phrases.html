@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W2 — Synthesis &amp; Judgment · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-tensions   { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-priorities { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-judgment   { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-tensions   .legend-label { color: #dc2626; }
+  .leg-priorities .legend-label { color: #d97706; }
+  .leg-judgment   .legend-label { color: #1e3a5f; }
+  .leg-tensions   .legend-desc { color: #dc2626; }
+  .leg-priorities .legend-desc { color: #d97706; }
+  .leg-judgment   .legend-desc { color: #1e3a5f; }
+  .connectors { margin: 8px 12px 12px; background: #f0f4f8; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #1e3a5f; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #1e3a5f; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #1e3a5f; background: #f0f4f8; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-tensions   .col-header { background: #dc2626; }
+  .col-priorities .col-header { background: #d97706; }
+  .col-judgment   .col-header { background: #1e3a5f; }
+  .col-tensions   { border: 1.5px solid #dc2626; }
+  .col-priorities { border: 1.5px solid #d97706; }
+  .col-judgment   { border: 1.5px solid #1e3a5f; }
+  .col-tensions   .col-body { background: #fef2f2; }
+  .col-priorities .col-body { background: #fffbeb; }
+  .col-judgment   .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W2 — Synthesis &amp; Judgment · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Bring competing considerations together and arrive at a reasoned, defensible conclusion. Phrases in each column are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.
+</div>
+<div class="legend">
+  <div class="legend-item leg-tensions"><span class="legend-label">Tensions</span><span class="legend-desc">The competing claims that must be addressed</span></div>
+  <div class="legend-item leg-priorities"><span class="legend-label">Priorities</span><span class="legend-desc">Which consideration wins and why</span></div>
+  <div class="legend-item leg-judgment"><span class="legend-label">Judgment</span><span class="legend-desc">The defensible conclusion that follows</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> while both positions have merit… · the stronger case rests on… · although X is a legitimate concern… · on balance… · weighing X against Y… · the evidence suggests… · neither position is without weakness, but… · a defensible position acknowledges… while concluding that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should higher education be made tuition-free at public universities?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">access and equity benefit vs. fiscal cost and credential inflation risk</div><div class="phrase">government funding replaces tuition vs. quality maintenance without tuition revenue</div><div class="phrase">benefit to all income groups vs. disproportionate benefit to those already likely to attend</div><div class="phrase">long-term workforce and economic benefit vs. short-term fiscal burden</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">access benefit is real but not universal — targeting matters, and free tuition is an untargeted subsidy</div><div class="phrase">quality maintenance is a design challenge, not an inherent obstacle — ring-fenced funding addresses it</div><div class="phrase">disproportionate benefit to higher-income groups is the strongest objection — income-contingent loans may be more targeted</div><div class="phrase">long-term benefit is documented in comparable systems; short-term cost is a political challenge, not an economic objection</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, free tuition is defensible but not obviously superior to well-designed income-contingent loans — the access argument depends on targeting quality</div><div class="phrase">the stronger case acknowledges credential inflation risk while noting it is addressable through employer engagement and alternative credential development</div><div class="phrase">the defensible position on distributional concern is to combine free tuition with strong need-based support for living costs — tuition is not the only barrier</div><div class="phrase">the judgment on long-term benefit favors free tuition in systems where loan burden has demonstrably suppressed access — the evidence is context-dependent</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should gig economy workers receive the same benefits as full-time employees?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">worker protection vs. flexibility that workers value</div><div class="phrase">platform cost absorption vs. market exit risk</div><div class="phrase">legal reclassification vs. new intermediate employment category</div><div class="phrase">immediate protection benefit vs. long-term gig work availability</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">flexibility argument is strongest for high-income contractors; it does not apply to low-income gig workers who have no real choice</div><div class="phrase">platform cost absorption is feasible for large platforms; market exit risk is real but concentrated among smaller operators</div><div class="phrase">new intermediate category is the most technically elegant solution but the most politically difficult to design and legislate</div><div class="phrase">immediate protection benefit is strongest for lowest-income workers; long-term availability concern is real but overstated by platforms</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, reclassification with income threshold is defensible — protecting the most vulnerable workers without eliminating flexibility for those who genuinely choose it</div><div class="phrase">the stronger case distinguishes between high-income contractors who choose gig work and low-income workers who have no alternative — the policy should track that distinction</div><div class="phrase">the defensible position on new intermediate category is that it is worth pursuing as a long-term goal while reclassification addresses immediate harm</div><div class="phrase">the judgment on long-term availability is that worker protection and gig work can coexist — platforms that exit are those whose business models depend on labor cost externalization</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should governments implement universal basic income?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">guaranteed income floor vs. work disincentive risk</div><div class="phrase">simplification of welfare system vs. elimination of targeted support for high-need groups</div><div class="phrase">automation buffer vs. fiscal cost at meaningful scale</div><div class="phrase">entrepreneurial freedom benefit vs. inflationary risk if money-creation funded</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">work disincentive risk is real at the margin but smaller than critics claim — evidence from pilots shows modest labor supply effects</div><div class="phrase">simplification benefit is genuine but replacement of targeted programs is the wrong design — supplement, don't replace</div><div class="phrase">automation buffer argument is forward-looking and speculative; fiscal cost is immediate and certain — the timing asymmetry matters</div><div class="phrase">entrepreneurial freedom benefit is real and undervalued in policy debate; inflationary risk is a design question, not an inherent feature</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a subsistence-level UBI that supplements rather than replaces targeted programs is defensible — the floor argument is strong and the work disincentive risk is manageable</div><div class="phrase">the stronger case frames UBI as an automation buffer and entrepreneurial enabler, not a welfare replacement — it reframes the political coalition</div><div class="phrase">the defensible position on fiscal cost is phased implementation with evidence review — the uncertainty about automation timing justifies caution about scale</div><div class="phrase">the judgment on inflation risk is that tax-funded UBI avoids it — the design question is not whether UBI causes inflation but how it is financed</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should social media companies be required to remove political misinformation?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">democratic harm of misinformation vs. censorship risk of government-mandated removal</div><div class="phrase">platform accountability vs. platform as private entity with right to set own policies</div><div class="phrase">scale of misinformation harm vs. scale of over-removal harm</div><div class="phrase">uniform enforcement vs. political bias in enforcement</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">democratic harm is real and documented; censorship risk is real but addressable through independent oversight rather than government direct mandate</div><div class="phrase">platform accountability argument is strongest for demonstrably false factual claims; it weakens significantly for contested political opinions</div><div class="phrase">scale comparison favors addressing misinformation — but over-removal of legitimate speech is a cost that must be explicitly weighted in design</div><div class="phrase">political bias in enforcement is the strongest objection — independent oversight with diverse composition addresses it better than government mandate</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, independent oversight with binding standards is more defensible than direct government mandate — it addresses the censorship risk while maintaining accountability</div><div class="phrase">the stronger case limits removal obligation to demonstrably false factual claims and excludes contested political opinion — scope is the critical design variable</div><div class="phrase">the defensible position on over-removal is that appeals processes and transparency reports reduce the harm — imperfect enforcement of a narrow standard beats no standard</div><div class="phrase">the judgment on political bias is that independent oversight is necessary but not sufficient — composition, transparency, and appeal rights determine whether independence is real</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should alternative medicine be covered by public health insurance?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">patient autonomy and cultural relevance vs. evidence-based resource allocation</div><div class="phrase">access expansion vs. displacement of conventional care investment</div><div class="phrase">coverage of some alternatives vs. blanket coverage regardless of evidence</div><div class="phrase">patient satisfaction benefit vs. delayed diagnosis risk</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">patient autonomy is a genuine value; it does not require public subsidy — the autonomy argument supports the right to choose, not the obligation to fund</div><div class="phrase">displacement risk is real if coverage is unlimited; it is manageable if coverage is tiered by evidence level</div><div class="phrase">tiered coverage based on evidence level is the most defensible design — it honors patient choice without abandoning evidence standards</div><div class="phrase">patient satisfaction benefit is real and improves adherence; delayed diagnosis risk is real and addressable through disclosure requirements</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, limited evidence-tiered coverage is defensible — blanket coverage is not; the design determines whether the policy is defensible</div><div class="phrase">the stronger case for coverage is made on adherence and cultural relevance grounds, not on efficacy equivalence — the argument is strongest when evidence is clearest</div><div class="phrase">the defensible position is narrow, well-defined coverage with disclosure requirements — broad coverage without evidence threshold is indefensible</div><div class="phrase">the judgment on delayed diagnosis risk is that disclosure requirements and practitioner licensing address it — coverage without those safeguards is not defensible</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the development of artificial intelligence?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">harm prevention vs. innovation cost</div><div class="phrase">domestic regulation vs. competitive disadvantage without international coordination</div><div class="phrase">prescriptive rules vs. principles-based oversight</div><div class="phrase">current harm prevention vs. future risk governance</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">harm prevention argument is strongest for high-risk AI systems with demonstrated harm potential; innovation cost concern is strongest for low-risk systems — risk-tiering addresses both</div><div class="phrase">competitive disadvantage is real without coordination; coordination is achievable through bilateral and multilateral agreements — it is a political challenge, not an inherent obstacle</div><div class="phrase">principles-based oversight is more durable than prescriptive rules in a fast-moving technology environment — it allows adaptation without legislative revision</div><div class="phrase">current harm is addressable now; future risk governance requires regulatory architecture that can adapt — both are necessary and compatible</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, risk-tiered principles-based regulation with international coordination is defensible — it addresses the innovation cost concern while maintaining the harm prevention imperative</div><div class="phrase">the stronger case leads with documented current harms — algorithmic discrimination, deepfakes, autonomous weapons — rather than speculative future risk</div><div class="phrase">the defensible position on international coordination is to build it through bilateral agreements while maintaining domestic standards — waiting for global consensus means waiting indefinitely</div><div class="phrase">the judgment on prescriptive vs. principles-based is that principles-based with mandatory outcomes is the most durable approach — how is flexible, what is not</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments ban the development of new fossil fuel infrastructure?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">climate imperative vs. energy security during transition</div><div class="phrase">carbon lock-in prevention vs. stranded asset cost to investors and workers</div><div class="phrase">domestic ban vs. carbon leakage to unregulated markets</div><div class="phrase">just transition obligation vs. political feasibility in fossil fuel-dependent regions</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">climate imperative is strongest — carbon lock-in from new infrastructure makes 1.5C targets structurally unachievable, energy security is a transition management challenge, not a permanent objection</div><div class="phrase">stranded asset cost is real and concentrated — just transition support addresses the human cost; investor stranded assets are a foreseeable risk in a carbon-constrained economy</div><div class="phrase">carbon leakage is the strongest technical objection — it is addressable through border carbon adjustment but not through domestic ban alone</div><div class="phrase">just transition obligation is non-negotiable and political feasibility follows from it — bans without transition support are politically self-defeating</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, a ban with robust just transition support and border carbon adjustment is defensible — the climate imperative is the strongest argument and the transition concerns are addressable</div><div class="phrase">the stronger case leads with the carbon lock-in argument — new infrastructure built today operates for 30-50 years, making it structurally incompatible with climate commitments</div><div class="phrase">the defensible position on leakage is that border adjustment is necessary alongside the ban — a ban without border protection is environmentally incomplete</div><div class="phrase">the judgment on political feasibility is that just transition support is the necessary condition — without it, the ban is correct in principle and undeliverable in practice</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should governments implement stricter gun control measures?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-tensions">
+          <div class="col-header">Tensions</div>
+          <div class="col-body"><div class="phrase">public safety benefit vs. constitutional right restriction</div><div class="phrase">legal firearm access reduction vs. illegal firearm market expansion</div><div class="phrase">mass casualty event lethality reduction vs. limited effect on overall gun homicide rate</div><div class="phrase">urban safety benefit vs. rural compliance burden</div></div>
+        </div>
+        <div class="col col-priorities">
+          <div class="col-header">Priorities</div>
+          <div class="col-body"><div class="phrase">public safety benefit is documented for specific measures — high-capacity magazine restrictions and background check expansion have clearest evidence; blanket arguments are weaker</div><div class="phrase">illegal market expansion is real but does not outweigh legal access reduction — the marginal deterrent effect of legal availability matters even if illegal markets persist</div><div class="phrase">mass casualty lethality reduction is the strongest evidence-based argument for specific restrictions; overall homicide rate reduction requires addressing social determinants</div><div class="phrase">rural compliance burden is real and legitimate — measure design should account for context differences rather than applying uniform urban-designed rules</div></div>
+        </div>
+        <div class="col col-judgment">
+          <div class="col-header">Judgment</div>
+          <div class="col-body"><div class="phrase">on balance, targeted measures with clearest evidence — background checks, high-capacity restrictions — are defensible; blanket measures without evidence base are not</div><div class="phrase">the stronger case leads with mass casualty lethality reduction — it has the clearest evidence and the strongest moral claim</div><div class="phrase">the defensible position on illegal markets is that reducing legal supply still matters at the margin — the argument that illegal markets negate legal restrictions proves too much</div><div class="phrase">the judgment on rural burden is that context-sensitive design is achievable and necessary — rural exemptions for specific categories are defensible within a broader framework</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Phrases are aligned — T1 pairs with P1 pairs with J1. Pick one number across all three columns to build a complete argument chain.</p>
+  <div class="example">"While both the democratic legitimacy and federalism arguments have merit, the stronger case rests on legitimacy — small state protection already exists through Senate representation. On balance, a system that has produced three popular vote losers as president has a legitimacy deficit that federalism concerns cannot offset."</div>
+  <p>Three chunks, one number, one complete argument. <strong>The Priorities column is where ILR 3 performance lives</strong> — not identifying the tension, but explaining why one side carries more weight than the other.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

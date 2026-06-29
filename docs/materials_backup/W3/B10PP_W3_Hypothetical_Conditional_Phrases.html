@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 — Hypothetical &amp; Conditional · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #16a34a; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-condition { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-projected { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-extended  { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-condition .legend-label { color: #16a34a; }
+  .leg-projected .legend-label { color: #d97706; }
+  .leg-extended  .legend-label { color: #7c3aed; }
+  .leg-condition .legend-desc { color: #16a34a; }
+  .leg-projected .legend-desc { color: #d97706; }
+  .leg-extended  .legend-desc { color: #7c3aed; }
+  .connectors { margin: 8px 12px 12px; background: #f0fdf4; border: 1px solid #16a34a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #16a34a; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #16a34a; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #16a34a; background: #f0fdf4; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-condition .col-header { background: #16a34a; }
+  .col-projected .col-header { background: #d97706; }
+  .col-extended  .col-header { background: #7c3aed; }
+  .col-condition { border: 1.5px solid #16a34a; }
+  .col-projected { border: 1.5px solid #d97706; }
+  .col-extended  { border: 1.5px solid #7c3aed; }
+  .col-condition .col-body { background: #f0fdf4; }
+  .col-projected .col-body { background: #fffbeb; }
+  .col-extended  .col-body { background: #f5f3ff; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W3 — Hypothetical &amp; Conditional · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Project scenarios and trace what follows. The core move is the conditional: <em>if X under condition Y, then Z would likely follow — and if Z holds, then...</em> The Extended Scenario column is where ILR 2+/3 responses go further, chaining consequences and testing second-order assumptions.
+</div>
+<div class="legend">
+  <div class="legend-item leg-condition"><span class="legend-label">Condition</span><span class="legend-desc">The specific circumstance that must hold</span></div>
+  <div class="legend-item leg-projected"><span class="legend-label">Projected Outcome</span><span class="legend-desc">What would likely result if the condition holds</span></div>
+  <div class="legend-item leg-extended"><span class="legend-label">Extended Scenario</span><span class="legend-desc">What follows from the outcome — second-order consequences</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> if… were implemented… · were… to… then… · should… fail to… · in a scenario where… · assuming… the effect would be… · if that outcome holds, then… · this in turn would lead to… · the second-order consequence would be… · provided that… · on the condition that…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should schools integrate media literacy education into their curricula?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if media literacy is embedded across subjects rather than siloed as a standalone course</div><div class="phrase">if teacher training precedes curriculum rollout</div><div class="phrase">if content is updated regularly to reflect the evolving media environment</div><div class="phrase">if assessment of media literacy skills is included in student evaluation</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">students develop transferable critical evaluation skills across domains</div><div class="phrase">teacher capacity to deliver media literacy varies significantly without training</div><div class="phrase">assessment inclusion incentivizes genuine skill development rather than surface coverage</div><div class="phrase">outdated content teaches skills irrelevant to current media landscape</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if skills transfer across domains, civic and consumer decision-making improves</div><div class="phrase">if teacher training is inadequate, curriculum mandate produces superficial compliance</div><div class="phrase">if assessment drives learning, students develop evaluable skills but may game metrics</div><div class="phrase">if content lags the media environment, students are prepared for yesterday's misinformation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should the gig economy be more strictly regulated?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulation distinguishes between high-income independent contractors and low-income gig workers</div><div class="phrase">if platforms are given 24 months to restructure before full enforcement</div><div class="phrase">if enforcement is cross-jurisdictional to prevent relocation arbitrage</div><div class="phrase">if small platforms receive proportional compliance accommodation</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">low-income gig workers gain benefit access while high-income contractors retain flexibility</div><div class="phrase">platforms restructure pricing and workforce models during transition period</div><div class="phrase">cross-jurisdictional enforcement prevents platforms from exiting regulated markets</div><div class="phrase">small platform accommodation reduces market consolidation risk</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if transition period is used to automate rather than restructure, worker displacement follows</div><div class="phrase">if cross-jurisdictional enforcement succeeds, a de facto global labor standard emerges</div><div class="phrase">if small platform accommodation is too broad, large platforms claim exemption through restructuring</div><div class="phrase">if distinction between worker types is clear, regulation protects the most vulnerable without restricting independent work</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should there be stronger antitrust laws to break up monopolies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if breakup orders are limited to cases of demonstrated consumer harm</div><div class="phrase">if international coordination prevents broken-up firms from reconsolidating offshore</div><div class="phrase">if structural remedies are preferred over behavioral ones</div><div class="phrase">if small business impact is assessed before divestiture orders are issued</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">consumer prices decrease in markets where competition increases post-breakup</div><div class="phrase">reconsolidation offshore reduces domestic benefit if international coordination fails</div><div class="phrase">structural remedies create durable competition; behavioral remedies are easily gamed</div><div class="phrase">small business supply chains face disruption during large firm restructuring</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if competition increases, innovation accelerates as challengers enter the market</div><div class="phrase">if offshore reconsolidation occurs, domestic antitrust produces no lasting competitive benefit</div><div class="phrase">if behavioral remedies are used instead, firms comply minimally and market power persists</div><div class="phrase">if small business disruption is severe, political coalition against antitrust action forms</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should governments implement stricter regulations on lobbying?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulations apply equally to corporate and non-profit lobbyists</div><div class="phrase">if cooling-off periods are extended to five years rather than one or two</div><div class="phrase">if enforcement is handled by an independent body rather than the legislature itself</div><div class="phrase">if digital lobbying and social media influence campaigns are included in scope</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">revolving door between government and industry slows significantly</div><div class="phrase">non-profit and civil society lobbying is constrained alongside corporate lobbying</div><div class="phrase">independent enforcement reduces self-serving exemptions</div><div class="phrase">digital influence campaigns become subject to the same disclosure requirements as direct lobbying</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if civil society is constrained equally, public interest advocacy loses influence it depends on</div><div class="phrase">if digital campaigns are included, enforcement complexity increases significantly</div><div class="phrase">if independent enforcement is well-funded, compliance improves and regulatory capture decreases</div><div class="phrase">if cooling-off periods are long, government struggles to attract talent from industry where expertise resides</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement sugar taxes on processed foods?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if revenue is hypothecated to nutrition education and healthy food subsidies</div><div class="phrase">if the tax rate is set high enough to produce meaningful behavior change</div><div class="phrase">if healthy food alternatives are made cheaper simultaneously</div><div class="phrase">if low-income households receive targeted rebates to offset the regressive burden</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">consumer demand for high-sugar products decreases among price-sensitive groups</div><div class="phrase">manufacturers accelerate reformulation to reduce sugar content in affected products</div><div class="phrase">low-income households bear disproportionate burden without rebate mechanism</div><div class="phrase">tax revenue generates funds for complementary public health investment</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if healthy alternatives are not cheaper, consumers substitute within the same unhealthy category</div><div class="phrase">if reformulation is widespread, the tax achieves its health goal without sustained revenue</div><div class="phrase">if rebates are well-designed, the regressive burden is offset and political support is maintained</div><div class="phrase">if revenue is hypothecated, public health investment compounds the behavior change effect</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the use of social media algorithms?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulation targets demonstrable harms rather than content categories</div><div class="phrase">if third-party audits are required before algorithm deployment at scale</div><div class="phrase">if users are given meaningful algorithmic choice rather than opt-out-only mechanisms</div><div class="phrase">if regulation is coordinated internationally to prevent jurisdiction shopping</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">platforms redesign algorithms to avoid demonstrable harm rather than optimize engagement at all costs</div><div class="phrase">pre-deployment audits slow rollout but improve safety of high-reach systems</div><div class="phrase">user choice creates diversity of information environments rather than a single regulated norm</div><div class="phrase">international coordination prevents regulatory arbitrage to less regulated markets</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if harm-based regulation is too narrow, engagement-driven radicalization continues in the gaps</div><div class="phrase">if audits are gamed, compliance is cosmetic and harms persist under different labels</div><div class="phrase">if user choice is genuine, echo chambers may deepen as users select confirming content</div><div class="phrase">if coordination succeeds, a de facto global content governance standard emerges</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should governments implement a carbon tax on all fossil fuel usage?</span>
+      </div>
+      <span class="q-tag">ENV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if the tax rate is set at the true social cost of carbon</div><div class="phrase">if revenue is returned to households through a carbon dividend</div><div class="phrase">if a border carbon adjustment prevents carbon leakage</div><div class="phrase">if the rate escalates predictably over time to enable long-term investment planning</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">energy prices rise proportionally to carbon content across all fuel types</div><div class="phrase">carbon dividend offsets regressive burden and builds political support</div><div class="phrase">border adjustment prevents domestic industry from competing against untaxed imports</div><div class="phrase">predictable escalation enables long-term investment in low-carbon alternatives</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if dividend is well-designed, lower-income households are net financial beneficiaries</div><div class="phrase">if border adjustment faces WTO challenge, trade friction offsets climate benefit</div><div class="phrase">if escalation is credible, private investment in clean energy accelerates significantly</div><div class="phrase">if rate is set too low, behavior change is insufficient and climate targets are missed</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on deep-sea fishing?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-condition">
+          <div class="col-header">Condition</div>
+          <div class="col-body"><div class="phrase">if regulations are binding under UNCLOS with enforcement authority</div><div class="phrase">if artisanal and subsistence fishing is exempted from commercial fleet restrictions</div><div class="phrase">if monitoring technology is deployed on all commercial vessels in international waters</div><div class="phrase">if compensation is provided to fishing nations that reduce their catch quotas</div></div>
+        </div>
+        <div class="col col-projected">
+          <div class="col-header">Projected Outcome</div>
+          <div class="col-body"><div class="phrase">commercial fishing pressure on depleted stocks decreases significantly</div><div class="phrase">artisanal fishing communities retain access to traditional fishing grounds</div><div class="phrase">vessel monitoring makes illegal fishing significantly harder to conceal</div><div class="phrase">quota-reduction compensation reduces political resistance from fishing nations</div></div>
+        </div>
+        <div class="col col-extended">
+          <div class="col-header">Extended Scenario</div>
+          <div class="col-body"><div class="phrase">if stock recovery follows, sustainable catch levels increase over medium term</div><div class="phrase">if artisanal exemptions are exploited by commercial fleets through flag registration, enforcement fails</div><div class="phrase">if monitoring is comprehensive, illegal fishing shifts to even more remote and harder-to-reach areas</div><div class="phrase">if compensation is adequate, fishing nations transition toward aquaculture and alternative protein industries</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with conditional language.</p>
+  <div class="example">"If CBDC is designed with strong privacy protections, the projected outcome is that financial inclusion improves — but if surveillance capacity grows alongside it, the extended scenario is that authoritarian misuse becomes structurally available, regardless of original intent."</div>
+  <p>Three chunks. Three connectors. A complete hypothetical argument with a second-order consequence. <strong>The Extended Scenario column is what separates an ILR 2+ response from an ILR 3 one</strong> — don't stop at the projected outcome.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

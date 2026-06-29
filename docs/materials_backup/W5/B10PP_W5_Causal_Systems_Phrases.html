@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W5 — Causal Systems · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #7c3aed; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-trigger { background: #f0fdfa; border: 1.5px solid #0d9488; }
+  .leg-mechanism { background: #f5f3ff; border: 1.5px solid #7c3aed; }
+  .leg-downstream { background: #f0f4f8; border: 1.5px solid #1e3a5f; }
+  .leg-trigger .legend-label { color: #0d9488; }
+  .leg-mechanism .legend-label { color: #7c3aed; }
+  .leg-downstream .legend-label { color: #1e3a5f; }
+  .leg-trigger .legend-desc { color: #0d9488; }
+  .leg-mechanism .legend-desc { color: #7c3aed; }
+  .leg-downstream .legend-desc { color: #374151; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #7c3aed; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #7c3aed; background: #f5f3ff; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-trigger .col-header { background: #0d9488; }
+  .col-mechanism .col-header { background: #7c3aed; }
+  .col-downstream .col-header { background: #1e3a5f; }
+  .col-trigger { border: 1.5px solid #0d9488; }
+  .col-mechanism { border: 1.5px solid #7c3aed; }
+  .col-downstream { border: 1.5px solid #1e3a5f; }
+  .col-trigger .col-body { background: #f0fdfa; }
+  .col-mechanism .col-body { background: #f5f3ff; }
+  .col-downstream .col-body { background: #f0f4f8; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W5 — Causal Systems · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Trace the mechanism — show not just that something happens, but <em>how</em> and <em>why</em>, step by step. Pick one chunk from each column and connect them with causal language.
+</div>
+<div class="legend">
+  <div class="legend-item leg-trigger"><span class="legend-label">Trigger</span><span class="legend-desc">What initiates the chain</span></div>
+  <div class="legend-item leg-mechanism"><span class="legend-label">Mechanism</span><span class="legend-desc">How the effect is produced</span></div>
+  <div class="legend-item leg-downstream"><span class="legend-label">Downstream Effect</span><span class="legend-desc">What results at the end</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> this triggers… · as a direct result of… · the mechanism here is… · this in turn leads to… · the downstream consequence is… · what drives this effect is… · the causal chain runs from… to… · this amplifies / suppresses / accelerates…
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should universities limit legacy admissions?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">legacy admissions preference eliminated at universities</div><div class="phrase">admissions criteria shifted to merit and need only</div><div class="phrase">alumni donation influence on admissions formally removed</div><div class="phrase">blind admissions process for legacy-eligible applicants enacted</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">admissions pool composition shifts toward first-generation students</div><div class="phrase">alumni donation motivation partially decoupled from admissions benefit</div><div class="phrase">university fundraising model faces pressure to adapt</div><div class="phrase">meritocratic admissions narrative is strengthened institutionally</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">socioeconomic diversity of student population increases over time</div><div class="phrase">university fundraising revenue decreases in short to medium term</div><div class="phrase">upstream preparation inequality continues to shape who competes</div><div class="phrase">long-term shift in who gains access to elite institutional networks</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should companies be required to disclose pay scales for all positions?</span>
+      </div>
+      <span class="q-tag">WRK</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">mandatory pay scale disclosure enacted for all positions</div><div class="phrase">salary band transparency required in job postings and internal systems</div><div class="phrase">pay equity reporting extended to include position-level data</div><div class="phrase">employees gain legal right to access pay scale information</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">wage-setting becomes visible and comparable across employees</div><div class="phrase">discriminatory pay gaps become harder to sustain and easier to challenge</div><div class="phrase">internal salary tension increases among employees at different levels</div><div class="phrase">employers standardize compensation structures to reduce disclosure risk</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">gender and racial pay gaps narrow in organizations with enforcement</div><div class="phrase">employee satisfaction with pay equity improves where gaps close</div><div class="phrase">high earners may seek employers with less transparent structures</div><div class="phrase">long-term shift toward market-visible compensation norms</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should inheritance taxes be significantly increased?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">inheritance tax rate significantly increased on large estates</div><div class="phrase">estate tax threshold lowered to capture more transfers</div><div class="phrase">intergenerational wealth transfer subject to higher levy</div><div class="phrase">gifting and trust loopholes subject to additional scrutiny</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">wealthy families accelerate gifting and trust restructuring</div><div class="phrase">estate planning industry expands to advise on avoidance strategies</div><div class="phrase">government revenue from estate taxes increases for compliant transfers</div><div class="phrase">family business and farm transfers face liquidity challenges</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">intergenerational wealth concentration slows at margin</div><div class="phrase">tax avoidance through complex structures increases</div><div class="phrase">public revenue available for equality-promoting investment rises</div><div class="phrase">long-term reduction in dynastic wealth accumulation at top of distribution</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should there be stricter limits on political donations from corporations?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">strict caps on corporate political donations enacted</div><div class="phrase">corporate political expenditure subject to disclosure requirements</div><div class="phrase">independent expenditure by corporations limited by law</div><div class="phrase">dark money channels through non-profits subject to new restrictions</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">corporate political influence through direct donation is reduced</div><div class="phrase">political parties seek alternative funding sources</div><div class="phrase">dark money flows adapt to new restrictions through legal workarounds</div><div class="phrase">public interest advocacy groups gain relative financial standing</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">legislative outcomes become modestly less skewed toward donor interests</div><div class="phrase">corporate influence shifts toward lobbying rather than direct donation</div><div class="phrase">political funding transparency increases where disclosure is enforced</div><div class="phrase">long-term reduction in perceived corporate capture of electoral process</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should euthanasia be legalized in all countries?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">euthanasia legalized with defined eligibility and safeguard criteria</div><div class="phrase">medical aid in dying available upon request for eligible patients</div><div class="phrase">legal framework for voluntary death enacted at national level</div><div class="phrase">physician participation made voluntary within legal framework</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">terminally ill patients gain access to controlled end-of-life option</div><div class="phrase">palliative care investment faces reallocation pressure</div><div class="phrase">medical profession navigates tension between healing and end-of-life roles</div><div class="phrase">vulnerable populations face increased pressure from family or institutions</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">patient autonomy at end of life is legally recognized</div><div class="phrase">eligibility criteria expand over time in some jurisdictions</div><div class="phrase">palliative care quality decreases if investment is redirected</div><div class="phrase">long-term cultural shift in relationship to death and medical intervention</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments regulate the collection and use of biometric data?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">biometric data collection subject to consent and purpose limitation</div><div class="phrase">facial recognition use in public spaces restricted or banned</div><div class="phrase">biometric database retention limits legally mandated</div><div class="phrase">algorithmic bias in biometric systems subject to audit requirement</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">biometric surveillance infrastructure expansion is constrained</div><div class="phrase">law enforcement loses access to real-time facial recognition tools</div><div class="phrase">tech companies redesign products to meet consent requirements</div><div class="phrase">minority communities face reduced exposure to biased algorithmic systems</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">civil liberties protection in digital public space is strengthened</div><div class="phrase">law enforcement effectiveness decreases in some surveillance-dependent contexts</div><div class="phrase">public trust in government biometric systems increases with regulation</div><div class="phrase">long-term reduction in discriminatory outcomes from biometric misidentification</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should private prisons be banned?</span>
+      </div>
+      <span class="q-tag">JUS</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">private prison contracts prohibited by legislation</div><div class="phrase">existing private facilities transferred to public operation</div><div class="phrase">profit motive removed from incarceration management</div><div class="phrase">government assumes full operational responsibility for corrections</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">private prison companies exit corrections market</div><div class="phrase">government absorbs capacity at significant short-term cost</div><div class="phrase">rural communities dependent on prison employment face economic disruption</div><div class="phrase">rehabilitation program investment shifts under public management</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">incarceration conditions improve where public standards are higher</div><div class="phrase">structural incentive to maintain high incarceration rates is reduced</div><div class="phrase">government corrections budget increases significantly</div><div class="phrase">long-term improvement in recidivism rates if rehabilitation investment follows</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be stricter international regulations on the use of private military companies?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-trigger">
+          <div class="col-header">Trigger</div>
+          <div class="col-body"><div class="phrase">binding international framework for PMC operations enacted</div><div class="phrase">PMC licensing and accountability standards legally mandated</div><div class="phrase">use of PMCs in active conflict zones subject to international law</div><div class="phrase">state liability for PMC actions established under international framework</div></div>
+        </div>
+        <div class="col col-mechanism">
+          <div class="col-header">Mechanism</div>
+          <div class="col-body"><div class="phrase">PMC operators face increased legal exposure for civilian harm</div><div class="phrase">states reduce use of PMCs to avoid accountability implications</div><div class="phrase">PMC industry consolidates around compliant larger operators</div><div class="phrase">proxy conflict via PMCs becomes legally and politically more costly</div></div>
+        </div>
+        <div class="col col-downstream">
+          <div class="col-header">Downstream Effect</div>
+          <div class="col-body"><div class="phrase">accountability gap for civilian harm in conflict narrows</div><div class="phrase">major powers adapt to use PMCs in less regulated jurisdictions</div><div class="phrase">international humanitarian law coverage of non-state armed actors expands</div><div class="phrase">long-term reduction in plausible deniability for state-sponsored PMC operations</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one chunk from each column and connect them with causal language.</p>
+  <div class="example">"Mandatory curriculum integration triggers a process in which students develop habitual source-checking behavior — and the downstream effect, over a generation, is a population significantly more resistant to foreign disinformation campaigns."</div>
+  <p>Three chunks. Two connectors. One complete causal argument. <strong>Do not skip the Mechanism column.</strong> Going straight from trigger to effect is the most common weakness in Causal Systems responses.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  // Auto-expand if URL hash matches a question id
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>

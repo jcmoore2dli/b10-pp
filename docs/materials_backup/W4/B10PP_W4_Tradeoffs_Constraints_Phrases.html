@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W4 — Trade-offs &amp; Constraints · ESO Phrase Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f3f4f6; color: #374151; font-size: 15px; padding-bottom: 40px; }
+  header { background: #1e3a5f; color: white; padding: 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  header h1 { font-size: 15px; font-weight: 700; }
+  header p { font-size: 12px; color: #93c5fd; margin-top: 2px; }
+  .frame-box { background: white; margin: 12px; border-radius: 12px; padding: 14px; border-left: 4px solid #d97706; font-size: 13px; line-height: 1.55; color: #374151; }
+  .frame-box strong { color: #1e3a5f; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 0 12px 4px; }
+  .legend-item { border-radius: 8px; padding: 8px; text-align: center; }
+  .legend-item .legend-label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .legend-item .legend-desc { font-size: 10px; line-height: 1.4; }
+  .leg-benefit    { background: #f0fdf4; border: 1.5px solid #16a34a; }
+  .leg-tradeoff   { background: #fffbeb; border: 1.5px solid #d97706; }
+  .leg-constraint { background: #fef2f2; border: 1.5px solid #dc2626; }
+  .leg-benefit    .legend-label { color: #16a34a; }
+  .leg-tradeoff   .legend-label { color: #d97706; }
+  .leg-constraint .legend-label { color: #dc2626; }
+  .leg-benefit    .legend-desc { color: #16a34a; }
+  .leg-tradeoff   .legend-desc { color: #d97706; }
+  .leg-constraint .legend-desc { color: #dc2626; }
+  .connectors { margin: 8px 12px 12px; background: #fffbeb; border: 1px solid #d97706; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #374151; line-height: 1.6; }
+  .connectors strong { color: #d97706; }
+  .questions { margin: 0 12px; }
+  .question { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .question-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; cursor: pointer; gap: 10px; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .question-header:active { background: #f9fafb; }
+  .q-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 0; }
+  .q-num { background: #d97706; color: white; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .q-text { font-size: 14px; font-weight: 600; color: #1e3a5f; line-height: 1.4; flex: 1; min-width: 0; }
+  .q-tag { font-size: 10px; font-weight: 600; color: #d97706; background: #fffbeb; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .q-chevron { font-size: 12px; color: #9ca3af; transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .question.open .q-chevron { transform: rotate(180deg); }
+  .phrase-panel { display: none; padding: 0 12px 14px; }
+  .question.open .phrase-panel { display: block; }
+  .columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .columns { grid-template-columns: 1fr; } }
+  .col { border-radius: 8px; overflow: hidden; }
+  .col-header { font-size: 10px; font-weight: 700; color: white; padding: 6px 8px; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; }
+  .col-benefit    .col-header { background: #16a34a; }
+  .col-tradeoff   .col-header { background: #d97706; }
+  .col-constraint .col-header { background: #dc2626; }
+  .col-benefit    { border: 1.5px solid #16a34a; }
+  .col-tradeoff   { border: 1.5px solid #d97706; }
+  .col-constraint { border: 1.5px solid #dc2626; }
+  .col-benefit    .col-body { background: #f0fdf4; }
+  .col-tradeoff   .col-body { background: #fffbeb; }
+  .col-constraint .col-body { background: #fef2f2; }
+  .col-body { padding: 8px; }
+  .phrase { font-size: 12px; font-style: italic; color: #374151; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.4; display: flex; align-items: flex-start; gap: 5px; }
+  .phrase:last-child { border-bottom: none; padding-bottom: 0; }
+  .phrase::before { content: '›'; flex-shrink: 0; font-style: normal; color: #9ca3af; font-size: 13px; line-height: 1.3; }
+  .how-to { margin: 16px 12px 0; background: white; border-radius: 12px; padding: 14px; border-left: 4px solid #1e3a5f; }
+  .how-to h2 { font-size: 13px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .how-to p { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+  .example { background: #f0f4f8; border-radius: 8px; padding: 10px; font-size: 12px; font-style: italic; color: #1e3a5f; line-height: 1.6; margin-bottom: 8px; }
+  .warning { font-size: 11px; font-weight: 700; color: #dc2626; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>W4 — Trade-offs &amp; Constraints · ESO Phrase Reference</h1>
+  <p>B10 Practice Platform · Tap a question to expand</p>
+</header>
+<div class="frame-box">
+  <strong>About this frame:</strong> Show what is gained, what is lost, and what structural limit prevents a cleaner solution. These chunks are building blocks — combine them with grammar stems to construct your own sentences.
+</div>
+<div class="legend">
+  <div class="legend-item leg-benefit"><span class="legend-label">Benefit</span><span class="legend-desc">What the policy achieves — who gains, what improves</span></div>
+  <div class="legend-item leg-tradeoff"><span class="legend-label">Trade-off</span><span class="legend-desc">What is sacrificed — the competing good that is reduced or lost</span></div>
+  <div class="legend-item leg-constraint"><span class="legend-label">Constraint</span><span class="legend-desc">The structural limit — why the trade-off cannot simply be avoided</span></div>
+</div>
+<div class="connectors">
+  <strong>Key connectors:</strong> although… nevertheless · at the expense of · while X, Y is sacrificed · the cost falls on · cannot simultaneously · this comes with the constraint that · a win-win outcome is unavailable because
+</div>
+<div class="questions">
+  <div class="question" id="q1" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q1</span>
+        <span class="q-text">Should AI teachers replace human instructors in some schools?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">personalizes learning pace for each student</div><div class="phrase">reduces dependence on teacher supply</div><div class="phrase">lowers per-student instructional cost</div><div class="phrase">expands access in underserved regions</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">eliminates mentorship and social-emotional development</div><div class="phrase">reduces human accountability in education</div><div class="phrase">deskills teaching profession over time</div><div class="phrase">widens gap between well-resourced and under-resourced schools</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">AI quality varies significantly across providers</div><div class="phrase">infrastructure requirements are substantial</div><div class="phrase">student outcomes depend on implementation quality</div><div class="phrase">equity of access to quality AI is not guaranteed</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q2" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q2</span>
+        <span class="q-text">Should personalized learning algorithms be mandatory in public education?</span>
+      </div>
+      <span class="q-tag">EDU</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">adapts content to individual learning pace</div><div class="phrase">may improve outcomes for struggling students</div><div class="phrase">reduces one-size-fits-all instruction gaps</div><div class="phrase">generates data to support teacher decisions</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">student data privacy is systematically at risk</div><div class="phrase">teacher role shifts toward facilitation only</div><div class="phrase">algorithm quality is uneven across vendors</div><div class="phrase">mandatory adoption removes local pedagogical choice</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">implementation costs are substantial and uneven</div><div class="phrase">defining what personalization means is contested</div><div class="phrase">vendor lock-in reduces long-term flexibility</div><div class="phrase">evidence of learning outcome improvement is mixed</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q3" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q3</span>
+        <span class="q-text">Should cryptocurrency be regulated as a financial instrument?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">increases consumer protection for retail investors</div><div class="phrase">reduces money laundering and sanctions evasion</div><div class="phrase">stabilizes markets by reducing speculative volatility</div><div class="phrase">generates tax revenue from crypto gains</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">compliance costs may reduce market access</div><div class="phrase">over-regulation may drive activity to unregulated markets</div><div class="phrase">unbanked populations lose access to alternative finance</div><div class="phrase">innovation in decentralized finance is constrained</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">technology evolves faster than regulatory frameworks</div><div class="phrase">cross-border enforcement is structurally limited</div><div class="phrase">defining cryptocurrency as a security versus commodity is contested</div><div class="phrase">international regulatory fragmentation creates arbitrage</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q4" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q4</span>
+        <span class="q-text">Should central banks adopt digital currencies?</span>
+      </div>
+      <span class="q-tag">ECN</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">enables direct stimulus delivery to citizens</div><div class="phrase">provides financial inclusion without traditional banking</div><div class="phrase">reduces payment processing costs and friction</div><div class="phrase">strengthens monetary policy transmission</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">commercial banks face disintermediation risk</div><div class="phrase">financial surveillance of citizens increases</div><div class="phrase">programmable money enables government spending control</div><div class="phrase">existing payment infrastructure is significantly disrupted</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">cybersecurity risk of centralized digital infrastructure is substantial</div><div class="phrase">privacy protections are technically difficult to guarantee</div><div class="phrase">public trust in government-issued digital money varies widely</div><div class="phrase">interoperability with existing financial systems is complex</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q5" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q5</span>
+        <span class="q-text">Should governments implement a digital identity system for all citizens?</span>
+      </div>
+      <span class="q-tag">GOV</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">streamlines access to government services</div><div class="phrase">reduces identity fraud and document forgery</div><div class="phrase">improves tax collection and benefit delivery efficiency</div><div class="phrase">enables faster emergency response verification</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">surveillance capacity increases significantly</div><div class="phrase">marginalized groups without documentation are excluded</div><div class="phrase">single point of failure creates systemic security risk</div><div class="phrase">scope creep toward social control is structurally likely</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">public trust in government data stewardship is limited</div><div class="phrase">interoperability across agencies is technically complex</div><div class="phrase">legal framework for data use is difficult to enforce</div><div class="phrase">biometric data cannot be changed if compromised</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q6" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q6</span>
+        <span class="q-text">Should governments fund research into life extension technologies?</span>
+      </div>
+      <span class="q-tag">HLT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">reduces suffering from age-related disease</div><div class="phrase">extends healthy productive working years</div><div class="phrase">may reduce long-term healthcare burden</div><div class="phrase">advances foundational biomedical knowledge</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">pension and retirement systems become fiscally unsustainable</div><div class="phrase">benefits accrue disproportionately to wealthy nations</div><div class="phrase">intergenerational wealth concentration worsens</div><div class="phrase">resource consumption per capita increases</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">timeline to viable outcomes is highly uncertain</div><div class="phrase">equitable global distribution is structurally unlikely</div><div class="phrase">ethical consensus on life extension is not established</div><div class="phrase">opportunity cost competes with immediate health needs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q7" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q7</span>
+        <span class="q-text">Should there be a global moratorium on autonomous weapons development?</span>
+      </div>
+      <span class="q-tag">TEC</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">prevents algorithmic targeting errors in conflict</div><div class="phrase">maintains human accountability in use of force</div><div class="phrase">reduces risk of autonomous weapons proliferating to non-state actors</div><div class="phrase">creates space for international humanitarian law to adapt</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">nations with advanced AI lose strategic deterrence capacity</div><div class="phrase">moratorium is unverifiable without inspection regime</div><div class="phrase">defensive autonomous systems may also be restricted</div><div class="phrase">compliance advantage shifts to non-signatories</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">verification of autonomous weapons development is technically impossible</div><div class="phrase">dual-use technology cannot be cleanly restricted</div><div class="phrase">major powers are unlikely to accept binding constraints</div><div class="phrase">existing international law was not designed for autonomous systems</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="question" id="q8" onclick="toggle(this)">
+    <div class="question-header">
+      <div class="q-left">
+        <span class="q-num">Q8</span>
+        <span class="q-text">Should there be a global ban on nuclear weapons?</span>
+      </div>
+      <span class="q-tag">INT</span>
+      <span class="q-chevron">▼</span>
+    </div>
+    <div class="phrase-panel">
+      <div class="columns">
+        <div class="col col-benefit">
+          <div class="col-header">Benefit</div>
+          <div class="col-body"><div class="phrase">eliminates existential risk of nuclear exchange</div><div class="phrase">reduces long-term radiation and accident risk</div><div class="phrase">frees defense budgets for other priorities</div><div class="phrase">creates legal norm against nuclear possession</div></div>
+        </div>
+        <div class="col col-tradeoff">
+          <div class="col-header">Trade-off</div>
+          <div class="col-body"><div class="phrase">removes deterrence framework that has prevented major war</div><div class="phrase">creates asymmetric vulnerability if compliance is uneven</div><div class="phrase">nuclear states lose strategic leverage</div><div class="phrase">verification and disarmament costs are substantial</div></div>
+        </div>
+        <div class="col col-constraint">
+          <div class="col-header">Constraint</div>
+          <div class="col-body"><div class="phrase">no nuclear-armed state has signed the TPNW</div><div class="phrase">verification of complete disarmament is technically complex</div><div class="phrase">breakout risk remains even after declaration of disarmament</div><div class="phrase">geopolitical trust deficit makes universal compliance structurally unlikely</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="how-to">
+  <h2>How to Use These Phrases</h2>
+  <p>Tap a question to expand its three columns. Pick one or two chunks from each column and connect them with trade-off language. For example:</p>
+  <div class="example">"Although this policy removes the financial barrier for low-income students, it shifts the cost to taxpayers — and the constraint here is that fiscal sustainability varies significantly by state, making a uniform national mandate structurally difficult."</div>
+  <p>Three chunks. Two connectors. One ILR 2+/3 argument move. <strong>The Constraint column is what separates a basic trade-off observation from an ILR 3 response</strong> — don't stop at naming what is lost. Explain why the trade-off cannot simply be avoided.</p>
+  <p class="warning">Scaffold feedback is diagnostic only — your score is always holistic.</p>
+</div>
+<script>
+  function toggle(el) { el.classList.toggle('open'); }
+  window.addEventListener('DOMContentLoaded', function() {
+    var hash = window.location.hash;
+    if (hash) {
+      var el = document.querySelector(hash);
+      if (el) { el.classList.add('open'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }
+  });
+</script>
+</body>
+</html>
