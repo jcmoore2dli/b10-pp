@@ -1753,12 +1753,13 @@ export default function InstructorDashboardScreen() {
       {/* POI — Plan of Instruction */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-2">Plan of Instruction (POI)</p>
+          <p className="text-xs text-gray-700 uppercase tracking-wide font-semibold mb-2">Plan of Instruction (POI) — Instructor Reference Documents</p>
           <div className="flex flex-row flex-wrap gap-2">
             {[
               { label: 'CORE Bundle',           file: 'B10PP_CORE_Daily_Protocol_SOP.html' },
               { label: 'ESO/Frames Practice',   file: 'B10PP_ESO_Frames_Daily_Protocol_SOP.html' },
               { label: 'LF — SLT Protocol',     file: 'B10PP_LF_Daily_Protocol_SOP.html' },
+              { label: 'Daily Quick Reference', file: 'B10PP_Daily_Instructor_Quick_Reference.html' },
             ].map(({ label, file }) => (
               <a
                 key={file}

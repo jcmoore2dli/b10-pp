@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10PP Daily Instructor Quick Reference</title>
+<style>
+  :root {
+    --navy:#1a2744; --gold:#c9a84c; --gold-lt:#f5e9c8;
+    --slate:#4a5568; --light:#f7f8fa; --border:#dde1e9;
+    --green:#2d6a4f; --green-lt:#d8f3dc;
+    --blue-lt:#dbeafe; --blue-bdr:#2563eb;
+    --amber-lt:#fff3cd; --amber-bdr:#d08800;
+    --teal:#0d6e6e; --teal-lt:#e0f4f4;
+    --black:#1a1a1a;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;
+    color:var(--black); background:#fff;
+    max-width:900px; margin:0 auto;
+    padding:28px 24px 48px;
+    line-height:1.5; font-size:13px;
+  }
+
+  /* ── Header ── */
+  .doc-header { margin-bottom:20px; }
+  .sys-label { color:var(--slate); font-size:10.5px; font-weight:700;
+               letter-spacing:.07em; text-transform:uppercase; margin-bottom:4px; }
+  h1 { color:var(--navy); font-size:22px; font-weight:800; margin-bottom:2px; }
+  .subtitle { color:var(--gold); font-size:13px; font-weight:700; }
+
+  /* ── Day arc bar ── */
+  .arc-bar {
+    display:flex; align-items:stretch; gap:0;
+    margin:18px 0 24px; border:1px solid var(--border);
+    border-radius:8px; overflow:hidden;
+  }
+  .arc-seg {
+    flex:1; padding:10px 14px; position:relative;
+  }
+  .arc-seg + .arc-seg::before {
+    content:'▶';
+    position:absolute; left:-9px; top:50%; transform:translateY(-50%);
+    color:#fff; font-size:11px; z-index:2;
+  }
+  .arc-seg.core   { background:var(--navy); }
+  .arc-seg.enable { background:var(--teal); }
+  .arc-seg.eso    { background:#2d5f8a; }
+  .arc-seg.assign { background:#5a3e8a; }
+  .arc-label { color:rgba(255,255,255,.6); font-size:9px; font-weight:700;
+               letter-spacing:.07em; text-transform:uppercase; }
+  .arc-title { color:#fff; font-size:12.5px; font-weight:700; margin-top:2px; }
+  .arc-note  { color:rgba(255,255,255,.7); font-size:10.5px; margin-top:2px; }
+
+  /* ── Section blocks ── */
+  .section { margin-bottom:18px; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .section-head {
+    padding:9px 14px; display:flex; align-items:center; gap:10px;
+  }
+  .section-head.core   { background:var(--navy); }
+  .section-head.enable { background:var(--teal); }
+  .section-head.eso    { background:#2d5f8a; }
+  .section-head.assign { background:#5a3e8a; }
+  .section-tag { color:rgba(255,255,255,.65); font-size:9.5px; font-weight:700;
+                 letter-spacing:.07em; text-transform:uppercase; }
+  .section-title { color:#fff; font-size:14px; font-weight:700; }
+  .section-body { padding:14px 16px; }
+
+  /* ── Steps ── */
+  .step { display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; }
+  .step:last-child { margin-bottom:0; }
+  .step-num {
+    flex-shrink:0; width:22px; height:22px; border-radius:50%;
+    font-size:11px; font-weight:700; display:flex;
+    align-items:center; justify-content:center; margin-top:1px;
+    color:#fff;
+  }
+  .step-num.core-n   { background:var(--navy); }
+  .step-num.enable-n { background:var(--teal); }
+  .step-num.eso-n    { background:#2d5f8a; }
+  .step-num.assign-n { background:#5a3e8a; }
+  .step-content { flex:1; font-size:12.5px; }
+  .step-label { font-weight:700; color:var(--navy); display:block; margin-bottom:2px; }
+  .step-label.teal  { color:var(--teal); }
+  .step-label.blue  { color:#2d5f8a; }
+  .step-label.purp  { color:#5a3e8a; }
+
+  /* ── Sub-bullets ── */
+  .sub { margin:5px 0 0 4px; padding:0; list-style:none; }
+  .sub li { padding:2px 0 2px 12px; position:relative; font-size:12px; color:var(--slate); }
+  .sub li::before { content:'·'; position:absolute; left:0; color:var(--gold); font-weight:700; }
+  .sub.disc li::before { content:'–'; color:var(--slate); }
+
+  /* ── Sub-step labels (4a/4b style) ── */
+  .substep { display:flex; gap:8px; margin:6px 0 0 0; align-items:flex-start; }
+  .substep-tag {
+    flex-shrink:0; background:var(--gold-lt); color:#6b5416;
+    font-size:10px; font-weight:700; padding:2px 7px;
+    border-radius:10px; margin-top:1px; white-space:nowrap;
+  }
+  .substep-text { font-size:12px; color:var(--slate); flex:1; }
+
+  /* ── Enabling activity arc ── */
+  .enable-arc {
+    display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;
+  }
+  .day-pill {
+    border:1px solid var(--border); border-radius:6px;
+    padding:6px 10px; font-size:11.5px; flex:1; min-width:120px;
+    background:var(--light);
+  }
+  .day-pill b { display:block; color:var(--teal); font-size:10.5px;
+                text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
+
+  /* ── Repeat callout ── */
+  .repeat-note {
+    background:var(--gold-lt); border-left:3px solid var(--gold);
+    border-radius:4px; padding:8px 12px; font-size:12px;
+    margin-top:10px; color:#6b5416; font-weight:600;
+  }
+
+  /* ── Divider ── */
+  .divider { border:none; border-top:1px dashed var(--border); margin:10px 0; }
+
+  /* ── Footer ── */
+  .doc-footer {
+    color:var(--slate); font-size:10.5px;
+    border-top:1px solid var(--border); margin-top:28px; padding-top:12px;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { padding:16px; }
+    .section { break-inside:avoid; page-break-inside:avoid; }
+    .arc-bar { break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="sys-label">B10 Practice Platform · Instructor Reference</div>
+  <h1>Daily Quick Reference</h1>
+  <div class="subtitle">Morning Debrief · Enabling Activity · ESO Debrief · End-of-Class Assignment</div>
+</div>
+
+<!-- ── Day Arc Bar ── -->
+<div class="arc-bar">
+  <div class="arc-seg core">
+    <div class="arc-label">Start of Class</div>
+    <div class="arc-title">CORE Debrief</div>
+    <div class="arc-note">Policy + Topic-Seed</div>
+  </div>
+  <div class="arc-seg enable">
+    <div class="arc-label">Mid-Class</div>
+    <div class="arc-title">Enabling Activity</div>
+    <div class="arc-note">10–15 min · Frame Practice</div>
+  </div>
+  <div class="arc-seg eso">
+    <div class="arc-label">After Activity</div>
+    <div class="arc-title">ESO Debrief</div>
+    <div class="arc-note">Bundle + Frames ESO</div>
+  </div>
+  <div class="arc-seg assign">
+    <div class="arc-label">End of Class</div>
+    <div class="arc-title">Assign Tomorrow</div>
+    <div class="arc-note">Bundle + MTS + Frames ESO</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- CORE BUNDLE -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head core">
+    <div>
+      <div class="section-tag">Start of Class</div>
+      <div class="section-title">CORE Bundle — Morning Debrief</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="step">
+      <div class="step-num core-n">1</div>
+      <div class="step-content">
+        <span class="step-label">Confirm submissions</span>
+        Check instructor dashboard. Follow up with non-submitters privately.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num core-n">2</div>
+      <div class="step-content">
+        <span class="step-label">Memory Training Strategy (MTS) pair debrief</span>
+        <ul class="sub">
+          <li>Restate last night's MTS in one sentence</li>
+          <li>Students pair for 3–4 minutes and discuss:
+            <ul class="sub disc" style="margin-top:3px;">
+              <li>Did the strategy help retain the main idea?</li>
+              <li>Where did retrieval break down?</li>
+              <li>What would they do differently next time?</li>
+            </ul>
+          </li>
+          <li>One pair briefs back to the class</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num core-n">3</div>
+      <div class="step-content">
+        <span class="step-label">Select a 3/4 or 4/4 exemplar</span>
+        Instructor-selected (default) or volunteer at discretion.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num core-n">4</div>
+      <div class="step-content">
+        <span class="step-label">Play audio</span>
+        <div class="substep">
+          <div class="substep-tag">4a</div>
+          <div class="substep-text">Play the policy CORE audio passage</div>
+        </div>
+        <div class="substep">
+          <div class="substep-tag">4b</div>
+          <div class="substep-text">Play the selected student response audio</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num core-n">5</div>
+      <div class="step-content">
+        <span class="step-label">Discuss transcript and platform feedback</span>
+        <ul class="sub">
+          <li>Was the main idea captured accurately?</li>
+          <li>Which details were retained? Which were missing?</li>
+          <li>What specific language made the response clear or precise?</li>
+          <li>Display platform scaffold feedback — what did it identify? Does the class agree?</li>
+          <li>Evaluate detail retention — was it strong? If yes, what made it land? If not, what would strengthen it?</li>
+          <li>What would the student need to do differently on the next attempt?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num core-n">6</div>
+      <div class="step-content">
+        <span class="step-label">Connect to the score</span>
+        Reference the score on the dashboard. Name specifically what earned it.
+      </div>
+    </div>
+
+    <div class="repeat-note">↺ Repeat Steps 3–6 for the topic-seed CORE audio.</div>
+
+    <div style="font-size:11px; color:var(--slate); margin-top:10px;">
+      <b>Note:</b> Each nightly bundle contains two CORE listening passages — a policy audio and a topic-seed audio. Both are mandatory and scored identically. Both debrief the same way.
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- ENABLING ACTIVITY -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head enable">
+    <div>
+      <div class="section-tag">Mid-Class · 10–15 min</div>
+      <div class="section-title">Enabling Activity — Frame Practice</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div style="font-size:12.5px; margin-bottom:10px;">
+      Select one activity from the current week's enabling activities set. Follow the daily arc below.
+      Activities build from surface/declarative (1a) to procedural/automatic transfer (4c) across the week.
+    </div>
+
+    <div class="enable-arc">
+      <div class="day-pill"><b>Day 1</b>Activity 1a · Depth Ladder</div>
+      <div class="day-pill"><b>Day 2</b>Activity 1b · Sentence-Frame Progression</div>
+      <div class="day-pill"><b>Day 3</b>Activity 1c · Comparison &amp; Paraphrase</div>
+      <div class="day-pill"><b>Day 4</b>Activity 4a · 2-Box Induction</div>
+      <div class="day-pill"><b>Day 5</b>Activity 4b or 4c · Silent Protocol or Strategic Competence</div>
+    </div>
+
+    <div style="font-size:11px; color:var(--slate); margin-top:10px;">
+      Refer to the current week's Enabling Activities HTML for full activity instructions. Available in
+      <b>docs/enabling_activities/</b> on the platform.
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- ESO DEBRIEF -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head eso">
+    <div>
+      <div class="section-tag">After Enabling Activity</div>
+      <div class="section-title">ESO/Frames — Morning Debrief</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="step">
+      <div class="step-num eso-n">1</div>
+      <div class="step-content">
+        <span class="step-label blue">Confirm submissions</span>
+        Check instructor dashboard. Follow up with non-submitters privately.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num eso-n">2</div>
+      <div class="step-content">
+        <span class="step-label blue">Select a 3/4 or 4/4 exemplar</span>
+        Instructor-selected (default) or volunteer at discretion.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num eso-n">3</div>
+      <div class="step-content">
+        <span class="step-label blue">Play audio</span>
+        <div class="substep">
+          <div class="substep-tag">3a</div>
+          <div class="substep-text">Play the ESO question audio</div>
+        </div>
+        <div class="substep">
+          <div class="substep-tag">3b</div>
+          <div class="substep-text">Play the selected student response audio</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num eso-n">4</div>
+      <div class="step-content">
+        <span class="step-label blue">Discuss transcript and platform feedback</span>
+        <ul class="sub">
+          <li>Which of the three frame steps are clearly present?</li>
+          <li>What specific language carried the argument at each step?</li>
+          <li>Display platform scaffold feedback — what did it identify? Does the class agree?</li>
+          <li>Evaluate the middle step — was it explicit and developed? If yes, what made it land? If not, what would strengthen it?</li>
+          <li>What would the student need to do differently on the next attempt?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num eso-n">4a</div>
+      <div class="step-content">
+        <span class="step-label blue">Optional repeat — additional response on same ESO question</span>
+        <ul class="sub">
+          <li>Instructor selects or solicits a volunteer response</li>
+          <li>Play audio and display transcript</li>
+          <li>Focus on one comparative question: what did this response do differently at the middle step, or in spiral integration, compared to the first?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num eso-n">5</div>
+      <div class="step-content">
+        <span class="step-label blue">Address spiral integration (Week 2+)</span>
+        <ul class="sub">
+          <li>Did prior frames appear?</li>
+          <li>Were they woven organically into the argument or appended?</li>
+          <li>If yes, what made the integration effective? If not, which prior frame would have strengthened the argument and where?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="repeat-note">↺ Repeat Steps 2–5 for the Frames ESO question.</div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- END OF CLASS ASSIGNMENT -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-head assign">
+    <div>
+      <div class="section-tag">End of Class</div>
+      <div class="section-title">Assign Tomorrow's Pre-Class Work</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="step">
+      <div class="step-num assign-n">1</div>
+      <div class="step-content">
+        <span class="step-label purp">Assign the next bundle in sequence</span>
+        Navigate to the assignment panel on the instructor dashboard. Assign the next bundle
+        (e.g. S1.2, S2.3). The policy audio, topic-seed audio, and domain-linked ESO question
+        are pre-packaged.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num assign-n">2</div>
+      <div class="step-content">
+        <span class="step-label purp">Designate tonight's MTS</span>
+        State it by name and restate its core strategy in one sentence.
+        Remind students: one listen, immediate spoken response, no notes.
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num assign-n">3</div>
+      <div class="step-content">
+        <span class="step-label purp">Assign the Frames ESO question</span>
+        Follow the weekly arc:
+        <ul class="sub" style="margin-top:5px;">
+          <li><b>Day 1:</b> 1–2 most accessible questions · full scaffold</li>
+          <li><b>Day 2:</b> 2 moderate questions · full scaffold</li>
+          <li><b>Day 3:</b> 1–2 increasing difficulty · scaffold fading</li>
+          <li><b>Day 4:</b> student selects 1–2 · cold production</li>
+          <li><b>Day 5:</b> weekend bridge from general ESO bank · combo scaffold</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num assign-n">4</div>
+      <div class="step-content">
+        <span class="step-label purp">Set expectations</span>
+        Inform students that a strong response from tonight's attempt will be played and
+        discussed tomorrow.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="doc-footer">
+  B10 Practice Platform · Daily Instructor Quick Reference · Version 1.0 · Effective July 27, 2026<br>
+  Defense Language Institute English Language Center · JBSA-Lackland, San Antonio, TX<br>
+  For platform support, contact your B10-PP administrator.
+</div>
+
+</body>
+</html>
