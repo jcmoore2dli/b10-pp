@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10PP W2 Enabling Activities — Trade-offs &amp; Constraints</title>
+<style>
+  :root {
+    --navy:#1a2744; --gold:#c9a84c; --gold-lt:#f5e9c8; --slate:#4a5568;
+    --green:#2d6a4f; --green-lt:#d8f3dc; --amber-lt:#fff3cd; --amber-bdr:#d08800;
+    --blue-lt:#dbeafe; --blue-bdr:#2563eb; --red-lt:#fde8e8; --red-bdr:#b91c1c;
+    --purple-lt:#ede9fe; --purple:#7c3aed; --light:#f7f8fa; --border:#dde1e9; --black:#1a1a1a;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif; color:var(--black);
+         max-width:820px; margin:0 auto; padding:32px 24px 60px; line-height:1.55; }
+  .sys-label { color:var(--slate); font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  h1 { color:var(--navy); font-size:23px; margin:4px 0 2px; }
+  .subtitle { color:var(--gold); font-size:14px; font-weight:700; margin-bottom:18px; }
+  .lede { font-size:13.5px; color:var(--slate); background:var(--light); border:1px solid var(--border);
+          border-radius:6px; padding:12px 16px; margin-bottom:22px; }
+  h2 { color:var(--navy); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+       border-bottom:2px solid var(--gold); padding-bottom:6px; margin-top:34px; }
+
+  .frame-recap { background:var(--navy); border-radius:8px; padding:16px 18px; margin:14px 0 30px; }
+  .frame-recap-label { color:var(--gold); font-size:11px; font-weight:700; letter-spacing:.05em;
+                        text-transform:uppercase; margin-bottom:10px; }
+  .frame-steps { display:flex; gap:12px; flex-wrap:wrap; }
+  .frame-step { flex:1; min-width:150px; }
+  .frame-step b { display:block; color:var(--gold-lt); font-size:12.5px; margin-bottom:2px; }
+  .frame-step span { color:#cbd5e1; font-size:11.5px; }
+  .scale-note { color:#cbd5e1; font-size:11.5px; margin-top:12px; border-top:1px solid #2d4070; padding-top:10px; }
+  .scale-note b { color:#fff; }
+
+  .activity-card { border:1px solid var(--border); border-radius:8px; margin:16px 0; overflow:hidden; }
+  .activity-head { background:var(--light); padding:10px 16px; border-bottom:1px solid var(--border); }
+  .activity-num { color:#a3822f; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+  .activity-title { color:var(--navy); font-size:16px; font-weight:700; margin-top:2px; }
+  .activity-body { padding:16px; }
+  .purpose { font-size:13px; color:var(--slate); font-style:italic; margin-bottom:14px; }
+
+  .callout { border-left:3.5px solid var(--gold); background:var(--gold-lt); border-radius:4px;
+             padding:10px 14px; margin:12px 0; font-size:13px; }
+  .callout-label { font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; color:#6b5416;}
+  .callout.blue { border-color:var(--blue-bdr); background:var(--blue-lt); }
+  .callout.blue .callout-label{ color:#1e40af; }
+  .callout.amber { border-color:var(--amber-bdr); background:var(--amber-lt); }
+  .callout.amber .callout-label{ color:#92620a; }
+  .callout.green { border-color:var(--green); background:var(--green-lt); }
+  .callout.green .callout-label{ color:#1d4a35; }
+  .callout.scenario { border-color:var(--navy); background:#eef1f7; }
+  .callout.scenario .callout-label{ color:var(--navy); }
+  .callout.red { border-color:var(--red-bdr); background:var(--red-lt); }
+  .callout.red .callout-label{ color:#7f1d1d; }
+
+  .ladder-item, .tier-item { display:flex; gap:12px; margin:12px 0; align-items:flex-start; }
+  .step-num { flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--navy); color:#fff;
+              font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px;}
+  .step-content { font-size:13.5px; flex:1; }
+  .step-label { font-weight:700; color:var(--navy); font-size:12.5px; display:block; margin-bottom:3px; }
+  .prompt-text { font-style:italic; }
+
+  .box-pair { display:flex; gap:14px; margin:12px 0; flex-wrap:wrap; }
+  .box { flex:1; min-width:220px; border:1px solid var(--border); border-radius:6px; padding:12px 14px; }
+  .box-a { background:#f0f7ff; }
+  .box-b { background:#fff7ed; }
+  .box-label { font-weight:700; font-size:11.5px; color:var(--navy); margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em;}
+  .box ul { margin:0; padding-left:18px; font-size:13px; }
+  .box li { margin-bottom:4px; }
+  .shared-facts { background:var(--light); border:1px solid var(--border); border-radius:6px; padding:12px 14px;
+                   font-size:13px; margin:12px 0; }
+  .shared-facts .callout-label { color:var(--navy); }
+
+  .lex-row { margin:10px 0; }
+  .lex-tags span { display:inline-block; background:var(--purple-lt); color:var(--purple); font-size:11.5px;
+                    font-weight:600; padding:3px 9px; border-radius:10px; margin:2px 5px 2px 0; }
+
+  .model-response { background:#fafbfc; border:1px solid var(--border); border-radius:6px;
+                     padding:14px 16px; font-size:13.5px; line-height:1.8; margin:10px 0; }
+  .tag-stakeholder { background:#dbeafe; padding:1px 3px; border-radius:3px; }
+  .tag-impact { background:#d8f3dc; padding:1px 3px; border-radius:3px; }
+  .tag-scale { background:#fff3cd; padding:1px 3px; border-radius:3px; }
+  .tag-consid { background:#ede9fe; padding:1px 3px; border-radius:3px; }
+
+  .instr-note { font-size:12px; color:var(--slate); border-top:1px dashed var(--border); margin-top:14px; padding-top:9px; }
+  .instr-note b { color:var(--navy); }
+
+  .doc-footer { color:var(--slate); font-size:11px; border-top:1px solid var(--border); margin-top:44px; padding-top:14px; }
+
+  .design-note { background:#fef2f2; border:1.5px solid var(--red-bdr); border-radius:8px; padding:16px 18px;
+                  margin:0 0 28px; font-size:13px; line-height:1.6; }
+  .design-note .dn-label { color:var(--red-bdr); font-size:11px; font-weight:800; letter-spacing:.06em;
+                            text-transform:uppercase; margin-bottom:8px; }
+  .design-note ul { margin:8px 0 8px 18px; padding:0; }
+  .design-note li { margin-bottom:6px; }
+
+  @media print {
+    .activity-card { break-before: page; page-break-before: always; border-color: var(--border) !important; }
+    .frame-recap, .activity-card, .design-note { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sys-label">B10 Practice Platform · ESO/Frames Enabling Activities</div>
+<h1>Week 2 Enabling Activities</h1>
+<div class="subtitle">Trade-offs &amp; Constraints</div>
+
+<div class="lede">
+  This set covers the full six-activity family for Trade-offs &amp; Constraints, organized as two tracks: 1a&ndash;1c
+  build the Benefit &rarr; Trade-off &rarr; Constraint move up in stages (depth ladder, sentence-frame progression,
+  comparison &amp; paraphrase); 4a&ndash;4c test whether it has actually proceduralized (2-box induction, silent
+  protocol, strategic competence under vocabulary constraint). These supplement — they do not replace — the Week 2
+  folder and the ESO/Frames Daily Protocol.
+</div>
+
+<div class="frame-recap">
+  <div class="frame-recap-label">This Week's Frame — Trade-offs &amp; Constraints (W2)</div>
+  <div class="frame-steps">
+    <div class="frame-step"><b>Benefit</b><span>What does the policy achieve?</span></div>
+    <div class="frame-step"><b>Trade-off</b><span>What competing good is sacrificed?</span></div>
+    <div class="frame-step"><b>Constraint</b><span>Why can't the trade-off simply be avoided?</span></div>
+  </div>
+  <div class="scale-note"><b>Key requirement:</b> the constraint step must show why the trade-off is
+    <i>structural</i> — a response that names what's given up without explaining why it can't be preserved
+    alongside the benefit does not meet the standard for this frame. Naming a trade-off is not the same as
+    explaining a constraint.</div>
+</div>
+
+<h2>Activity Index</h2>
+<div style="font-size:13px; color:var(--slate);">
+  1a. Single-Scenario Depth Ladder &nbsp;&middot;&nbsp; 1b. Sentence-Frame Progression &nbsp;&middot;&nbsp;
+  1c. 3-Interval Comparison &amp; Paraphrase &nbsp;&middot;&nbsp; 4a. 2-Box Induction &nbsp;&middot;&nbsp;
+  4b. Silent Protocol &amp; Brief-Back &nbsp;&middot;&nbsp; 4c. Strategic Competence &amp; Fallback
+</div>
+
+<!-- ═══ ACTIVITY 1a ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 1a · Depth Ladder</div>
+    <div class="activity-title">Single-Scenario Depth Ladder — "Scaffold the Scaffold"</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Holds one low-stakes scenario constant while building the Benefit &rarr; Trade-off &rarr;
+      Constraint move in four steps, so the mechanics of the frame — not an unfamiliar topic — are what's being
+      tested. Use before a student's first W2 attempt, or as remediation if the constraint step isn't yet showing
+      up as structural.</div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Anchor Scenario (held constant across all four items)</div>
+      A city converts a lane of street parking into a protected bike lane.
+    </div>
+
+    <div class="ladder-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><span class="step-label">Surface</span>
+        <span class="prompt-text">"What does converting the parking lane to a bike lane achieve?"</span><br>
+        Name one benefit only.</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><span class="step-label">Surface &rarr; Deep</span>
+        <span class="prompt-text">"What is given up to get that benefit?"</span><br>
+        Add the Trade-off box. Just name what's sacrificed — don't explain why yet.</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><span class="step-label">Deep</span>
+        <span class="prompt-text">"The city gains safer cycling routes. Local businesses lose customer parking,
+        and ___."</span><br>
+        Complete the Constraint — why the trade-off can't just be undone (a second lane can't be added without
+        removing something else; the street width is fixed).</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">4</div>
+      <div class="step-content"><span class="step-label">Transfer</span>
+        <span class="prompt-text">"Should cities convert more downtown streets to bike lanes?"</span><br>
+        Full response: benefit + trade-off + constraint, no connector given.</div>
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> 5&ndash;10 minute warm-up. A student who completes Item 4
+      without hesitation is ready for the Week 2 folder.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 1b ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 1b · Sentence-Frame Progression</div>
+    <div class="activity-title">Causal Subordination &rarr; Concessive Subordination &rarr; Appositive</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Builds subordinate-clause complexity in three tiers using connectors that read as ILR
+      2+/3, not just connectors that are technically subordinating. Coordinating conjunctions (FANBOYS) are
+      excluded — and so are "because" and "so": both are grammatically fine, but they're exactly the safe,
+      overused connectors OPI training pushes students away from. T1 uses higher-register causal subordinators
+      that do the same causal job with more precision.</div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Scenario</div>
+      A city converts a lane of street parking into a protected bike lane.
+    </div>
+
+    <div class="tier-item">
+      <div class="step-num">T1</div>
+      <div class="step-content"><span class="step-label">Causal subordination — given that / on the grounds that / considering that</span>
+        Complete each sentence, naming one benefit.
+        <ul style="margin:6px 0 0 18px; padding:0;">
+          <li>"Cyclists support the new bike lane given that ___."</li>
+          <li>"The city council is willing to approve the conversion on the grounds that ___."</li>
+          <li>"Nearby businesses remain open to the idea considering that ___."</li>
+        </ul></div>
+    </div>
+    <div class="tier-item">
+      <div class="step-num">T2</div>
+      <div class="step-content"><span class="step-label">Concessive subordination — although / while / even though</span>
+        Now hold the benefit and the trade-off in tension inside one sentence — harder than T1 because the clause
+        has to concede a cost rather than simply state a reason.
+        <ul style="margin:6px 0 0 18px; padding:0;">
+          <li>"While cyclists gain a safer route, local drivers ___."</li>
+          <li>"Although the bike lane reduces accidents, nearby shop owners ___."</li>
+          <li>"Even though the city gains a greener transportation image, businesses along the route ___."</li>
+        </ul></div>
+    </div>
+    <div class="tier-item">
+      <div class="step-num">T3</div>
+      <div class="step-content"><span class="step-label">Appositives — "Fact, ___, Fact"</span>
+        Embed a stakeholder's benefit-or-cost identity as a defining phrase inside the sentence.
+        <div class="callout" style="margin-top:8px;">
+          <div class="callout-label">Model</div>
+          "Cyclists, the primary beneficiaries of the new protected lane, report feeling safer commuting, while
+          local shop owners, facing a steep drop in curbside customers, argue the trade-off wasn't fairly
+          weighed."
+        </div>
+        Now write your own appositive sentence connecting a benefit-holding stakeholder to the cost another
+        stakeholder bears.</div>
+    </div>
+
+    <div class="instr-note"><b>OPI note:</b> "because" and "so" aren't FANBOYS, but they're exactly the safe,
+      overused connectors OPI training flags as a proficiency ceiling. T1 swaps them for "given that" / "on the
+      grounds that" / "considering that" — same causal-reasoning entry point (still vital groundwork for the
+      Benefit &rarr; Trade-off move), higher register from the first sentence.<br><b>Instructor note:</b> move to
+      T2 only once T1 is fluent. T3 is stretch — optional for students still consolidating the two-sided
+      trade-off requirement.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 1c ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 1c · 3-Interval Comparison</div>
+    <div class="activity-title">Comparison &amp; Paraphrase Prompts</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Connects trade-off vocabulary to comparative sentence structures, moving from a simple
+      one-line comparison to a claim that explicitly names the trade-off as structural.</div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Comparison Pair</div>
+      How the bike lane's benefit to cyclists compares with its cost to local businesses.
+    </div>
+
+    <div class="lex-row">
+      <div class="callout-label" style="color:var(--purple); margin-bottom:6px;">Target Lexicon — must appear at least once</div>
+      <div class="lex-tags"><span>trade-off</span><span>inherent</span><span>structural</span>
+      <span>at the expense of</span><span>on the whole</span></div>
+    </div>
+
+    <div class="ladder-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><span class="step-label">Surface</span>
+        "In one sentence, compare the benefit cyclists get from the new lane with the cost local businesses
+        bear."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><span class="step-label">Deep</span>
+        "Using <i>structural</i>, explain whether the cost to businesses is incidental or built into the design
+        of the bike lane itself."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><span class="step-label">Transfer</span>
+        "Write one complex sentence connecting the benefit to cyclists and the cost to businesses, using
+        <i>inherent</i> or <i>at the expense of</i>."</div>
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> score for lexicon use and whether the response correctly
+      identifies the trade-off as structural — not for stance on whether the bike lane is worth it.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 4a ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 4a · 2-Box Induction</div>
+    <div class="activity-title">Visual Synthesis</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Forces students to infer what makes a trade-off <i>complete</i> versus <i>incomplete</i>
+      from grouped, unlabeled examples — no rule is stated up front.</div>
+
+    <div class="box-pair">
+      <div class="box box-a">
+        <div class="box-label">Box A</div>
+        <ul>
+          <li>The company saved $2 million a year by switching to remote work.</li>
+          <li>The city cut traffic accidents by installing more streetlights.</li>
+          <li>The school raised test scores by extending the school day.</li>
+        </ul>
+      </div>
+      <div class="box box-b">
+        <div class="box-label">Box B</div>
+        <ul>
+          <li>The company saved $2 million a year by switching to remote work, but lost the spontaneous
+            collaboration that used to happen in the office.</li>
+          <li>The city cut traffic accidents by installing more streetlights, but raised its annual energy costs
+            by 15%.</li>
+          <li>The school raised test scores by extending the school day, but cut into students' time for
+            after-school jobs and family responsibilities.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout blue">
+      <div class="callout-label">Task</div>
+      What is missing from the statements in Box A that Box B includes? Why is a Box B–style statement a stronger
+      analytical claim than a Box A–style statement? Answer using a concessive subordinating conjunction —
+      <i>although</i>, <i>while</i>, or <i>even though</i>.
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> don't pre-explain the boxes. The distinction is presence versus
+      absence of the trade-off — Box A statements aren't wrong, they're incomplete for this week's purposes. Let
+      the student name what's missing before you confirm it.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 4b ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 4b · Silent Protocol</div>
+    <div class="activity-title">Silent Modeling &amp; Pre-Attempt Brief-Back</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Separates rule comprehension from production. Students extract the frame's structure from
+      a marked-but-unexplained model, then must plan out loud before they're allowed to attempt their own
+      response.</div>
+
+    <div class="callout amber">
+      <div class="callout-label">Phase 1 — Silent Modeling</div>
+      Read the response below. Three colors mark three different moves. No explanation is given — figure out what
+      each color represents before moving to Phase 2.
+    </div>
+
+    <div class="model-response">
+      The city gains <span class="tag-impact">safer cycling routes and reduced traffic emissions along the
+      corridor</span> — a direct benefit for commuters who switch from driving to biking. But that same redesign
+      removes <span class="tag-scale">forty on-street parking spaces that local shop owners relied on for
+      customer turnover</span>. <span class="tag-consid">Because the street's width is fixed, there's no way to
+      add the bike lane without removing an equivalent amount of parking somewhere on that block — the trade-off
+      isn't a side effect of poor planning, it's the only way the two uses can physically coexist on the same
+      strip of pavement.</span>
+    </div>
+
+    <div class="key-reveal">
+      <b>Key (reveal only after Phase 2):</b><br>
+      <span><span class="swatch" style="background:#d8f3dc;"></span>Benefit</span>
+      <span><span class="swatch" style="background:#fff3cd;"></span>Trade-off</span>
+      <span><span class="swatch" style="background:#ede9fe;"></span>Constraint</span>
+    </div>
+
+    <div class="callout blue" style="margin-top:16px;">
+      <div class="callout-label">Phase 2 — Verbal Brief-Back ("Plan Before You Produce")</div>
+      Before attempting your own response to the prompt below, say out loud — or write in one sentence — what
+      benefit and what trade-off you will name, and why you think the constraint makes the trade-off unavoidable.
+      Do not begin your full response until you've stated your plan.
+    </div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Prompt for Phase 2 Attempt</div>
+      "Should cities make new bike lanes permanent after a trial period, or restore the parking once testing
+      ends?"
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> the brief-back is a planning checkpoint, not a rehearsal —
+      keep it to one sentence. This models a legitimate real-world OPI strategy: a brief pause to organize before
+      speaking.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 4c ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 4c · Strategic Competence</div>
+    <div class="activity-title">Fallback Scaffolding</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Tests whether the benefit-trade-off-constraint move survives without the frame's own
+      vocabulary — the ILR 3 skill of knowing what to do when the exact word isn't available.</div>
+
+    <div class="callout red">
+      <div class="callout-label">Constraint</div>
+      Answer the prompt below without using the words <i>benefit</i>, <i>trade-off</i>, or <i>constraint</i>.
+    </div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Prompt</div>
+      "Should cities convert more downtown streets to bike lanes?"
+    </div>
+
+    <div class="callout-label" style="color:var(--navy); margin:14px 0 6px;">Fallback Strategies to Practice</div>
+    <div class="ladder-item">
+      <div class="step-num">a</div>
+      <div class="step-content"><span class="step-label">Circumlocution</span>
+        Talk around the missing word — instead of "trade-off," try "what has to give" or "the thing you lose to
+        get this."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">b</div>
+      <div class="step-content"><span class="step-label">Term substitution</span>
+        Instead of "benefit" / "constraint," try "what's gained" / "the reason it can't be avoided."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">c</div>
+      <div class="step-content"><span class="step-label">Self-correction</span>
+        "What I mean is..." / "Let me put that another way..."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">d</div>
+      <div class="step-content"><span class="step-label">Hedging</span>
+        "It seems to come with a cost..." / "This tends to require giving something up..."</div>
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> use after a student is reliably naming the constraint as
+      structural with the frame vocabulary available — this is a stress test, not a first attempt.</div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  B10 Practice Platform · W2 Enabling Activities — Trade-offs &amp; Constraints · Version 1.0 · Effective July 27, 2026<br>
+  Defense Language Institute English Language Center · JBSA-Lackland, San Antonio, TX<br>
+  For platform support, contact your B10-PP administrator.
+</div>
+
+</body>
+</html>

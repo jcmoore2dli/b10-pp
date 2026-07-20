@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10PP W5 Enabling Activities — Values, Heuristics &amp; Bias</title>
+<style>
+  :root {
+    --navy:#1a2744; --gold:#c9a84c; --gold-lt:#f5e9c8; --slate:#4a5568;
+    --green:#2d6a4f; --green-lt:#d8f3dc; --amber-lt:#fff3cd; --amber-bdr:#d08800;
+    --blue-lt:#dbeafe; --blue-bdr:#2563eb; --red-lt:#fde8e8; --red-bdr:#b91c1c;
+    --purple-lt:#ede9fe; --purple:#7c3aed; --light:#f7f8fa; --border:#dde1e9; --black:#1a1a1a;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif; color:var(--black);
+         max-width:820px; margin:0 auto; padding:32px 24px 60px; line-height:1.55; }
+  .sys-label { color:var(--slate); font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  h1 { color:var(--navy); font-size:23px; margin:4px 0 2px; }
+  .subtitle { color:var(--gold); font-size:14px; font-weight:700; margin-bottom:18px; }
+  .lede { font-size:13.5px; color:var(--slate); background:var(--light); border:1px solid var(--border);
+          border-radius:6px; padding:12px 16px; margin-bottom:22px; }
+  h2 { color:var(--navy); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+       border-bottom:2px solid var(--gold); padding-bottom:6px; margin-top:34px; }
+
+  .frame-recap { background:var(--navy); border-radius:8px; padding:16px 18px; margin:14px 0 30px; }
+  .frame-recap-label { color:var(--gold); font-size:11px; font-weight:700; letter-spacing:.05em;
+                        text-transform:uppercase; margin-bottom:10px; }
+  .frame-steps { display:flex; gap:12px; flex-wrap:wrap; }
+  .frame-step { flex:1; min-width:150px; }
+  .frame-step b { display:block; color:var(--gold-lt); font-size:12.5px; margin-bottom:2px; }
+  .frame-step span { color:#cbd5e1; font-size:11.5px; }
+  .scale-note { color:#cbd5e1; font-size:11.5px; margin-top:12px; border-top:1px solid #2d4070; padding-top:10px; }
+  .scale-note b { color:#fff; }
+
+  .activity-card { border:1px solid var(--border); border-radius:8px; margin:16px 0; overflow:hidden; }
+  .activity-head { background:var(--light); padding:10px 16px; border-bottom:1px solid var(--border); }
+  .activity-num { color:#a3822f; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+  .activity-title { color:var(--navy); font-size:16px; font-weight:700; margin-top:2px; }
+  .activity-body { padding:16px; }
+  .purpose { font-size:13px; color:var(--slate); font-style:italic; margin-bottom:14px; }
+
+  .callout { border-left:3.5px solid var(--gold); background:var(--gold-lt); border-radius:4px;
+             padding:10px 14px; margin:12px 0; font-size:13px; }
+  .callout-label { font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; color:#6b5416;}
+  .callout.blue { border-color:var(--blue-bdr); background:var(--blue-lt); }
+  .callout.blue .callout-label{ color:#1e40af; }
+  .callout.amber { border-color:var(--amber-bdr); background:var(--amber-lt); }
+  .callout.amber .callout-label{ color:#92620a; }
+  .callout.green { border-color:var(--green); background:var(--green-lt); }
+  .callout.green .callout-label{ color:#1d4a35; }
+  .callout.scenario { border-color:var(--navy); background:#eef1f7; }
+  .callout.scenario .callout-label{ color:var(--navy); }
+  .callout.red { border-color:var(--red-bdr); background:var(--red-lt); }
+  .callout.red .callout-label{ color:#7f1d1d; }
+
+  .ladder-item, .tier-item { display:flex; gap:12px; margin:12px 0; align-items:flex-start; }
+  .step-num { flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--navy); color:#fff;
+              font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px;}
+  .step-content { font-size:13.5px; flex:1; }
+  .step-label { font-weight:700; color:var(--navy); font-size:12.5px; display:block; margin-bottom:3px; }
+  .prompt-text { font-style:italic; }
+
+  .box-pair { display:flex; gap:14px; margin:12px 0; flex-wrap:wrap; }
+  .box { flex:1; min-width:220px; border:1px solid var(--border); border-radius:6px; padding:12px 14px; }
+  .box-a { background:#f0f7ff; }
+  .box-b { background:#fff7ed; }
+  .box-label { font-weight:700; font-size:11.5px; color:var(--navy); margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em;}
+  .box ul { margin:0; padding-left:18px; font-size:13px; }
+  .box li { margin-bottom:4px; }
+  .shared-facts { background:var(--light); border:1px solid var(--border); border-radius:6px; padding:12px 14px;
+                   font-size:13px; margin:12px 0; }
+  .shared-facts .callout-label { color:var(--navy); }
+
+  .lex-row { margin:10px 0; }
+  .lex-tags span { display:inline-block; background:var(--purple-lt); color:var(--purple); font-size:11.5px;
+                    font-weight:600; padding:3px 9px; border-radius:10px; margin:2px 5px 2px 0; }
+
+  .model-response { background:#fafbfc; border:1px solid var(--border); border-radius:6px;
+                     padding:14px 16px; font-size:13.5px; line-height:1.8; margin:10px 0; }
+  .tag-stakeholder { background:#dbeafe; padding:1px 3px; border-radius:3px; }
+  .tag-impact { background:#d8f3dc; padding:1px 3px; border-radius:3px; }
+  .tag-scale { background:#fff3cd; padding:1px 3px; border-radius:3px; }
+  .tag-consid { background:#ede9fe; padding:1px 3px; border-radius:3px; }
+
+  .instr-note { font-size:12px; color:var(--slate); border-top:1px dashed var(--border); margin-top:14px; padding-top:9px; }
+  .instr-note b { color:var(--navy); }
+
+  .doc-footer { color:var(--slate); font-size:11px; border-top:1px solid var(--border); margin-top:44px; padding-top:14px; }
+
+  .design-note { background:#fef2f2; border:1.5px solid var(--red-bdr); border-radius:8px; padding:16px 18px;
+                  margin:0 0 28px; font-size:13px; line-height:1.6; }
+  .design-note .dn-label { color:var(--red-bdr); font-size:11px; font-weight:800; letter-spacing:.06em;
+                            text-transform:uppercase; margin-bottom:8px; }
+  .design-note ul { margin:8px 0 8px 18px; padding:0; }
+  .design-note li { margin-bottom:6px; }
+
+  @media print {
+    .activity-card { break-before: page; page-break-before: always; border-color: var(--border) !important; }
+    .frame-recap, .activity-card, .design-note { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sys-label">B10 Practice Platform · ESO/Frames Enabling Activities</div>
+<h1>Week 5 Enabling Activities</h1>
+<div class="subtitle">Values, Heuristics &amp; Bias</div>
+
+<div class="lede">
+  This set covers the full six-activity family for Values, Heuristics &amp; Bias, organized as two tracks:
+  1a&ndash;1c build the Value &rarr; Assumption &rarr; Competing Framework move up in stages (depth ladder,
+  sentence-frame progression, comparison &amp; paraphrase); 4a&ndash;4c test whether it has actually
+  proceduralized (2-box induction, silent protocol, strategic competence under vocabulary constraint). These
+  supplement — they do not replace — the Week 5 folder and the ESO/Frames Daily Protocol.
+</div>
+
+<div class="frame-recap">
+  <div class="frame-recap-label">This Week's Frame — Values, Heuristics &amp; Bias (W5)</div>
+  <div class="frame-steps">
+    <div class="frame-step"><b>Value</b><span>What does this stakeholder believe is important?</span></div>
+    <div class="frame-step"><b>Assumption</b><span>What must be true for that value to justify their position?</span></div>
+    <div class="frame-step"><b>Competing Framework</b><span>What does a stakeholder on the other side believe instead?</span></div>
+  </div>
+  <div class="scale-note"><b>Key requirement:</b> the competing framework must reflect a genuinely different
+    value system &mdash; not a restatement of the same value with different specifics, and not a strawman. A
+    response that only describes one side's reasoning, or invents an implausible opposing view, does not meet the
+    standard for this frame.</div>
+</div>
+
+<h2>Activity Index</h2>
+<div style="font-size:13px; color:var(--slate);">
+  1a. Single-Scenario Depth Ladder &nbsp;&middot;&nbsp; 1b. Sentence-Frame Progression &nbsp;&middot;&nbsp;
+  1c. 3-Interval Comparison &amp; Paraphrase &nbsp;&middot;&nbsp; 4a. 2-Box Induction &nbsp;&middot;&nbsp;
+  4b. Silent Protocol &amp; Brief-Back &nbsp;&middot;&nbsp; 4c. Strategic Competence &amp; Fallback
+</div>
+
+<!-- ═══ ACTIVITY 1a ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 1a · Depth Ladder</div>
+    <div class="activity-title">Single-Scenario Depth Ladder — "Scaffold the Scaffold"</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Holds one low-stakes scenario constant while building the Value &rarr; Assumption &rarr;
+      Competing Framework move in four steps, so the mechanics of the frame — not an unfamiliar topic — are what's
+      being tested. Values, Heuristics &amp; Bias treats its three elements as parallel rather than sequential
+      once mastered, but this ladder still stages them in order for acquisition purposes. Use before a student's
+      first W5 attempt, or as remediation if the competing framework isn't yet a genuinely different value.</div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Anchor Scenario (held constant across all four items)</div>
+      A company uses AI software to screen job applicants' resumes.
+    </div>
+
+    <div class="ladder-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><span class="step-label">Surface</span>
+        <span class="prompt-text">"What value drives support for AI resume screening?"</span><br>
+        Name one value only (for example, efficiency or standardized fairness).</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><span class="step-label">Surface &rarr; Deep</span>
+        <span class="prompt-text">"What has to be true about the AI system for that value to actually justify
+        using it?"</span><br>
+        Add the Assumption box — what must hold for the value to be a good reason.</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><span class="step-label">Deep</span>
+        <span class="prompt-text">"Supporters value efficient, standardized screening. Critics, however, value
+        ___."</span><br>
+        Complete the Competing Framework — a genuinely different value system, not the same value restated.</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">4</div>
+      <div class="step-content"><span class="step-label">Transfer</span>
+        <span class="prompt-text">"Should landlords be allowed to use AI to screen rental applicants?"</span><br>
+        Full response: value + assumption + competing framework, no connector given.</div>
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> 5&ndash;10 minute warm-up. A student who completes Item 4
+      without hesitation is ready for the Week 5 folder.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 1b ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 1b · Sentence-Frame Progression</div>
+    <div class="activity-title">Causal Subordination &rarr; Concessive Subordination &rarr; Appositive</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Builds subordinate-clause complexity in three tiers using connectors that read as ILR
+      2+/3, not just connectors that are technically subordinating. Coordinating conjunctions (FANBOYS) are
+      excluded — and so are "because" and "so": both are grammatically fine, but they're exactly the safe,
+      overused connectors OPI training pushes students away from. T1 uses higher-register causal subordinators
+      that do the same causal job with more precision.</div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Scenario</div>
+      A company uses AI software to screen job applicants' resumes.
+    </div>
+
+    <div class="tier-item">
+      <div class="step-num">T1</div>
+      <div class="step-content"><span class="step-label">Causal subordination — given that / on the grounds that / considering that</span>
+        Complete each sentence, naming one value.
+        <ul style="margin:6px 0 0 18px; padding:0;">
+          <li>"Supporters back AI resume screening given that ___."</li>
+          <li>"Hiring managers are willing to adopt the software on the grounds that ___."</li>
+          <li>"Some applicants remain wary of the system considering that ___."</li>
+        </ul></div>
+    </div>
+    <div class="tier-item">
+      <div class="step-num">T2</div>
+      <div class="step-content"><span class="step-label">Concessive subordination — although / while / even though</span>
+        Now hold two competing values in tension inside one sentence — harder than T1 because the clause has to
+        concede that the other side's value is also legitimate, not simply mistaken.
+        <ul style="margin:6px 0 0 18px; padding:0;">
+          <li>"While efficiency-focused hiring teams welcome faster screening, applicants who value
+            individualized consideration ___."</li>
+          <li>"Although the system treats every resume by the same standard, critics who prioritize human
+            judgment ___."</li>
+          <li>"Even though supporters emphasize consistency, those who value contextual fairness ___."</li>
+        </ul></div>
+    </div>
+    <div class="tier-item">
+      <div class="step-num">T3</div>
+      <div class="step-content"><span class="step-label">Appositives — "Fact, ___, Fact"</span>
+        Embed a stakeholder's value identity as a defining phrase inside the sentence.
+        <div class="callout" style="margin-top:8px;">
+          <div class="callout-label">Model</div>
+          "Hiring managers, the primary beneficiaries of faster, standardized screening, welcome the AI system's
+          consistency, while rejected applicants, bearing the cost of decisions made without human context, argue
+          that efficiency was privileged over fairness."
+        </div>
+        Now write your own appositive sentence connecting a value-holding stakeholder to a stakeholder who holds
+        a competing value.</div>
+    </div>
+
+    <div class="instr-note"><b>OPI note:</b> "because" and "so" aren't FANBOYS, but they're exactly the safe,
+      overused connectors OPI training flags as a proficiency ceiling. T1 swaps them for "given that" / "on the
+      grounds that" / "considering that" — same causal-reasoning entry point (still vital groundwork for naming a
+      value), higher register from the first sentence.<br><b>Instructor note:</b> move to T2 only once T1 is
+      fluent. T3 is stretch — optional for students still consolidating the genuinely-different-value
+      requirement.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 1c ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 1c · 3-Interval Comparison</div>
+    <div class="activity-title">Comparison &amp; Paraphrase Prompts</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Connects values/bias vocabulary to comparative sentence structures, moving from a simple
+      one-line comparison to a claim that explicitly names competing priorities.</div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Comparison Pair</div>
+      How supporters and critics of AI resume screening weigh the same efficiency-versus-fairness trade-off
+      differently.
+    </div>
+
+    <div class="lex-row">
+      <div class="callout-label" style="color:var(--purple); margin-bottom:6px;">Target Lexicon — must appear at least once</div>
+      <div class="lex-tags"><span>underlying assumption</span><span>competing priorities</span>
+      <span>at odds with</span><span>privileges</span><span>on balance</span></div>
+    </div>
+
+    <div class="ladder-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><span class="step-label">Surface</span>
+        "In one sentence, compare what supporters of AI screening value most with what critics value most."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><span class="step-label">Deep</span>
+        "Using <i>underlying assumption</i>, explain what a supporter has to believe about the software for
+        their value to hold up."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><span class="step-label">Transfer</span>
+        "Write one complex sentence connecting the two competing values, using <i>at odds with</i> or
+        <i>privileges</i>."</div>
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> score for lexicon use and whether the competing framework is
+      a genuinely different value — not for which side the student takes.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 4a ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 4a · 2-Box Induction</div>
+    <div class="activity-title">Visual Synthesis</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Forces students to identify how two reasonable positions can reach opposite conclusions
+      from identical facts — no rule is stated up front.</div>
+
+    <div class="shared-facts">
+      <div class="callout-label">Shared Facts (both boxes work from this)</div>
+      A city is deciding whether to allow a new large retail store to open on the edge of downtown. The store
+      would create 200 jobs and offer lower prices, but it would likely put several small, family-owned shops
+      out of business.
+    </div>
+
+    <div class="box-pair">
+      <div class="box box-a">
+        <div class="box-label">Box A</div>
+        <ul>
+          <li>The store should be allowed to open — 200 new jobs and lower prices benefit far more residents
+            than the small number of shop owners affected.</li>
+          <li>Efficiency and broad access matter more than protecting a handful of existing businesses.</li>
+        </ul>
+      </div>
+      <div class="box box-b">
+        <div class="box-label">Box B</div>
+        <ul>
+          <li>The store should not be allowed to open — those 200 jobs come at the direct cost of family
+            livelihoods that took years to build.</li>
+          <li>A community's character and the people who built it deserve protection, even if it means slightly
+            higher prices for everyone else.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout blue">
+      <div class="callout-label">Task</div>
+      Box A and Box B are working from the exact same facts. What value is each box prioritizing? Why do two
+      reasonable people, looking at identical information, reach opposite conclusions?
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> don't pre-explain the boxes. Box A prioritizes broad economic
+      efficiency; Box B prioritizes community continuity and protecting existing livelihoods. Neither box is
+      wrong — that's the point of this frame. Let the student name both values before you confirm them.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 4b ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 4b · Silent Protocol</div>
+    <div class="activity-title">Silent Modeling &amp; Pre-Attempt Brief-Back</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Separates rule comprehension from production. Students extract the frame's structure from
+      a marked-but-unexplained model, then must plan out loud before they're allowed to attempt their own
+      response.</div>
+
+    <div class="callout amber">
+      <div class="callout-label">Phase 1 — Silent Modeling</div>
+      Read the response below. Three colors mark three different moves. No explanation is given — figure out what
+      each color represents before moving to Phase 2.
+    </div>
+
+    <div class="model-response">
+      <span class="tag-stakeholder">Hiring managers who adopt AI screening value consistency — treating every
+      applicant against the exact same criteria, without the fatigue or mood swings that affect a human
+      reviewer's tenth interview of the day.</span> <span class="tag-scale">That value only justifies the tool if
+      the criteria themselves are neutral — if the algorithm was trained on data that doesn't quietly favor
+      certain names, schools, or zip codes over others.</span> <span class="tag-consid">Critics start from a
+      different value entirely: they believe every applicant deserves individualized human judgment, and that no
+      amount of statistical consistency makes up for a process that can't explain, in a given case, why a
+      specific person was rejected.</span>
+    </div>
+
+    <div class="key-reveal">
+      <b>Key (reveal only after Phase 2):</b><br>
+      <span><span class="swatch" style="background:#dbeafe;"></span>Value</span>
+      <span><span class="swatch" style="background:#fff3cd;"></span>Assumption</span>
+      <span><span class="swatch" style="background:#ede9fe;"></span>Competing Framework</span>
+    </div>
+
+    <div class="callout blue" style="margin-top:16px;">
+      <div class="callout-label">Phase 2 — Verbal Brief-Back ("Plan Before You Produce")</div>
+      Before attempting your own response to the prompt below, say out loud — or write in one sentence — what
+      value you'll name, what assumption underlies it, and what competing framework you'll set against it. Do not
+      begin your full response until you've stated your plan.
+    </div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Prompt for Phase 2 Attempt</div>
+      "Should universities use AI to screen college applications?"
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> the brief-back is a planning checkpoint, not a rehearsal —
+      keep it to one sentence. This models a legitimate real-world OPI strategy: a brief pause to organize before
+      speaking.</div>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY 4c ═══ -->
+<div class="activity-card">
+  <div class="activity-head">
+    <div class="activity-num">Activity 4c · Strategic Competence</div>
+    <div class="activity-title">Fallback Scaffolding</div>
+  </div>
+  <div class="activity-body">
+    <div class="purpose">Tests whether the value-assumption-competing-framework move survives without the frame's
+      own vocabulary — the ILR 3 skill of knowing what to do when the exact word isn't available.</div>
+
+    <div class="callout red">
+      <div class="callout-label">Constraint</div>
+      Answer the prompt below without using the words <i>value</i>, <i>assumption</i>, or <i>competing
+      framework</i>.
+    </div>
+
+    <div class="callout scenario">
+      <div class="callout-label">Prompt</div>
+      "Should landlords be allowed to use AI to screen rental applicants?"
+    </div>
+
+    <div class="callout-label" style="color:var(--navy); margin:14px 0 6px;">Fallback Strategies to Practice</div>
+    <div class="ladder-item">
+      <div class="step-num">a</div>
+      <div class="step-content"><span class="step-label">Circumlocution</span>
+        Talk around the missing word — instead of "value," try "what matters most to them" or "what they care
+        about."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">b</div>
+      <div class="step-content"><span class="step-label">Term substitution</span>
+        Instead of "assumption" / "competing framework," try "what has to be true for that to make sense" /
+        "what the other side believes instead."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">c</div>
+      <div class="step-content"><span class="step-label">Self-correction</span>
+        "What I mean is..." / "Let me put that another way..."</div>
+    </div>
+    <div class="ladder-item">
+      <div class="step-num">d</div>
+      <div class="step-content"><span class="step-label">Hedging</span>
+        "It seems to matter most to..." / "This tends to conflict with..."</div>
+    </div>
+
+    <div class="instr-note"><b>Instructor note:</b> use after a student is reliably naming a genuinely different
+      competing framework with the frame vocabulary available — this is a stress test, not a first attempt.</div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  B10 Practice Platform · W5 Enabling Activities — Values, Heuristics &amp; Bias · Version 1.0 · Effective July 27, 2026<br>
+  Defense Language Institute English Language Center · JBSA-Lackland, San Antonio, TX<br>
+  For platform support, contact your B10-PP administrator.
+</div>
+
+</body>
+</html>
