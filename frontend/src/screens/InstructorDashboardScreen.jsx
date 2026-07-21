@@ -510,15 +510,15 @@ Use professional instructor register. You may reference ILR levels if relevant. 
       </div>
       <div className="flex border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
         <div className="flex-1 px-4 py-3 border-r border-gray-200 text-center">
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Attempts</p>
+          <p className="text-xs text-gray-700 uppercase tracking-wide font-semibold mb-1">Attempts</p>
           <p className="text-xl font-black text-gray-900">{totalAttempts}</p>
         </div>
         <div className="flex-1 px-4 py-3 border-r border-gray-200 text-center">
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Last Practice</p>
+          <p className="text-xs text-gray-700 uppercase tracking-wide font-semibold mb-1">Last Practice</p>
           <p className="text-sm font-bold text-gray-900">{lastPractice}</p>
         </div>
         <div className="flex-1 px-4 py-3 text-center">
-          <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Last Score</p>
+          <p className="text-xs text-gray-700 uppercase tracking-wide font-semibold mb-1">Last Score</p>
           <p className="text-xl font-black text-gray-900">
             {lastAttempt ? `${lastAttempt.score}/${lastAttempt.taskFamily === 'LEVEL3' ? 4 : 3}` : '—'}
           </p>
@@ -527,7 +527,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
 
       {/* Progress Summary */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Progress Summary</p>
+        <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">Progress Summary</p>
         <div className="flex gap-2">
           <button
             onClick={() => handleProgressSummary(7)}
@@ -565,7 +565,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
       {/* Assign passage */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Assign Passage</p>
+          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Assign Passage</p>
           <button
             onClick={() => { setShowAssign(!showAssign); setAssignError(null); setAssignSuccess(null) }}
             className="text-xs font-semibold text-blue-700 underline"
@@ -856,7 +856,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
             onClick={() => setCoreSectionOpen(prev => !prev)}
             className="w-full flex items-center justify-between"
           >
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
               Bundle Sequence ({coreAttemptedCount}/{coreTotalCount} attempted)
             </p>
             <span className="text-gray-400 text-xs">{coreSectionOpen ? '▲' : '▼'}</span>
@@ -948,7 +948,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
             onClick={() => setFramesSectionOpen(prev => !prev)}
             className="w-full flex items-center justify-between"
           >
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+            <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
               Frames Practice ({frameAttemptedCount}/{frameTotalCount} attempted)
             </p>
             <span className="text-gray-400 text-xs">{framesSectionOpen ? '▲' : '▼'}</span>
@@ -1058,7 +1058,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
           onClick={() => setLfSectionOpen(o => !o)}
           className="w-full flex items-center justify-between"
         >
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
             Linguistic Flexibility
           </p>
           <span className="text-gray-400 text-xs">{lfSectionOpen ? '▲' : '▼'}</span>
@@ -1122,7 +1122,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
       {/* Assignment history */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
             Assigned Passages ({otherAssignments.length})
           </p>
           {selectedAssignmentIds.size > 0 && (
@@ -1239,7 +1239,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
 
       {/* Attempt history */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
+        <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-4">
           Attempt History ({totalAttempts})
         </p>
         {attempts.length === 0 ? (
@@ -1302,7 +1302,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                       {/* Transcript */}
                       {attempt.transcriptText && (
                         <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Transcript</p>
+                          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">Transcript</p>
                           <p className="text-sm text-gray-700 leading-relaxed">{attempt.transcriptText}</p>
                         </div>
                       )}
@@ -1385,7 +1385,7 @@ Use professional instructor register. You may reference ILR levels if relevant. 
                       {/* Transcript note */}
                       {attempt.transcript_note && (
                         <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Note on Recording</p>
+                          <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">Note on Recording</p>
                           <p className="text-sm text-gray-700 leading-relaxed">{attempt.transcript_note}</p>
                         </div>
                       )}
@@ -1592,7 +1592,7 @@ function FeedbackView({ db }) {
           <p className="text-sm text-gray-800 leading-relaxed mb-2">{item.description}</p>
           {item.transcript && (
             <div className="bg-gray-50 rounded-lg p-3 mt-2">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">Transcript</p>
+              <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1">Transcript</p>
               <p className="text-xs text-gray-700 font-mono leading-relaxed whitespace-pre-wrap">{item.transcript}</p>
             </div>
           )}
@@ -1867,7 +1867,7 @@ export default function InstructorDashboardScreen() {
         {view === 'lookup' && (
           <>
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Student Lookup</p>
+              <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-4">Student Lookup</p>
               <div className="flex gap-2">
                 <input
                   type="text"
