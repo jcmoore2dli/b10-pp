@@ -12,3 +12,8 @@ hosting/
 service-account.json
 key/
 .venv/
+
+# Pilot data — never commit
+b10_pilot_archive/
+*.transcripts.csv
+serviceAccount*.json
