@@ -1,7 +1,8 @@
 # Governance for AI-assisted work in this repo
 
 ## Branch discipline
-- Work happens on `toefl-build`. Never commit or push directly to `main`.
+- Work happens on `feature/toefl-platform-build`. Never commit or push
+  directly to `main`.
 - `main` is merged only by JC, via reviewed pull request.
 - Never run `firebase deploy`, `npm run deploy`, or any Cloud Functions/Firestore
   rules deploy command. Deploys are JC-triggered only, always.
