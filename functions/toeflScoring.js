@@ -1490,8 +1490,19 @@ function notBuiltYet(taskType, arrivingWhen) {
 
 const SCORERS = {
   // MCQ — live today.
+  //
+  // LTC belongs here and was missing until Sep 10, which meant every LTC
+  // submission fell through to the trigger's unknown-taskType branch and was
+  // written as scoringStatus "error" — worse than notBuiltYet, which at least
+  // leaves an unbuilt type at "queued". Confirmed against real content before
+  // wiring it: LTC-001's answerKey is {questionIndex, correctOptionId,
+  // rationales} with four options and four rationales per question, exactly
+  // scoreMcq's contract. LTC is absent from the data model's own MCQ list and
+  // from the import spec's both-writes check, which is how it went unnoticed
+  // in both places — see the LTC SPEC GAP note the importer prints.
   AP: scoreMcq,
   AT: scoreMcq,
+  LTC: scoreMcq,
   RDL: scoreMcq,
   LCR: scoreMcq,
   LTA: scoreMcq,
