@@ -1476,6 +1476,200 @@ function renderDeliveryEvidence(entry, clip) {
   ];
 }
 
+// ── BAS — Build a Sentence ────────────────────────────────────────────────────
+//
+// Deterministic comparer, no Anthropic call. Same family as scoreMcq and
+// scoreCompleteTheWords.
+//
+// SCORING IS EXACT-MATCH, ALL-OR-NOTHING, per BAS_Content_Spec_v1_2.md §2.2
+// ("a single target sentence per item, exact-order implied") and the resolution
+// corpus reached with JC on Sep 10, 2026:
+//   · exact-match against the item's accepted ordering — no within-item
+//     partial credit for a partially-correct arrangement
+//   · live grammatical-equivalence checking REJECTED — judging at scoring time
+//     whether a student's alternative arrangement is also grammatical would
+//     make BAS a holistic-judgment type, against the deterministic-comparer
+//     premise it was scoped under. Architectural, not a cost decision.
+//   · genuinely multi-valid items are handled by DATA, never by inference —
+//     see ACCEPTED ORDERINGS below.
+//
+// §2.2 and BAS_Review_Prompt_v1_3.md Check 3 both still carry the open-item
+// language this resolution closes; replacement text is drafted and pending a
+// version-convention decision. scripts/checkSpecDrift.js tracks both.
+const BAS_MIN_FRAGMENTS = 4; // §2.1: confirmed range 4-8 chunks per item
+
+// ACCEPTED ORDERINGS — the shape choice that makes the future schema addition
+// free.
+//
+// Correctness is evaluated as MEMBERSHIP IN A SET of accepted orderings, not
+// equality against a single one. Today that set always has exactly one member,
+// derived from answerKey.correctOrder, and no real item is known to be
+// multi-valid. When corpus's reviewer-populated `acceptedOrderings` array
+// lands, it is read straight through and nothing in the comparison changes —
+// a pure data change, as JC specified.
+//
+// Deliberately NOT inferring anything: if the field is absent, the set is
+// exactly [correctOrder]. A second ordering only ever exists because a content
+// reviewer explicitly confirmed that specific item has one.
+function basAcceptedOrderings(answerKey) {
+  if (Array.isArray(answerKey.acceptedOrderings) && answerKey.acceptedOrderings.length) {
+    return answerKey.acceptedOrderings;
+  }
+  return [answerKey.correctOrder];
+}
+
+function basSameOrder(a, b) {
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((v, i) => v === b[i])
+  );
+}
+
+async function scoreBuildASentence(db, { submissionId, submission, itemId }) {
+  const ctx = { submissionId, taskType: "BAS", itemId };
+
+  const itemRef = db.collection("toeflItems").doc(itemId);
+  const itemSnap = await itemRef.get();
+  if (!itemSnap.exists) {
+    throw new Error(`item document missing at toeflItems/${itemId}`);
+  }
+  const item = itemSnap.data();
+
+  const keySnap = await itemRef.collection("answerKey").doc("key").get();
+  if (!keySnap.exists) {
+    throw new Error(
+      `answerKey document missing at toeflItems/${itemId}/answerKey/key`
+    );
+  }
+  const answerKey = keySnap.data();
+
+  // ── Item-data assertions. A malformed item is a data failure, never a
+  // student's zero — same discipline as MCQ's missing answerKey.
+  const fragments = item.fragments;
+  if (!Array.isArray(fragments) || fragments.length < BAS_MIN_FRAGMENTS) {
+    throw new Error(
+      `item ${itemId} has ${Array.isArray(fragments) ? fragments.length : "no"} ` +
+        `fragments, expected at least ${BAS_MIN_FRAGMENTS} (spec §2.1 range 4-8)`
+    );
+  }
+
+  // fragmentIndex is 0-BASED and contiguous. Asserted rather than assumed
+  // because this data model carries three different index bases — MCQ
+  // questionIndex and CTW gapIndex are 1-based (they come from the source's
+  // own Q1..Qn numbering), while BAS fragmentIndex is 0-based (source chunks
+  // are unnumbered, so it is array position). An off-by-one between
+  // submittedOrder and fragmentIndex is exactly the bug class that silently
+  // mis-assigned INT's questions on Sep 10.
+  const indices = fragments.map((f) => f && f.fragmentIndex);
+  const expected = fragments.map((_, i) => i);
+  if (!basSameOrder(indices, expected)) {
+    throw new Error(
+      `item ${itemId} fragmentIndex values are ${JSON.stringify(indices)}, ` +
+        `expected contiguous 0-based ${JSON.stringify(expected)}`
+    );
+  }
+
+  const correctOrder = answerKey.correctOrder;
+  if (!Array.isArray(correctOrder) || correctOrder.length === 0) {
+    throw new Error(`answerKey for ${itemId} has no correctOrder array`);
+  }
+  if (new Set(correctOrder).size !== correctOrder.length) {
+    throw new Error(
+      `answerKey for ${itemId} has a duplicate fragmentIndex in correctOrder: ` +
+        JSON.stringify(correctOrder)
+    );
+  }
+  if (correctOrder.some((i) => !Number.isInteger(i) || i < 0 || i >= fragments.length)) {
+    throw new Error(
+      `answerKey for ${itemId} has an out-of-range fragmentIndex in ` +
+        `correctOrder: ${JSON.stringify(correctOrder)} against ` +
+        `${fragments.length} fragments`
+    );
+  }
+  // correctOrder may legitimately be SHORTER than fragments: unused entries are
+  // distractor chunks, and 45.5% of real items have none while 54.5% have one
+  // (§3 — "a distractor-free item is not a defect"). Never assume a distractor
+  // exists, and never assume one does not.
+  if (correctOrder.length > fragments.length) {
+    throw new Error(
+      `answerKey for ${itemId} has correctOrder longer than fragments ` +
+        `(${correctOrder.length} > ${fragments.length})`
+    );
+  }
+
+  const acceptedOrderings = basAcceptedOrderings(answerKey);
+
+  // ── The student's arrangement.
+  const submittedOrder = submission.responseContent?.submittedOrder;
+  if (!Array.isArray(submittedOrder)) {
+    throw new Error(
+      `submission ${submissionId} has no responseContent.submittedOrder array`
+    );
+  }
+
+  // Malformed vs simply wrong — the distinction CTW established.
+  //
+  // A duplicate index, or an index outside the fragment set, cannot come from
+  // a student using a working renderer: no drag-and-drop UI lets one chunk be
+  // placed twice or invents a chunk that is not there. Those are integration
+  // failures, logged loudly and scored incorrect, never silently absorbed —
+  // the BAS component does not exist yet (Frontend Scaffold v1.10 schedules it
+  // separately), so absorbing them would hide a renderer disagreeing with the
+  // data model behind a plausible-looking zero.
+  //
+  // Everything else is an ordinary wrong answer:
+  //   · including a distractor index      — the distractor doing its job
+  //   · omitting fragments / wrong length — a partial arrangement is a real
+  //                                         submission
+  //   · an empty array                    — the student left it
+  const problems = [];
+  if (new Set(submittedOrder).size !== submittedOrder.length) {
+    problems.push("duplicate fragmentIndex — one chunk placed more than once");
+  }
+  const outOfRange = submittedOrder.filter(
+    (i) => !Number.isInteger(i) || i < 0 || i >= fragments.length
+  );
+  if (outOfRange.length) {
+    problems.push(
+      `fragmentIndex outside the item's ${fragments.length} fragments: ` +
+        JSON.stringify(outOfRange)
+    );
+  }
+
+  const orderCorrect =
+    problems.length === 0 &&
+    acceptedOrderings.some((ordering) => basSameOrder(submittedOrder, ordering));
+
+  if (problems.length) {
+    logger.error("scoreBuildASentence: malformed submittedOrder", {
+      ...ctx,
+      submittedOrder,
+      fragmentCount: fragments.length,
+      problems,
+      note:
+        "responseContent.submittedOrder must be 0-based fragmentIndex values, " +
+        "each used at most once — a duplicate or out-of-range index indicates " +
+        "the renderer and the item disagree, not a student mistake",
+    });
+  }
+
+  logger.info("scoreBuildASentence: scored", {
+    ...ctx,
+    orderCorrect,
+    acceptedOrderingCount: acceptedOrderings.length,
+    malformed: problems.length > 0,
+  });
+
+  // Data model v1.17: {orderCorrect, correctOrder} — correctOrder is copied
+  // back so the review screen can show the right answer, same reasoning as
+  // MCQ's rationale copy-back. No aggregate or derived score: outcomeType for
+  // BAS is percentCorrect, computed elsewhere, and a single sentence is 0 or
+  // 100 by definition.
+  return { orderCorrect, correctOrder };
+}
+
 // Registered but unbuilt. The branch exists so the dispatch shape is settled;
 // the logic behind it is genuinely not written yet and must not pretend to be.
 // An unbuilt type leaves scoringStatus at "queued" — accurate, since the
@@ -1514,7 +1708,7 @@ const SCORERS = {
 
   // Remaining deterministic types — later gates.
   CTW: scoreCompleteTheWords,
-  BAS: notBuiltYet("BAS", "orderCorrect, later gate"),
+  BAS: scoreBuildASentence,
   LAR: notBuiltYet("LAR", "transcript comparer, later gate"),
 };
 

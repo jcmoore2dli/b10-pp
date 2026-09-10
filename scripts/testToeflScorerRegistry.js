@@ -53,7 +53,7 @@ const stubs = {
 const src =
   fs.readFileSync(SRC, "utf8") +
   "\n;module.exports.__test = { SCORERS, scoreMcq, scoreEmail, scoreDiscussion," +
-  " scoreInterview, scoreCompleteTheWords };";
+  " scoreInterview, scoreCompleteTheWords, scoreBuildASentence };";
 const fn = eval(Module.wrap(src));
 const mod = { exports: {} };
 fn.call(mod.exports, mod.exports, (id) => stubs[id] || require(id), mod, SRC, path.dirname(SRC));
@@ -91,8 +91,8 @@ const EXPECTED = {
   EM: "scoreEmail",
   DISC: "scoreDiscussion",
   CTW: "scoreCompleteTheWords",
+  BAS: "scoreBuildASentence",
   LAR: null,
-  BAS: null,
 };
 
 console.log("\nCase 1 — every taskType in the enum resolves to a callable scorer");
@@ -145,10 +145,26 @@ console.log("\nCase 5 — unbuilt types are present and return null, not absent"
 }
 
 (async () => {
+  // Invoked with empty args because notBuiltYet ignores them entirely. That is
+  // only safe for genuinely unbuilt scorers, so a built one must produce a
+  // clean FAIL telling the reader to update EXPECTED — never an uncaught
+  // TypeError. The first draft of this file called every unbuilt scorer
+  // unguarded, and the moment BAS was wired it crashed mid-suite AFTER
+  // printing a stale "BAS is present (unbuilt, but wired)" pass. A test that
+  // explodes when the code improves is describing what it ran, not what it
+  // should catch.
   for (const t of ALL_TYPES.filter((x) => EXPECTED[x] === null)) {
-    const result = await SCORERS[t]({}, {});
-    check(`${t} returns null so the trigger restores "queued"`, result === null,
-      JSON.stringify(result));
+    let result, threw = null;
+    try {
+      result = await SCORERS[t]({}, {});
+    } catch (err) {
+      threw = err.message;
+    }
+    check(`${t} returns null so the trigger restores "queued"`,
+      threw === null && result === null,
+      threw
+        ? `threw: ${threw} — ${t} looks BUILT now; update EXPECTED in this file`
+        : JSON.stringify(result));
   }
   check("unbuilt scorers log a warning naming the type",
     warnings.length >= ALL_TYPES.filter((x) => EXPECTED[x] === null).length,
