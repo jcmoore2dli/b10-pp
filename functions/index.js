@@ -1477,3 +1477,11 @@ exports.createStudentAccount = onCall(async (request) => {
   logger.info("createStudentAccount: complete", { uid, b10Id, groupId, accessCode: code });
   return { success: true, b10Id };
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TOEFL — additive only. Lives in its own module so nothing above this line is
+// touched by the TOEFL build. Deploy scoped: `firebase deploy --only
+// functions:onToeflSubmissionCreated` — never an unscoped `--only functions`,
+// which would redeploy B10-PP's live routes alongside it.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.onToeflSubmissionCreated = require("./toeflScoring").onToeflSubmissionCreated;
