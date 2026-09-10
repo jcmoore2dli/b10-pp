@@ -267,6 +267,235 @@ const INT_QUESTION_COUNT = 4;
 // avoidable "error".
 const INT_MAX_TOKENS = 4096;
 
+// ── CTW — Complete the Words ──────────────────────────────────────────────────
+//
+// Deterministic comparer, no Anthropic call. Same family as scoreMcq, not the
+// Layer A/B branches: CTW has exactly one correct exact-letter-string per gap
+// (CTW_Content_Spec_v1_2.md §4), so there is nothing for a model to judge.
+//
+// SCORING IS BINARY PER GAP, NO PARTIAL CREDIT. §4 deferred within-gap partial
+// credit to "the platform's scoring implementation"; that confirmation was
+// given by JC on Sep 4 and recorded in Data Model v1.12 ("Binary
+// correct/incorrect per gap, no partial credit"). CTW_Content_Spec_v1_2.md §4
+// and CTW_Review_Prompt_v1_2.md both still carry the open-item language and are
+// stale relative to that decision — raised with corpus Sep 10, not this
+// function's problem to resolve.
+const CTW_GAP_COUNT = 10;
+
+// SEAM 1 — US/UK spelling variants. DECIDED (corpus, Sep 10): accept both.
+//
+// Corpus's reasoning, recorded because it is a construct judgment: CTW tests
+// word-recognition from context, not spelling convention, so rejecting a
+// correctly-spelled British variant would test something this task type was
+// never built to measure. This is a distinct question from the partial-credit
+// one the Sep 4 decision closed — that was "is a near-miss partly right?"
+// (no); this is "is a variant spelling a different answer?" (no).
+//
+// Keyed by the AUTHORED completion; the value lists additionally-acceptable
+// completions. Keying by completion makes each entry global across all gaps,
+// so the set below was verified against all 530 real imported gaps before
+// being written (Sep 10):
+//   · the 5 entries hit exactly 7 gaps, matching the 7 identified as exposed —
+//     no inert entries, no over-reach
+//   · zero gaps carry an authored British completion, so no inverted mapping
+//     is needed
+//   · the only other completions containing "ise"/"ising"/"isation" are
+//     "wise" (otherwise, x2) and "rtisers" (Advertisers), none of which any
+//     entry below touches
+//
+// The 7 gaps covered: organization (CTW-AM-022 g3), revitalization
+// (CTW-AM-044 g5), privatization (CTW-BE-006 g7), symbolizing (CTW-AM-046 g3),
+// emphasize (CTW-ED-054 g1), specialized (CTW-PT-030 g2), pressurizes
+// (CTW-PT-052 g5). Note realized (CTW-HA-025 g6) needs no entry: its "z" sits
+// in the given prefix, so the completion is "ed" in either variety.
+const CTW_VARIANT_EQUIVALENCE = Object.freeze({
+  ization: ["isation"],
+  olizing: ["olising"],
+  asize: ["asise"],
+  ialized: ["ialised"],
+  izes: ["ises"],
+});
+
+function ctwAcceptableCompletions(correctCompletion) {
+  const extra = CTW_VARIANT_EQUIVALENCE[correctCompletion];
+  return extra ? [correctCompletion, ...extra] : [correctCompletion];
+}
+
+// SEAM 2 — prefix case. DECIDED (JC, Sep 10): case-insensitive.
+//
+// 43 of 530 authored gaps have a capitalised given part ("Resear" + "chers" =
+// "Researchers"). Since responses are whole reconstructed words (decision
+// below), the student types that capital. JC's reasoning, recorded because it
+// is a construct judgment and not an implementation convenience: CTW tests
+// whether the student can supply the correct completing letters, not whether
+// they can reproduce an item-authored capital that has nothing to do with
+// vocabulary or spelling. "Researchers" and "researchers" represent identical
+// knowledge.
+//
+// Note this applies ONLY to the given prefix. The completion itself is still
+// compared case-sensitively — and that costs nothing, because all 530 authored
+// completions are purely lowercase [a-z]+ (verified against real imported
+// content, Sep 10).
+function ctwPrefixMatches(response, givenLetters) {
+  return (
+    response.length >= givenLetters.length &&
+    response.slice(0, givenLetters.length).toLowerCase() ===
+      givenLetters.toLowerCase()
+  );
+}
+
+// SEAM 3 — response shape. DECIDED (JC, Sep 10): the WHOLE reconstructed word,
+// not the completion alone.
+//
+// Data model v1.6 defines responseContent as
+// {gapResponses: [{gapIndex, response}, ...]} but never says which of the two
+// `response` holds. JC's call: the whole word, because it is what a real CTW
+// renderer most naturally produces (the student sees and edits the full word,
+// not an isolated fragment) and it makes the stored response self-describing
+// without needing the item alongside it to interpret. The comparer strips
+// givenLetters itself, which is cheap.
+//
+// A response that does NOT start with givenLetters is therefore an integration
+// mismatch, not a wrong answer, and is reported as such — see below. The CTW
+// renderer does not exist yet (Frontend Scaffold v1.10 schedules it
+// separately), so silently absorbing a completion-only response as ten wrong
+// answers would hide the renderer disagreeing with this decision.
+async function scoreCompleteTheWords(db, { submissionId, submission, itemId }) {
+  const ctx = { submissionId, taskType: "CTW", itemId };
+
+  const itemRef = db.collection("toeflItems").doc(itemId);
+  const itemSnap = await itemRef.get();
+  if (!itemSnap.exists) {
+    throw new Error(`item document missing at toeflItems/${itemId}`);
+  }
+  const item = itemSnap.data();
+
+  const keySnap = await itemRef.collection("answerKey").doc("key").get();
+  if (!keySnap.exists) {
+    throw new Error(
+      `answerKey document missing at toeflItems/${itemId}/answerKey/key`
+    );
+  }
+  const answerKey = keySnap.data();
+
+  // Ten gaps on both sides is a hard corpus rule (§3.1, "no exceptions"), so
+  // any other count is a data failure rather than a variation to absorb — the
+  // same discipline the importer applies when writing these.
+  const gaps = item.gaps;
+  const keyGaps = answerKey.gaps;
+  if (!Array.isArray(gaps) || gaps.length !== CTW_GAP_COUNT) {
+    throw new Error(
+      `item ${itemId} has ${Array.isArray(gaps) ? gaps.length : "no"} public ` +
+        `gaps, expected exactly ${CTW_GAP_COUNT}`
+    );
+  }
+  if (!Array.isArray(keyGaps) || keyGaps.length !== CTW_GAP_COUNT) {
+    throw new Error(
+      `answerKey for ${itemId} has ` +
+        `${Array.isArray(keyGaps) ? keyGaps.length : "no"} gaps, expected ` +
+        `exactly ${CTW_GAP_COUNT}`
+    );
+  }
+
+  const gapResponses = submission.responseContent?.gapResponses;
+  if (!Array.isArray(gapResponses)) {
+    throw new Error(
+      `submission ${submissionId} has no responseContent.gapResponses array`
+    );
+  }
+
+  const givenByIndex = new Map(gaps.map((g) => [g.gapIndex, g.givenLetters]));
+  const keyByIndex = new Map(
+    keyGaps.map((g) => [g.gapIndex, g.correctCompletion])
+  );
+
+  const perGapResults = [];
+  const mismatches = [];
+
+  for (const gap of gaps) {
+    const gapIndex = gap.gapIndex;
+    const givenLetters = givenByIndex.get(gapIndex);
+    const correctCompletion = keyByIndex.get(gapIndex);
+
+    if (typeof correctCompletion !== "string" || correctCompletion === "") {
+      throw new Error(
+        `answerKey for ${itemId} has no correctCompletion for gap ${gapIndex}`
+      );
+    }
+
+    const entry = gapResponses.find((r) => r && r.gapIndex === gapIndex);
+    // An unanswered gap is a wrong answer, not an error: a student may leave
+    // one blank. Distinct from a malformed response, below.
+    const rawResponse = entry && typeof entry.response === "string"
+      ? entry.response
+      : "";
+    const response = rawResponse.trim();
+
+    let supplied = null;
+    let malformed = false;
+
+    if (response === "") {
+      supplied = "";
+    } else if (ctwPrefixMatches(response, givenLetters)) {
+      supplied = response.slice(givenLetters.length);
+    } else {
+      // Does not begin with the given letters. Either the renderer sent the
+      // completion alone (disagreeing with the whole-word decision) or the
+      // student overwrote the given portion. Recorded and reported, and scored
+      // incorrect rather than guessed at — never re-interpreted as a
+      // completion, which would silently paper over a renderer mismatch.
+      malformed = true;
+      supplied = null;
+    }
+
+    const isCorrect =
+      !malformed &&
+      supplied !== null &&
+      ctwAcceptableCompletions(correctCompletion).includes(supplied);
+
+    if (malformed) {
+      mismatches.push({ gapIndex, response, givenLetters });
+    }
+
+    perGapResults.push({
+      gapIndex,
+      response: rawResponse,
+      correctCompletion,
+      isCorrect,
+    });
+  }
+
+  if (mismatches.length) {
+    // Loud, with the item ID, because this means the renderer and the data
+    // model disagree about what `response` holds — an integration bug that
+    // would otherwise present as a student scoring zero.
+    logger.error(
+      "scoreCompleteTheWords: responses do not start with the item's given letters",
+      {
+        ...ctx,
+        mismatchCount: mismatches.length,
+        mismatches: mismatches.slice(0, CTW_GAP_COUNT),
+        note:
+          "responseContent.gapResponses[].response must be the whole " +
+          "reconstructed word (JC, Sep 10), not the completion alone",
+      }
+    );
+  }
+
+  const correctCount = perGapResults.filter((r) => r.isCorrect).length;
+  logger.info("scoreCompleteTheWords: scored", {
+    ...ctx,
+    correct: correctCount,
+    of: CTW_GAP_COUNT,
+    malformed: mismatches.length,
+  });
+
+  // No aggregate score field: CTW is binary per gap and the data model defines
+  // perGapResults as the result shape. A total would be a derived value no
+  // spec asks for.
+  return { perGapResults };
+}
+
 // The raw model text goes to the logs, not into the thrown message: the
 // trigger's catch below logs err.message, and a 4KB model response in that
 // field is unreadable. Requirement 1 wants both halves — a visible, retryable
@@ -1273,7 +1502,7 @@ const SCORERS = {
   DISC: scoreDiscussion,
 
   // Remaining deterministic types — later gates.
-  CTW: notBuiltYet("CTW", "perGapResults, later gate"),
+  CTW: scoreCompleteTheWords,
   BAS: notBuiltYet("BAS", "orderCorrect, later gate"),
   LAR: notBuiltYet("LAR", "transcript comparer, later gate"),
 };
