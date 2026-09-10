@@ -24,7 +24,11 @@ const { defineSecret } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 const Anthropic = require("@anthropic-ai/sdk");
-const { EM_RUBRIC_PROMPT } = require("./lib/toeflLayerABPrompts");
+const {
+  EM_RUBRIC_PROMPT,
+  DISC_RUBRIC_PROMPT,
+  INT_RUBRIC_PROMPT,
+} = require("./lib/toeflLayerABPrompts");
 // Modular import deliberately: under the functions emulator, the namespaced
 // admin.firestore.FieldValue is undefined (the runtime wraps admin.firestore
 // without carrying its statics). This form is unaffected, and is the v13
@@ -160,6 +164,113 @@ const EM_FLAGS = new Set([
   "INCOMPLETE_DATA",
 ]);
 
+// Discussion's closed lists, from TOEFL_Discussion_Scoring_Prompt_LayerAB_v1_1.md
+// — the Layer B feature table and the attention-flag list. Five features and
+// three flags: a different, shorter set than Email's, not a superset. Note
+// there is deliberately no "Social conventions" entry — the Discussion rubric
+// retires the register/social-conventions item outright ("Retired — do not
+// report"), and hedging moves under "Syntactic variety and word choice" as a
+// structural resource rather than a politeness one.
+const DISC_FEATURES = new Set([
+  "Relevance / contribution",
+  "Elaboration depth",
+  "Prompt-copying",
+  "Syntactic variety and word choice",
+  "Accuracy",
+]);
+const DISC_FLAGS = new Set([
+  "NO_CONTRIBUTION",
+  "STIMULUS_BORROWED",
+  "INCOMPLETE_DATA",
+]);
+
+// Interview's closed lists, from TOEFL_Interview_Scoring_Prompt_LayerAB_v1_1.md.
+// Six features and five flags — the largest set of the three constructed-
+// response types, because INT is the only one with delivery evidence to judge
+// (Fluency signals, Intelligibility) on top of the text.
+const INT_FEATURES = new Set([
+  "Elaboration",
+  "Prompt-copying",
+  "Fluency signals",
+  "Intelligibility",
+  "Grammar and vocabulary",
+  "Organization",
+]);
+const INT_FLAGS = new Set([
+  "DELIVERY_LIMITING",
+  "OFF_TOPIC",
+  "PROMPT_RECYCLED",
+  "INTELLIGIBILITY_UNCERTAIN",
+  "INCOMPLETE_DATA",
+]);
+
+// INT question types, from the input contract's TYPE enum. The corpus tags its
+// questions more richly than the contract does ("Preference + Reason — B2+",
+// "Descriptive/Observational — B2 accessible — Indirect framing"), so the
+// importer stores the raw tag and this maps it to the contract's four values
+// by leading phrase.
+//
+// The corpus structure is fixed and was verified across all 48 items (192
+// tags): exactly 48 of each family, one per position — Q1 Descriptive,
+// Q2 Preference-Reason, Q3 Trend-Evaluation, Q4 Prediction-Hypothesis. So the
+// prefix mapping is cross-checked against position below, and a disagreement
+// is a loud failure rather than a silent mismap. That check is the whole point
+// of mapping by prefix instead of by position alone: an item regenerated with
+// a reordered question set stays correct, and an unrecognised tag stops the
+// import rather than being guessed at.
+const INT_TYPE_BY_PREFIX = [
+  [/^Descriptive\/Observational/i, "Descriptive"],
+  [/^Preference \+ Reason/i, "Preference-Reason"],
+  [/^Trend\/Policy Evaluation/i, "Trend-Evaluation"],
+  [/^Prediction\/Hypothesis/i, "Prediction-Hypothesis"],
+];
+const INT_TYPE_BY_POSITION = [
+  "Descriptive",
+  "Preference-Reason",
+  "Trend-Evaluation",
+  "Prediction-Hypothesis",
+];
+
+// Delivery-evidence divergence, stated in code because it changes what the
+// model is shown.
+//
+// The v1.1 input contract asks for "mean run length: [words between pauses >
+// 0.495s]" and "long pauses: [count per minute]". This pipeline cannot produce
+// either as specified: computeDisfluencyMetadata() in lib/claudeScorer.js
+// measures pauses at 1.5s and 2.5s, never 0.495s, and
+// claudeScorer_TOEFL_INTERVIEW_v3_2.md records that the 0.495s figures are
+// "unusable as calibration seeds for anything in this pipeline" — the threshold
+// is a retired artifact of the old taxonomy.
+//
+// JC's call, Sep 10: render what the pipeline actually produces and label the
+// divergence honestly in the input, rather than hold INT or fabricate a
+// 0.495s number. The rendered block therefore names its own thresholds, so the
+// model is never silently told it is reading a metric it is not.
+//
+// OPEN ITEM — NEEDS A REAL OWNER, not just this comment. Reconciling the
+// 0.495s contract against the 1.5s/2.5s pipeline is carried to the next Fable
+// calibration session as an explicit agenda item (JC, Sep 10). Until then A3
+// governs: the evidence is qualitative and "no number in the delivery evidence
+// maps to a band", which is what makes rendering different thresholds safe
+// rather than score-affecting.
+const DELIVERY_PAUSE_THRESHOLDS = { long: 1.5, severe: 2.5 };
+
+// Four questions per Interview attempt, fixed (data model v1.17 —
+// interviewClips is the four-clip parent shape; the prompt's OUTPUT requires
+// exactly four entries in each array).
+const INT_QUESTION_COUNT = 4;
+
+// Four rationales plus up to twelve item/observation/target triples from one
+// call — materially more output than EM or DISC. Raised above their 2048 for
+// the same reason theirs was raised above claudeScorer's 1024: a response
+// truncated at the cap is invalid JSON, and requirement 1 turns that into an
+// avoidable "error".
+const INT_MAX_TOKENS = 4096;
+
+// The raw model text goes to the logs, not into the thrown message: the
+// trigger's catch below logs err.message, and a 4KB model response in that
+// field is unreadable. Requirement 1 wants both halves — a visible, retryable
+// "error" status and the raw text server-side.
 function rawFailure(what, raw, { submissionId, taskType }) {
   logger.error(`layerAB: ${what}`, { submissionId, taskType, raw });
   return new Error(`${taskType} ${submissionId}: ${what} — ${raw.slice(0, 200)}`);
@@ -337,6 +448,112 @@ function buildLayerB(layerB, { features, flags, bandZero }, ctx) {
   return { items, flags: flagsOut, label: LAYER_B_LABEL };
 }
 
+// Requirement 2 for INT, which is the one place EM/DISC's shape genuinely does
+// not port: layerA and layerB are two PARALLEL four-entry arrays, one entry per
+// question, never averaged into a task score.
+//
+// validateLayerAObject is reused verbatim, called once per entry — it already
+// enforces every per-entry bullet requirement 2 lists (single object, integer
+// score 0-5, band0Gate consistency, rationale string empty only at 0) and
+// returns a field-by-field pick, so anything the model invented inside an
+// entry never reaches Firestore. Nothing of its internals is duplicated here.
+// What this function adds is only the array envelope and the alignment check.
+function validateLayerAArray(layerA, layerB, raw, ctx) {
+  if (!Array.isArray(layerA)) {
+    throw rawFailure("layerA is not an array", raw, ctx);
+  }
+  if (!Array.isArray(layerB)) {
+    throw rawFailure("layerB is not an array", raw, ctx);
+  }
+  if (layerA.length !== INT_QUESTION_COUNT) {
+    throw rawFailure(
+      `layerA has ${layerA.length} entries, expected ${INT_QUESTION_COUNT}`,
+      raw,
+      ctx
+    );
+  }
+  if (layerB.length !== INT_QUESTION_COUNT) {
+    throw rawFailure(
+      `layerB has ${layerB.length} entries, expected ${INT_QUESTION_COUNT}`,
+      raw,
+      ctx
+    );
+  }
+
+  const out = [];
+  for (let i = 0; i < INT_QUESTION_COUNT; i++) {
+    // The alignment check corpus asked about. Checked BEFORE per-entry
+    // validation on purpose: a misaligned array should fail as misalignment,
+    // not as a confusing score error three questions downstream.
+    //
+    // One strict positional comparison covers all three failure modes the spec
+    // names, which is why there is no separate dedupe or ordering pass:
+    //   · out of order  — a value lands at an index that isn't its own
+    //   · missing       — undefined !== i
+    //   · duplicated    — a repeat forces some later index to mismatch
+    //                     ([0,1,1,3] fails at i=2)
+    // Strict === against a number also rejects the string "0", the same
+    // discipline validateLayerAObject applies to score rejecting "4".
+    if (layerA[i] == null || layerA[i].questionIndex !== i) {
+      throw rawFailure(
+        `layerA[${i}].questionIndex is ${JSON.stringify(
+          layerA[i] == null ? layerA[i] : layerA[i].questionIndex
+        )}, expected ${i} — arrays are parallel by index and must align`,
+        raw,
+        ctx
+      );
+    }
+    if (layerB[i] == null || layerB[i].questionIndex !== i) {
+      throw rawFailure(
+        `layerB[${i}].questionIndex is ${JSON.stringify(
+          layerB[i] == null ? layerB[i] : layerB[i].questionIndex
+        )}, expected ${i} — arrays are parallel by index and must align`,
+        raw,
+        ctx
+      );
+    }
+
+    const entry = validateLayerAObject(layerA[i], raw, {
+      ...ctx,
+      questionIndex: i,
+    });
+
+    // questionIndex is taken from the loop counter, not copied from the model.
+    // We have just asserted the two are equal, so the value is identical —
+    // but sourcing it from i makes the written field definitionally correct
+    // rather than model-supplied, same reasoning as picking fields above.
+    out.push({ questionIndex: i, ...entry });
+  }
+
+  return out;
+}
+
+// Layer B for INT: buildLayerB called once per question, unchanged.
+//
+// The one substantive difference from EM/DISC is bandZero. They pass a single
+// value for the whole submission; INT passes four independent ones, each from
+// that question's OWN score, because requirement 3's last bullet is about a
+// band-0 QUESTION, not a band-0 attempt. A student can score 0 on Q2 and 4 on
+// Q3, and only Q2's items get emptied.
+function buildLayerBArray(layerB, layerAOut, ctx) {
+  const out = [];
+  for (let i = 0; i < INT_QUESTION_COUNT; i++) {
+    const built = buildLayerB(
+      layerB[i],
+      {
+        features: INT_FEATURES,
+        flags: INT_FLAGS,
+        bandZero: layerAOut[i].score === 0,
+      },
+      // questionIndex on ctx so buildLayerB's dropped-content warning says
+      // which question the invalid feature or flag came from.
+      { ...ctx, questionIndex: i }
+    );
+    out.push({ questionIndex: i, ...built });
+  }
+  return out;
+}
+
 // EM — Write an Email. One response, one holistic judgment, one layerA/layerB
 // object (data model v1.17 — EM/DISC are a single map, INT an array of four).
 // Governed by TOEFL_Email_Scoring_Prompt_LayerAB_v1_2.md.
@@ -511,6 +728,525 @@ function buildEmailInput({
   return lines.join("\n");
 }
 
+// DISC — Write for an Academic Discussion. One post, one holistic judgment,
+// one layerA/layerB object — the same shape as EM, not INT's array of four
+// (data model v1.17). Governed by
+// TOEFL_Discussion_Scoring_Prompt_LayerAB_v1_1.md, whose "Trigger-side
+// requirements" section specifies this function's five obligations.
+//
+// Requirements 1, 2 and 3 are discharged entirely by the shared helpers
+// parseLayerAB / validateLayerAObject / buildLayerB (and rawFailure beneath
+// them), already built and emulator-tested for EM. They are called here, never
+// reimplemented — the closed lists are the only per-type input they need.
+// Requirement 5 (idempotency) is discharged upstream by the trigger's claim
+// transaction, which every task type passes through; DISC inherits it by being
+// registered in SCORERS and needs nothing of its own.
+async function scoreDiscussion(db, { submissionId, submission, itemId }) {
+  const ctx = { submissionId, taskType: "DISC", itemId };
+
+  // No answerKey subcollection for DISC — there is no fixed answer to hide
+  // (data model v1.17). The item is read for the thread the rubric judges
+  // against, all of it already public to the student.
+  const itemSnap = await db.collection("toeflItems").doc(itemId).get();
+  if (!itemSnap.exists) {
+    throw new Error(`item document missing at toeflItems/${itemId}`);
+  }
+  const item = itemSnap.data();
+
+  // EM/DISC responseContent is {text, wordCount} (data model Collection 3).
+  // wordCount is deliberately not passed to the model — A3 makes word count a
+  // non-criterion, and the surest way to keep it out of the judgment is to
+  // keep it out of the prompt. An empty string is deliberately not
+  // short-circuited either: A0 owns the band-0 call, and reimplementing that
+  // gate here would put rubric logic in code where it is not reviewable as
+  // rubric. The cost is one model call on an empty post.
+  const responseText = submission.responseContent?.text;
+  if (typeof responseText !== "string") {
+    throw new Error(
+      `submission ${submissionId} has no responseContent.text string`
+    );
+  }
+
+  // Whether the item actually supplies both peer posts is a fact the trigger
+  // can prove, so it is computed here rather than inferred by the model.
+  // A post with no text is not a post — an empty string would render as a
+  // present-but-blank line, which is worse than a declared absence.
+  const peers = Array.isArray(item.stimulus?.peerResponses)
+    ? item.stimulus.peerResponses
+    : [];
+  const usablePeers = peers.filter(
+    (p) => p && typeof p.text === "string" && p.text.trim() !== ""
+  );
+  const hasBothPeerPosts = usablePeers.length >= 2;
+
+  const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
+  const response = await client.messages.create({
+    model: LAYER_AB_MODEL,
+    max_tokens: LAYER_AB_MAX_TOKENS,
+    temperature: 0,
+    // top_k 1 alongside temperature 0, same standing reason as EM: Sep 9
+    // emulator testing showed run-to-run Layer B variance on an identical
+    // submission, and spec §7's calibration protocol compares scores across
+    // runs.
+    top_k: 1,
+    system: DISC_RUBRIC_PROMPT,
+    messages: [
+      {
+        role: "user",
+        content: buildDiscussionInput({
+          itemId,
+          submission,
+          item,
+          responseText,
+          usablePeers,
+        }),
+      },
+    ],
+  });
+
+  const raw = response.content?.[0]?.text || "";
+
+  const parsed = parseLayerAB(raw, ctx);
+  const layerA = validateLayerAObject(parsed.layerA, raw, ctx);
+  const layerB = buildLayerB(
+    parsed.layerB,
+    {
+      features: DISC_FEATURES,
+      flags: DISC_FLAGS,
+      bandZero: layerA.score === 0,
+    },
+    ctx
+  );
+
+  // INCOMPLETE_DATA, written deterministically rather than left to the model —
+  // the same call JC made for EM's missing relationshipType, applied to the
+  // same failure mode. The input contract's rule is "peer posts were missing
+  // from the input", which is a provable fact about the item, not a judgment
+  // about the writing; the model can only infer it from a line that is not
+  // there, and noticing an absence is exactly what it proved unreliable at.
+  //
+  // Deduplicated: if the model did raise it, buildLayerB has already kept it
+  // (INCOMPLETE_DATA is on DISC_FLAGS) and this adds nothing. Applied at band 0
+  // too — the input was incomplete regardless of what the post scored, and
+  // only items are emptied for a band-0 response, not flags.
+  //
+  // Note what this deliberately does NOT do: it does not touch layerA. The
+  // input contract is explicit that missing posts are "not a reason to lower
+  // the placement", so the absence surfaces as feedback only.
+  if (!hasBothPeerPosts && !layerB.flags.includes("INCOMPLETE_DATA")) {
+    layerB.flags.push("INCOMPLETE_DATA");
+    logger.info(
+      "scoreDiscussion: added INCOMPLETE_DATA — item supplies fewer than two peer posts",
+      { ...ctx, peerPostsFound: usablePeers.length }
+    );
+  }
+
+  logger.info("scoreDiscussion: scored", { ...ctx, score: layerA.score });
+
+  // Requirement 4 — status and instructor are the trigger's, never the
+  // model's. The trigger's own write adds scoringStatus and scoredAt on top.
+  return {
+    layerA,
+    layerB,
+    status: {
+      provisional: true,
+      instructorConfirmRequired: INSTRUCTOR_CONFIRM_REQUIRED,
+    },
+    instructor: null,
+  };
+}
+
+// The prompt doc's input contract, filled from the item. Field shapes are the
+// ones confirmed against real corpus content while building the importer
+// (Sep 10): stimulus.professorPrompt is one string, stimulus.peerResponses is
+// an array of {label, peerName, text} where peerName is null for the 26 items
+// that leave their peers unnamed and a real name for the 4 that don't
+// (DISC-002 Sofia/Marcus, DISC-005 Daniel/Priya, DISC-007 Aisha/Tom,
+// DISC-010 Wei/Grace).
+function buildDiscussionInput({
+  itemId,
+  submission,
+  item,
+  responseText,
+  usablePeers,
+}) {
+  const professorPrompt = item.stimulus?.professorPrompt;
+
+  // An item that cannot fill the contract is an item-data failure, not a
+  // student's zero. Loud, for the same reason EM's missing scenario is loud:
+  // scoring a post for relevance against an absent question would produce a
+  // plausible-looking wrong number. Relevance is judged against this text, so
+  // its absence is not a degradable input the way a missing peer post is.
+  if (typeof professorPrompt !== "string" || professorPrompt.trim() === "") {
+    throw new Error(
+      `item ${itemId} is not a scorable DISC item ` +
+        `(needs stimulus.professorPrompt)`
+    );
+  }
+
+  // Both post lines are always rendered, A then B. A missing post shows as an
+  // explicit "(not provided)" rather than being dropped — an omitted line asks
+  // the model to notice an absence, which it demonstrably does not; a present
+  // line saying the value is missing is something it can read. The flag itself
+  // no longer depends on the model spotting this (see scoreDiscussion).
+  //
+  // "unnamed" is the contract's own literal for a peer the item does not name
+  // ("with the poster's name if the item gives one, otherwise 'unnamed'"), so
+  // a real name is never invented and an absent one is never left ambiguous.
+  const byLabel = new Map(usablePeers.map((p) => [p.label, p]));
+  const postLine = (label) => {
+    const peer = byLabel.get(label);
+    if (!peer) return `STUDENT POST ${label}: (not provided)`;
+    return `STUDENT POST ${label} (${peer.peerName || "unnamed"}): ${peer.text}`;
+  };
+
+  const lines = [
+    `ITEM ID: ${itemId}`,
+    `ATTEMPT ID: ${submission.attemptId}`,
+    "",
+    `PROFESSOR PROMPT: ${professorPrompt}`,
+    postLine("A"),
+    postLine("B"),
+    "",
+    `STUDENT RESPONSE: ${responseText}`,
+  ];
+
+  return lines.join("\n");
+}
+
+// INT — Interview. Four questions, one attempt, ONE model call, two parallel
+// four-entry arrays out. Governed by
+// TOEFL_Interview_Scoring_Prompt_LayerAB_v1_1.md, whose "Trigger-side
+// requirements" section specifies this function's five obligations.
+//
+// Requirements 1 and 3 are discharged by the shared helpers parseLayerAB and
+// buildLayerB (via buildLayerBArray), unchanged. Requirement 2 is discharged
+// by validateLayerAArray, which reuses validateLayerAObject per entry and adds
+// only the array envelope and the alignment check. Requirement 5 (idempotency)
+// is discharged upstream by the trigger's claim transaction, inherited by
+// being registered in SCORERS.
+async function scoreInterview(db, { submissionId, submission, itemId }) {
+  const ctx = { submissionId, taskType: "INT", itemId };
+
+  // No answerKey subcollection for INT — there is no fixed answer to hide
+  // (data model v1.17). The item is read for the four stems, their types, and
+  // the interview framing, all of it already public to the student.
+  const itemSnap = await db.collection("toeflItems").doc(itemId).get();
+  if (!itemSnap.exists) {
+    throw new Error(`item document missing at toeflItems/${itemId}`);
+  }
+  const item = itemSnap.data();
+
+  // The attempt carries the four clips: storagePath, durationSeconds and
+  // transcriptStatus per question (data model v1.17, interviewClips). This is
+  // the ONLY source that can distinguish "the student recorded nothing" from
+  // "a recording exists but transcription failed" — see buildInterviewInput.
+  const attemptSnap = await db
+    .collection("toeflAttempts")
+    .doc(submission.attemptId)
+    .get();
+  if (!attemptSnap.exists) {
+    throw new Error(`attempt ${submission.attemptId} not found`);
+  }
+  const attempt = attemptSnap.data();
+
+  // buildInterviewInput throws on a transcription failure, and it is called
+  // BEFORE the client is constructed on purpose: the input contract is
+  // explicit that on a transcription failure "the trigger never calls you for
+  // this attempt at all". Building the input first is what makes that true
+  // rather than aspirational.
+  const promptInput = buildInterviewInput({
+    itemId,
+    submission,
+    item,
+    attempt,
+    ctx,
+  });
+
+  const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
+  const response = await client.messages.create({
+    model: LAYER_AB_MODEL,
+    // Four rationales plus up to four x three item/observation/target triples
+    // is materially more output than EM or DISC produce from one call. A
+    // response truncated at the cap is invalid JSON, which requirement 1
+    // correctly turns into "error" — an avoidable one.
+    max_tokens: INT_MAX_TOKENS,
+    temperature: 0,
+    top_k: 1,
+    system: INT_RUBRIC_PROMPT,
+    messages: [{ role: "user", content: promptInput }],
+  });
+
+  const raw = response.content?.[0]?.text || "";
+
+  // parseLayerAB is reused as-is. Its top-level contract — an object with
+  // exactly the keys layerA and layerB — is identical for INT; only what those
+  // keys hold differs, and it does not inspect that.
+  const parsed = parseLayerAB(raw, ctx);
+  const layerA = validateLayerAArray(parsed.layerA, parsed.layerB, raw, ctx);
+  const layerB = buildLayerBArray(parsed.layerB, layerA, ctx);
+
+  // Nothing is averaged, aggregated, or reduced to a task score. The OUTPUT
+  // rules are explicit: "no task score, no average, no 1-6 band anywhere in
+  // this object", and four per-question judgments are the result.
+  logger.info("scoreInterview: scored", {
+    ...ctx,
+    scores: layerA.map((a) => a.score),
+  });
+
+  // Requirement 4 — status and instructor are the trigger's, never the
+  // model's. The trigger's own write adds scoringStatus and scoredAt on top.
+  return {
+    layerA,
+    layerB,
+    status: {
+      provisional: true,
+      instructorConfirmRequired: INSTRUCTOR_CONFIRM_REQUIRED,
+    },
+    instructor: null,
+  };
+}
+
+// The prompt doc's input contract, assembled from the item, the attempt's
+// interviewClips, and the submission's per-question transcripts.
+//
+// THE DISTINCTION THIS FUNCTION EXISTS TO MAKE. A student who recorded nothing
+// and a Deepgram call that failed are indistinguishable from inside the model,
+// and only one of them is a band 0. They differ in SCOPE as well as outcome,
+// which is the part a port of EM's single-missing-field logic would flatten:
+//
+//   no recording        per QUESTION.  storagePath absent. The model IS called,
+//                       is told "[NO RECORDING]" for that question, and scores
+//                       it band 0 / "no response" / empty Layer B. The other
+//                       three questions score normally.
+//
+//   transcription fail  per ATTEMPT.   storagePath PRESENT but no usable
+//                       transcript. The model is never called at all; this
+//                       throws, the trigger's catch sets scoringStatus
+//                       "error", and the failure is visible and retryable.
+//                       A system failure is never scored as a student's zero.
+//
+// Precedence is explicit: storagePath absence wins. No recording is no
+// recording regardless of what transcriptStatus says about it.
+function buildInterviewInput({ itemId, submission, item, attempt, ctx }) {
+  const contextSentence = item.stimulus?.contextSentence;
+  const questions = item.prompt?.questions;
+
+  // An item that cannot fill the contract is an item-data failure, not a
+  // student's zero — same reasoning as EM's missing scenario and DISC's
+  // missing professor prompt.
+  if (!Array.isArray(questions) || questions.length !== INT_QUESTION_COUNT) {
+    throw new Error(
+      `item ${itemId} is not a scorable INT item ` +
+        `(needs ${INT_QUESTION_COUNT} prompt.questions, found ` +
+        `${Array.isArray(questions) ? questions.length : "none"})`
+    );
+  }
+
+  const clips = Array.isArray(attempt.interviewClips)
+    ? attempt.interviewClips
+    : [];
+  const transcripts = Array.isArray(submission.responseContent?.transcripts)
+    ? submission.responseContent.transcripts
+    : [];
+
+  const blocks = [];
+  for (let i = 0; i < INT_QUESTION_COUNT; i++) {
+    // INDEX BASE CONVERSION, in one place and deliberately explicit.
+    //
+    // Corpus items number their questions 1..4 — the file's own Q1..Q4, which
+    // the importer preserves verbatim, consistent with the MCQ types storing
+    // 1..5. The scoring prompt's OUTPUT contract indexes layerA/layerB 0..3.
+    // Runtime artifacts (interviewClips, responseContent.transcripts) are
+    // 0-based to match the scoring contract, so only the item lookup converts.
+    //
+    // This was a real bug before it was a comment: a `find` on the raw loop
+    // index matched the item's 1-based value, so output index 1 resolved to Q1,
+    // 2 to Q2, 3 to Q3 — Q1 rendered twice and Q4 never scored, silently. The
+    // array-position fallback that used to sit here masked it for index 0.
+    // There is no fallback now: a missing question is loud.
+    const question = questions.find((q) => q.questionIndex === i + 1);
+    if (!question) {
+      throw new Error(
+        `item ${itemId} has no question with questionIndex ${i + 1} ` +
+          `(found ${JSON.stringify(questions.map((q) => q.questionIndex))}) — ` +
+          `items are 1-based, scoring output is 0-based`
+      );
+    }
+    const clip = clips.find((c) => c && c.questionIndex === i);
+    const entry = transcripts.find((t) => t && t.questionIndex === i);
+
+    const hasRecording = !!(clip && clip.storagePath);
+    const transcriptText =
+      entry && typeof entry.transcript === "string" ? entry.transcript : null;
+
+    if (hasRecording && (transcriptText === null || clip.transcriptStatus !== "complete")) {
+      // Transcription failure, attempt-level. Thrown, never rendered: the
+      // model must not be asked to score this attempt at all.
+      //
+      // transcriptStatus's legal values are not enumerated in data model
+      // v1.17, so this fails closed on anything that is not an explicit
+      // "complete" WITH a transcript — "pending" included. A submission
+      // stuck at "error" is visible and retryable; a score computed from
+      // evidence that had not arrived yet is neither.
+      throw new Error(
+        `INT transcription failure on Q${i + 1} of attempt ` +
+          `${submission.attemptId}: recording exists at ` +
+          `${clip.storagePath} but transcriptStatus is ` +
+          `${JSON.stringify(clip.transcriptStatus)} and transcript is ` +
+          `${transcriptText === null ? "absent" : "present"} — the model is ` +
+          `deliberately not called for this attempt`
+      );
+    }
+
+    blocks.push(
+      renderQuestionBlock({
+        index: i,
+        question,
+        clip,
+        entry,
+        hasRecording,
+        transcriptText,
+        ctx,
+      })
+    );
+  }
+
+  return [
+    `ITEM ID: ${itemId}`,
+    `ATTEMPT ID: ${submission.attemptId}`,
+    `INTERVIEW CONTEXT: ${contextSentence || "(not provided)"}`,
+    "",
+    ...blocks,
+  ].join("\n");
+}
+
+// One QUESTION block of the input contract.
+function renderQuestionBlock({
+  index,
+  question,
+  clip,
+  entry,
+  hasRecording,
+  transcriptText,
+  ctx,
+}) {
+  const lines = [
+    `QUESTION ${index + 1}:`,
+    `  TYPE: ${resolveQuestionType(question, index, ctx)}`,
+    `  STEM: ${question.stem}`,
+  ];
+
+  if (!hasRecording) {
+    // The literal token the input contract specifies. The model reads this and
+    // scores the question band 0 with band0Gate "no response" — it is not
+    // asked to infer anything from a missing line.
+    lines.push(`  TRANSCRIPT: [NO RECORDING]`);
+    lines.push(`  DELIVERY EVIDENCE: [NO RECORDING]`);
+    return lines.join("\n");
+  }
+
+  lines.push(`  TRANSCRIPT: ${transcriptText}`);
+  lines.push(...renderDeliveryEvidence(entry, clip));
+  return lines.join("\n");
+}
+
+// The corpus tags questions more richly than the contract's four-value enum,
+// so map by leading phrase and cross-check against the fixed positional
+// structure. Disagreement is loud, never silently resolved in favour of one.
+function resolveQuestionType(question, index, ctx) {
+  const raw =
+    typeof question.questionType === "string" ? question.questionType : null;
+  const positional = INT_TYPE_BY_POSITION[index];
+
+  if (!raw) {
+    // No tag stored (an item imported before questionType capture). Fall back
+    // to position and say so in the logs rather than silently asserting a type.
+    logger.warn("scoreInterview: no questionType on item question, using position", {
+      ...ctx,
+      questionIndex: index,
+      positional,
+    });
+    return positional;
+  }
+
+  const hit = INT_TYPE_BY_PREFIX.find(([re]) => re.test(raw));
+  if (!hit) {
+    // An unrecognised tag is reported, not guessed at. Position is used so the
+    // attempt still scores, but the tag reaches the logs so a corpus tag the
+    // mapping does not cover is visible during calibration.
+    logger.warn("scoreInterview: unrecognised questionType tag", {
+      ...ctx,
+      questionIndex: index,
+      raw,
+      usingPositional: positional,
+    });
+    return positional;
+  }
+
+  if (hit[1] !== positional) {
+    logger.warn(
+      "scoreInterview: questionType tag disagrees with positional structure",
+      { ...ctx, questionIndex: index, raw, fromTag: hit[1], fromPosition: positional }
+    );
+  }
+  return hit[1];
+}
+
+// Delivery evidence, rendered from what this pipeline can actually produce.
+//
+// The divergence from the contract is named IN the block rather than hidden:
+// the contract asks for run length and long pauses measured at 0.495s, which
+// nothing here computes (see DELIVERY_PAUSE_THRESHOLDS). Labelling the real
+// thresholds means the model is never silently told it is reading a metric it
+// is not. Safe to do because A3 is explicit that "no number in the delivery
+// evidence maps to a band" — the evidence is qualitative input, so different
+// thresholds change what the model sees, not what any number entitles it to.
+//
+// Missing or malformed evidence is NOT estimated, per the contract: the line
+// says so and the model scores from the transcript alone, raising
+// INCOMPLETE_DATA for that question.
+function renderDeliveryEvidence(entry, clip) {
+  const ev = entry && typeof entry.deliveryEvidence === "object"
+    ? entry.deliveryEvidence
+    : null;
+  const duration = clip && typeof clip.durationSeconds === "number"
+    ? clip.durationSeconds
+    : ev && typeof ev.durationSeconds === "number"
+    ? ev.durationSeconds
+    : null;
+
+  if (!ev) {
+    return [
+      "  DELIVERY EVIDENCE: [NOT AVAILABLE — not estimated; score this question",
+      "    from the transcript alone, state in the rationale that delivery could",
+      "    not be assessed, and raise INCOMPLETE_DATA for this question]",
+      `    duration: ${duration === null ? "unknown" : `${duration} seconds`}`,
+    ];
+  }
+
+  const num = (v) => (typeof v === "number" ? v : null);
+  const show = (v, unit) => (v === null ? "not available" : `${v}${unit || ""}`);
+
+  return [
+    "  DELIVERY EVIDENCE:",
+    `    speaking rate: ${show(num(ev.wordsPerMinute), " wpm")}`,
+    `    mean gap between words: ${show(num(ev.meanGapSeconds), "s")}`,
+    `    long pauses (>=${DELIVERY_PAUSE_THRESHOLDS.long}s): ${show(num(ev.longPauseCount))}` +
+      `${ev.longPauseTimestamps ? ` at ${ev.longPauseTimestamps}` : ""}`,
+    `    severe pauses (>=${DELIVERY_PAUSE_THRESHOLDS.severe}s): ${show(num(ev.severePauseCount))}` +
+      `${ev.severePauseTimestamps ? ` at ${ev.severePauseTimestamps}` : ""}`,
+    `    filled pauses (uh/um/eh): ${show(num(ev.filledPauseCount))}`,
+    `    word-confidence pattern: ${ev.wordConfidencePattern || "not available"}`,
+    `    duration: ${show(duration, " seconds")}`,
+    "    NOTE ON THRESHOLDS: pause counts above are measured at " +
+      `${DELIVERY_PAUSE_THRESHOLDS.long}s and ${DELIVERY_PAUSE_THRESHOLDS.severe}s, ` +
+      "not the 0.495s the input contract names, and no mean-run-length figure " +
+      "is computed. Read these as the qualitative evidence A3 describes; do not " +
+      "treat any number as mapping to a band.",
+  ];
+}
+
 // Registered but unbuilt. The branch exists so the dispatch shape is settled;
 // the logic behind it is genuinely not written yet and must not pretend to be.
 // An unbuilt type leaves scoringStatus at "queued" — accurate, since the
@@ -532,9 +1268,9 @@ const SCORERS = {
   LTA: scoreMcq,
 
   // Constructed response — Layer A/B.
-  INT: notBuiltYet("INT", "Layer A/B, next"),
+  INT: scoreInterview,
   EM: scoreEmail,
-  DISC: notBuiltYet("DISC", "Layer A/B, next"),
+  DISC: scoreDiscussion,
 
   // Remaining deterministic types — later gates.
   CTW: notBuiltYet("CTW", "perGapResults, later gate"),

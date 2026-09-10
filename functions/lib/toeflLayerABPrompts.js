@@ -47,4 +47,41 @@ function loadPrompt(filename) {
 // Email_Content_Spec_v1_5.md §3.1 and real corpus content (EM-001).
 const EM_RUBRIC_PROMPT = loadPrompt("TOEFL_Email_Scoring_LayerAB_v1_2.prompt.md");
 
-module.exports = { EM_RUBRIC_PROMPT };
+// DISC — Write for an Academic Discussion.
+// Source: TOEFL_Discussion_Scoring_Prompt_LayerAB_v1_1.md, lines 22-172 — the
+// `## Input contract` section through the end of `## PROMPT`.
+//
+// Same range choice as EM, and for the same reason rather than by imitation:
+// two rules the model needs sit ABOVE the `## PROMPT` heading. Missing peer
+// posts ("score Layer A normally... Raise INCOMPLETE_DATA... Do not treat
+// missing posts as a reason to lower the placement") and the literal
+// band0Gate: "no response" for an empty submission. Cutting from `## PROMPT`
+// would hand the model INCOMPLETE_DATA's definition with no rule for when it
+// applies — the exact defect the Sep 9 EM emulator run surfaced.
+//
+// Verified byte-identical to the source range at extraction time (diff, not
+// eyeball). No rubric text edited — rubric content is governed, CLAUDE.md.
+const DISC_RUBRIC_PROMPT = loadPrompt(
+  "TOEFL_Discussion_Scoring_LayerAB_v1_1.prompt.md"
+);
+
+// INT — Interview. Four questions, one attempt, one call.
+// Source: TOEFL_Interview_Scoring_Prompt_LayerAB_v1_1.md, lines 20-206 — the
+// `## Input contract` section through the end of `## PROMPT`.
+//
+// Same range choice as EM and DISC, and again for a reason verified against
+// this document rather than carried over: two rules the model needs sit ABOVE
+// the `## PROMPT` heading, and both are INT-specific. (1) The no-recording
+// rule — the trigger passes `TRANSCRIPT: [NO RECORDING]` and the model scores
+// that question band 0, versus a transcription failure where the model is
+// never called at all. (2) The missing-delivery-evidence rule — score from the
+// transcript alone, say so in the rationale, raise INCOMPLETE_DATA, never
+// substitute a default. Cutting from `## PROMPT` would drop both.
+//
+// Verified byte-identical to the source range at extraction time (diff, not
+// eyeball). No rubric text edited — rubric content is governed, CLAUDE.md.
+const INT_RUBRIC_PROMPT = loadPrompt(
+  "TOEFL_Interview_Scoring_LayerAB_v1_1.prompt.md"
+);
+
+module.exports = { EM_RUBRIC_PROMPT, DISC_RUBRIC_PROMPT, INT_RUBRIC_PROMPT };

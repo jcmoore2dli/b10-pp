@@ -286,21 +286,28 @@ function extractContentSpecVersion(body) {
 
 // Grab the body of a bold-inline labelled block, up to the next bold label,
 // horizontal rule, or heading.
-function boldBlock(body, label) {
+function boldBlock(body, label, out) {
   // Boundary notes. (1) `$` is NOT usable as "end of input" here: the `m` flag
   // makes it match every line end, which truncated every block at its first
   // newline. `(?![\\s\\S])` is end-of-input regardless of flags. (2) The
   // next-bold-label boundary must exclude `**Qn ...:**` question headers, or
   // the QUESTIONS block ends at its own first question.
   const re = new RegExp(
-    `^\\*\\*${label}(?:\\s*\\([^)]*\\))?:\\*\\*[^\\n]*\\n([\\s\\S]*?)` +
+    `^\\*\\*${label}(?:\\s*\\(([^)]*)\\))?:\\*\\*[^\\n]*\\n([\\s\\S]*?)` +
       `(?=\\n\\*\\*(?!Q\\d)[A-Z][^\\n]*:\\*\\*|\\n---|\\n#{2,}\\s|(?![\\s\\S]))`,
     "m"
   );
   const m = once(body, re, `**${label}:**`);
-  return trimBlock(m[1]);
+  // The label's optional parenthetical is captured, not just tolerated:
+  // DISC's named-peer variant carries the poster's name there
+  // (`**STUDENT POST A (Sofia):**`), and the Discussion scoring prompt's input
+  // contract asks for that name explicitly ("with the poster's name if the
+  // item gives one, otherwise 'unnamed'"). Callers that don't care ignore it.
+  if (out && typeof out === "object") out.paren = m[1] ? clean(m[1]) : null;
+  return trimBlock(m[2]);
 }
 
+// Grab the body under a `## HEADING`, up to the next `##`.
 function headingBlock(body, heading) {
   const re = new RegExp(`^##\\s+${heading}\\s*\\n([\\s\\S]*?)(?=\\n##\\s|(?![\\s\\S]))`, "m");
   const m = once(body, re, `## ${heading}`);
@@ -766,7 +773,8 @@ const PARSERS = {
   INT(body, ctx) {
     const contextSentence = boldBlock(body, "INTERVIEW CONTEXT");
     const section = boldBlock(body, "QUESTIONS");
-    const headers = [...section.matchAll(/^\*\*Q(\d+)\s*(?:\[[^\]]*\])?:\*\*\s*$/gm)];
+    // Capturing the bracket tag, not just tolerating it — see questionType below.
+    const headers = [...section.matchAll(/^\*\*Q(\d+)\s*(?:\[([^\]]*)\])?:\*\*\s*$/gm)];
     if (headers.length !== 4) {
       fail(`INT must have exactly 4 questions, found ${headers.length}`);
     }
@@ -776,7 +784,21 @@ const PARSERS = {
       const end = i + 1 < headers.length ? headers[i + 1].index : section.length;
       const chunk = section.slice(start, end);
       const stemM = once(chunk, /^Stem:\s*(.*)$/m, `INT Q${headers[i][1]} Stem:`);
-      questions.push({ questionIndex: Number(headers[i][1]), stem: collapse(stemM[1]) });
+
+      // questionType is the raw corpus tag from the `**Qn [...]:**` header,
+      // stored verbatim rather than pre-mapped. The Interview scoring prompt's
+      // input contract wants one of four enum values (Descriptive,
+      // Preference-Reason, Trend-Evaluation, Prediction-Hypothesis) and the
+      // corpus tags are richer than that ("Preference + Reason — B2+",
+      // "Descriptive/Observational — B2 accessible — Indirect framing").
+      // Mapping is the scoring branch's job, where it can be cross-checked
+      // against position and logged; the importer's job is provenance, so it
+      // keeps what the file actually says. null when the header carries no tag.
+      questions.push({
+        questionIndex: Number(headers[i][1]),
+        stem: collapse(stemM[1]),
+        questionType: headers[i][2] ? collapse(headers[i][2]) : null,
+      });
     }
     return {
       stimulus: { contextSentence },
@@ -814,16 +836,22 @@ const PARSERS = {
 
   DISC(body, ctx) {
     const professorPrompt = boldBlock(body, "PROFESSOR PROMPT");
-    const postA = boldBlock(body, "STUDENT POST A");
-    const postB = boldBlock(body, "STUDENT POST B");
+    const aOut = {};
+    const bOut = {};
+    const postA = boldBlock(body, "STUDENT POST A", aOut);
+    const postB = boldBlock(body, "STUDENT POST B", bOut);
     const debateM = optional(body, /^\*\*DEBATE TYPE:\*\*\s*(.*)$/m);
 
+    // peerName is null when the item leaves its peers unnamed — the majority
+    // case (26 of 30 items). It is NOT defaulted to a string here: the
+    // scoring prompt's contract distinguishes a real name from "unnamed", and
+    // rendering that distinction is the trigger's job, not the importer's.
     return {
       stimulus: {
         professorPrompt,
         peerResponses: [
-          { label: "A", text: postA },
-          { label: "B", text: postB },
+          { label: "A", peerName: aOut.paren || null, text: postA },
+          { label: "B", peerName: bOut.paren || null, text: postB },
         ],
       },
       prompt: {
@@ -1370,6 +1398,15 @@ async function contentVerificationGate(db, plan) {
             q.stem,
             (lp.questions || [])[i] ? lp.questions[i].stem : undefined
           );
+          if (q.questionType !== undefined) {
+            compare(
+              findings,
+              itemId,
+              `prompt.questions[${q.questionIndex}].questionType`,
+              q.questionType,
+              (lp.questions || [])[i] ? lp.questions[i].questionType : undefined
+            );
+          }
         });
       }
     }
