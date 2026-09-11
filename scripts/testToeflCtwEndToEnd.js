@@ -84,14 +84,14 @@ async function main() {
   for (const c of CASES) {
     await db.collection("toeflAttempts").doc(c.id.replace("SUB", "ATT")).set({
       attemptId: c.id.replace("SUB", "ATT"), itemId: itemDoc.id, taskType: "CTW",
-      uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+      studentId: "TEST-STUDENT-01",
       startedAt: FV.serverTimestamp(), completedAt: FV.serverTimestamp(),
     });
   }
   for (const c of CASES) {
     await db.collection("toeflSubmissions").doc(c.id).set({
       submissionId: c.id, attemptId: c.id.replace("SUB", "ATT"),
-      taskType: "CTW", uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+      taskType: "CTW", studentId: "TEST-STUDENT-01",
       responseContent: { gapResponses: c.responses },
       scoringStatus: "queued", submittedAt: FV.serverTimestamp(),
     });

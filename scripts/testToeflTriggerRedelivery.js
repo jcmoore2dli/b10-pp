@@ -140,7 +140,7 @@ const SUBMISSION = {
   submissionId: SUB_ID,
   attemptId: ATTEMPT_ID,
   taskType: "EM",
-  uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+  studentId: "TEST-STUDENT-01",
   responseContent: { text: "Dear Ms. Danforth, the wheel arrived bent.", wordCount: 8 },
   scoringStatus: "queued",
 };
@@ -174,7 +174,7 @@ async function seed() {
     attemptId: ATTEMPT_ID,
     itemId: ITEM_ID,
     taskType: "EM",
-    uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+    studentId: "TEST-STUDENT-01",
   });
 
   await submissionRef.set({ ...SUBMISSION, submittedAt: FieldValue.serverTimestamp() });

@@ -217,7 +217,7 @@ async function main() {
       attemptId: c.attemptId,
       itemId: c.itemId,
       taskType: "EM",
-      uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+      studentId: "TEST-STUDENT-01",
       startedAt: admin.firestore.FieldValue.serverTimestamp(),
       completedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
@@ -231,7 +231,7 @@ async function main() {
       submissionId: c.submissionId,
       attemptId: c.attemptId,
       taskType: "EM",
-      uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+      studentId: "TEST-STUDENT-01",
       responseContent: { text: c.text, wordCount: wordCount(c.text) },
       scoringStatus: "queued",
       submittedAt: admin.firestore.FieldValue.serverTimestamp(),

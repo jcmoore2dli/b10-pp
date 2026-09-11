@@ -92,7 +92,7 @@ async function seedQueued() {
     submissionId: DOC_ID,
     attemptId: "ATT-CLAIM-TEST-001",
     taskType: "EM",
-    uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+    studentId: "TEST-STUDENT-01",
     responseContent: { text: "throwaway", wordCount: 1 },
     scoringStatus: "queued",
     submittedAt: FieldValue.serverTimestamp(),
