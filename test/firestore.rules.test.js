@@ -2,7 +2,12 @@ const { readFileSync } = require("fs");
 const { initializeTestEnvironment, assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const { doc, getDoc, setDoc, updateDoc, deleteDoc } = require("firebase/firestore");
 
-const PROJECT_ID = "b10-practice-platform";
+// A DEDICATED project, deliberately not the shared one. afterEach() below
+// calls clearFirestore(), which is scoped to this projectId — so when this
+// read "b10-practice-platform" every run of this suite silently wiped every
+// imported corpus item out of the emulator, breaking the fixture and e2e
+// suites that share it. Rules evaluation is identical under any project id.
+const PROJECT_ID = "b10-pp-rules-test";
 const RULES_PATH = "./firebase/firestore.rules";
 
 let testEnv;
