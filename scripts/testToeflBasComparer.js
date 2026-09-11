@@ -15,12 +15,14 @@
 //
 // Three cases exist purely because real data cannot exercise them:
 //
-//   · Case 2 — a set of MORE THAN ONE accepted ordering. No real BAS item is
-//     multi-valid today, so this branch would be entirely unexercised by every
-//     real item and by any end-to-end run. It is the whole point of the
-//     set-membership shape: it proves corpus's future reviewer-populated
-//     acceptedOrderings array works BEFORE the schema lands, so that addition
-//     really is a pure data change.
+//   · Case 2 — a set of MORE THAN ONE accepted ordering, in the shape Firestore
+//     actually permits. No real BAS item is multi-valid today, so this branch is
+//     unexercised by every real item and by any end-to-end run. Its first
+//     version used an array of arrays and passed — against a plain-JS fake
+//     database that holds any shape. Firestore rejects directly nested arrays
+//     outright, so the very scenario the case existed to de-risk would have
+//     failed at write time. It now asserts the shape is STORABLE as well as
+//     that the comparison works.
 //
 //   · Case 11 — a 1-BASED fragmentIndex item. Nothing produces one today. It
 //     is asserted because this data model carries three index bases (MCQ and
@@ -122,6 +124,24 @@ async function throws(fnToRun) {
   try { await fnToRun(); return null; } catch (e) { return e.message; }
 }
 
+// Firestore rejects a DIRECTLY nested array ("3 INVALID_ARGUMENT: Nested
+// arrays are not allowed"). This unit test deliberately never touches
+// Firestore — that is what makes it fast and CI-safe — so the constraint is
+// encoded as a structural assertion it CAN check. This is the specific hole
+// that let the first Case 2 pass: it exercised an array of arrays against a
+// plain-JS fake database, which holds any shape happily, so it validated the
+// comparison logic while being structurally incapable of catching the storage
+// constraint it was written to de-risk.
+function hasDirectlyNestedArray(value) {
+  if (Array.isArray(value)) {
+    return value.some((v) => Array.isArray(v) || hasDirectlyNestedArray(v));
+  }
+  if (value && typeof value === "object") {
+    return Object.values(value).some(hasDirectlyNestedArray);
+  }
+  return false;
+}
+
 (async () => {
 
 console.log("\nCase 1 — real BAS-001, correct arrangement");
@@ -135,21 +155,57 @@ console.log("\nCase 1 — real BAS-001, correct arrangement");
     Object.keys(r).join(","));
 }
 
-console.log("\nCase 2 — set membership with MORE THAN ONE accepted ordering");
-console.log("           (no real item is multi-valid; this proves the future seam)");
+console.log("\nCase 2 — set membership via the Firestore-STORABLE shape");
+console.log("           (array-of-maps; a bare array of arrays is rejected by Firestore)");
 {
-  const second = [6, 2, 5, 1, 4, 0];  // synthetic alternative, reviewer-confirmed shape
-  const key = { correctOrder: BAS001_ORDER, acceptedOrderings: [BAS001_ORDER, second] };
+  const KEY = {
+    correctOrder: BAS001_ORDER,
+    acceptedOrderings: [{ order: [6, 2, 5, 1, 4, 0] }],
+  };
 
-  const a = await run(BAS001_CHUNKS, key, BAS001_ORDER);
-  check("the primary ordering is accepted", a.orderCorrect === true);
-  const b = await run(BAS001_CHUNKS, key, second);
-  check("the SECOND accepted ordering is also accepted", b.orderCorrect === true);
-  const c = await run(BAS001_CHUNKS, key, [0, 1, 2, 3, 4, 5]);
+  check("the answerKey shape has NO directly nested array (Firestore rejects those)",
+    hasDirectlyNestedArray(KEY) === false, JSON.stringify(KEY));
+  check("the OLD array-of-arrays shape is correctly identified as unstorable",
+    hasDirectlyNestedArray({ acceptedOrderings: [[6, 2], [2, 6]] }) === true);
+  check("a flat array of ints is storable",
+    hasDirectlyNestedArray({ correctOrder: BAS001_ORDER }) === false);
+
+  const a = await run(BAS001_CHUNKS, KEY, BAS001_ORDER);
+  check("the primary correctOrder is accepted", a.orderCorrect === true);
+  const b = await run(BAS001_CHUNKS, KEY, [6, 2, 5, 1, 4, 0]);
+  check("the reviewer-added alternative is accepted", b.orderCorrect === true);
+  const c = await run(BAS001_CHUNKS, KEY, [0, 1, 2, 3, 4, 5]);
   check("an ordering on neither list is still wrong", c.orderCorrect === false);
   check("correctOrder still reports the primary, not the matched alternative",
     basSameOrder(b.correctOrder, BAS001_ORDER), JSON.stringify(b.correctOrder));
-  check("helper returns both entries", basAcceptedOrderings(key).length === 2);
+
+  // UNION semantics: the primary survives even when only an alternative is
+  // listed. Under the old "complete set" reading, a reviewer who listed one
+  // alternative would have silently stopped the authored answer being accepted.
+  check("helper returns primary + alternative", basAcceptedOrderings(KEY, "X").length === 2);
+  check("primary is first", basSameOrder(basAcceptedOrderings(KEY, "X")[0], BAS001_ORDER));
+  check("absent field → primary only",
+    basAcceptedOrderings({ correctOrder: BAS001_ORDER }, "X").length === 1);
+  check("empty array → primary only",
+    basAcceptedOrderings({ correctOrder: BAS001_ORDER, acceptedOrderings: [] }, "X").length === 1);
+
+  // Malformed reviewer entries throw rather than being silently dropped.
+  check("a bare array entry throws (the nested-array mistake itself)",
+    (await throws(() => run(BAS001_CHUNKS,
+      { correctOrder: BAS001_ORDER, acceptedOrderings: [[6, 2, 5]] }, BAS001_ORDER))) !== null);
+  check("an entry missing .order throws",
+    (await throws(() => run(BAS001_CHUNKS,
+      { correctOrder: BAS001_ORDER, acceptedOrderings: [{ ordering: [6, 2] }] }, BAS001_ORDER))) !== null);
+  check("an alternative with a duplicate index throws",
+    (await throws(() => run(BAS001_CHUNKS,
+      { correctOrder: BAS001_ORDER, acceptedOrderings: [{ order: [6, 6, 5] }] }, BAS001_ORDER))) !== null);
+  check("an alternative with an out-of-range index throws",
+    (await throws(() => run(BAS001_CHUNKS,
+      { correctOrder: BAS001_ORDER, acceptedOrderings: [{ order: [6, 99] }] }, BAS001_ORDER))) !== null);
+  const msg = await throws(() => run(BAS001_CHUNKS,
+    { correctOrder: BAS001_ORDER, acceptedOrderings: [{ order: [6, 99] }] }, BAS001_ORDER));
+  check("the error names WHICH ordering failed, not just 'correctOrder'",
+    msg && /acceptedOrderings\[0\]\.order/.test(msg), msg);
 }
 
 console.log("\nCase 3 — acceptedOrderings absent or empty falls back to [correctOrder]");

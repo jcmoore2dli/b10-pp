@@ -1498,24 +1498,66 @@ function renderDeliveryEvidence(entry, clip) {
 // version-convention decision. scripts/checkSpecDrift.js tracks both.
 const BAS_MIN_FRAGMENTS = 4; // §2.1: confirmed range 4-8 chunks per item
 
-// ACCEPTED ORDERINGS — the shape choice that makes the future schema addition
-// free.
+// ACCEPTED ORDERINGS — membership in a set, and the shape Firestore actually
+// permits.
 //
 // Correctness is evaluated as MEMBERSHIP IN A SET of accepted orderings, not
-// equality against a single one. Today that set always has exactly one member,
-// derived from answerKey.correctOrder, and no real item is known to be
-// multi-valid. When corpus's reviewer-populated `acceptedOrderings` array
-// lands, it is read straight through and nothing in the comparison changes —
-// a pure data change, as JC specified.
+// equality against a single one. Today that set has exactly one member,
+// answerKey.correctOrder, and no real item is known to be multi-valid.
 //
-// Deliberately NOT inferring anything: if the field is absent, the set is
-// exactly [correctOrder]. A second ordering only ever exists because a content
-// reviewer explicitly confirmed that specific item has one.
-function basAcceptedOrderings(answerKey) {
-  if (Array.isArray(answerKey.acceptedOrderings) && answerKey.acceptedOrderings.length) {
-    return answerKey.acceptedOrderings;
-  }
-  return [answerKey.correctOrder];
+// THE SHAPE IS NOT THE OBVIOUS ONE, and the first version of this comment was
+// wrong to claim the future addition needed no code change. The natural
+// encoding — an array of orderings, each itself an array of fragmentIndex
+// values — is a DIRECTLY NESTED ARRAY, which Firestore prohibits outright:
+//
+//     3 INVALID_ARGUMENT: Nested arrays are not allowed
+//
+// Verified against the emulator, Sep 11. So each ordering is wrapped in a map:
+//
+//     acceptedOrderings: [{ order: [6,2,5,1,0,4] }, { order: [6,2,5,1,4,0] }]
+//
+// That also matches the data model's existing house style — questions:
+// [{questionIndex, …}], gaps: [{gapIndex, …}], fragments: [{fragmentIndex, …}]
+// — and was confirmed to round-trip through the rules-enforced REST path with
+// an admin claim, not merely through an Admin SDK bypass (the Admin SDK skips
+// rules entirely, so a bypass proves nothing about what a real admin UI could
+// write).
+//
+// How this was missed: the unit test written specifically to de-risk this
+// scenario exercised an array of arrays against a plain-JS fake database,
+// which holds any shape happily. It proved the comparison logic and was
+// structurally incapable of catching the storage constraint.
+//
+// UNION, not replacement. correctOrder is always accepted; acceptedOrderings
+// ADDS alternatives. A reviewer recording a second valid arrangement therefore
+// cannot accidentally stop the primary answer from being accepted — which the
+// previous "complete set" reading allowed.
+//
+// Nothing is inferred: an alternative exists only because a content reviewer
+// explicitly confirmed that specific item has one.
+function basAcceptedOrderings(answerKey, itemId) {
+  const orderings = [answerKey.correctOrder];
+  const raw = answerKey.acceptedOrderings;
+  if (!Array.isArray(raw) || raw.length === 0) return orderings;
+
+  raw.forEach((entry, i) => {
+    // A bare array here is the nested-array mistake itself — thrown rather
+    // than coerced, so the wrong shape fails loudly at the first scored
+    // submission instead of silently never matching.
+    if (
+      !entry ||
+      typeof entry !== "object" ||
+      Array.isArray(entry) ||
+      !Array.isArray(entry.order)
+    ) {
+      throw new Error(
+        `answerKey for ${itemId} has a malformed acceptedOrderings[${i}]: ` +
+          `expected {order: [fragmentIndex, ...]}, got ${JSON.stringify(entry)}`
+      );
+    }
+    orderings.push(entry.order);
+  });
+  return orderings;
 }
 
 function basSameOrder(a, b) {
@@ -1575,31 +1617,45 @@ async function scoreBuildASentence(db, { submissionId, submission, itemId }) {
   if (!Array.isArray(correctOrder) || correctOrder.length === 0) {
     throw new Error(`answerKey for ${itemId} has no correctOrder array`);
   }
-  if (new Set(correctOrder).size !== correctOrder.length) {
-    throw new Error(
-      `answerKey for ${itemId} has a duplicate fragmentIndex in correctOrder: ` +
-        JSON.stringify(correctOrder)
-    );
-  }
-  if (correctOrder.some((i) => !Number.isInteger(i) || i < 0 || i >= fragments.length)) {
-    throw new Error(
-      `answerKey for ${itemId} has an out-of-range fragmentIndex in ` +
-        `correctOrder: ${JSON.stringify(correctOrder)} against ` +
-        `${fragments.length} fragments`
-    );
-  }
-  // correctOrder may legitimately be SHORTER than fragments: unused entries are
+
+  // Every accepted ordering gets the SAME integrity checks, not just the
+  // primary. Index 0 IS correctOrder, so nothing is duplicated — the checks are
+  // generalised over the set. A reviewer-entered alternative deserves no weaker
+  // guarantee than the authored answer: one carrying a duplicate or an
+  // out-of-range index would otherwise either never match (silently dead data)
+  // or accept an arrangement that is not really valid.
+  //
+  // Any ordering may legitimately be SHORTER than fragments: unused entries are
   // distractor chunks, and 45.5% of real items have none while 54.5% have one
   // (§3 — "a distractor-free item is not a defect"). Never assume a distractor
   // exists, and never assume one does not.
-  if (correctOrder.length > fragments.length) {
-    throw new Error(
-      `answerKey for ${itemId} has correctOrder longer than fragments ` +
-        `(${correctOrder.length} > ${fragments.length})`
-    );
-  }
-
-  const acceptedOrderings = basAcceptedOrderings(answerKey);
+  const acceptedOrderings = basAcceptedOrderings(answerKey, itemId);
+  acceptedOrderings.forEach((ordering, n) => {
+    const where = n === 0 ? "correctOrder" : `acceptedOrderings[${n - 1}].order`;
+    if (!Array.isArray(ordering) || ordering.length === 0) {
+      throw new Error(
+        `answerKey for ${itemId}: ${where} is not a non-empty array`
+      );
+    }
+    if (new Set(ordering).size !== ordering.length) {
+      throw new Error(
+        `answerKey for ${itemId}: ${where} has a duplicate fragmentIndex: ` +
+          JSON.stringify(ordering)
+      );
+    }
+    if (ordering.some((i) => !Number.isInteger(i) || i < 0 || i >= fragments.length)) {
+      throw new Error(
+        `answerKey for ${itemId}: ${where} has an out-of-range fragmentIndex: ` +
+          `${JSON.stringify(ordering)} against ${fragments.length} fragments`
+      );
+    }
+    if (ordering.length > fragments.length) {
+      throw new Error(
+        `answerKey for ${itemId}: ${where} is longer than fragments ` +
+          `(${ordering.length} > ${fragments.length})`
+      );
+    }
+  });
 
   // ── The student's arrangement.
   const submittedOrder = submission.responseContent?.submittedOrder;

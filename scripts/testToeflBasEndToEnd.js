@@ -36,6 +36,11 @@ function check(label, cond, detail) {
   else { failures++; console.log(`    FAIL  ${label}`); if (detail !== undefined) console.log(`          ${detail}`); }
 }
 
+function sameOrder(a, b) {
+  return Array.isArray(a) && Array.isArray(b) && a.length === b.length &&
+    a.every((v, i) => v === b[i]);
+}
+
 async function waitScored(id, timeoutMs = 60000) {
   const t0 = Date.now();
   while (Date.now() - t0 < timeoutMs) {
@@ -92,11 +97,20 @@ async function main() {
   mk(withoutD, "006", withoutD.order, true, `${withoutD.id} correct, distractor-free item`);
   mk(withoutD, "007", [...withoutD.order].reverse(), false, `${withoutD.id} reversed`);
 
+  // Delete any prior run's submissions FIRST. onDocumentCreated fires on
+  // create only, so a set() over an existing document is an update that the
+  // trigger never sees — every waitScored would then block for its full
+  // timeout. Without this the suite is single-use, which is not a test.
+  const priorIds = [...CASES.map((c) => c.id), "SUB-BAS-E2E-ALT", "SUB-BAS-E2E-PRIM"];
+  for (const id of priorIds) {
+    await db.collection("toeflSubmissions").doc(id).delete();
+  }
+
   for (const c of CASES) {
     const attemptId = c.id.replace("SUB", "ATT");
     await db.collection("toeflAttempts").doc(attemptId).set({
       attemptId, itemId: c.item, taskType: "BAS",
-      uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+      studentId: "TEST-STUDENT-01",
       startedAt: FV.serverTimestamp(), completedAt: FV.serverTimestamp(),
     });
   }
@@ -104,7 +118,7 @@ async function main() {
   for (const c of CASES) {
     await db.collection("toeflSubmissions").doc(c.id).set({
       submissionId: c.id, attemptId: c.id.replace("SUB", "ATT"),
-      taskType: "BAS", uid: "FIXTURE_UID_NOT_A_REAL_STUDENT",
+      taskType: "BAS", studentId: "TEST-STUDENT-01",
       responseContent: { submittedOrder: c.submittedOrder },
       scoringStatus: "queued", submittedAt: FV.serverTimestamp(),
     });
@@ -124,6 +138,98 @@ async function main() {
       JSON.stringify(d.correctOrder));
     check("no aggregate score / no layerA written",
       !("score" in d) && !("layerA" in d) && !("perGapResults" in d), Object.keys(d).join(","));
+  }
+
+  // ── acceptedOrderings round-trip, against REAL Firestore ────────────────
+  //
+  // The unit test asserts the shape contains no directly nested array, but it
+  // never touches Firestore — which is exactly how the first version of that
+  // case passed while testing a shape Firestore rejects outright
+  // ("3 INVALID_ARGUMENT: Nested arrays are not allowed"). This is the other
+  // half: prove the map-wrapped shape genuinely stores, reads back intact, and
+  // is honoured end to end by the trigger.
+  console.log("\n  ── acceptedOrderings round-trip (real Firestore) ──");
+  {
+    const ref = db.collection("toeflItems").doc(withD.id)
+      .collection("answerKey").doc("key");
+
+    // Clear the field FIRST, deterministically. A snapshot-and-restore
+    // approach faithfully restores whatever it captured — including residue
+    // from an aborted earlier run — so the teardown described what it did
+    // rather than what it must guarantee. FieldValue.delete() is idempotent
+    // and self-healing regardless of prior state.
+    await ref.update({ acceptedOrderings: FV.delete() });
+    const before = (await ref.get()).data();
+    check("starting from a clean answerKey (no acceptedOrderings)",
+      before.acceptedOrderings === undefined, JSON.stringify(Object.keys(before)));
+
+    // An alternative ordering: last two positions swapped. Synthetic, standing
+    // in for what a content reviewer would record after confirming a genuine
+    // second valid arrangement.
+    const alt = [...withD.order.slice(0, -2), withD.order.at(-1), withD.order.at(-2)];
+
+    // The shape Firestore rejects, proven to reject rather than assumed.
+    let nestedRejected = false;
+    try {
+      await ref.update({ acceptedOrderings: [withD.order, alt] });
+    } catch (e) {
+      nestedRejected = /[Nn]ested arrays/.test(e.message);
+    }
+    check("a bare array-of-arrays is REJECTED by Firestore", nestedRejected);
+
+    await ref.update({ acceptedOrderings: [{ order: alt }] });
+    const back = (await ref.get()).data();
+    check("array-of-maps round-trips intact",
+      Array.isArray(back.acceptedOrderings) &&
+        sameOrder(back.acceptedOrderings[0].order, alt),
+      JSON.stringify(back.acceptedOrderings));
+    check("correctOrder is untouched by the addition",
+      sameOrder(back.correctOrder, withD.order));
+
+    // A submission matching the ALTERNATIVE must now score correct.
+    const altId = "SUB-BAS-E2E-ALT";
+    await db.collection("toeflSubmissions").doc(altId).delete();
+    await db.collection("toeflAttempts").doc(altId.replace("SUB", "ATT")).set({
+      attemptId: altId.replace("SUB", "ATT"), itemId: withD.id, taskType: "BAS",
+      studentId: "TEST-STUDENT-01",
+      startedAt: FV.serverTimestamp(), completedAt: FV.serverTimestamp(),
+    });
+    await db.collection("toeflSubmissions").doc(altId).set({
+      submissionId: altId, attemptId: altId.replace("SUB", "ATT"),
+      taskType: "BAS", studentId: "TEST-STUDENT-01",
+      responseContent: { submittedOrder: alt },
+      scoringStatus: "queued", submittedAt: FV.serverTimestamp(),
+    });
+    const altDoc = await waitScored(altId);
+    check("a submission matching the alternative scores CORRECT end to end",
+      altDoc && altDoc.orderCorrect === true, altDoc && String(altDoc.orderCorrect));
+
+    // And the primary still scores correct — union, not replacement.
+    const primId = "SUB-BAS-E2E-PRIM";
+    await db.collection("toeflSubmissions").doc(primId).delete();
+    await db.collection("toeflAttempts").doc(primId.replace("SUB", "ATT")).set({
+      attemptId: primId.replace("SUB", "ATT"), itemId: withD.id, taskType: "BAS",
+      studentId: "TEST-STUDENT-01",
+      startedAt: FV.serverTimestamp(), completedAt: FV.serverTimestamp(),
+    });
+    await db.collection("toeflSubmissions").doc(primId).set({
+      submissionId: primId, attemptId: primId.replace("SUB", "ATT"),
+      taskType: "BAS", studentId: "TEST-STUDENT-01",
+      responseContent: { submittedOrder: withD.order },
+      scoringStatus: "queued", submittedAt: FV.serverTimestamp(),
+    });
+    const primDoc = await waitScored(primId);
+    check("the primary correctOrder STILL scores correct (union, not replacement)",
+      primDoc && primDoc.orderCorrect === true, primDoc && String(primDoc.orderCorrect));
+
+    // Remove the field explicitly rather than restoring a snapshot, so the
+    // item is left exactly as imported whatever state this run started in.
+    await ref.update({ acceptedOrderings: FV.delete() });
+    const restored = (await ref.get()).data();
+    check("acceptedOrderings removed, item left exactly as imported",
+      restored.acceptedOrderings === undefined &&
+        sameOrder(restored.correctOrder, withD.order),
+      JSON.stringify(Object.keys(restored)));
   }
 
   console.log("\n  ── answer-key containment ──");
