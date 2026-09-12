@@ -21,6 +21,7 @@ const { defineSecret }          = require("firebase-functions/params");
 const logger                    = require("firebase-functions/logger");
 const admin                     = require("firebase-admin");
 const { transcribeAudio }       = require("./lib/deepgramSTT");
+const { toWordTimings, buildSttMeta } = require("./lib/lar/ingest");
 const { scoreTranscript, computeDisfluencyMetadata, validateFeedbackGrammar } = require("./lib/claudeScorer");
 
 
@@ -156,7 +157,7 @@ async function processSubmission(submissionId) {
 
     // ── Step 4 + 5: Deepgram STT ──────────────────────────────────────────
     logger.info("processSubmission: calling Deepgram", { submissionId });
-    const { transcript, words } = await withRetry(
+    const { transcript, words, allWords } = await withRetry(
       () => transcribeAudio(DEEPGRAM_API_KEY.value(), audioBuffer, mimeType),
       "Deepgram"
     );
@@ -310,6 +311,22 @@ async function processSubmission(submissionId) {
       resultFields.monitor_notes      = scoreResult.monitor_notes || "";
       resultFields.disfluencyMetadata = disfluencyMetadata;
     }
+
+    // ── Step 13b: Stage 00 — persist word timings + STT metadata ──────────
+    // Additive, and written in the SAME update as the transcript so it lands
+    // inside the 3-day audio window. computeDisfluencyMetadata already reads
+    // word.start/word.end and then discards them; per-word confidence arrives
+    // on the same objects and is never read. Both are captured here.
+    //
+    // UNFILTERED (`allWords`), not the diarization-filtered `words`: for
+    // boundary-segmented tasks the stimulus playback must remain visible so it
+    // can be excluded by `responseBoundaries` rather than by a speaker guess.
+    // Seconds are converted to integer milliseconds exactly once, at ingest.
+    resultFields.wordTimings = toWordTimings(allWords);
+    resultFields.sttMeta = {
+      ...buildSttMeta(allWords),
+      capturedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
 
     if (type === "ESO") {
       resultFields.scaffold_feedback = scoreResult.scaffold_feedback || "";

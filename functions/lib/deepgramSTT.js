@@ -12,6 +12,13 @@
 //   - Punctuation: ENABLED
 //   - Speaker diarization: ENABLED (student speaker isolated before scoring)
 //   - Word-level timestamps: ENABLED (required for disfluency metadata)
+//
+// LAR NOTE (Stage 00): `words` below is DIARIZATION-FILTERED to the dominant
+// speaker. Listen-and-Repeat must NOT use it. In a LAR recording the played
+// stimulus is in the same audio and is near-identical to what the student then
+// says, so "dominant speaker" is meaningless and may isolate the wrong half.
+// LAR uses `allWords` (unfiltered) and separates stimulus from response with
+// `responseBoundaries` instead. See functions/lib/lar/segment.js.
 
 "use strict";
 
@@ -19,12 +26,13 @@ const { createClient } = require("@deepgram/sdk");
 
 /**
  * Transcribe audio buffer using Deepgram.
- * Returns raw transcript (student speaker only) and word-level timestamp array.
+ * Returns raw transcript (student speaker only), the diarization-filtered
+ * word array, and the UNFILTERED word array for boundary-segmented tasks.
  *
  * @param {string} apiKey - Deepgram API key
  * @param {Buffer} audioBuffer - audio file buffer
  * @param {string} mimeType - e.g. "audio/webm", "audio/mp4", "audio/wav"
- * @returns {{ transcript: string, words: Array }}
+ * @returns {{ transcript: string, words: Array, allWords: Array }}
  */
 async function transcribeAudio(apiKey, audioBuffer, mimeType) {
   const deepgram = createClient(apiKey);
@@ -81,7 +89,8 @@ async function transcribeAudio(apiKey, audioBuffer, mimeType) {
   // INVARIANT: this string is never modified before reaching the scoring engine.
   const transcript = studentWords.map((w) => w.punctuated_word || w.word).join(" ");
 
-  return { transcript, words: studentWords };
+  // `allWords` is additive: nothing downstream of `transcript`/`words` changes.
+  return { transcript, words: studentWords, allWords };
 }
 
 module.exports = { transcribeAudio };
