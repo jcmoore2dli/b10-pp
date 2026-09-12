@@ -29,6 +29,9 @@ const {
   DISC_RUBRIC_PROMPT,
   INT_RUBRIC_PROMPT,
 } = require("./lib/toeflLayerABPrompts");
+// LAR's comparer. Deterministic and self-contained — no network, no model
+// call, no Firestore. Stages 01-06 with their own suite (npm run test:lar).
+const { compareLAR } = require("./lib/lar");
 // Modular import deliberately: under the functions emulator, the namespaced
 // admin.firestore.FieldValue is undefined (the runtime wraps admin.firestore
 // without carrying its statics). This form is unaffected, and is the v13
@@ -259,6 +262,34 @@ const DELIVERY_PAUSE_THRESHOLDS = { long: 1.5, severe: 2.5 };
 // interviewClips is the four-clip parent shape; the prompt's OUTPUT requires
 // exactly four entries in each array).
 const INT_QUESTION_COUNT = 4;
+
+// Seven utterances per LAR item, fixed. The importer's LAR parser enforces it
+// (scripts/importToeflCorpus.js — "LAR must have exactly 7 utterances") and the
+// comparer's Stage 01 contract asserts it again independently. Declared here so
+// a malformed item fails naming the ITEM, rather than deep inside the comparer
+// where the error would name a contract.
+const LAR_UTTERANCE_COUNT = 7;
+
+// LAR's Layer B closed lists, from LayerAB_Scoring_Specification_v1_0.md §4.
+//
+// Deterministic, so unlike EM/DISC/INT these are not validating a model's
+// output — nothing can invent a feature name here. The closed list still
+// governs: it is what the review UI renders, and what the layerA/layerB shape
+// promises every consumer.
+const LAR_FEATURES = new Set([
+  "Content words dropped or changed",
+  "Function words dropped or changed",
+  "Tense, number, and aspect",
+  "Transpositions",
+  "Run length and hesitation",
+  "Intelligibility",
+]);
+
+// LAR's own two flags, NOT the generic set. DELIVERY_LIMITING, OFF_TOPIC and
+// PROMPT_RECYCLED have no meaning for a repetition task, and INCOMPLETE_DATA
+// cannot arise here: a LAR submission missing its runtime inputs throws as a
+// data failure long before Layer B is built.
+const LAR_FLAGS = new Set(["INTELLIGIBILITY_UNCERTAIN", "PARTIAL_ATTEMPT"]);
 
 // Four rationales plus up to twelve item/observation/target triples from one
 // call — materially more output than EM or DISC. Raised above their 2048 for
@@ -1726,6 +1757,303 @@ async function scoreBuildASentence(db, { submissionId, submission, itemId }) {
   return { orderCorrect, correctOrder };
 }
 
+// ── LAR — Listen and Repeat ──────────────────────────────────────────────────
+//
+// Deterministic: the comparer in functions/lib/lar/ does the whole job
+// (Stages 01-06, 95 tests, no network, no model call). This branch is
+// integration only — read the item, read the runtime inputs, hand them over,
+// shape the result.
+
+// compareLAR applies TWO intelligibility verdicts: the per-utterance one inside
+// bandUtterance, and intelligibility.overall as a response-level cap afterwards.
+// The second rewrites the band but leaves u.verdict holding the per-utterance
+// value, so an utterance lowered by the overall verdict reads "clear" while
+// carrying a lowered band. Taking the worse of the two is what keeps the
+// rationale and the flag honest about why the band moved.
+const LAR_VERDICT_SEVERITY = { clear: 0, uncertain: 1, unintelligible: 2 };
+function larEffectiveVerdict(u, overall) {
+  const a = LAR_VERDICT_SEVERITY[u.verdict] ?? 0;
+  const b = LAR_VERDICT_SEVERITY[overall] ?? 0;
+  return b > a ? overall : u.verdict;
+}
+
+// One sentence, same register as the other three types' rationales. Built from
+// the clause that actually decided the band, so the sentence and the number can
+// never disagree.
+function larRationale(u, overall) {
+  const verdict = larEffectiveVerdict(u, overall);
+  // THE BAND THAT GETS WRITTEN IS THE GATED ONE, and the sentence has to
+  // describe THAT band. bandLabel comes from the pre-gate match, so reading it
+  // directly produces a rationale that contradicts the score: an utterance
+  // capped to 4 by uncertain delivery would otherwise read "Repeated exactly
+  // and intelligibly" next to a 4. Both lowering steps are handled before the
+  // matched-clause path is reached.
+  if (u.band < u.cappedBand) {
+    return (
+      `Delivery was ${verdict}, so band ${u.cappedBand} is withheld — ` +
+      `the repetition itself was otherwise ${u.bandLabel}.`
+    );
+  }
+  const loweredBy = (u.capsApplied || []).find((c) => c.lowered);
+  if (loweredBy) {
+    return `Lowered to band ${u.band} — ${loweredBy.reason}.`;
+  }
+  if (u.band === 5) return "Repeated exactly and intelligibly.";
+  const because = {
+    "minor-function-words": "one or two function words differed",
+    "morphological-marker": "a tense, number or aspect ending differed",
+    "transposition": "two words were repeated out of order",
+    "self-correction-completed": "a self-correction still completed the sentence",
+    "content-word-missing-longer-prompt": "one content word was missing from a long prompt",
+    "function-word-accumulation": "three or more function words differed",
+    "one-content-word-missing-short-prompt": "a content word was missing",
+    "content-words-substantively-changed": "content words were substantively changed",
+    "content-substitution-relatedness-unknown": "a content word was replaced",
+    "incomplete-most-content-retained":
+      "the sentence was not completed, though most content was retained",
+    "significant-content-missing": "a significant part of the content was missing",
+    "few-words-only": "only a few words were produced",
+    nothing: "nothing was produced",
+    "no-attempt": "no attempt was made",
+  };
+  const reason = u.matchedClauses
+    .filter((c) => c.band === u.rawBand)
+    .map((c) => because[c.clause])
+    .filter(Boolean)[0];
+  const label = u.bandLabel || "scored";
+  return reason
+    ? `${label.charAt(0).toUpperCase()}${label.slice(1)} — ${reason}.`
+    : `${label.charAt(0).toUpperCase()}${label.slice(1)}.`;
+}
+
+// Ordered by how much each matters to the task, so the three that survive the
+// cap are the three worth reading. Same three-item cap the other types enforce.
+function larLayerB(u, overall) {
+  const verdict = larEffectiveVerdict(u, overall);
+  const f = u.features;
+  const items = [];
+  const add = (feature, observation, target) => {
+    if (items.length < 3) items.push({ feature, observation, target });
+  };
+
+  // Band 0 carries no items, matching buildLayerB's bandZero rule. Flags are
+  // deliberately still emitted — they remain true facts about the input.
+  if (u.band !== 0) {
+    if (f.contentDeviationsEffective > 0) {
+      add(
+        "Content words dropped or changed",
+        `${f.contentMatched} of ${f.contentTotal} content words recalled; ` +
+          `${f.contentDeviationsEffective} missing or replaced.`,
+        "Hold the content words first — they carry the meaning this task measures."
+      );
+    }
+    if (f.morphContentSubs > 0) {
+      add(
+        "Tense, number, and aspect",
+        `${f.morphContentSubs} word(s) repeated with a different ending.`,
+        "Match the ending you heard; tense and number change the meaning."
+      );
+    }
+    if (f.transpositions > 0) {
+      add(
+        "Transpositions",
+        `${f.transpositions} word(s) repeated out of order.`,
+        "Keep the order you heard — the words were right, the sequence was not."
+      );
+    }
+    if (f.functionDeviations > 0) {
+      add(
+        "Function words dropped or changed",
+        `${f.functionDeviations} function word(s) changed or missing.`,
+        "Keep the small words: articles, prepositions and auxiliaries complete the grammar."
+      );
+    }
+    if (f.selfCorrectionCount > 0 || !f.reachesEnd) {
+      add(
+        "Run length and hesitation",
+        f.reachesEnd
+          ? `${f.selfCorrectionCount} self-correction(s), sentence completed.`
+          : `Trailed off before the end; ${f.tailOmittedRun} word(s) never reached.`,
+        "Carry the whole sentence through to its end before correcting detail."
+      );
+    }
+    if (verdict !== "clear") {
+      add(
+        "Intelligibility",
+        `Delivery was ${verdict} for this utterance.`,
+        "Slow slightly and finish each word — clarity is part of the score."
+      );
+    }
+  }
+
+  const flags = [];
+  if (verdict === "uncertain") flags.push("INTELLIGIBILITY_UNCERTAIN");
+  if (!f.isFullSentence) flags.push("PARTIAL_ATTEMPT");
+
+  // Belt and braces: these are built here, not parsed, but the closed lists are
+  // the contract and a future edit that drifts from them should fail loudly
+  // rather than write a feature name the review UI cannot render.
+  for (const it of items) {
+    if (!LAR_FEATURES.has(it.feature)) {
+      throw new Error(`LAR Layer B feature not on the closed list: ${it.feature}`);
+    }
+  }
+  for (const fl of flags) {
+    if (!LAR_FLAGS.has(fl)) {
+      throw new Error(`LAR Layer B flag not on the closed list: ${fl}`);
+    }
+  }
+
+  return { items, flags, label: LAYER_B_LABEL };
+}
+
+// WHY THIS THROWS TODAY. None of the three runtime inputs has a producer yet:
+// wordTimings and sttMeta are written by B10-PP's own pipeline into the
+// `submissions` collection (functions/index.js Stage 00), NOT into
+// toeflSubmissions; responseBoundaries has no producer anywhere in the repo;
+// and intelligibility is an injected verdict the comparer refuses to infer.
+// Week 1's transcription work is what lands them. Until then this is a data
+// failure and is reported as one, naming exactly which inputs are absent — the
+// same discipline BAS established: a missing input is never a student's zero.
+// When the inputs land, the fix is to stop throwing, not to write this.
+async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
+  const ctx = { submissionId, taskType: "LAR", itemId };
+
+  const itemRef = db.collection("toeflItems").doc(itemId);
+  const itemSnap = await itemRef.get();
+  if (!itemSnap.exists) {
+    throw new Error(`item document missing at toeflItems/${itemId}`);
+  }
+  const item = itemSnap.data();
+
+  // No answerKey read, and deliberately none: LAR is the one type the importer
+  // registers with answerKey:false. The "correct answer" IS the utterance text
+  // on the item, because the task is repetition. Nothing here reaches the
+  // protected subcollection.
+  const utterances = item.utterances;
+  if (!Array.isArray(utterances) || utterances.length !== LAR_UTTERANCE_COUNT) {
+    throw new Error(
+      `item ${itemId} has ${Array.isArray(utterances) ? utterances.length : "no"} ` +
+        `utterances, expected exactly ${LAR_UTTERANCE_COUNT}`
+    );
+  }
+
+  // INDEX BASE, asserted rather than assumed — this data model carries three.
+  // MCQ questionIndex and CTW gapIndex are 1-based; BAS fragmentIndex is
+  // 0-based. LAR's utteranceIndex is 1-BASED: the importer writes
+  // `utterances.length + 1` as it walks the four part headers. The comparer's
+  // Stage 01 expects 1-based too and converts to array position in exactly one
+  // place, so nothing converts here. If the importer ever changed base, this
+  // assertion is what catches it instead of a silent off-by-one shifting every
+  // utterance's score by one — the INT bug class.
+  //
+  // basSameOrder is generic ordered array-equality despite the BAS-prefixed
+  // name; reused rather than duplicated.
+  const indices = utterances.map((u) => u && u.utteranceIndex);
+  const expected = utterances.map((_, i) => i + 1);
+  if (!basSameOrder(indices, expected)) {
+    throw new Error(
+      `item ${itemId} utteranceIndex values are ${JSON.stringify(indices)}, ` +
+        `expected contiguous 1-based ${JSON.stringify(expected)}`
+    );
+  }
+
+  const targets = utterances.map((u) => {
+    if (typeof u.text !== "string" || u.text.trim() === "") {
+      throw new Error(`item ${itemId} utterance ${u.utteranceIndex} has no text`);
+    }
+    return u.text;
+  });
+
+  // ── Runtime inputs. All three are absent today; see the note above.
+  //
+  // Read from responseContent because that is where every other branch reads
+  // student runtime data (answers, gapResponses, text, transcripts,
+  // submittedOrder). The exact field names are the transcription work's to
+  // confirm — if it lands them elsewhere, this is the one place that changes.
+  const rc = submission.responseContent || {};
+  const missing = [];
+  if (!Array.isArray(rc.wordTimings)) missing.push("wordTimings");
+  if (!Array.isArray(rc.responseBoundaries)) missing.push("responseBoundaries");
+  if (!rc.intelligibility) missing.push("intelligibility");
+
+  if (missing.length) {
+    logger.error("scoreListenAndRepeat: runtime inputs not available", {
+      ...ctx,
+      missing,
+      note:
+        "LAR scoring needs word-level timings, per-utterance response " +
+        "boundaries, and an injected intelligibility verdict. None has a " +
+        "producer yet — Week 1 transcription work lands them. The comparer " +
+        "itself is built and tested; this is missing input, not missing logic.",
+    });
+    throw new Error(
+      `submission ${submissionId}: LAR cannot be scored — responseContent is ` +
+        `missing ${missing.join(", ")} (no producer exists yet)`
+    );
+  }
+
+  const result = compareLAR({
+    targets,
+    boundaries: rc.responseBoundaries,
+    wordTimings: rc.wordTimings,
+    intelligibility: rc.intelligibility,
+  });
+
+  // DEFERRED, deliberately: the withheld-status design question.
+  //
+  // compareLAR has three outcomes; this trigger has two. A withheld result is
+  // neither "scored" nor "queued" — the comparer ran correctly and REFUSED,
+  // which is a real terminal outcome with no status value to carry it. That
+  // needs a data-model decision, and it is not being made today, because no
+  // genuine withheld case can occur until the inputs above exist.
+  //
+  // Until then this throws rather than guessing a status. It is loud on
+  // purpose: writing "error" for a correct refusal would be wrong, and writing
+  // "scored" with no bands would be wrong differently. Neither gets chosen by
+  // accident.
+  if (result.status === "withheld") {
+    throw new Error(
+      `submission ${submissionId}: LAR comparer withheld (${result.reason}) — ` +
+        `no scoringStatus value models a deliberate refusal yet; this is the ` +
+        `deferred withheld-status design question, not a scoring failure`
+    );
+  }
+
+  logger.info("scoreListenAndRepeat: scored", {
+    ...ctx,
+    bands: result.utterances.map((u) => u.band),
+    needsHumanReview: result.needsHumanReview,
+    orphanFlag: result.orphanFlag,
+  });
+
+  // perUtteranceResults mirrors MCQ's perQuestionResults naming, with each
+  // entry carrying EM/DISC/INT's layerA/layerB shape. NO aggregate band: the
+  // spec forbids a response-level rollup outright, matching INT's precedent,
+  // so there is nothing to total here.
+  return {
+    perUtteranceResults: result.utterances.map((u) => ({
+      utteranceIndex: u.utteranceIndex,
+      layerA: { score: u.band, rationale: larRationale(u, result.intelligibilityOverall) },
+      layerB: larLayerB(u, result.intelligibilityOverall),
+      // Sibling to layerA/layerB, not folded into either: the spec requires a
+      // human reviewer to see the evidence behind the band, and Layer B is
+      // practice focus rather than evidence. Same copy-back reasoning as MCQ's
+      // rationales and BAS's correctOrder.
+      diffResult: u.diffResult,
+      target: targets[u.utteranceIndex - 1],
+      part: utterances[u.utteranceIndex - 1].part,
+      matchedClauses: u.matchedClauses,
+      capsApplied: u.capsApplied,
+      selfCorrections: u.selfCorrections,
+      needsHumanReview: u.needsHumanReview,
+    })),
+    needsHumanReview: result.needsHumanReview,
+    orphanCount: result.orphanCount,
+    orphanFlag: result.orphanFlag,
+  };
+}
+
 // Registered but unbuilt. The branch exists so the dispatch shape is settled;
 // the logic behind it is genuinely not written yet and must not pretend to be.
 // An unbuilt type leaves scoringStatus at "queued" — accurate, since the
@@ -1765,7 +2093,17 @@ const SCORERS = {
   // Remaining deterministic types — later gates.
   CTW: scoreCompleteTheWords,
   BAS: scoreBuildASentence,
-  LAR: notBuiltYet("LAR", "transcript comparer, later gate"),
+
+  // LAR was the LAST notBuiltYet entry. The comparer behind it is built and
+  // tested; what is still missing is its three runtime inputs, which is a data
+  // failure the branch reports by name rather than a missing scorer. See the
+  // note above scoreListenAndRepeat.
+  //
+  // notBuiltYet is deliberately kept below even though nothing calls it now:
+  // it documents the dispatch shape for the next type that needs it, and
+  // scripts/testToeflScorerRegistry.js asserts explicitly that the set is
+  // empty rather than passing vacuously over it.
+  LAR: scoreListenAndRepeat,
 };
 
 // ── Trigger ───────────────────────────────────────────────────────────────────

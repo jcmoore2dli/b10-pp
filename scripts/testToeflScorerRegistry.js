@@ -49,11 +49,19 @@ const stubs = {
     DISC_RUBRIC_PROMPT: "",
     INT_RUBRIC_PROMPT: "",
   },
+  // The REAL comparer, not a stub: it is pure logic with no network, no
+  // Firestore and no model call, so loading it here costs nothing and keeps
+  // this harness honest. A relative require inside toeflScoring.js resolves
+  // against THIS file's directory, not against functions/ — which is why every
+  // one of them has to appear in this map or the eval throws at load time,
+  // before a single check runs.
+  "./lib/lar": require("../functions/lib/lar"),
 };
 const src =
   fs.readFileSync(SRC, "utf8") +
   "\n;module.exports.__test = { SCORERS, scoreMcq, scoreEmail, scoreDiscussion," +
-  " scoreInterview, scoreCompleteTheWords, scoreBuildASentence };";
+  " scoreInterview, scoreCompleteTheWords, scoreBuildASentence," +
+  " scoreListenAndRepeat };";
 const fn = eval(Module.wrap(src));
 const mod = { exports: {} };
 fn.call(mod.exports, mod.exports, (id) => stubs[id] || require(id), mod, SRC, path.dirname(SRC));
@@ -92,7 +100,10 @@ const EXPECTED = {
   DISC: "scoreDiscussion",
   CTW: "scoreCompleteTheWords",
   BAS: "scoreBuildASentence",
-  LAR: null,
+  // LAR was the last null here. Its comparer is built and tested; the branch
+  // throws a named data failure while its three runtime inputs have no
+  // producer, which is a different thing from being unbuilt.
+  LAR: "scoreListenAndRepeat",
 };
 
 console.log("\nCase 1 — every taskType in the enum resolves to a callable scorer");
@@ -134,13 +145,32 @@ console.log("\nCase 4 — the six MCQ types share one scorer instance");
   check("that reference is scoreMcq", SCORERS.AP === T.scoreMcq);
 }
 
+// Computed ONCE, because three separate places loop over it and an empty set
+// has to be handled the same way in all three.
+const UNBUILT = ALL_TYPES.filter((x) => EXPECTED[x] === null);
+
 console.log("\nCase 5 — unbuilt types are present and return null, not absent");
 {
   // notBuiltYet returns null so the trigger puts the status back to "queued".
   // A type ABSENT from the table instead reaches the unknown-taskType branch
   // and is written "error" — the distinction this whole file exists for.
-  for (const t of ALL_TYPES.filter((x) => EXPECTED[x] === null)) {
-    check(`${t} is present (unbuilt, but wired)`, typeof SCORERS[t] === "function");
+  //
+  // EMPTY-SET DISCIPLINE. LAR was the last unbuilt type, so this loop now has
+  // nothing to iterate. A bare `for` over an empty array prints a header and
+  // zero checks, which reads as "nothing to say" and is indistinguishable from
+  // a case that silently stopped running — the same degradation BAS's
+  // transition needed catching for. So the empty set gets an EXPLICIT positive
+  // assertion instead of a skip.
+  if (UNBUILT.length === 0) {
+    check(
+      "no unbuilt types remain — every enum type resolves to a real scorer",
+      ALL_TYPES.every((t) => EXPECTED[t] !== null),
+      `still unbuilt: ${JSON.stringify(ALL_TYPES.filter((t) => EXPECTED[t] === null))}`
+    );
+  } else {
+    for (const t of UNBUILT) {
+      check(`${t} is present (unbuilt, but wired)`, typeof SCORERS[t] === "function");
+    }
   }
 }
 
@@ -153,7 +183,7 @@ console.log("\nCase 5 — unbuilt types are present and return null, not absent"
   // printing a stale "BAS is present (unbuilt, but wired)" pass. A test that
   // explodes when the code improves is describing what it ran, not what it
   // should catch.
-  for (const t of ALL_TYPES.filter((x) => EXPECTED[x] === null)) {
+  for (const t of UNBUILT) {
     let result, threw = null;
     try {
       result = await SCORERS[t]({}, {});
@@ -166,9 +196,25 @@ console.log("\nCase 5 — unbuilt types are present and return null, not absent"
         ? `threw: ${threw} — ${t} looks BUILT now; update EXPECTED in this file`
         : JSON.stringify(result));
   }
-  check("unbuilt scorers log a warning naming the type",
-    warnings.length >= ALL_TYPES.filter((x) => EXPECTED[x] === null).length,
-    `${warnings.length} warnings`);
+
+  // The warning check was VACUOUS once the unbuilt set emptied:
+  // `warnings.length >= UNBUILT.length` degrades to `0 >= 0`, which is always
+  // true, so the suite printed PASS for a claim about unbuilt scorers when
+  // there were none and nothing had been logged. False confidence is worse
+  // than a skipped check, so the two cases are now asserted separately and
+  // each says something that can actually fail.
+  if (UNBUILT.length === 0) {
+    check(
+      "nothing called notBuiltYet, consistent with no unbuilt types",
+      warnings.length === 0,
+      `${warnings.length} warning(s) logged but EXPECTED lists no unbuilt type — ` +
+        "either a scorer is still registered as notBuiltYet, or EXPECTED is stale"
+    );
+  } else {
+    check("unbuilt scorers log a warning naming the type",
+      warnings.length >= UNBUILT.length,
+      `${warnings.length} warnings for ${UNBUILT.length} unbuilt type(s)`);
+  }
 
   console.log(
     failures === 0

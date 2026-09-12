@@ -54,6 +54,11 @@ const stubs = {
     DISC_RUBRIC_PROMPT: "",
     INT_RUBRIC_PROMPT: "",
   },
+  // toeflScoring.js requires ./lib/lar for the LAR branch. A relative require
+  // inside it resolves against THIS file's directory, not functions/, so it
+  // must appear here or the eval throws at load time. The real module: pure
+  // logic, no network, no Firestore, no model call.
+  "./lib/lar": require("../functions/lib/lar"),
 };
 const warnings = [];
 
