@@ -10,6 +10,9 @@
     "rules": "firebase/storage.rules"
   },
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "firestore": {
       "port": 8080
     },
@@ -32,6 +35,10 @@
       {
         "source": "/b10_practice_platform/!(assets)**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/toefl/!(assets)**",
+        "destination": "/toefl/index.html"
       }
     ]
   }

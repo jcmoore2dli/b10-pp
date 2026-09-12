@@ -398,5 +398,64 @@ match /accessCodes/{codeId} {
       allow update: if false;
       allow delete: if isAdmin();
     }
+
+    function isOwner(studentId) {
+      return signedIn() &&
+        request.auth.token.b10Id != null &&
+        request.auth.token.b10Id == studentId;
+    }
+
+    match /toeflItems/{itemId} {
+      allow read: if signedIn();
+      allow write: if isAdminOrInstructor();
+
+      match /answerKey/{key} {
+        allow read: if isAdminOrInstructor();
+        allow write: if isAdminOrInstructor();
+      }
+    }
+
+    match /toeflAttempts/{attemptId} {
+      allow read: if isOwner(resource.data.studentId) || isAdminOrInstructor();
+      allow create: if isOwner(request.resource.data.studentId);
+      allow update: if isOwner(resource.data.studentId) &&
+        request.resource.data.studentId == resource.data.studentId &&
+        request.resource.data.itemId == resource.data.itemId;
+      allow delete: if false;
+    }
+
+    // Added Sep 9: the create rule pins ownership (below) but that alone
+    // doesn't stop a client from also including server-only fields in the
+    // same write. The scoring trigger's success path overwrites everything
+    // unconditionally, so this mostly wouldn't matter — except the error
+    // path only sets scoringStatus, never clears these fields, so a
+    // fabricated value could survive a failed scoring attempt. Blocked
+    // outright here instead of relying on every future reader to check
+    // scoringStatus before trusting perQuestionResults.
+    //
+    // scoredAt gets its own, null-tolerant check: the client legitimately
+    // writes scoredAt: null at creation (it's part of the documented
+    // initial shape), so a bare key-absence check would have rejected
+    // every real submission, not just a fabricated one. Allowed if the
+    // key is absent OR explicitly null; blocked the moment it's anything
+    // else, which only a client trying to fabricate a timestamp would do.
+    match /toeflSubmissions/{submissionId} {
+      allow read: if isOwner(resource.data.studentId) || isAdminOrInstructor();
+      allow create: if isOwner(request.resource.data.studentId) &&
+        !('perQuestionResults' in request.resource.data) &&
+        (!('scoredAt' in request.resource.data) || request.resource.data.scoredAt == null) &&
+        !('layerA' in request.resource.data) &&
+        !('layerB' in request.resource.data) &&
+        !('status' in request.resource.data) &&
+        !('instructor' in request.resource.data);
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /toeflCourseStats/{statId} {
+      allow read: if isAdminOrInstructor();
+      allow write: if false;
+    }
+
   }
 }
