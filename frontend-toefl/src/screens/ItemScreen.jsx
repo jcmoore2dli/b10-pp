@@ -4,14 +4,18 @@ import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import StubScreen from '../components/StubScreen'
 import MCQRenderer from '../components/MCQRenderer'
+import TypedResponseRenderer from '../components/TypedResponseRenderer'
 
 // One route for all twelve task types, per the scaffold spec: dispatch by
 // taskType (read from the toeflItems doc) happens inside this component,
 // not in the router.
 //
 // The five MCQ types share one renderer, per data model v1.15 Collection 1.
-// The other seven are separately scheduled and deliberately not built here.
+// EM and DISC share one typed-response renderer: same {text, wordCount}
+// response shape, different stimulus. The other five are separately scheduled
+// and deliberately not built here.
 const MCQ_TYPES = ['AP', 'AT', 'RDL', 'LCR', 'LTA']
+const TYPED_TYPES = ['EM', 'DISC']
 
 export default function ItemScreen() {
   const { itemId } = useParams()
@@ -60,11 +64,15 @@ export default function ItemScreen() {
     return <MCQRenderer itemId={itemId} />
   }
 
+  if (TYPED_TYPES.includes(taskType)) {
+    return <TypedResponseRenderer itemId={itemId} />
+  }
+
   return (
     <StubScreen
       route={`/item/${itemId}`}
       title="Item"
-      note={`taskType = ${taskType}. Renderer for this type is not built yet — only the five MCQ types (${MCQ_TYPES.join(', ')}) are live.`}
+      note={`taskType = ${taskType}. Renderer for this type is not built yet — only ${[...MCQ_TYPES, ...TYPED_TYPES].join(', ')} are live.`}
     />
   )
 }

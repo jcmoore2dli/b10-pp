@@ -10,6 +10,11 @@ import { Link, useParams } from 'react-router-dom'
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { DISPLAY_LABELS, orderForQuestion } from '../lib/shuffle'
+import TypedResultsView from '../components/TypedResultsView'
+
+// EM and DISC results carry layerA/layerB, never perQuestionResults — the MCQ
+// wait below would show "Scoring…" for them forever.
+const TYPED_TYPES = ['EM', 'DISC']
 
 export default function ResultsScreen() {
   const { submissionId } = useParams()
@@ -53,6 +58,15 @@ export default function ResultsScreen() {
   }, [attempt?.itemId])
 
   if (error) return <Shell><p className="text-red-600 text-sm">{error}</p></Shell>
+
+  // Branch before any MCQ-specific state handling. The three effects above
+  // are type-agnostic, so the typed view receives the same live submission,
+  // attempt and item.
+  if (TYPED_TYPES.includes(submission?.taskType)) {
+    return (
+      <TypedResultsView submission={submission} attempt={attempt} item={item} />
+    )
+  }
 
   if (submission?.scoringStatus === 'error') {
     return (
