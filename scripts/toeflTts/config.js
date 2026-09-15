@@ -42,7 +42,7 @@ const PRESETS = Object.freeze({
     similarity_boost: 0.8,
     style: 0.0,
     use_speaker_boost: true,
-    speed: 0.95,
+    speed: 0.97, // was 0.95; JC listening 2026-09-15: NA_F slightly slow
   },
   // "Warmer, personal-anecdote opening, more conversational — a
   // general-audience expert"
