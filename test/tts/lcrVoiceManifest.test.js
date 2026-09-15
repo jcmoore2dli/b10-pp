@@ -14,7 +14,7 @@ const {
   readManifest,
   writeManifest,
 } = require("../../scripts/toeflTts/lcrVoiceManifest");
-const { voiceConstantFor, VOICES } = require("../../scripts/toeflTts/config");
+const { voiceConstantFor, VOICES, API_KEY_ENV, B10_API_KEY_ENV } = require("../../scripts/toeflTts/config");
 
 const ids = (n) => Array.from({ length: n }, (_, i) => `LCR-${String(i + 1).padStart(3, "0")}`);
 const genders = (m) => m.items.map((it) => it.gender).join("");
@@ -113,5 +113,12 @@ describe("voiceConstantFor", () => {
       for (const g of ["F", "M"]) assert.ok(VOICES[voiceConstantFor(a, g)]);
     }
     assert.throws(() => voiceConstantFor("US", "F"), /unknown accent/);
+  });
+});
+
+describe("API key variable", () => {
+  it("is TOEFL's own key name, never B10-PP's", () => {
+    assert.strictEqual(API_KEY_ENV, "TOEFL_TTS_API_KEY");
+    assert.notStrictEqual(API_KEY_ENV, B10_API_KEY_ENV);
   });
 });

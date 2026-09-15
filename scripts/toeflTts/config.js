@@ -23,6 +23,13 @@ const VOICES = Object.freeze({
   TOEFL_TTS_VOICE_NZ_F: { voiceId: "A3TiUH9xcSptIzvOUBnB", name: "Cassandra Woodhouse" },
 });
 
+// API key: TOEFL's own ElevenLabs key, read from this variable only. B10-PP's
+// production key (B10_API_KEY_ENV) must never be used for TOEFL calls, not
+// even as a fallback: refuse to run if API_KEY_ENV is unset, or if it holds
+// the same value as B10_API_KEY_ENV.
+const API_KEY_ENV = "TOEFL_TTS_API_KEY";
+const B10_API_KEY_ENV = "ELEVENLABS_API_KEY";
+
 // Same model and output format as B10-PP's generate_core_audio.py.
 const MODEL_ID = "eleven_multilingual_v2";
 const OUTPUT_FORMAT = "mp3_44100_128";
@@ -74,4 +81,14 @@ function voiceConstantFor(accent, gender) {
   return `TOEFL_TTS_VOICE_${accent}_${gender}`;
 }
 
-module.exports = { VOICES, PRESETS, MODEL_ID, OUTPUT_FORMAT, ACCENTS, GENDERS, voiceConstantFor };
+module.exports = {
+  VOICES,
+  PRESETS,
+  API_KEY_ENV,
+  B10_API_KEY_ENV,
+  MODEL_ID,
+  OUTPUT_FORMAT,
+  ACCENTS,
+  GENDERS,
+  voiceConstantFor,
+};
