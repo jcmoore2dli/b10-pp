@@ -3,7 +3,9 @@
 // presets applied to them at generation time.
 //
 // Voices: final list confirmed by JC 2026-09-15 and re-verified against
-// ElevenLabs. One voice per accent/gender slot.
+// ElevenLabs. One voice per accent/gender slot. UK_F changed from Charlotte
+// (6fZce9LFNG3iEITDfqZZ) to Lynd on 2026-09-16 (JC, after student listening:
+// Charlotte misplaced stress on Interview "...? Why?" questions).
 //
 // Presets: PROPOSED starting values (2026-09-15), derived from the prose in
 // TOEFL_ElevenLabs_Voice_Requirements.pdf §2. Not yet approved and not yet
@@ -16,7 +18,7 @@ const VOICES = Object.freeze({
   TOEFL_TTS_VOICE_NA_M: { voiceId: "uFIXVu9mmnDZ7dTKCBTX", name: "Justin Time" },
   TOEFL_TTS_VOICE_NA_F: { voiceId: "DIS307HFaAvJZzq496qM", name: "Cecilia O'Connor" },
   TOEFL_TTS_VOICE_UK_M: { voiceId: "mZ8K1MPRiT5wDQaasg3i", name: "Alexander Kensington" },
-  TOEFL_TTS_VOICE_UK_F: { voiceId: "6fZce9LFNG3iEITDfqZZ", name: "Charlotte" },
+  TOEFL_TTS_VOICE_UK_F: { voiceId: "8z5UhJ1uv7X8TN5yg8oI", name: "Lynd" },
   TOEFL_TTS_VOICE_AU_M: { voiceId: "WLKp2jV6nrS8aMkPPDRO", name: "Paul" },
   TOEFL_TTS_VOICE_AU_F: { voiceId: "56bWURjYFHyYyVf490Dp", name: "Emma" },
   TOEFL_TTS_VOICE_NZ_M: { voiceId: "3Mb3pRhm3AnXiPCSQNXS", name: "Joel" },
