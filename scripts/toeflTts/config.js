@@ -5,7 +5,10 @@
 // Voices: final list confirmed by JC 2026-09-15 and re-verified against
 // ElevenLabs. One voice per accent/gender slot. UK_F changed from Charlotte
 // (6fZce9LFNG3iEITDfqZZ) to Lynd on 2026-09-16 (JC, after student listening:
-// Charlotte misplaced stress on Interview "...? Why?" questions).
+// Charlotte misplaced stress on Interview "...? Why?" questions). UK_M changed
+// from Alexander Kensington (mZ8K1MPRiT5wDQaasg3i) to Chris Brift on
+// 2026-09-16 (JC: Alexander misplaced the same stress with and without the
+// tag; Chris Brift got it right at 0.3s).
 //
 // Presets: PROPOSED starting values (2026-09-15), derived from the prose in
 // TOEFL_ElevenLabs_Voice_Requirements.pdf §2. Not yet approved and not yet
@@ -17,7 +20,7 @@
 const VOICES = Object.freeze({
   TOEFL_TTS_VOICE_NA_M: { voiceId: "uFIXVu9mmnDZ7dTKCBTX", name: "Justin Time" },
   TOEFL_TTS_VOICE_NA_F: { voiceId: "DIS307HFaAvJZzq496qM", name: "Cecilia O'Connor" },
-  TOEFL_TTS_VOICE_UK_M: { voiceId: "mZ8K1MPRiT5wDQaasg3i", name: "Alexander Kensington" },
+  TOEFL_TTS_VOICE_UK_M: { voiceId: "UEKYgullGqaF0keqT8Bu", name: "Chris Brift" },
   TOEFL_TTS_VOICE_UK_F: { voiceId: "8z5UhJ1uv7X8TN5yg8oI", name: "Lynd" },
   TOEFL_TTS_VOICE_AU_M: { voiceId: "WLKp2jV6nrS8aMkPPDRO", name: "Paul" },
   TOEFL_TTS_VOICE_AU_F: { voiceId: "56bWURjYFHyYyVf490Dp", name: "Emma" },
@@ -115,9 +118,9 @@ const INT_TAG_POLICY = Object.freeze({
     comma: policy("0.3s", "untested", "Lynd not heard on a comma stem; no comma clips in batch"),
   }),
   UK_M: Object.freeze({
-    dash: policy(null, "confirmed", "INT-001 q1: tagged too slow"),
-    tagOn: policy("0.3s", "unresolved", "INT-033 q2: wrong stress on 'will' with and without tag"),
-    comma: policy("0.3s", "unresolved", "not heard yet (Test D pending)"),
+    dash: policy("0.3s", "unresolved", "Chris Brift not heard on a dash stem"),
+    tagOn: policy("0.3s", "confirmed", "Chris Brift INT-033 q2: correct 2-3-1 stress at the 0.3s tag"),
+    comma: policy("0.3s", "unresolved", "Chris Brift not heard on a comma stem"),
   }),
   AU_F: Object.freeze({
     dash: policy(null, "confirmed", "INT-001 q1: tag adds rising intonation on 'life'"),
