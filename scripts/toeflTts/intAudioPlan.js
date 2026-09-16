@@ -103,9 +103,15 @@ function clipDelivery(clip, text) {
   return { delivery: "short", words, pause, textSent, settings: { ...preset, speed: INT_SHORT_QUESTION.speed } };
 }
 
-// Per-voice, per-clip delivery (NOT YET USED by buildIntPlan; see config.js
-// INT_TAG_POLICY / INT_CLIP_OVERRIDES). Returns clipDelivery's fields plus
-// seed, policy ({ breakTime, status, note } or null) and override (or null).
+// Per-voice, per-clip delivery (config.js INT_TAG_POLICY / INT_CLIP_OVERRIDES).
+// Returns clipDelivery's fields plus seed, policy ({ breakTime, status, note }
+// or null), override (or null) and confirmation:
+//   confirmed - the setting was chosen by listening on this voice and type
+//   decided   - JC chose it (long stems keep the preset; NA_M "Why?" untagged)
+//   override  - a per-clip override with its reason
+//   default   - "default applied, not individually confirmed" (JC 2026-09-16):
+//               policy status default/inferred/untested, short stems with no
+//               clause break (speed 0.92 only), and intros (preset, not heard)
 // `blocked` is set when the policy is unresolved and no override covers the clip.
 function resolveClipDelivery(
   { itemId, clip, text, voiceConstant },
@@ -115,6 +121,16 @@ function resolveClipDelivery(
   const override = overrides[`${itemId}:${clip}`] ?? null;
   if (override && !override.reason) throw new Error(`override ${itemId}:${clip} has no reason`);
   const out = { ...base, seed: override?.seed ?? seed, policy: null, override, blocked: null };
+  if (override) {
+    out.confirmation = "override";
+    out.confirmationNote = override.reason;
+  } else if (clip === "intro") {
+    out.confirmation = "default";
+    out.confirmationNote = "intro: toefl_int_interviewer preset; intros were not listened to";
+  } else if (base.delivery !== "short") {
+    out.confirmation = "decided";
+    out.confirmationNote = "long stem: preset unchanged (JC 2026-09-16)";
+  }
   if (base.delivery !== "short") return out;
 
   const slot = voiceConstant.replace(/^TOEFL_TTS_VOICE_/, "");
@@ -130,6 +146,18 @@ function resolveClipDelivery(
   out.breakTime = base.pause ? breakTime : null;
   if (policy?.status === "unresolved" && !override) {
     out.blocked = `${slot} ${base.pause} policy is unresolved: ${policy.note}`;
+  }
+  if (!override) {
+    if (!base.pause) {
+      out.confirmation = "default";
+      out.confirmationNote = `short stem with no clause break: speed ${INT_SHORT_QUESTION.speed}, no tag; not listened to per voice`;
+    } else if (policy.status === "confirmed" || policy.status === "decided") {
+      out.confirmation = policy.status;
+      out.confirmationNote = `${slot} ${base.pause}: ${policy.note}`;
+    } else {
+      out.confirmation = "default";
+      out.confirmationNote = `${slot} ${base.pause} (${policy.status}): ${policy.note}`;
+    }
   }
   return out;
 }
@@ -188,7 +216,8 @@ const statusField = (text, re) => {
 };
 
 // Returns { items, excluded }. Each item: { itemId, voice, voiceConstant, clips }.
-function buildIntPlan(corpusRoot, { only = null } = {}) {
+// `resolveOptions` is passed to resolveClipDelivery (tests inject policies).
+function buildIntPlan(corpusRoot, { only = null, resolveOptions = {} } = {}) {
   const base = path.join(corpusRoot, INT_FOLDER);
   const items = [];
   const excluded = [];
@@ -231,17 +260,18 @@ function buildIntPlan(corpusRoot, { only = null } = {}) {
     }
 
     const texts = [["intro", parsed.contextSentence], ...parsed.stems.map((s, i) => [`q${i + 1}`, s])];
+    const voiceConstant = voiceConstantFor(parsed.voice.accent, parsed.voice.gender);
     items.push({
       itemId,
       voice: parsed.voice,
-      voiceConstant: voiceConstantFor(parsed.voice.accent, parsed.voice.gender),
+      voiceConstant,
       preset: PRESET,
       clips: texts.map(([clip, text]) => ({
         clip,
         file: path.join("int", itemId, `${itemId}_${clip}.mp3`),
         text,
         textSha256: sha256(text),
-        ...clipDelivery(clip, text),
+        ...resolveClipDelivery({ itemId, clip, text, voiceConstant }, resolveOptions),
       })),
     });
   }

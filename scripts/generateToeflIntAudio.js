@@ -10,8 +10,12 @@
 // Dry run by default: prints the plan and character totals, calls nothing.
 // With --generate, calls ElevenLabs using TOEFL_TTS_API_KEY only (never
 // B10-PP's ELEVENLABS_API_KEY) and writes MP3s plus a manifest.
-// Short question stems get their own speed and a break tag (see
-// intAudioPlan.js); every call sends the fixed seed TTS_SEED.
+// Short question stems get their own speed and, per voice and pause type, a
+// break tag or none (config.js INT_TAG_POLICY, per-clip INT_CLIP_OVERRIDES;
+// see intAudioPlan.resolveClipDelivery). Each call sends the clip's seed
+// (TTS_SEED unless overridden). Every clip's manifest entry records its
+// confirmation; "default" means "default applied, not individually
+// confirmed" (JC 2026-09-16).
 // Existing clips whose rendering is unchanged (text sent, settings, model,
 // seed, voice) are skipped; a clip whose rendering has changed since it was
 // generated is reported and left alone unless --force is given.
@@ -92,16 +96,16 @@ function writeManifest(manifest) {
 // Everything that decides how a clip sounds. A change to any of it means the
 // clip on disk no longer matches what this run would generate.
 const renderSha256 = (voiceId, clip) =>
-  sha256(JSON.stringify({ voiceId, text: clip.textSent, settings: clip.settings, modelId: MODEL_ID, seed: TTS_SEED }));
+  sha256(JSON.stringify({ voiceId, text: clip.textSent, settings: clip.settings, modelId: MODEL_ID, seed: clip.seed }));
 
-async function synthesize(apiKey, voiceId, text, settings) {
+async function synthesize(apiKey, voiceId, text, settings, seed) {
   const url =
     `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}` +
     `?output_format=${encodeURIComponent(OUTPUT_FORMAT)}`;
   const res = await fetch(url, {
     method: "POST",
     headers: { "xi-api-key": apiKey, "Content-Type": "application/json", Accept: "audio/mpeg" },
-    body: JSON.stringify({ text, model_id: MODEL_ID, voice_settings: settings, seed: TTS_SEED }),
+    body: JSON.stringify({ text, model_id: MODEL_ID, voice_settings: settings, seed }),
   });
   if (!res.ok) {
     const detail = (await res.text()).slice(0, 300);
@@ -144,34 +148,49 @@ async function main() {
   const selected = items.flatMap((item) => item.clips.filter((clip) => wanted(item, clip)).map((clip) => ({ item, clip })));
   const short = selected.filter((s) => s.clip.delivery === "short");
   const byPause = (p) => short.filter((s) => s.clip.pause === p).length;
+  const byConfirmation = (c) => selected.filter((s) => s.clip.confirmation === c).length;
+  const blocked = selected.filter((s) => s.clip.blocked);
+  const defaults = selected.filter((s) => s.clip.confirmation === "default");
   console.log(`corpus:    ${corpusRoot}`);
   console.log(`audio out: ${outRoot}`);
   console.log(`manifest:  ${manifestFile}`);
   console.log(`preset:    toefl_int_interviewer ${JSON.stringify(PRESETS.toefl_int_interviewer)}`);
   console.log(`short questions (<= ${INT_SHORT_QUESTION.maxWords} words): speed ${INT_SHORT_QUESTION.speed}, break ${INT_SHORT_QUESTION.breakTime}`);
-  console.log(`seed:      ${TTS_SEED}`);
+  console.log(`seed:      ${TTS_SEED} (per-clip overrides: ${selected.filter((s) => s.clip.seed !== TTS_SEED).length})`);
   console.log(`items: ${items.length}  clips: ${selected.length}  up to date: ${upToDate}  to generate: ${todo.length} (${chars} chars)`);
   console.log(
     `short: ${short.length} (before tag-on ${byPause("tagOn")}, dash ${byPause("dash")}, comma ${byPause("comma")}, speed only ${byPause(null)})  standard: ${selected.length - short.length}`
   );
+  console.log(
+    `confirmation: confirmed ${byConfirmation("confirmed")}, decided ${byConfirmation("decided")}, ` +
+      `override ${byConfirmation("override")}, default ${defaults.length} (default applied, not individually confirmed)`
+  );
   for (const e of excluded) console.log(`excluded: ${e.itemId} (${e.reason})`);
+  for (const b of blocked) console.log(`BLOCKED: ${b.clip.file} (${b.clip.blocked})`);
   for (const c of changed) console.log(`CHANGED, not regenerated (use --force): ${c.clip.file} (${c.why})`);
 
   if (!generate) {
-    for (const { item, clip } of listAll ? selected : short) {
-      const how = clip.delivery === "short" ? `short/${clip.pause ?? "none"}` : "standard";
-      console.log(`${item.itemId} ${clip.clip.padEnd(5)} ${item.voiceConstant.slice(-4)} ${String(clip.words).padStart(2)}w ${how.padEnd(11)} | ${clip.textSent}`);
+    const line = ({ item, clip }) => {
+      const how = clip.delivery === "short" ? `short/${clip.pause ?? "none"}/${clip.breakTime ?? "no tag"}` : "standard";
+      return `${item.itemId} ${clip.clip.padEnd(5)} ${item.voiceConstant.slice(-4)} ${String(clip.words).padStart(2)}w ${how.padEnd(22)} ${clip.confirmation.padEnd(9)} | ${clip.textSent}`;
+    };
+    for (const s of listAll ? selected : short) console.log(line(s));
+    console.log("\nDEFAULT APPLIED, NOT INDIVIDUALLY CONFIRMED (short stems):");
+    for (const s of defaults.filter((d) => d.clip.delivery === "short")) {
+      console.log(`  ${s.item.itemId} ${s.clip.clip} ${s.item.voiceConstant.slice(-4)} — ${s.clip.confirmationNote}`);
     }
+    console.log(`  + ${defaults.filter((d) => d.clip.clip === "intro").length} intros (preset, not listened to)`);
     console.log("dry run — pass --generate to call ElevenLabs.");
     return;
   }
 
+  if (blocked.length) throw new Error(`${blocked.length} clip(s) blocked by an unresolved policy; see the list above`);
   const apiKey = resolveApiKey();
   const today = new Date().toISOString().slice(0, 10);
   let done = 0;
   for (const { item, clip } of todo) {
     const voice = VOICES[item.voiceConstant];
-    const audio = await synthesize(apiKey, voice.voiceId, clip.textSent, clip.settings);
+    const audio = await synthesize(apiKey, voice.voiceId, clip.textSent, clip.settings, clip.seed);
     const dest = path.join(outRoot, clip.file);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, audio);
@@ -185,12 +204,20 @@ async function main() {
       textSha256: clip.textSha256,
       renderSha256: renderSha256(voice.voiceId, clip),
       delivery: clip.delivery,
+      pause: clip.pause,
+      breakTime: clip.breakTime ?? null,
+      policyStatus: clip.policy?.status ?? null,
+      confirmation: clip.confirmation,
+      confirmationNote: clip.confirmation === "default"
+        ? `default applied, not individually confirmed: ${clip.confirmationNote}`
+        : clip.confirmationNote,
+      override: clip.override,
       textSent: clip.textSent,
       chars: clip.textSent.length,
       bytes: audio.length,
       settings: clip.settings,
       modelId: MODEL_ID,
-      seed: TTS_SEED,
+      seed: clip.seed,
       generatedOn: today,
     };
     writeManifest(manifest); // after every clip, so an interrupted run keeps its record

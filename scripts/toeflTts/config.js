@@ -95,16 +95,21 @@ const INT_SHORT_QUESTION = Object.freeze({ maxWords: 26, speed: 0.92, breakTime:
 //              decided    - JC chose between two imperfect versions
 //              inferred   - not heard; follows this voice's other results
 //              untested   - not heard; batch has no clips of this type here
-//              unresolved - neither version was acceptable; clips of this
-//                           type in this voice are not generated without a
-//                           per-clip override
+//              default    - no setting was confirmed; JC 2026-09-16 ended the
+//                           listening work and accepted a documented
+//                           default, taken from what similar voices or
+//                           question types showed working. Manifest flags
+//                           these clips "default applied, not individually
+//                           confirmed".
+//              unresolved - blocks generation unless the clip has an
+//                           override (no cell uses it now)
 // Pause types come from intAudioPlan.shortQuestionText: tagOn ("...? Why?"),
 // dash, comma. Stems with no clause break get no tag regardless.
 const policy = (breakTime, status, note) => Object.freeze({ breakTime, status, note });
 const INT_TAG_POLICY = Object.freeze({
   NA_F: Object.freeze({
     dash: policy("0.3s", "confirmed", "INT-001 q1: tag wins; untagged sounds rushed"),
-    tagOn: policy("0.3s", "unresolved", "INT-033 q2: wrong stress on 'will' with and without tag"),
+    tagOn: policy("0.3s", "default", "INT-033 q2: wrong stress with and without tag; default = 0.3s, the setting 4 of 6 voices were confirmed with on this type"),
     comma: policy("0.3s", "inferred", "no natural pause at any break without the tag"),
   }),
   NA_M: Object.freeze({
@@ -118,9 +123,9 @@ const INT_TAG_POLICY = Object.freeze({
     comma: policy("0.3s", "untested", "Lynd not heard on a comma stem; no comma clips in batch"),
   }),
   UK_M: Object.freeze({
-    dash: policy("0.3s", "unresolved", "Chris Brift not heard on a dash stem"),
+    dash: policy(null, "default", "Chris Brift not heard on a dash stem; default = no tag, what every male voice judged on the dash type preferred (NZ_M, AU_M, Alexander)"),
     tagOn: policy("0.3s", "confirmed", "Chris Brift INT-033 q2: correct 2-3-1 stress at the 0.3s tag"),
-    comma: policy("0.3s", "unresolved", "Chris Brift not heard on a comma stem"),
+    comma: policy("0.3s", "default", "Chris Brift not heard on a comma stem; default = 0.3s, confirmed for AU_F, NZ_M and NA_M on this type"),
   }),
   AU_F: Object.freeze({
     dash: policy(null, "confirmed", "INT-001 q1: tag adds rising intonation on 'life'"),
@@ -134,7 +139,7 @@ const INT_TAG_POLICY = Object.freeze({
   }),
   NZ_F: Object.freeze({
     dash: policy("0.3s", "untested", "INT-001 q1: tagged slightly more natural; no dash clips in batch"),
-    tagOn: policy("0.3s", "unresolved", "INT-033 q2: 'will' stress defect in both versions (voice-specific)"),
+    tagOn: policy("0.3s", "default", "INT-033 q2: 'will' stress defect in both versions (voice-specific); default = 0.3s as for NA_F"),
     comma: policy("0.3s", "untested", "INT-040 q1: barely distinguishable; no comma clips in batch"),
   }),
   NZ_M: Object.freeze({

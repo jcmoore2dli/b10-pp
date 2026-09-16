@@ -264,7 +264,7 @@ describe("resolveClipDelivery (per-voice policy and per-clip overrides)", () => 
     for (const a of ACCENTS) for (const g of GENDERS) for (const p of ["tagOn", "dash", "comma"]) {
       const e = INT_TAG_POLICY[`${a}_${g}`]?.[p];
       assert.ok(e, `${a}_${g}.${p}`);
-      assert.ok(["confirmed", "decided", "inferred", "untested", "unresolved"].includes(e.status));
+      assert.ok(["confirmed", "decided", "inferred", "untested", "default"].includes(e.status), `${a}_${g}.${p} ${e.status}`);
       assert.ok(e.breakTime === null || /^0\.\d+s$/.test(e.breakTime));
     }
   });
@@ -295,6 +295,42 @@ describe("resolveClipDelivery (per-voice policy and per-clip overrides)", () => 
     const reseed = resolveClipDelivery(at(whyStem), { policies, overrides: { "INT-009:q2": { seed: 5, reason: "r" } } });
     assert.strictEqual(reseed.seed, 5);
     assert.match(reseed.textSent, /\? <break time="0\.3s" \/> Why\?$/);
+  });
+
+  it("labels confirmation: confirmed, default (policy, no break, intro), decided (long), override", () => {
+    const pols = { AA_F: { tagOn: pol("0.3s"), dash: pol(null, "default"), comma: pol("0.3s", "inferred") } };
+    const c = (text, clip = "q2", overrides = {}) => resolveClipDelivery(at(text, clip), { policies: pols, overrides });
+    assert.strictEqual(c(whyStem).confirmation, "confirmed");
+    const d = c(dashStem, "q1");
+    assert.strictEqual(d.confirmation, "default");
+    assert.strictEqual(d.textSent, dashStem);
+    assert.strictEqual(c("Describe a habit you keep, such as reading at night?", "q1").confirmation, "default");
+    const plain = c("Describe your favourite place to read?", "q1");
+    assert.strictEqual(plain.pause, null);
+    assert.strictEqual(plain.confirmation, "default");
+    assert.match(plain.confirmationNote, /no clause break/);
+    assert.strictEqual(c("You will talk with a researcher today.", "intro").confirmation, "default");
+    const long = c(`${Array.from({ length: 30 }, (_, i) => `w${i}`).join(" ")}?`, "q3");
+    assert.strictEqual(long.confirmation, "decided");
+    const o = c(whyStem, "q2", { "INT-009:q2": { breakTime: null, reason: "heard fine untagged" } });
+    assert.deepStrictEqual([o.confirmation, o.confirmationNote], ["override", "heard fine untagged"]);
+  });
+
+  it("has no unresolved cell, so nothing in the real table blocks generation", () => {
+    for (const slot of Object.values(INT_TAG_POLICY)) for (const e of Object.values(slot)) assert.notStrictEqual(e.status, "unresolved");
+  });
+
+  it("buildIntPlan applies the item's voice policy and confirmation to every clip", () => {
+    const whyBody = layer1().replace("Stem: Question   number 2?", "Stem: Would you rather cook at home, or eat out? Why?");
+    const root = makeCorpus([{ id: "INT-001", body: whyBody }]);
+    const policies = { UK_F: { tagOn: pol(null, "decided"), dash: pol("0.3s"), comma: pol("0.3s") } };
+    const [it] = buildIntPlan(root, { resolveOptions: { policies, overrides: {} } }).items;
+    const q2 = it.clips[2];
+    assert.strictEqual(q2.pause, "tagOn");
+    assert.strictEqual(q2.textSent, "Would you rather cook at home, or eat out? Why?");
+    assert.strictEqual(q2.confirmation, "decided");
+    assert.strictEqual(q2.seed, TTS_SEED);
+    assert.ok(it.clips.every((c) => c.confirmation && !c.blocked));
   });
 
   it("rejects an override without a reason, and leaves intros and long stems alone", () => {
