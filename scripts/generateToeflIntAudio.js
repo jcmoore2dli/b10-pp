@@ -152,7 +152,7 @@ async function main() {
   console.log(`seed:      ${TTS_SEED}`);
   console.log(`items: ${items.length}  clips: ${selected.length}  up to date: ${upToDate}  to generate: ${todo.length} (${chars} chars)`);
   console.log(
-    `short: ${short.length} (dash ${byPause("dash")}, comma ${byPause("comma")}, speed only ${byPause(null)})  standard: ${selected.length - short.length}`
+    `short: ${short.length} (before tag-on ${byPause("tagOn")}, dash ${byPause("dash")}, comma ${byPause("comma")}, speed only ${byPause(null)})  standard: ${selected.length - short.length}`
   );
   for (const e of excluded) console.log(`excluded: ${e.itemId} (${e.reason})`);
   for (const c of changed) console.log(`CHANGED, not regenerated (use --force): ${c.clip.file} (${c.why})`);

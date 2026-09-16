@@ -42,18 +42,30 @@ const sha256 = (s) => crypto.createHash("sha256").update(s, "utf8").digest("hex"
 const countWords = (s) => s.split(/\s+/).filter((t) => /[A-Za-z0-9]/.test(t)).length;
 
 // Clause-opening words a break may precede when they follow a comma.
+const TAG_ON_MAX_WORDS = 4;
+const TAG_ON = /\?\s+([^.?!]+\?)\s*$/;
+
 const CLAUSE_OPENERS = /, (?=(or|and|such as|even though|before|apart from)\b)/g;
 
-// Where the break tag goes in a short stem. Only the first sentence is
-// considered; a later sentence already starts after a full stop.
-//   1. First em dash: tag before it (the form approved on INT-001 Q1).
-//   2. Else the last comma that opens a clause (", or", ", such as", ...).
+// Where the break tag goes in a short stem. One tag per stem.
+//   1. A stem ending in a short tag-on question ("...? Why?", at most
+//      TAG_ON_MAX_WORDS words): tag right before it (JC 2026-09-16).
+//   Otherwise only the first sentence is considered:
+//   2. First em dash: tag before it (the form approved on INT-001 Q1).
+//   3. Else the last comma that opens a clause (", or", ", such as", ...).
 //      ", or"/", and" with another comma in the 4 words before it is a
 //      serial list ("a song, food, or place") and is skipped.
-//   3. Else no tag; the stem still gets the short-question speed.
-// Returns { text, pause } where pause is "dash", "comma", or null.
+//   4. Else no tag; the stem still gets the short-question speed.
+// Returns { text, pause } where pause is "tagOn", "dash", "comma", or null.
 function shortQuestionText(stem, breakTime = INT_SHORT_QUESTION.breakTime) {
   const tag = `<break time="${breakTime}" />`;
+
+  const tagOn = TAG_ON.exec(stem);
+  if (tagOn && countWords(tagOn[1]) <= TAG_ON_MAX_WORDS) {
+    const at = tagOn.index + 1;
+    return { text: `${stem.slice(0, at)} ${tag} ${stem.slice(at).trimStart()}`, pause: "tagOn" };
+  }
+
   const first = stem.split(/(?<=[.?!])\s+/)[0];
 
   const dash = first.search(/\s*—/);

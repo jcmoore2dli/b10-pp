@@ -157,14 +157,29 @@ describe("shortQuestionText", () => {
     assert.strictEqual(shortQuestionText("Name a teacher—or a coach—who helped you?").text, `Name a teacher ${TAG} —or a coach—who helped you?`);
   });
 
-  it("otherwise puts it after the last clause-opening comma", () => {
+  it("puts it right before a short tag-on question, ahead of any dash or comma", () => {
     assert.deepStrictEqual(shortQuestionText("Would you rather cook at home, or eat out? Why?"), {
-      text: `Would you rather cook at home, ${TAG} or eat out? Why?`,
-      pause: "comma",
+      text: `Would you rather cook at home, or eat out? ${TAG} Why?`,
+      pause: "tagOn",
     });
     assert.strictEqual(
-      shortQuestionText("When you travel, do you plan ahead, or decide on the day? Why?").text,
-      `When you travel, do you plan ahead, ${TAG} or decide on the day? Why?`
+      shortQuestionText("Do you walk — or drive — to work? Why or why not?").text,
+      `Do you walk — or drive — to work? ${TAG} Why or why not?`
+    );
+    assert.strictEqual(shortQuestionText("Do you repair things or replace them? Why?").pause, "tagOn");
+  });
+
+  it("does not treat a longer second question as a tag-on", () => {
+    assert.deepStrictEqual(shortQuestionText("Is it hard? Do you agree or disagree, and why?"), {
+      text: "Is it hard? Do you agree or disagree, and why?",
+      pause: null,
+    });
+  });
+
+  it("otherwise puts it after the last clause-opening comma", () => {
+    assert.strictEqual(
+      shortQuestionText("When you travel, do you plan ahead, or decide on the day?").text,
+      `When you travel, do you plan ahead, ${TAG} or decide on the day?`
     );
     assert.strictEqual(
       shortQuestionText("Describe a habit you keep, such as reading at night?").text,
