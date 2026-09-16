@@ -17,3 +17,8 @@ key/
 b10_pilot_archive/
 *.transcripts.csv
 serviceAccount*.json
+
+# TOEFL generated audio: goes to Firebase Storage, never git.
+# Manifests (voice assignments, clip records) are project state: tracked.
+audio/toefl/*
+!audio/toefl/manifests/
