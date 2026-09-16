@@ -72,6 +72,18 @@ const PRESETS = Object.freeze({
   },
 });
 
+// Interview short questions (JC 2026-09-16). A question stem of maxWords or
+// fewer is too short for the voice to find a natural pause, so it is rendered
+// with speed 0.92 and one break tag at its clause break; longer stems and all
+// intros use toefl_int_interviewer unchanged. Chosen by ear on Cecilia (NA_F),
+// INT-001 Q1, seed 20260915 (0.93 judged slightly fast). The corpus has no
+// stem of 27 words: short stems run 15-26, long ones start at 28.
+const INT_SHORT_QUESTION = Object.freeze({ maxWords: 26, speed: 0.92, breakTime: "0.3s" });
+
+// Every TOEFL generation call sends this seed, so an approved rendering
+// reproduces in the real batch (JC 2026-09-16).
+const TTS_SEED = 20260915;
+
 const ACCENTS = Object.freeze(["NA", "UK", "AU", "NZ"]);
 const GENDERS = Object.freeze(["F", "M"]);
 
@@ -88,6 +100,8 @@ module.exports = {
   B10_API_KEY_ENV,
   MODEL_ID,
   OUTPUT_FORMAT,
+  INT_SHORT_QUESTION,
+  TTS_SEED,
   ACCENTS,
   GENDERS,
   voiceConstantFor,

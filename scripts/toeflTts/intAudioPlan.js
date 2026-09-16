@@ -9,6 +9,10 @@
 //            the questions (JC 2026-09-16: no second, unexplained voice).
 //   q1–q4  — the four question stems.
 //
+// Short stems (INT_SHORT_QUESTION.maxWords or fewer, any question position)
+// are sent with speed 0.92 and one break tag at the clause break; see
+// shortQuestionText(). Intros and longer stems use the preset unchanged.
+//
 // Voice comes from the item's SPEAKER VOICE PROFILE ("Female, UK accent").
 // The layer1 file and the STATUS file must agree. Item selection follows the
 // importer's gate: LAYER 2 verdict PASS, CROSS-MODEL CHECK not failed.
@@ -18,7 +22,7 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-const { voiceConstantFor } = require("./config");
+const { PRESETS, INT_SHORT_QUESTION, voiceConstantFor } = require("./config");
 
 const INT_FOLDER = "03_interview";
 const PRESET = "toefl_int_interviewer";
@@ -33,6 +37,52 @@ const GENDER_CODES = Object.freeze({ female: "F", male: "M" });
 
 const collapse = (s) => s.replace(/\s+/g, " ").trim();
 const sha256 = (s) => crypto.createHash("sha256").update(s, "utf8").digest("hex");
+
+// Words are whitespace tokens containing a letter or digit; a lone "—" is not one.
+const countWords = (s) => s.split(/\s+/).filter((t) => /[A-Za-z0-9]/.test(t)).length;
+
+// Clause-opening words a break may precede when they follow a comma.
+const CLAUSE_OPENERS = /, (?=(or|and|such as|even though|before|apart from)\b)/g;
+
+// Where the break tag goes in a short stem. Only the first sentence is
+// considered; a later sentence already starts after a full stop.
+//   1. First em dash: tag before it (the form approved on INT-001 Q1).
+//   2. Else the last comma that opens a clause (", or", ", such as", ...).
+//      ", or"/", and" with another comma in the 4 words before it is a
+//      serial list ("a song, food, or place") and is skipped.
+//   3. Else no tag; the stem still gets the short-question speed.
+// Returns { text, pause } where pause is "dash", "comma", or null.
+function shortQuestionText(stem, breakTime = INT_SHORT_QUESTION.breakTime) {
+  const tag = `<break time="${breakTime}" />`;
+  const first = stem.split(/(?<=[.?!])\s+/)[0];
+
+  const dash = first.search(/\s*—/);
+  if (dash >= 0) {
+    return { text: `${stem.slice(0, dash)} ${tag} ${stem.slice(dash).trimStart()}`, pause: "dash" };
+  }
+
+  let at = -1;
+  for (const m of first.matchAll(CLAUSE_OPENERS)) {
+    const before = first.slice(0, m.index).split(/\s+/).slice(-4).join(" ");
+    const serialList = (m[1] === "or" || m[1] === "and") && before.includes(",");
+    if (!serialList) at = m.index;
+  }
+  if (at >= 0) {
+    return { text: `${stem.slice(0, at + 1)} ${tag}${stem.slice(at + 1)}`, pause: "comma" };
+  }
+  return { text: stem, pause: null };
+}
+
+// How one clip is rendered: the text sent to ElevenLabs and its voice settings.
+function clipDelivery(clip, text) {
+  const preset = PRESETS[PRESET];
+  const words = countWords(text);
+  if (clip === "intro" || words > INT_SHORT_QUESTION.maxWords) {
+    return { delivery: "standard", words, pause: null, textSent: text, settings: { ...preset } };
+  }
+  const { text: textSent, pause } = shortQuestionText(text);
+  return { delivery: "short", words, pause, textSent, settings: { ...preset, speed: INT_SHORT_QUESTION.speed } };
+}
 
 // "Female, UK accent — single consistent voice across all 4 questions"
 function parseVoiceProfile(raw) {
@@ -141,6 +191,7 @@ function buildIntPlan(corpusRoot, { only = null } = {}) {
         file: path.join("int", itemId, `${itemId}_${clip}.mp3`),
         text,
         textSha256: sha256(text),
+        ...clipDelivery(clip, text),
       })),
     });
   }
@@ -153,4 +204,13 @@ function buildIntPlan(corpusRoot, { only = null } = {}) {
   return { items, excluded };
 }
 
-module.exports = { PRESET, parseVoiceProfile, parseIntLayer1, buildIntPlan, sha256 };
+module.exports = {
+  PRESET,
+  parseVoiceProfile,
+  parseIntLayer1,
+  buildIntPlan,
+  countWords,
+  shortQuestionText,
+  clipDelivery,
+  sha256,
+};

@@ -7,7 +7,19 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { parseVoiceProfile, parseIntLayer1, buildIntPlan, PRESET } = require("../../scripts/toeflTts/intAudioPlan");
+const {
+  parseVoiceProfile,
+  parseIntLayer1,
+  buildIntPlan,
+  countWords,
+  shortQuestionText,
+  clipDelivery,
+  PRESET,
+} = require("../../scripts/toeflTts/intAudioPlan");
+const { PRESETS, INT_SHORT_QUESTION } = require("../../scripts/toeflTts/config");
+
+const TAG = '<break time="0.3s" />';
+const words = (n, last = "end?") => [...Array.from({ length: n - 1 }, (_, i) => `w${i}`), last].join(" ");
 
 const layer1 = ({ profile = "Female, UK accent — single consistent voice across all 4 questions", context, questions = 4 } = {}) =>
   [
@@ -126,5 +138,100 @@ describe("buildIntPlan", () => {
     const { items, excluded } = buildIntPlan(root, { only: ["INT-002", "INT-099"] });
     assert.deepStrictEqual(items.map((i) => i.itemId), ["INT-002"]);
     assert.deepStrictEqual(excluded, [{ itemId: "INT-099", reason: "no such item folder" }]);
+  });
+});
+
+describe("countWords", () => {
+  it("counts tokens with a letter or digit, not a lone dash", () => {
+    assert.strictEqual(countWords("Do you walk — or   drive, mostly?"), 6);
+    assert.strictEqual(countWords("studies—or friends"), 2);
+  });
+});
+
+describe("shortQuestionText", () => {
+  it("puts the break before the first em dash", () => {
+    assert.deepStrictEqual(shortQuestionText("Tell me about a hobby — for example, a sport — you enjoy?"), {
+      text: `Tell me about a hobby ${TAG} — for example, a sport — you enjoy?`,
+      pause: "dash",
+    });
+    assert.strictEqual(shortQuestionText("Name a teacher—or a coach—who helped you?").text, `Name a teacher ${TAG} —or a coach—who helped you?`);
+  });
+
+  it("otherwise puts it after the last clause-opening comma", () => {
+    assert.deepStrictEqual(shortQuestionText("Would you rather cook at home, or eat out? Why?"), {
+      text: `Would you rather cook at home, ${TAG} or eat out? Why?`,
+      pause: "comma",
+    });
+    assert.strictEqual(
+      shortQuestionText("When you travel, do you plan ahead, or decide on the day? Why?").text,
+      `When you travel, do you plan ahead, ${TAG} or decide on the day? Why?`
+    );
+    assert.strictEqual(
+      shortQuestionText("Describe a habit you keep, such as reading at night?").text,
+      `Describe a habit you keep, ${TAG} such as reading at night?`
+    );
+  });
+
+  it("skips serial-list commas", () => {
+    assert.deepStrictEqual(shortQuestionText("Describe a book, film, or show you liked?"), {
+      text: "Describe a book, film, or show you liked?",
+      pause: null,
+    });
+    assert.strictEqual(
+      shortQuestionText("Where do you see art, such as films, songs, or murals?").text,
+      `Where do you see art, ${TAG} such as films, songs, or murals?`
+    );
+  });
+
+  it("looks only at the first sentence", () => {
+    const stem = "Some people say cities are too loud. Do you agree or disagree, and why?";
+    assert.deepStrictEqual(shortQuestionText(stem), { text: stem, pause: null });
+  });
+});
+
+describe("clipDelivery", () => {
+  const max = INT_SHORT_QUESTION.maxWords;
+
+  it("treats a stem of maxWords or fewer as short, in any question position", () => {
+    for (const clip of ["q1", "q2", "q3", "q4"]) {
+      const d = clipDelivery(clip, words(max));
+      assert.strictEqual(d.delivery, "short");
+      assert.deepStrictEqual(d.settings, { ...PRESETS[PRESET], speed: 0.92 });
+    }
+    assert.strictEqual(clipDelivery("q1", words(max + 1)).delivery, "standard");
+  });
+
+  it("leaves long stems and every intro on the preset, text unchanged", () => {
+    const long = `${words(max, "one,")} or two — three?`;
+    for (const [clip, text] of [["q2", long], ["intro", "You are joining a study, and a researcher will ask you questions."]]) {
+      const d = clipDelivery(clip, text);
+      assert.strictEqual(d.delivery, "standard");
+      assert.strictEqual(d.textSent, text);
+      assert.deepStrictEqual(d.settings, PRESETS[PRESET]);
+    }
+  });
+
+  it("gives a short stem with no clause break the speed but no tag", () => {
+    const d = clipDelivery("q3", "Some people say cities are too loud. Do you agree?");
+    assert.strictEqual(d.delivery, "short");
+    assert.strictEqual(d.pause, null);
+    assert.strictEqual(d.settings.speed, 0.92);
+    assert.ok(!d.textSent.includes("<break"));
+  });
+
+  it("does not change the preset object", () => {
+    clipDelivery("q1", "Short one?");
+    assert.strictEqual(PRESETS[PRESET].speed, 1.0);
+  });
+});
+
+describe("buildIntPlan delivery", () => {
+  it("attaches delivery, textSent and settings to every clip", () => {
+    const { items } = buildIntPlan(makeCorpus([{ id: "INT-001" }]));
+    const [intro, q1] = items[0].clips;
+    assert.strictEqual(intro.delivery, "standard");
+    assert.strictEqual(q1.delivery, "short");
+    assert.strictEqual(q1.textSent, "Question number 1?");
+    assert.strictEqual(q1.settings.speed, 0.92);
   });
 });

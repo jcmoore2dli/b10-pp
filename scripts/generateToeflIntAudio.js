@@ -10,24 +10,29 @@
 // Dry run by default: prints the plan and character totals, calls nothing.
 // With --generate, calls ElevenLabs using TOEFL_TTS_API_KEY only (never
 // B10-PP's ELEVENLABS_API_KEY) and writes MP3s plus a manifest.
-// Existing clips whose text is unchanged are skipped; a clip whose corpus
-// text has changed since it was generated is reported and left alone unless
-// --force is given.
+// Short question stems get their own speed and a break tag (see
+// intAudioPlan.js); every call sends the fixed seed TTS_SEED.
+// Existing clips whose rendering is unchanged (text sent, settings, model,
+// seed, voice) are skipped; a clip whose rendering has changed since it was
+// generated is reported and left alone unless --force is given.
 //
 // Usage:
 //   node scripts/generateToeflIntAudio.js                     dry run, all items
 //   ... --items INT-001,INT-002                               limit to these items
+//   ... --clips INT-046:q1,INT-047:q2                         limit to these clips
 //   ... --generate                                            call ElevenLabs, write files
 //   ... --force                                               regenerate changed-text clips
 //   ... --corpus <dir>    corpus root (default ~/toefl/corpus)
 //   ... --out <dir>       audio root (default audio/toefl)
+//   ... --list all        dry run: list every clip, not just short questions
 // ─────────────────────────────────────────────────
 
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { VOICES, PRESETS, API_KEY_ENV, B10_API_KEY_ENV, MODEL_ID, OUTPUT_FORMAT } = require("./toeflTts/config");
-const { buildIntPlan } = require("./toeflTts/intAudioPlan");
+const { VOICES, PRESETS, API_KEY_ENV, B10_API_KEY_ENV, MODEL_ID, OUTPUT_FORMAT, TTS_SEED, INT_SHORT_QUESTION } =
+  require("./toeflTts/config");
+const { buildIntPlan, sha256 } = require("./toeflTts/intAudioPlan");
 
 const MANIFEST_SCHEMA = "toefl-int-audio-manifest/1";
 
@@ -39,7 +44,10 @@ function argValue(flag, fallback) {
 const corpusRoot = argValue("--corpus", path.join(os.homedir(), "toefl", "corpus"));
 const outRoot = path.resolve(argValue("--out", path.join(__dirname, "..", "audio", "toefl")));
 const manifestFile = path.join(outRoot, "manifests", "int_audio_manifest.json");
-const only = argValue("--items", null)?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
+const listArg = (flag) => argValue(flag, null)?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
+const clipFilter = listArg("--clips");
+const only = listArg("--items") ?? (clipFilter ? [...new Set(clipFilter.map((c) => c.split(":")[0]))] : null);
+const listAll = argValue("--list", null) === "all";
 const generate = process.argv.includes("--generate");
 const force = process.argv.includes("--force");
 
@@ -81,6 +89,11 @@ function writeManifest(manifest) {
   fs.renameSync(tmp, manifestFile);
 }
 
+// Everything that decides how a clip sounds. A change to any of it means the
+// clip on disk no longer matches what this run would generate.
+const renderSha256 = (voiceId, clip) =>
+  sha256(JSON.stringify({ voiceId, text: clip.textSent, settings: clip.settings, modelId: MODEL_ID, seed: TTS_SEED }));
+
 async function synthesize(apiKey, voiceId, text, settings) {
   const url =
     `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}` +
@@ -88,7 +101,7 @@ async function synthesize(apiKey, voiceId, text, settings) {
   const res = await fetch(url, {
     method: "POST",
     headers: { "xi-api-key": apiKey, "Content-Type": "application/json", Accept: "audio/mpeg" },
-    body: JSON.stringify({ text, model_id: MODEL_ID, voice_settings: settings }),
+    body: JSON.stringify({ text, model_id: MODEL_ID, voice_settings: settings, seed: TTS_SEED }),
   });
   if (!res.ok) {
     const detail = (await res.text()).slice(0, 300);
@@ -100,7 +113,7 @@ async function synthesize(apiKey, voiceId, text, settings) {
 async function main() {
   const { items, excluded } = buildIntPlan(corpusRoot, { only });
   const manifest = readManifest();
-  const settings = PRESETS[items[0]?.preset ?? "toefl_int_interviewer"];
+  const wanted = (item, clip) => !clipFilter || clipFilter.includes(`${item.itemId}:${clip.clip}`);
 
   // Classify every clip against what's already on disk and in the manifest.
   const todo = [];
@@ -108,33 +121,46 @@ async function main() {
   let upToDate = 0;
   for (const item of items) {
     const prev = manifest.items[item.itemId];
+    const voiceId = VOICES[item.voiceConstant].voiceId;
     for (const clip of item.clips) {
+      if (!wanted(item, clip)) continue;
       const onDisk = fs.existsSync(path.join(outRoot, clip.file));
       const prevClip = prev?.clips?.[clip.clip];
-      const sameVoice = prev?.voiceConstant === item.voiceConstant;
-      if (onDisk && prevClip && prevClip.textSha256 === clip.textSha256 && sameVoice) {
+      if (onDisk && prevClip && prevClip.renderSha256 === renderSha256(voiceId, clip)) {
         upToDate++;
       } else if (onDisk && prevClip && !force) {
-        changed.push({ item, clip, why: sameVoice ? "text changed" : "voice changed" });
+        const why =
+          prev.voiceConstant !== item.voiceConstant ? "voice changed"
+          : prevClip.textSha256 !== clip.textSha256 ? "text changed"
+          : "delivery changed";
+        changed.push({ item, clip, why });
       } else {
         todo.push({ item, clip });
       }
     }
   }
 
-  const chars = todo.reduce((n, t) => n + t.clip.text.length, 0);
+  const chars = todo.reduce((n, t) => n + t.clip.textSent.length, 0);
+  const selected = items.flatMap((item) => item.clips.filter((clip) => wanted(item, clip)).map((clip) => ({ item, clip })));
+  const short = selected.filter((s) => s.clip.delivery === "short");
+  const byPause = (p) => short.filter((s) => s.clip.pause === p).length;
   console.log(`corpus:    ${corpusRoot}`);
   console.log(`audio out: ${outRoot}`);
   console.log(`manifest:  ${manifestFile}`);
-  console.log(`preset:    toefl_int_interviewer ${JSON.stringify(settings)}`);
-  console.log(`items: ${items.length}  clips: ${items.length * 5}  up to date: ${upToDate}  to generate: ${todo.length} (${chars} chars)`);
+  console.log(`preset:    toefl_int_interviewer ${JSON.stringify(PRESETS.toefl_int_interviewer)}`);
+  console.log(`short questions (<= ${INT_SHORT_QUESTION.maxWords} words): speed ${INT_SHORT_QUESTION.speed}, break ${INT_SHORT_QUESTION.breakTime}`);
+  console.log(`seed:      ${TTS_SEED}`);
+  console.log(`items: ${items.length}  clips: ${selected.length}  up to date: ${upToDate}  to generate: ${todo.length} (${chars} chars)`);
+  console.log(
+    `short: ${short.length} (dash ${byPause("dash")}, comma ${byPause("comma")}, speed only ${byPause(null)})  standard: ${selected.length - short.length}`
+  );
   for (const e of excluded) console.log(`excluded: ${e.itemId} (${e.reason})`);
   for (const c of changed) console.log(`CHANGED, not regenerated (use --force): ${c.clip.file} (${c.why})`);
 
   if (!generate) {
-    for (const item of items) {
-      const v = VOICES[item.voiceConstant];
-      console.log(`${item.itemId}  ${item.voiceConstant} (${v.name})  intro: ${item.clips[0].text}`);
+    for (const { item, clip } of listAll ? selected : short) {
+      const how = clip.delivery === "short" ? `short/${clip.pause ?? "none"}` : "standard";
+      console.log(`${item.itemId} ${clip.clip.padEnd(5)} ${item.voiceConstant.slice(-4)} ${String(clip.words).padStart(2)}w ${how.padEnd(11)} | ${clip.textSent}`);
     }
     console.log("dry run — pass --generate to call ElevenLabs.");
     return;
@@ -145,7 +171,7 @@ async function main() {
   let done = 0;
   for (const { item, clip } of todo) {
     const voice = VOICES[item.voiceConstant];
-    const audio = await synthesize(apiKey, voice.voiceId, clip.text, settings);
+    const audio = await synthesize(apiKey, voice.voiceId, clip.textSent, clip.settings);
     const dest = path.join(outRoot, clip.file);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, audio);
@@ -157,10 +183,14 @@ async function main() {
     entry.clips[clip.clip] = {
       file: clip.file,
       textSha256: clip.textSha256,
-      chars: clip.text.length,
+      renderSha256: renderSha256(voice.voiceId, clip),
+      delivery: clip.delivery,
+      textSent: clip.textSent,
+      chars: clip.textSent.length,
       bytes: audio.length,
-      settings,
+      settings: clip.settings,
       modelId: MODEL_ID,
+      seed: TTS_SEED,
       generatedOn: today,
     };
     writeManifest(manifest); // after every clip, so an interrupted run keeps its record
