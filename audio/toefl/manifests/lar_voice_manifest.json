@@ -1,0 +1,323 @@
+{
+  "schema": "toefl-lar-voice-manifest/1",
+  "rule": "LAR speaker is North American only (NA_M Justin Time, NA_F Cecilia O'Connor), 3:2 M:F; gender by item number, repeating M F M F M from LAR-001 (corpus ruling and JC approval 2026-09-16).",
+  "pattern": "MFMFM",
+  "items": [
+    {
+      "itemId": "LAR-001",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-002",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-003",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-004",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-005",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-006",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-007",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-008",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-009",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-010",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-011",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-012",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-013",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-014",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-015",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-016",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-017",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-018",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-019",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-020",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-021",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-022",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-023",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-024",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-025",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-026",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-027",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-028",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-029",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-030",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-031",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-032",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-033",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-034",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-035",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-036",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-037",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-038",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-039",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-040",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-041",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-042",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-043",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-044",
+      "gender": "F",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-16"
+    },
+    {
+      "itemId": "LAR-045",
+      "gender": "M",
+      "accent": "NA",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-16"
+    }
+  ],
+  "removedItems": []
+}
