@@ -22,7 +22,14 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-const { PRESETS, INT_SHORT_QUESTION, voiceConstantFor } = require("./config");
+const {
+  PRESETS,
+  INT_SHORT_QUESTION,
+  INT_TAG_POLICY,
+  INT_CLIP_OVERRIDES,
+  TTS_SEED,
+  voiceConstantFor,
+} = require("./config");
 
 const INT_FOLDER = "03_interview";
 const PRESET = "toefl_int_interviewer";
@@ -94,6 +101,37 @@ function clipDelivery(clip, text) {
   }
   const { text: textSent, pause } = shortQuestionText(text);
   return { delivery: "short", words, pause, textSent, settings: { ...preset, speed: INT_SHORT_QUESTION.speed } };
+}
+
+// Per-voice, per-clip delivery (NOT YET USED by buildIntPlan; see config.js
+// INT_TAG_POLICY / INT_CLIP_OVERRIDES). Returns clipDelivery's fields plus
+// seed, policy ({ breakTime, status, note } or null) and override (or null).
+// `blocked` is set when the policy is unresolved and no override covers the clip.
+function resolveClipDelivery(
+  { itemId, clip, text, voiceConstant },
+  { policies = INT_TAG_POLICY, overrides = INT_CLIP_OVERRIDES, seed = TTS_SEED } = {}
+) {
+  const base = clipDelivery(clip, text);
+  const override = overrides[`${itemId}:${clip}`] ?? null;
+  if (override && !override.reason) throw new Error(`override ${itemId}:${clip} has no reason`);
+  const out = { ...base, seed: override?.seed ?? seed, policy: null, override, blocked: null };
+  if (base.delivery !== "short") return out;
+
+  const slot = voiceConstant.replace(/^TOEFL_TTS_VOICE_/, "");
+  const policy = base.pause ? policies[slot]?.[base.pause] : null;
+  if (base.pause && !policy) throw new Error(`no INT_TAG_POLICY for ${slot}.${base.pause}`);
+  out.policy = policy;
+
+  const hasBreak = override && "breakTime" in override;
+  const breakTime = hasBreak ? override.breakTime : policy?.breakTime ?? null;
+  if (base.pause) {
+    out.textSent = breakTime ? shortQuestionText(text, breakTime).text : text;
+  }
+  out.breakTime = base.pause ? breakTime : null;
+  if (policy?.status === "unresolved" && !override) {
+    out.blocked = `${slot} ${base.pause} policy is unresolved: ${policy.note}`;
+  }
+  return out;
 }
 
 // "Female, UK accent — single consistent voice across all 4 questions"
@@ -224,5 +262,6 @@ module.exports = {
   countWords,
   shortQuestionText,
   clipDelivery,
+  resolveClipDelivery,
   sha256,
 };

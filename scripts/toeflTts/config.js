@@ -82,6 +82,72 @@ const PRESETS = Object.freeze({
 // stem of 27 words: short stems run 15-26, long ones start at 28.
 const INT_SHORT_QUESTION = Object.freeze({ maxWords: 26, speed: 0.92, breakTime: "0.3s" });
 
+// Interview short-question pause policy, per voice slot and pause type
+// (JC 2026-09-16, from B2/B2+ student listening and PPS stress analysis;
+// evidence: tts_calibration_2026-09-16/listening_test*). One question and one
+// take per cell, so these are starting values; listen after generation and
+// correct single clips with INT_CLIP_OVERRIDES.
+//   breakTime: "0.3s" = one tag of that length; null = no tag (speed only).
+//   status:    confirmed  - chosen by listening on this voice
+//              decided    - JC chose between two imperfect versions
+//              inferred   - not heard; follows this voice's other results
+//              untested   - not heard; batch has no clips of this type here
+//              unresolved - neither version was acceptable; clips of this
+//                           type in this voice are not generated without a
+//                           per-clip override
+// Pause types come from intAudioPlan.shortQuestionText: tagOn ("...? Why?"),
+// dash, comma. Stems with no clause break get no tag regardless.
+const policy = (breakTime, status, note) => Object.freeze({ breakTime, status, note });
+const INT_TAG_POLICY = Object.freeze({
+  NA_F: Object.freeze({
+    dash: policy("0.3s", "confirmed", "INT-001 q1: tag wins; untagged sounds rushed"),
+    tagOn: policy("0.3s", "unresolved", "INT-033 q2: wrong stress on 'will' with and without tag"),
+    comma: policy("0.3s", "inferred", "no natural pause at any break without the tag"),
+  }),
+  NA_M: Object.freeze({
+    dash: policy("0.3s", "untested", "INT-001 q1: both versions misplace stress; no dash clips in batch"),
+    tagOn: policy(null, "decided", "INT-033 q2: tag gives correct stress, but JC prefers untagged pacing"),
+    comma: policy("0.3s", "confirmed", "INT-040 q1: no meaningful difference; both correct"),
+  }),
+  UK_F: Object.freeze({
+    dash: policy("0.3s", "confirmed", "Lynd INT-001 q1: 0.3s best; untagged stresses 'or', 0.6s wrong"),
+    tagOn: policy("0.3s", "confirmed", "Lynd INT-033 q2: tagged has correct 2-3-1 stress"),
+    comma: policy("0.3s", "untested", "Lynd not heard on a comma stem; no comma clips in batch"),
+  }),
+  UK_M: Object.freeze({
+    dash: policy(null, "confirmed", "INT-001 q1: tagged too slow"),
+    tagOn: policy("0.3s", "unresolved", "INT-033 q2: wrong stress on 'will' with and without tag"),
+    comma: policy("0.3s", "unresolved", "not heard yet (Test D pending)"),
+  }),
+  AU_F: Object.freeze({
+    dash: policy(null, "confirmed", "INT-001 q1: tag adds rising intonation on 'life'"),
+    tagOn: policy(null, "confirmed", "INT-033 q2: untagged has correct 2-3-1 stress"),
+    comma: policy("0.3s", "confirmed", "INT-040 q1: untagged too fast, no breath"),
+  }),
+  AU_M: Object.freeze({
+    dash: policy(null, "confirmed", "INT-001 q1: tag adds rising intonation on 'relaxing'"),
+    tagOn: policy("0.3s", "confirmed", "INT-033 q2: both correct; tagged paces slightly better"),
+    comma: policy(null, "confirmed", "INT-040 q1: untagged clean (tagged take had a splice defect)"),
+  }),
+  NZ_F: Object.freeze({
+    dash: policy("0.3s", "untested", "INT-001 q1: tagged slightly more natural; no dash clips in batch"),
+    tagOn: policy("0.3s", "unresolved", "INT-033 q2: 'will' stress defect in both versions (voice-specific)"),
+    comma: policy("0.3s", "untested", "INT-040 q1: barely distinguishable; no comma clips in batch"),
+  }),
+  NZ_M: Object.freeze({
+    dash: policy(null, "confirmed", "INT-001 q1: tagged too slow"),
+    tagOn: policy("0.3s", "confirmed", "INT-033 q2: tagged has correct 2-3-1 stress; untagged does not"),
+    comma: policy("0.3s", "confirmed", "INT-040 q1: tag sounds like a natural breath"),
+  }),
+});
+
+// Per-clip corrections after listening, keyed "ITEM-ID:clip" (e.g.
+// "INT-040:q1"). Each field present replaces the policy/global value for that
+// clip only; `reason` is required.
+//   breakTime: "0.6s" | "0.3s" | null   seed: number (a different take)
+// An override also clears an "unresolved" policy for its clip.
+const INT_CLIP_OVERRIDES = Object.freeze({});
+
 // Every TOEFL generation call sends this seed, so an approved rendering
 // reproduces in the real batch (JC 2026-09-16).
 const TTS_SEED = 20260915;
@@ -103,6 +169,8 @@ module.exports = {
   MODEL_ID,
   OUTPUT_FORMAT,
   INT_SHORT_QUESTION,
+  INT_TAG_POLICY,
+  INT_CLIP_OVERRIDES,
   TTS_SEED,
   ACCENTS,
   GENDERS,

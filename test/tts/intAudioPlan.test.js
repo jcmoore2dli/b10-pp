@@ -250,3 +250,57 @@ describe("buildIntPlan delivery", () => {
     assert.strictEqual(q1.settings.speed, 0.92);
   });
 });
+
+describe("resolveClipDelivery (per-voice policy and per-clip overrides)", () => {
+  const { resolveClipDelivery } = require("../../scripts/toeflTts/intAudioPlan");
+  const { INT_TAG_POLICY, ACCENTS, GENDERS, TTS_SEED } = require("../../scripts/toeflTts/config");
+  const whyStem = "Would you rather cook at home, or eat out? Why?";
+  const dashStem = "Tell me about a hobby — for example, a sport — you enjoy?";
+  const pol = (breakTime, status = "confirmed") => ({ breakTime, status, note: "n" });
+  const policies = { AA_F: { tagOn: pol("0.3s"), dash: pol(null), comma: pol("0.3s", "unresolved") } };
+  const at = (text, clip = "q2", itemId = "INT-009") => ({ itemId, clip, text, voiceConstant: "TOEFL_TTS_VOICE_AA_F" });
+
+  it("has a policy with a known status for every voice slot and pause type", () => {
+    for (const a of ACCENTS) for (const g of GENDERS) for (const p of ["tagOn", "dash", "comma"]) {
+      const e = INT_TAG_POLICY[`${a}_${g}`]?.[p];
+      assert.ok(e, `${a}_${g}.${p}`);
+      assert.ok(["confirmed", "decided", "inferred", "untested", "unresolved"].includes(e.status));
+      assert.ok(e.breakTime === null || /^0\.\d+s$/.test(e.breakTime));
+    }
+  });
+
+  it("applies the voice's break length, or no tag, by pause type", () => {
+    const tagged = resolveClipDelivery(at(whyStem), { policies, overrides: {} });
+    assert.strictEqual(tagged.textSent, `Would you rather cook at home, or eat out? ${TAG} Why?`);
+    assert.strictEqual(tagged.seed, TTS_SEED);
+    const untagged = resolveClipDelivery(at(dashStem, "q1"), { policies, overrides: {} });
+    assert.strictEqual(untagged.textSent, dashStem);
+    assert.strictEqual(untagged.breakTime, null);
+    assert.strictEqual(untagged.settings.speed, 0.92);
+  });
+
+  it("blocks unresolved cells unless the clip has an override", () => {
+    const stem = "Describe a habit you keep, such as reading at night?";
+    assert.match(resolveClipDelivery(at(stem, "q1"), { policies, overrides: {} }).blocked, /unresolved/);
+    const overrides = { "INT-009:q1": { breakTime: "0.6s", seed: 7, reason: "heard OK" } };
+    const r = resolveClipDelivery(at(stem, "q1"), { policies, overrides });
+    assert.strictEqual(r.blocked, null);
+    assert.strictEqual(r.seed, 7);
+    assert.strictEqual(r.textSent, 'Describe a habit you keep, <break time="0.6s" /> such as reading at night?');
+  });
+
+  it("lets an override remove the tag or change only the seed", () => {
+    const noTag = resolveClipDelivery(at(whyStem), { policies, overrides: { "INT-009:q2": { breakTime: null, reason: "r" } } });
+    assert.strictEqual(noTag.textSent, whyStem);
+    const reseed = resolveClipDelivery(at(whyStem), { policies, overrides: { "INT-009:q2": { seed: 5, reason: "r" } } });
+    assert.strictEqual(reseed.seed, 5);
+    assert.match(reseed.textSent, /\? <break time="0\.3s" \/> Why\?$/);
+  });
+
+  it("rejects an override without a reason, and leaves intros and long stems alone", () => {
+    assert.throws(() => resolveClipDelivery(at(whyStem), { policies, overrides: { "INT-009:q2": { seed: 1 } } }), /no reason/);
+    const intro = resolveClipDelivery(at("You are joining a study, and a researcher will ask questions.", "intro"), { policies, overrides: {} });
+    assert.strictEqual(intro.delivery, "standard");
+    assert.strictEqual(intro.policy, null);
+  });
+});
