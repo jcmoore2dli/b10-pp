@@ -224,6 +224,7 @@ async function main() {
     console.log(`[${++done}/${todo.length}] ${clip.file} (${audio.length} bytes)`);
   }
   console.log("done.");
+  if (done) console.log("Next: python3 scripts/normalizeToeflIntAudio.py (loudness to -20 LUFS; new files become raw originals in audio/toefl/int_raw/).");
 }
 
 main().catch((err) => {

@@ -22,3 +22,6 @@ serviceAccount*.json
 # Manifests (voice assignments, clip records) are project state: tracked.
 audio/toefl/*
 !audio/toefl/manifests/
+
+# Python bytecode (TOEFL TTS scripts)
+__pycache__/
