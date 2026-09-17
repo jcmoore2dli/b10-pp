@@ -1,0 +1,4499 @@
+{
+  "schema": "toefl-ltc-audio-manifest/1",
+  "items": {
+    "LTC-001": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-001/LTC-001_stimulus.mp3",
+          "textSha256": "9930c6c91987323eaac815e824c55e4d4811954cf56f951a7e5397be2620d900",
+          "renderSha256": "4b9545d27c2f9033867df13f7356e88d9d578dc1f0376423cdebabd1c11686ec",
+          "textSent": "Hey, did you set up a desk for the new intern yet? Not yet. I was waiting to hear which team she's joining first. She's with marketing, starting Monday. I already emailed her the parking pass. Good, I'll grab a laptop from IT this afternoon then, and print her badge before she gets in. Perfect. Can you also walk her through the break room and the printer setup? Sure, I'll build that into her first morning.",
+          "chars": 409,
+          "words": 76,
+          "bytes": 387492,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.37,
+            "tailPaddedMs": 120,
+            "minTailMs": 300,
+            "gainDb": -2.19,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -3.44,
+            "truePeakDb": -3.42,
+            "durationIn": 24.16,
+            "durationOut": 24.28,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.19 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "13cef9ae9be4d101c5e9aa6f5516fded18b140b191caca1acefe8a8b41c6bc57",
+            "normalizedSha256": "9b6ee25718fc3e40c1f5bbb304f5dace57264ab8714430d6981cfdb93d1598ae",
+            "bytes": 389537,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-001/LTC-001_stimulus.mp3",
+            "generation": "1789680185645860",
+            "md5Hash": "ToIy+HclEQ82J7ro6/siqA==",
+            "size": 389537,
+            "sha256": "9b6ee25718fc3e40c1f5bbb304f5dace57264ab8714430d6981cfdb93d1598ae",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 50
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 62
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 78
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 93
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 76
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 45
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-002": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-002/LTC-002_stimulus.mp3",
+          "textSha256": "d63a42cf53e6629d1d9b2481f49018d1b3bd4438082629ccfd87bfecf970073a",
+          "renderSha256": "6d283526aa7dbeeb00e126a15928b5e880f3fa51f3bf3d97e2de70007a772fc3",
+          "textSent": "Hi, is it still possible to switch to the lot behind Building C? Mine's a ten-minute walk from my desk. There's actually a short waitlist right now, but I can add your name today. How long is the wait usually? Lately it's been about three weeks, sometimes less if someone moves departments. That works. Can you email me once a spot opens up? Sure, I'll flag your request and follow up as soon as one clears.",
+          "chars": 407,
+          "words": 76,
+          "bytes": 437647,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.16,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -2.4,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -3.28,
+            "truePeakDb": -3.26,
+            "durationIn": 27.28,
+            "durationOut": 27.58,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.40 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "bfd2ce9c6f387288e0ed066fe6d114788e9fed37325455e0a58dfce4a804497f",
+            "normalizedSha256": "a3291415e802806a978bb489440d8cffd4009c7702c16c4e25738229aec30bb6",
+            "bytes": 442199,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-002/LTC-002_stimulus.mp3",
+            "generation": "1789680186116095",
+            "md5Hash": "rKb2eB5+jCUBJogQofiIAw==",
+            "size": 442199,
+            "sha256": "a3291415e802806a978bb489440d8cffd4009c7702c16c4e25738229aec30bb6",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 103
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 75
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 29
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 80
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 50
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 65
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-003": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-003/LTC-003_stimulus.mp3",
+          "textSha256": "4335b8b6cba4050242fcce3b1c64dcf01abbd98790fd168ea8f497d34ff199de",
+          "renderSha256": "1509d4161d99033884d8e574afa6f439b57b327804b31151d47c5fad9874b66c",
+          "textSent": "Hi, I think locker forty-two is mine, but someone else's bag is already inside it. It shows forty-two assigned to you at nine this morning, but there's a duplicate entry from last week under another member. I signed up for the annual plan yesterday and picked that locker myself at the desk. I'll clear the old entry and give you locker forty-five instead -- same size, closer to the pool. Could you email me confirmation so this doesn't happen again? Sure, I'll send it before you leave.",
+          "chars": 488,
+          "words": 86,
+          "bytes": 558019,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.89,
+            "tailPaddedMs": 100,
+            "minTailMs": 300,
+            "gainDb": -2.66,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.76,
+            "truePeakDb": -3.71,
+            "durationIn": 34.8,
+            "durationOut": 34.9,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.66 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "70f06d5e15f24f3316770b5461eb872f432d43b79ed3e1d47d63818d7ce00205",
+            "normalizedSha256": "e4c79a10b72ec47759535d47b5102522cb2be2983eb1edf723ec4fd0fe1f8938",
+            "bytes": 559646,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-003/LTC-003_stimulus.mp3",
+            "generation": "1789680186774901",
+            "md5Hash": "s+a1FX4rRQ7stZbdjK4yow==",
+            "size": 559646,
+            "sha256": "e4c79a10b72ec47759535d47b5102522cb2be2983eb1edf723ec4fd0fe1f8938",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 82
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 123
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 84
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 97
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 61
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 36
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-004": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-004/LTC-004_stimulus.mp3",
+          "textSha256": "8378af31b36a06f1f81bf51c4eeb0e43f84764e65ba8272bc03a49191a9e5a1c",
+          "renderSha256": "9b67950f82ce477b1990c5033941f05815c0c914f83a5635c6950ef5ba7db8c5",
+          "textSent": "I'm still eleventh on the garden waitlist -- have any plots opened up? I've been on since March. Two people gave up their plots moving out of state, so the list moved up eight spots. That puts me around third. I already paid the ten-dollar deposit in March too. Your form still counts, but you'll need to confirm by replying to Monday's email. I'll reply tonight. Is the ten-by-ten plot near the shed still available? It should be -- I'll hold that one until you confirm.",
+          "chars": 471,
+          "words": 84,
+          "bytes": 533359,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.53,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -2.01,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.19,
+            "truePeakDb": -3.18,
+            "durationIn": 33.28,
+            "durationOut": 33.58,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.01 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "5388a5cb3398f959006b08f3649c5e5e6165f77181791d83c79c6008d86e750f",
+            "normalizedSha256": "4435bd3f5a43b938312920b411372041f510b69a9b1ea78c690c191020c82b77",
+            "bytes": 538330,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-004/LTC-004_stimulus.mp3",
+            "generation": "1789680186307796",
+            "md5Hash": "Px/eT02p593Y4zUzi/8l0w==",
+            "size": 538330,
+            "sha256": "4435bd3f5a43b938312920b411372041f510b69a9b1ea78c690c191020c82b77",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 96
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 85
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 78
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 81
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 73
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 53
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-005": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-005/LTC-005_stimulus.mp3",
+          "textSha256": "7235d29b321ab2b1d5cfa0ac8bddcf296e60f0f63fc83c6325b028402eac68c7",
+          "renderSha256": "95d920e4db5b19922d0ca299e16bded44f259bc0c6b2e66c81471714c2027539",
+          "textSent": "This table's legs are the shorter walnut set, not the tall oak ones we ordered. Let me check -- you're right, the order says tall oak, item two-two-one-nine. I'm sorry about that. The driver mentioned the warehouse mixed up two other orders this week too. I can ship the correct legs overnight, or you keep these and I refund the difference. I'd rather wait for the right ones -- we need the extra height for the bar stools. Understood, I'll place that overnight order right now.",
+          "chars": 479,
+          "words": 84,
+          "bytes": 505356,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.44,
+            "tailPaddedMs": 100,
+            "minTailMs": 300,
+            "gainDb": -0.11,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -1.91,
+            "truePeakDb": -1.9,
+            "durationIn": 31.52,
+            "durationOut": 31.62,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.11 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "92839d986c4fec38cff3df1398bda2dcc41f8da8667cc017b3591c54d988afb7",
+            "normalizedSha256": "de72158c1ea4d65990c8aed452de74f11e054241f052c4c895a49bc50b9b6f1e",
+            "bytes": 506983,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-005/LTC-005_stimulus.mp3",
+            "generation": "1789680186830605",
+            "md5Hash": "m0GklRGSmQRa5N2qc9SQgw==",
+            "size": 506983,
+            "sha256": "de72158c1ea4d65990c8aed452de74f11e054241f052c4c895a49bc50b9b6f1e",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 79
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 99
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 75
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 85
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 82
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 54
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-006": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-006/LTC-006_stimulus.mp3",
+          "textSha256": "38da777ac5ca5ef286df6391f8ee1e765998898d0865cf76c2ae524474eed58b",
+          "renderSha256": "06e9cf53474a1646e6f2ffd030ddd0673c1cf18678c93e61ebda5222a28c59c3",
+          "textSent": "I got a notice saying I owe four dollars for \"The Great Bridge,\" but I returned it already. The drop box scans the next morning, so anything after six p.m. shows late by one day. I dropped it off around seven -- I didn't know that rule. We waive the first drop-box late fee for any patron, so I'll remove this one now. I'd appreciate that. Is there a sign about the six p.m. cutoff near the box? Not yet, but I'll suggest that to the branch manager.",
+          "chars": 449,
+          "words": 87,
+          "bytes": 442662,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.43,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.13,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -1.97,
+            "truePeakDb": -1.96,
+            "durationIn": 27.6,
+            "durationOut": 27.9,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.13 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "d57e46dd2e8b4c7bf9b6c63f09bab6fe68f8ddf7a1cadea85ad9f5094ef3f5b3",
+            "normalizedSha256": "087ddb4f412c2bec016d887ddca8258a1496c12e5cc1a0dd94c99da25158ab94",
+            "bytes": 447633,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-006/LTC-006_stimulus.mp3",
+            "generation": "1789680187070469",
+            "md5Hash": "jVVP03wRZ+G3vAju1svpKg==",
+            "size": 447633,
+            "sha256": "087ddb4f412c2bec016d887ddca8258a1496c12e5cc1a0dd94c99da25158ab94",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 91
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 86
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 57
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 81
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 76
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 53
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-007": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-007/LTC-007_stimulus.mp3",
+          "textSha256": "19918b03ace2a4c8aebf6ab7c0da83ec1a5056a19b47c25d7dbc40ae2e8e44d4",
+          "renderSha256": "91ce06e0abbec8187f4b9947082459aacf9c0b932c6121ff22669b2c0d8f08e6",
+          "textSent": "Should we redo the chore chart now that classes are starting again? Yeah, last semester I did dishes every week and it got old fast. Fair. How about we rotate dishes and trash weekly, and I'll keep vacuuming since I don't mind it? Deal. Can we also agree on a day to take the trash out, so it's not forgotten? Let's say Sunday nights, before the truck comes Monday morning. Works for me.",
+          "chars": 387,
+          "words": 73,
+          "bytes": 419675,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.47,
+            "tailPaddedMs": 40,
+            "minTailMs": 300,
+            "gainDb": -4.08,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -5.33,
+            "truePeakDb": -5.29,
+            "durationIn": 26.16,
+            "durationOut": 26.2,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -4.08 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f2730f6b49e6478d85ceb95624a60815ffcb82d78358462d32bb38a77063bb8c",
+            "normalizedSha256": "bcb2989cc880916a5d2486b259f266bdeba371ab9b296bda6be378e04b01516c",
+            "bytes": 420048,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-007/LTC-007_stimulus.mp3",
+            "generation": "1789680187107549",
+            "md5Hash": "zzFQoBiscHrBlDpQP1tdNA==",
+            "size": 420048,
+            "sha256": "bcb2989cc880916a5d2486b259f266bdeba371ab9b296bda6be378e04b01516c",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 67
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 64
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 97
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 78
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 63
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 13
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-008": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-008/LTC-008_stimulus.mp3",
+          "textSha256": "0ae8dc40fd858631c696cfbc38019225e96136d5a0bf447a38843c1e78426049",
+          "renderSha256": "3a11bfa2a475c3d86dcb893cf2390f0e886d89ba49fc337884acfa6ddd5d6ab0",
+          "textSent": "For Friday's potluck, I signed up to bring a salad. What are you thinking? I was going to bring dessert, but someone already claimed brownies on the sign-up sheet. You could do something else sweet, like a fruit tart maybe. That's a good idea, and it travels better than brownies anyway. True. Should we remind people to label dishes with allergens? Good call, I'll add a note to the sign-up sheet today.",
+          "chars": 404,
+          "words": 72,
+          "bytes": 420928,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -4.55,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -5.34,
+            "truePeakDb": -5.33,
+            "durationIn": 26.24,
+            "durationOut": 26.54,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -4.55 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "66aa4d2350cd83ee50c2fa5152549cc53b6cf342ff889051663a4bc564bb808d",
+            "normalizedSha256": "2a818346f6ef2332fc03054270a9a298d14cedb0d2a59350fbbb846064ab4dfe",
+            "bytes": 425481,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-008/LTC-008_stimulus.mp3",
+            "generation": "1789680188129996",
+            "md5Hash": "2TZJMsQzFD6EBTffgCrWdA==",
+            "size": 425481,
+            "sha256": "2a818346f6ef2332fc03054270a9a298d14cedb0d2a59350fbbb846064ab4dfe",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 74
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 88
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 59
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 63
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 61
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 54
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-009": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-009/LTC-009_stimulus.mp3",
+          "textSha256": "a8c63ae7ad72d716ea7fec86559e5ab55cba774290e5dd0d8b746ab3d357ea67",
+          "renderSha256": "64f6fa67e61e834ef74a98fdc0c8477cdae62f496bdbeea6a86055ad21f1dfe5",
+          "textSent": "I heard you missed Tuesday's titration lab -- were you sick? Yeah, I had a fever. Professor Alvarez said I can redo it any afternoon this week. Open lab is Thursday four to six, but I'm free Wednesday if you want a partner instead of going alone. Wednesday's better -- I have a shift Thursday evening. I'll bring my notes from Tuesday so you're not starting from scratch. I'll reserve a bench in the lab for two o'clock.",
+          "chars": 420,
+          "words": 76,
+          "bytes": 364504,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.24,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.31,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.61,
+            "truePeakDb": -2.59,
+            "durationIn": 22.72,
+            "durationOut": 23.02,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.31 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ab83b26ba28fdb24a96b6d510aca0dd361d962fd0b503c04334fbbc83643f42a",
+            "normalizedSha256": "f62a8e4373ac01fc1a3ca15b1b98a0c2922ddb97bba8bd5f6a08ee85e1ddbf68",
+            "bytes": 369474,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-009/LTC-009_stimulus.mp3",
+            "generation": "1789680187692682",
+            "md5Hash": "zKaeaQi683B2Xu8MKe9pAQ==",
+            "size": 369474,
+            "sha256": "f62a8e4373ac01fc1a3ca15b1b98a0c2922ddb97bba8bd5f6a08ee85e1ddbf68",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 60
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 82
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 102
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 54
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 69
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 48
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-010": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-010/LTC-010_stimulus.mp3",
+          "textSha256": "58dbae969f8ebef3c5a3d5f99c118a7368fb34d67abe6d1b8de73dcd267c906a",
+          "renderSha256": "f836ce8ed95fc5a5ffde5d64d1c46c6fea7e155705c1324723c9a5c18ece9ab9",
+          "textSent": "Have you decided on the four-day summer schedule yet? A few of us were hoping to start next month. I approved it yesterday, actually. You'll each pick a day off, but Fridays are already full for the warehouse team. I was thinking of taking Mondays off since I have a class those mornings anyway. That works. Just let payroll know your choice by the fifteenth so it's on file before June. Should I email you directly, or fill out a form? Email me is fine, I'll forward it to payroll myself.",
+          "chars": 489,
+          "words": 91,
+          "bytes": 494071,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.56,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -2.99,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.84,
+            "truePeakDb": -3.82,
+            "durationIn": 30.8,
+            "durationOut": 31.1,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.99 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f839e85167c57eef5864cac2860517ea941a29986345d22fa439e963223836b2",
+            "normalizedSha256": "3459c64fbd937e3d9990cfa8bed2b20b0d5e85db8f673a26a03ff1a910f66ec7",
+            "bytes": 498624,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-010/LTC-010_stimulus.mp3",
+            "generation": "1789680188581810",
+            "md5Hash": "VmU8ayfQYrQIa69ilmi8zA==",
+            "size": 498624,
+            "sha256": "3459c64fbd937e3d9990cfa8bed2b20b0d5e85db8f673a26a03ff1a910f66ec7",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 98
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 115
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 80
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 91
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 48
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 52
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-011": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-011/LTC-011_stimulus.mp3",
+          "textSha256": "fc62ea3e957c4112f14d5108b014199bfe786f9e93a5fad8c6072dd4b706711f",
+          "renderSha256": "33296b93694cfcf4ea534b7fa2ef44e9ffc9c5f1b693e3772282a4a33179b49e",
+          "textSent": "Priya, the printer contract renews Tuesday, and the vendor's raising the price fifteen percent. It still covers free toner delivery, though. Fifteen percent is steep. What about the machine in the storage room? I saw it's under warranty until March. I checked -- it only prints color, not double-sided scans, so it can't replace this one. Then ask for a two-month extension instead of a full year. Canceling outright triggers a two-hundred-dollar fee, so don't do that. Good idea. I'll email them today and mention the extension.",
+          "chars": 529,
+          "words": 86,
+          "bytes": 587276,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.71,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -2.83,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.98,
+            "samplePeakDb": -3.56,
+            "truePeakDb": -3.56,
+            "durationIn": 36.64,
+            "durationOut": 36.94,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.83 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "0ca9191be9dd63b3aef8ee72be0e6f46dca844a179d6ade8bedc6c2aa855c587",
+            "normalizedSha256": "dfce2162e5152cc5bd6c16ac315fa1cfb96412b046110b07d702fd64c98463f6",
+            "bytes": 592247,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-011/LTC-011_stimulus.mp3",
+            "generation": "1789680188747922",
+            "md5Hash": "54Dv8W9M1CZSSGH8DcVEhQ==",
+            "size": 592247,
+            "sha256": "dfce2162e5152cc5bd6c16ac315fa1cfb96412b046110b07d702fd64c98463f6",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 140
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 108
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 88
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 130
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 59
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-012": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-012/LTC-012_stimulus.mp3",
+          "textSha256": "ccf99afc0a8a5adb2d2893570a222d10d244625e710f048c82c44e34e27cea40",
+          "renderSha256": "37e359752afb39725fd2ea218adde0b9642d2fc2824ddb9e26b1029669fa0d59",
+          "textSent": "This is my first time running the team stand-up. Any tips before Monday? Keep it under fifteen minutes. Each person shares yesterday, today, and any blockers, that's it. What if someone starts going on about details no one else needs? Just gently redirect them, and offer to follow up after the meeting instead. Should I go first to set the tone? Actually, save yourself for last so you can address anything that came up.",
+          "chars": 421,
+          "words": 74,
+          "bytes": 479861,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.29,
+            "tailPaddedMs": 280,
+            "minTailMs": 300,
+            "gainDb": -1.27,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.1,
+            "truePeakDb": -3.06,
+            "durationIn": 29.92,
+            "durationOut": 30.2,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.27 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "4cc02e407551b0209d772e7c9a778029efd9c15502216548d6f7cb7c59776863",
+            "normalizedSha256": "e2786d66ec8353195fb2c3b01f9894f2ef404f2117b3188e433f70146aa9030b",
+            "bytes": 484413,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-012/LTC-012_stimulus.mp3",
+            "generation": "1789680188978077",
+            "md5Hash": "v6C7lfPkxOFDEnKvcZ13DA==",
+            "size": 484413,
+            "sha256": "e2786d66ec8353195fb2c3b01f9894f2ef404f2117b3188e433f70146aa9030b",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 72
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 96
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 64
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 76
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 34
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 74
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-013": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-013/LTC-013_stimulus.mp3",
+          "textSha256": "22a44179f6e3b75049d01a67fea5bd4cd57d6828d2efb966e5774a466e5e3d08",
+          "renderSha256": "fbe0e95ca89bf55423db0d4f964ca5893aee94096d161cb5c2be670e20f1dd80",
+          "textSent": "Hi Coach, I wanted to ask about Saturday's practice time. Ethan has a dentist appointment at nine. No problem, we actually moved Saturday practice to eleven this week because of field maintenance. Oh perfect, that works out. Is the game Sunday still at the same time? Yes, Sunday's game is still at ten, just the practice time changed. Got it. Should he bring anything different for practice this week? Just extra water, it's supposed to be warm out.",
+          "chars": 450,
+          "words": 78,
+          "bytes": 442662,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.25,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -0.29,
+            "limiterMaxReductionDb": -0.2,
+            "lufsOut": -20,
+            "samplePeakDb": -1.47,
+            "truePeakDb": -1.45,
+            "durationIn": 27.6,
+            "durationOut": 27.9,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain -0.29 dB, peak limiter up to 0.20 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "2b16eb8a2e508624c2650ed1b5c1a8a7dbefe56ea0f25234d2afac47ec412069",
+            "normalizedSha256": "96d7bbf3971f2a3b924bb1c6edc4ac6a8d7850c40d3e036d933945b707e88756",
+            "bytes": 447633,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-013/LTC-013_stimulus.mp3",
+            "generation": "1789680189499859",
+            "md5Hash": "/tI6oclpsUJEtwwPOdGxJA==",
+            "size": 447633,
+            "sha256": "96d7bbf3971f2a3b924bb1c6edc4ac6a8d7850c40d3e036d933945b707e88756",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 98
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 97
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 70
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 67
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 66
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 47
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-014": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-014/LTC-014_stimulus.mp3",
+          "textSha256": "1260f659a61e04c27953cb171b61ad3610adb48cdda25b155b583c7ade8168d6",
+          "renderSha256": "f6c0ffe9fb65439c728c6f5856bcd491da87dc98f5382a13ba82e1bcc43cf1d3",
+          "textSent": "I'm trying to pick a paint color for a rental apartment. It needs to work for the next tenant too. For rentals, most people go with a neutral like a soft gray or warm white, it's easier to touch up later. That makes sense. Do you have anything in a washable finish? Yes, this eggshell line here wipes clean easily and it's only a few dollars more per gallon. Perfect, I'll take two gallons of the gray in that line. Great, I'll ring that up for you now.",
+          "chars": 453,
+          "words": 88,
+          "bytes": 468158,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.7,
+            "tailPaddedMs": 80,
+            "minTailMs": 300,
+            "gainDb": 0.16,
+            "limiterMaxReductionDb": -0.01,
+            "lufsOut": -20,
+            "samplePeakDb": -1.48,
+            "truePeakDb": -1.48,
+            "durationIn": 29.2,
+            "durationOut": 29.28,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +0.16 dB, peak limiter up to 0.01 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "255413b3543fb82e2e4b1cd8d0cf171e3aa6aba8fd009b3bdee687a15b5587f5",
+            "normalizedSha256": "4333ad2b95851dde00fe70b0a385764954e9c6c49467a060e98daaf9e1e1ea72",
+            "bytes": 469367,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-014/LTC-014_stimulus.mp3",
+            "generation": "1789680189987383",
+            "md5Hash": "dNeggqn1cuNPGH0HAcwelQ==",
+            "size": 469367,
+            "sha256": "4333ad2b95851dde00fe70b0a385764954e9c6c49467a060e98daaf9e1e1ea72",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 98
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 105
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 60
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 92
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 56
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 37
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-015": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-015/LTC-015_stimulus.mp3",
+          "textSha256": "5b1fd784aab7449eca6c541bcd7c8c9538c6ba12a474dba648bfc96f754889ec",
+          "renderSha256": "7d9fac71f1d4effcb3f70aa2324d7e4db1ccc680d915167c34477a2686eba8ab",
+          "textSent": "We rented the main hall for the retirement party last month -- I'm calling about our deposit refund. Your deposit was one hundred fifty dollars, and the room was in good condition, so that's a full refund. The form said refunds take ten business days, but it's been three weeks. I see the issue -- your form was filed under the wrong event date, which delayed it. Can you fix that today so it goes out this week? Yes, I'll correct it now and email you a confirmation.",
+          "chars": 467,
+          "words": 86,
+          "bytes": 494071,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.71,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -3.85,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -4.57,
+            "truePeakDb": -4.57,
+            "durationIn": 30.8,
+            "durationOut": 31.1,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -3.85 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "9c9d03baa11335095f3240ad89fee63ee99b4709b15dac1f0aa365862963b7b9",
+            "normalizedSha256": "6b4bdfb7da3a39aa2f830a790f1445af0c4b5dc3e3bb6bf2c70fed269a9930a6",
+            "bytes": 498624,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-015/LTC-015_stimulus.mp3",
+            "generation": "1789680190041548",
+            "md5Hash": "6gKiyF+MIynfZN1aQUm+JQ==",
+            "size": 498624,
+            "sha256": "6b4bdfb7da3a39aa2f830a790f1445af0c4b5dc3e3bb6bf2c70fed269a9930a6",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 100
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 104
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 72
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 84
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 48
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 54
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-016": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-016/LTC-016_stimulus.mp3",
+          "textSha256": "7901fabc535c6750bf055151b4e25dd2a3e3c5385605b543aa67dc4773f9ecd4",
+          "renderSha256": "60f4e7941e62894b67210572e3c3686b1485ad6168cdcf52555f059bfd63f1a4",
+          "textSent": "I was thinking we could split the community garden plot again this year. Same as last summer? Sure, though I'd like to grow tomatoes this time instead of peppers. That works, I'll keep doing herbs on my side then, like last year. Should we split the watering schedule, or just water whenever we're both out there? Let's just alternate weeks, that way neither of us is stuck doing it every day. Sounds good, I can take the first week since I'm off work then.",
+          "chars": 457,
+          "words": 84,
+          "bytes": 435139,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.26,
+            "tailPaddedMs": 270,
+            "minTailMs": 300,
+            "gainDb": -4.29,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -4.96,
+            "truePeakDb": -4.94,
+            "durationIn": 27.12,
+            "durationOut": 27.39,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -4.29 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "2186f08ab998978b8916682587aac8908114032a765b858a8c6574ade011cf5c",
+            "normalizedSha256": "41a132607b1155839a3729b41778c5cbe5b5b5406ea15c0182b85119c1bfc309",
+            "bytes": 439274,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-016/LTC-016_stimulus.mp3",
+            "generation": "1789680190243488",
+            "md5Hash": "a50tcW6gjRpFoxbnso7Wlg==",
+            "size": 439274,
+            "sha256": "41a132607b1155839a3729b41778c5cbe5b5b5406ea15c0182b85119c1bfc309",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 93
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 68
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 66
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 83
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 79
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 63
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-017": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-017/LTC-017_stimulus.mp3",
+          "textSha256": "166294901690f2ba82d9bc3816c9c4dec279ebf0a932d082535953e752e96c8f",
+          "renderSha256": "5836bc93973e3fff9d2afaf0b3f05363e6235ab1e41b8cedbace65d68b2c935e",
+          "textSent": "Hi, I'd like to reserve a table for ten people this Saturday evening, if possible. Let me check... Saturday evening we can do a table for ten at six, but it's a two-hour limit during peak hours. Two hours should be fine. Do you need a deposit to hold it? Just a twenty-dollar deposit, refundable if everyone shows up. Great, I'll pay that now. Can I add or remove a couple of guests later? Sure, just let us know by Thursday so we can adjust the table size.",
+          "chars": 457,
+          "words": 88,
+          "bytes": 537539,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.61,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.94,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.1,
+            "truePeakDb": -3.07,
+            "durationIn": 33.52,
+            "durationOut": 33.82,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.94 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "61d882b69e8f16a969a88802870e0ffe4843059aa0cc18f32a59084a5340272f",
+            "normalizedSha256": "5ef4fb437b9606bfe05922407aee4d42f08284adb65b87f26443769f2649b608",
+            "bytes": 542092,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-017/LTC-017_stimulus.mp3",
+            "generation": "1789680190507752",
+            "md5Hash": "n4G2xpTdzcqzmIjaUA62Wg==",
+            "size": 542092,
+            "sha256": "5ef4fb437b9606bfe05922407aee4d42f08284adb65b87f26443769f2649b608",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 82
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 111
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 59
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 62
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 71
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 67
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-018": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-018/LTC-018_stimulus.mp3",
+          "textSha256": "f037e1c7098cab82159ca1bd69dfa1c1fe1b6feb24e5dad42c6d65f5f53135ad",
+          "renderSha256": "7ef9e2ae08e151037b8b3ecf2b4590289d65ec9e46c77638fdb05b963398243b",
+          "textSent": "Mr. Delgado, we're out of the compact model -- I can offer a free upgrade to the midsize SUV. I booked the compact specifically because it fits my hotel's narrow parking garage, and I'm only in town through Sunday. The SUV's about a foot wider. I do have one more compact coming back from cleaning in twenty minutes. I'll wait for that one -- I'm driving downtown tonight for a nine o'clock reservation. I'll knock ten dollars off your total for the wait. Appreciated, thank you.",
+          "chars": 479,
+          "words": 84,
+          "bytes": 468158,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.95,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.6,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.74,
+            "truePeakDb": -2.72,
+            "durationIn": 29.2,
+            "durationOut": 29.5,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.60 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c0692612e4a826019a02d5b2527ab86125499432da67bd7c61084f9f0a41f003",
+            "normalizedSha256": "21738c4db2a60eb7f9dc2c8a44554bec3fcfb5f107aaa58a2f3fecefec217ba5",
+            "bytes": 473128,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-018/LTC-018_stimulus.mp3",
+            "generation": "1789680191251629",
+            "md5Hash": "zu9SrkeSZhx8IlQivXc/pQ==",
+            "size": 473128,
+            "sha256": "21738c4db2a60eb7f9dc2c8a44554bec3fcfb5f107aaa58a2f3fecefec217ba5",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 93
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 120
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 101
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 86
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 51
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 23
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-019": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-019/LTC-019_stimulus.mp3",
+          "textSha256": "5027b0b833147e12b98523b30d6899c138116cccd469c38b0aabb1d65eff596a",
+          "renderSha256": "cf330ffe0049b0d1c6710882de9bc6cc1d0c2ca28a18175f5c3d8b5f385f14b6",
+          "textSent": "Room two-eleven is booked under my name for three, but you're already in there with your group. Sorry, the app showed it open until four -- I think the system didn't update after your reservation. That's happened to me twice this month with that app. We can move to two-thirteen down the hall; it just opened up and it's actually bigger. That works for me, I just need an outlet for my laptop. Two-thirteen has three outlets, so you're covered.",
+          "chars": 444,
+          "words": 79,
+          "bytes": 491146,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.69,
+            "tailPaddedMs": 260,
+            "minTailMs": 300,
+            "gainDb": -1.85,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.18,
+            "truePeakDb": -3.17,
+            "durationIn": 30.64,
+            "durationOut": 30.9,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.85 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "b32acba5810f8539fd0da59ed1ea1842d4a116589fc4368c1818b209b89a89c0",
+            "normalizedSha256": "92726b6c5835683f0d22caa72b41f5851531b4232ad927f0950dad30036c99d2",
+            "bytes": 495280,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-019/LTC-019_stimulus.mp3",
+            "generation": "1789680191036129",
+            "md5Hash": "cdj2DuvsWYrjthm3X7UtDw==",
+            "size": 495280,
+            "sha256": "92726b6c5835683f0d22caa72b41f5851531b4232ad927f0950dad30036c99d2",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 95
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 100
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 53
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 86
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 55
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 50
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-020": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-020/LTC-020_stimulus.mp3",
+          "textSha256": "90f32f74a2d61e7c27814a396a2235a71ddb522814bdee90b4557937ca9608bd",
+          "renderSha256": "2c6b08d36466b89ed0a49a96ca85be6733286c98a0e2795737c9db3c0e7a6045",
+          "textSent": "Are you signing up for the garden volunteer day Saturday? I heard they need people for fall planting. I saw the flyer. I was actually going to bring my younger brother along, if that's allowed for volunteers. I think guests are fine as long as they're with a student. I'm bringing gloves and a trowel from home. Good idea, I'll grab an extra pair for my brother then. They said to meet at the greenhouse at nine, not the usual garden gate. Got it, I'll set an alarm so we're not late.",
+          "chars": 484,
+          "words": 92,
+          "bytes": 533359,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.87,
+            "tailPaddedMs": 90,
+            "minTailMs": 300,
+            "gainDb": -2.68,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.99,
+            "truePeakDb": -3.99,
+            "durationIn": 33.28,
+            "durationOut": 33.37,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.68 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "551b1f03325ef6edf05473d3934833a21c4a4f51e89986ad2ec7655fa48cfbe2",
+            "normalizedSha256": "8847209326420c2885721b5da7dc9f7ec7b1a0680e7db11c8a77e5dc39cc079d",
+            "bytes": 534986,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-020/LTC-020_stimulus.mp3",
+            "generation": "1789680191248202",
+            "md5Hash": "Zau1nI48UYLYZvb/AMsmPw==",
+            "size": 534986,
+            "sha256": "8847209326420c2885721b5da7dc9f7ec7b1a0680e7db11c8a77e5dc39cc079d",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 101
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 106
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 102
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 55
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 71
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 44
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-021": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-021/LTC-021_stimulus.mp3",
+          "textSha256": "bc7991a40b0a518bf91d3271a9f244c027c631439dea0171f12e13ef3af3208c",
+          "renderSha256": "833dba39c549b1be3bc5ed3206b0444841de83d170db64dcde62ed47e9cfd620",
+          "textSent": "Hi, my monthly pass stopped working at the turnstile. I've had it for about two weeks. Let me look it up... it looks like it was deactivated by mistake when we updated the system overnight. Can you reactivate it now? I'm already running late for a meeting downtown. Yes, one moment... there, it should work now. I'll also add three free days since it was our error. I appreciate that. Do I need to do anything else on my end? No, just try tapping again, it should read fine at any station now.",
+          "chars": 493,
+          "words": 93,
+          "bytes": 527090,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.91,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -0.65,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -1.69,
+            "truePeakDb": -1.68,
+            "durationIn": 32.88,
+            "durationOut": 33.18,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.65 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "152ffebf0bf7210f209303cd415503b19d14a93d896e41417f2f35d4eb97ad01",
+            "normalizedSha256": "8007047131c019bf42788f3560f624487e079801ab7945bf8aeafbbe771b655f",
+            "bytes": 532061,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-021/LTC-021_stimulus.mp3",
+            "generation": "1789680191511933",
+            "md5Hash": "F264trxwVZJ6PZPx7QxN6w==",
+            "size": 532061,
+            "sha256": "8007047131c019bf42788f3560f624487e079801ab7945bf8aeafbbe771b655f",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 86
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 102
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 75
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 99
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 59
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 67
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-022": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-022/LTC-022_stimulus.mp3",
+          "textSha256": "6bec527ee7226da1b71fdbdddfaa651d8f6a294f76e7cb91e5bf4a3879108ac5",
+          "renderSha256": "c081168c8daa7e1a92905f1877e4cf7555c5d2eebe52acc9b57d97316570ba16",
+          "textSent": "I want to throw Maria a surprise party for her fortieth. Who should we invite from her book club? Renee and the Kowalski sisters, they're always at her place. I'm not sure about the newer members. Let's stick to people she's known at least a year. What about cousins? She's close with her cousin Beth, I'd invite her. I don't know the others well enough. I'll ask Beth for their contact info. Can you handle the invitations once we finalize the list? Sure, I'll design something simple and send it out next week.",
+          "chars": 512,
+          "words": 93,
+          "bytes": 489892,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.96,
+            "tailPaddedMs": 90,
+            "minTailMs": 300,
+            "gainDb": -1.61,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.02,
+            "samplePeakDb": -2.56,
+            "truePeakDb": -2.54,
+            "durationIn": 30.56,
+            "durationOut": 30.65,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.61 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "37a185b76424fd80ca092035545f1b1b0a12c27c04e5515be444c2e49d0149ef",
+            "normalizedSha256": "f784c42c1a8222a66612c6e051f20d091da10bfcbe6b1b11490f9ea57cafdb7b",
+            "bytes": 491519,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-022/LTC-022_stimulus.mp3",
+            "generation": "1789680192124628",
+            "md5Hash": "ZC0LhBclU3gKY96cyFgkHw==",
+            "size": 491519,
+            "sha256": "f784c42c1a8222a66612c6e051f20d091da10bfcbe6b1b11490f9ea57cafdb7b",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 97
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 98
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 70
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 86
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 95
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 61
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-023": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-023/LTC-023_stimulus.mp3",
+          "textSha256": "f2399b8bde4b772fcd403dfd009f258b6e139d8bc40766233a7afbb3a1b91fde",
+          "renderSha256": "cf19e008ad9e3804ce3a4a32a3c79b12c6c4db4a7eed315e9a00f86a0872254b",
+          "textSent": "For the block party, I reserved folding tables and booked the taco truck for noon. I lined up a playlist and speaker, but we still need someone for the bounce house. My cousin runs a rental company and offered a discount if we book by Friday. Let's do that. I also emailed the street about parking so cars don't block the cul-de-sac. Good thinking. I'll confirm the bounce house today and text you the cost. I'll print flyers for everyone's doors this weekend too.",
+          "chars": 464,
+          "words": 84,
+          "bytes": 489892,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.31,
+            "tailPaddedMs": 140,
+            "minTailMs": 300,
+            "gainDb": -4.24,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -5.1,
+            "truePeakDb": -5.09,
+            "durationIn": 30.56,
+            "durationOut": 30.7,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -4.24 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ad73c284cc167d367f2251c18d35999f2267b3caba0357f3adf3f386554fcbf6",
+            "normalizedSha256": "d4f79523f334f304dd953a5f61fb64ceaefbec89fb4381e628ea6f8bcaa02928",
+            "bytes": 492354,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-023/LTC-023_stimulus.mp3",
+            "generation": "1789680192610113",
+            "md5Hash": "sDsnfvJxzC43jht6wjvupQ==",
+            "size": 492354,
+            "sha256": "d4f79523f334f304dd953a5f61fb64ceaefbec89fb4381e628ea6f8bcaa02928",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 82
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 82
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 76
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 90
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 73
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 56
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-024": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-024/LTC-024_stimulus.mp3",
+          "textSha256": "034e029b0224856d706cff798cf07d19bd7788ab27e69decee5b6b4e89ad54d4",
+          "renderSha256": "e5f29403880a2e76791f667e888fadc32bfa0db1c66eb9744b01b4f0d9ed13bf",
+          "textSent": "My badge stopped working at the side entrance this morning, but it still opens the lobby door fine. The new system rolled out Monday -- side-entrance readers now need a PIN too. Nobody told me about a PIN. This is the second reader that's glitched on me this week. A new four-digit code was sent by email -- check spam, a few went there by mistake. Found it. Should I keep using the lobby door for now? Yes, until IT confirms the side reader is fixed, probably Friday.",
+          "chars": 468,
+          "words": 86,
+          "bytes": 524582,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.51,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -4.05,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -4.82,
+            "truePeakDb": -4.8,
+            "durationIn": 32.72,
+            "durationOut": 33.02,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -4.05 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "43599bd9c740382885e2ebfd9842541ff88a4a87644ebcc8b5a0c06d46753ccf",
+            "normalizedSha256": "b0eaf6fbdf6c660fa0b17da79c157a973ed1dfc60e9bb12d65bcfce377516a5d",
+            "bytes": 529553,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-024/LTC-024_stimulus.mp3",
+            "generation": "1789680192593016",
+            "md5Hash": "zovWbro3zg+eis4pDsXkbg==",
+            "size": 529553,
+            "sha256": "b0eaf6fbdf6c660fa0b17da79c157a973ed1dfc60e9bb12d65bcfce377516a5d",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 99
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 77
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 86
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 83
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 53
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 65
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-025": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-025/LTC-025_stimulus.mp3",
+          "textSha256": "fddcb8dd25169c4e0b8aae708e088edae2261bf2f704bfd223dae4c3c4ad15a1",
+          "renderSha256": "13da01a3e18e88a056a0a06deb07bbdaba95670a7c24000f5384cfe0c4363f6a",
+          "textSent": "The delivery that came in is labeled for Bay 3, but the packing slip says it should go to Bay 7. Let me check the order number... yeah, this was meant for the electronics line, Bay 7 is correct. Should I move it now, or wait until after shift change? Move it now if you can, that line's waiting on this shipment to start their afternoon run. Okay, I'll grab the pallet jack and get it over there. Thanks, and flag it to the label team so this doesn't happen again this week.",
+          "chars": 474,
+          "words": 93,
+          "bytes": 458127,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.28,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.27,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.06,
+            "truePeakDb": -2.05,
+            "durationIn": 28.56,
+            "durationOut": 28.86,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.27 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "8271cbeb6616aefa4e003e28887233ee61fd9b8142b1f6db7b6b310b68fa42d3",
+            "normalizedSha256": "2fb83338228af39ec67ba6a02a1c399037ab76339483e7587fa1a2b35f423023",
+            "bytes": 462679,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-025/LTC-025_stimulus.mp3",
+            "generation": "1789680192793433",
+            "md5Hash": "8UGWs6/xg+Ac/v9l73rKAg==",
+            "size": 462679,
+            "sha256": "2fb83338228af39ec67ba6a02a1c399037ab76339483e7587fa1a2b35f423023",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 96
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 97
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 55
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 90
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 54
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 77
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-026": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-026/LTC-026_stimulus.mp3",
+          "textSha256": "cf32871109e403211083a6f9c5c2af29ac47e2ef2073b4bea1cb39708d3986b1",
+          "renderSha256": "1cb6f3895f4363785a980960714c8262d08dc51ea340f5b591b98bac41fd1291",
+          "textSent": "Hi, I'd like to trade in my old phone. It's about three years old, the screen's a little cracked. With the crack, I can offer sixty dollars in credit. That's lower than I expected. Would fixing the screen first get me more? Yes, an undamaged model gets ninety, so it might be worth the repair cost. I'll think about it. Can I still trade it in today if I skip the repair? Sure, the sixty-dollar offer holds through the end of the week.",
+          "chars": 435,
+          "words": 83,
+          "bytes": 425944,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.78,
+            "tailPaddedMs": 150,
+            "minTailMs": 300,
+            "gainDb": -1.77,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.61,
+            "truePeakDb": -2.57,
+            "durationIn": 26.56,
+            "durationOut": 26.71,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.77 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c57e41ed2cb291e71e02e270519108bed0a651876d1669630439bf7dbb5d5466",
+            "normalizedSha256": "fb94c70c705a1d300ccb0236dc636b0128bf40e720585ec7675d1d50d49c8eb1",
+            "bytes": 428407,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-026/LTC-026_stimulus.mp3",
+            "generation": "1789680192974491",
+            "md5Hash": "1CwsSWXhxbSuLuZsse491Q==",
+            "size": 428407,
+            "sha256": "fb94c70c705a1d300ccb0236dc636b0128bf40e720585ec7675d1d50d49c8eb1",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 97
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 52
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 72
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 74
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 72
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 63
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-027": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-027/LTC-027_stimulus.mp3",
+          "textSha256": "977a43c8090d385844cf6c0c066779678c30384d0baf402df7ed5947472778c3",
+          "renderSha256": "82d51c6d74d6539026f0e84b472769f3be6403efcf2522f8a9f3b37bb628fb9c",
+          "textSent": "Hi, I signed up to volunteer at the festival but haven't gotten my shift yet. It's Saturday, right? Yes, the sixth. You're down for the info booth, ten to two. I did request afternoon since I have a morning commitment. Any flexibility? I can swap you with someone on the two-to-six shift instead. Perfect, that solves it. Where do I check in? At the volunteer tent near the main entrance, look for the clipboard station.",
+          "chars": 420,
+          "words": 75,
+          "bytes": 519567,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.17,
+            "tailPaddedMs": 120,
+            "minTailMs": 300,
+            "gainDb": -1.38,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.66,
+            "truePeakDb": -2.65,
+            "durationIn": 32.4,
+            "durationOut": 32.52,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.38 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "339d8a1abba8c7bd0c80c49fe63b361ba981b234810b1d98b9ab9a2bf847616c",
+            "normalizedSha256": "0c4fbee00906e7e90b6d19b7d0a85f5a01d437638d65ece8691d2b0aee61b892",
+            "bytes": 521194,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-027/LTC-027_stimulus.mp3",
+            "generation": "1789680193782102",
+            "md5Hash": "jZooMnxmbNgiWpioWol3xQ==",
+            "size": 521194,
+            "sha256": "0c4fbee00906e7e90b6d19b7d0a85f5a01d437638d65ece8691d2b0aee61b892",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 99
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 59
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 75
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 60
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 45
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 77
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-028": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-028/LTC-028_stimulus.mp3",
+          "textSha256": "4669f1bd45796853f37afaf35fff54d747f741b8490e95a8daae4c31c872efb8",
+          "renderSha256": "fc6b924980e999b042127e1ed986913b5d614eb322044f0af20ff5a0925057cb",
+          "textSent": "I wanted to ask about a standing desk -- my doctor recommended one, and I've had this desk two years. We have extras in storage from the last office move, so I can get you one without ordering. Does it come with the same monitor arm as my current desk? No, request that separately through facilities -- it usually ships within a week. I'll submit that today. I'm also switching to the north wing next month. I'll deliver it Thursday, and move it with you when you switch.",
+          "chars": 471,
+          "words": 86,
+          "bytes": 547570,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.46,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -2.09,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -3.23,
+            "truePeakDb": -3.23,
+            "durationIn": 34.16,
+            "durationOut": 34.46,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.09 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "dd719f0ba90ec38029851046fd06b31b9b0c1e09ea143b5d9ede31782df98a7d",
+            "normalizedSha256": "ce1b295ddcb3ad4ef481f5813ff6a3f193b38bc4347f50c79aa8ffcb1bff8a16",
+            "bytes": 552541,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-028/LTC-028_stimulus.mp3",
+            "generation": "1789680194043330",
+            "md5Hash": "SnC9Dm3ktcpEtluupWxseA==",
+            "size": 552541,
+            "sha256": "ce1b295ddcb3ad4ef481f5813ff6a3f193b38bc4347f50c79aa8ffcb1bff8a16",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 101
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 91
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 58
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 81
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 72
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 63
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-029": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-029/LTC-029_stimulus.mp3",
+          "textSha256": "0f5728d233272e0d816e9cc79845bc7bf04ef214ccd118275ed592d617b3ed64",
+          "renderSha256": "aa302ae7f16240b6b0a712024412833ea10f2fe58546d13a5172b87aa01d4ae0",
+          "textSent": "I finished the proposal for the recycling program. Building services approved bins for every floor. That's great news. Did they say when the bins would actually arrive? Next Tuesday, so we could launch the week after if we get the signage ready in time. I can design the signage this week, I've done similar posters before. Perfect. Should we announce it at the all-hands meeting or just send an email? Let's do the all-hands, people pay more attention when it's announced live.",
+          "chars": 478,
+          "words": 82,
+          "bytes": 442662,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.11,
+            "tailPaddedMs": 220,
+            "minTailMs": 300,
+            "gainDb": -1.44,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.45,
+            "truePeakDb": -2.44,
+            "durationIn": 27.6,
+            "durationOut": 27.82,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.44 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "7377dd62c4dbdb412825e68ee418b42f92aa08926fa51c7c770f39651a481da7",
+            "normalizedSha256": "4351aa34dc7762194cacb5884e4727eea7fff60a55f3a55df53d73df82d5d476",
+            "bytes": 445961,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-029/LTC-029_stimulus.mp3",
+            "generation": "1789680194087777",
+            "md5Hash": "nw7aBqV9FYk2XqTpunE+Wg==",
+            "size": 445961,
+            "sha256": "4351aa34dc7762194cacb5884e4727eea7fff60a55f3a55df53d73df82d5d476",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 99
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 68
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 84
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 69
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 78
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 75
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-030": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-030/LTC-030_stimulus.mp3",
+          "textSha256": "beb8e0e268b7efe0c320c5f14d6252336a09885f43adeb7218b30eaa3db05167",
+          "renderSha256": "beb8b7066df757f898d5c7ddb31fafa7e50f48b08befde3f13d59ce480500101",
+          "textSent": "Did you see the driver gave us a three-star rating from Tuesday's ride? Yeah, I checked the app -- it said we were both ten minutes late to the pickup spot. That's fair, we were stuck finishing the meeting. Did he leave a comment too? Just that the pickup location pin was wrong, which wasn't really our fault. I'll message support about the pin -- maybe they can fix the rating. Good idea, I'll forward you the trip receipt for that.",
+          "chars": 434,
+          "words": 79,
+          "bytes": 401702,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.19,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -0.36,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.01,
+            "truePeakDb": -1.99,
+            "durationIn": 25.04,
+            "durationOut": 25.34,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.36 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "e4e04d42e60b2d37939d1c4ab9278ae84d9b0a25c5222886aca992fb36586e0e",
+            "normalizedSha256": "45a516ce68dbca8a60a0acfc1829af58b8c530f7fc182e7e75ac0d32db98c45a",
+            "bytes": 406673,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-030/LTC-030_stimulus.mp3",
+            "generation": "1789680194106239",
+            "md5Hash": "0VSS35vVqOE0R/uaPiETtQ==",
+            "size": 406673,
+            "sha256": "45a516ce68dbca8a60a0acfc1829af58b8c530f7fc182e7e75ac0d32db98c45a",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 71
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 84
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 77
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 75
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 68
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 54
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-031": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-031/LTC-031_stimulus.mp3",
+          "textSha256": "c7b1715b1e0b7ab8663192a7b48bf6496eae513b0ec7a2fe46f997fe667630e1",
+          "renderSha256": "f5310927bb94db8188404a2336680dfe1b3e24b82a56e28a25f8c384e27317da",
+          "textSent": "Did you get the email about Saturday's game moving? It almost went to my spam folder. They're reseeding the north field, so we're pushed to Sunday at the south field instead. Same time, or does that change too? Same nine a.m. kickoff, just a different field. The south lot only holds about twenty cars. I'll text the team tonight so nobody shows up at the wrong field. Good idea -- I'll bring the water jugs since the south field has no fountain.",
+          "chars": 446,
+          "words": 81,
+          "bytes": 459381,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.13,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -3.42,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -4.14,
+            "truePeakDb": -4.07,
+            "durationIn": 28.64,
+            "durationOut": 28.94,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -3.42 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "3af76b6fa3ea7e3c52a14146584e6c5787960b1dcf2648327cc36b1f234ce750",
+            "normalizedSha256": "4d634a5263d70af52ae6935247fda96f260e93b324465044f0303d972ca52d0a",
+            "bytes": 463933,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-031/LTC-031_stimulus.mp3",
+            "generation": "1789680194512236",
+            "md5Hash": "xCNdLuKG3MxRXjnALJ1Dtw==",
+            "size": 463933,
+            "sha256": "4d634a5263d70af52ae6935247fda96f260e93b324465044f0303d972ca52d0a",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 85
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 88
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 35
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 91
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 65
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 77
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-032": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-032/LTC-032_stimulus.mp3",
+          "textSha256": "b6dc521bd1ae8533a617a231412a5cf43439c113ab352def621c6cc02294ad6b",
+          "renderSha256": "e725eb81af69044688bb6cad85a6178287a4b83be0e21520070f4c45086d08fa",
+          "textSent": "This is my first time at a climbing gym. Do I need the safety orientation first? Yes, it's required before you can climb the taller walls, but bouldering doesn't require it. Bouldering sounds good for today then. How high do those walls go? About fifteen feet, with crash pads the whole way down, so it's pretty forgiving if you fall. That's reassuring. Do I need my own shoes, or can I rent a pair? You can rent here, the front desk has sizes for about five dollars a pair.",
+          "chars": 474,
+          "words": 89,
+          "bytes": 469412,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.34,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -4.21,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -4.98,
+            "truePeakDb": -4.98,
+            "durationIn": 29.28,
+            "durationOut": 29.58,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -4.21 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "bbefae20fcbd2f4bc9b86125767ed437d69c39764332cb153041760ba4565ff9",
+            "normalizedSha256": "6150a00098549a3928fb958e54899dbc1ea2c7a3e42054a3a56e4e2fdc35b7dc",
+            "bytes": 474382,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-032/LTC-032_stimulus.mp3",
+            "generation": "1789680194882763",
+            "md5Hash": "ntmCBv1oyfsY9N6+rRvkJg==",
+            "size": 474382,
+            "sha256": "6150a00098549a3928fb958e54899dbc1ea2c7a3e42054a3a56e4e2fdc35b7dc",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 80
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 92
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 66
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 93
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 64
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 74
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-033": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-033/LTC-033_stimulus.mp3",
+          "textSha256": "657c42af52487c3a16c813aa3f7b041ad376b2cd8d611cd9545b6da98cfd750c",
+          "renderSha256": "35bd10181f8477dbab184e0448e5c9cc5600132f61516ce37c6419705599f71c",
+          "textSent": "My blender stopped spinning after six weeks -- I still have the receipt and bought the two-year warranty plan. Good, that covers it. Was it the six-cup pitcher model? Yes, the six-cup. It hums now but the blades don't turn. Sounds like a motor issue -- I can send it for repair, or swap it since we have three in stock. I'd rather swap it -- I need it working before the weekend. I'll process that now; just bring the receipt and unit to the counter.",
+          "chars": 450,
+          "words": 83,
+          "bytes": 504102,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.76,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.79,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.59,
+            "truePeakDb": -2.57,
+            "durationIn": 31.44,
+            "durationOut": 31.74,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.79 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "872d0272129c2ecaf9e97b0b7d0b212c7bf6c0175f6fd35b24850ffd8eaa584f",
+            "normalizedSha256": "3fb3a61d2f17744f2845857b6f093030ff13c189b0609279a55aae24ddf24b19",
+            "bytes": 509073,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-033/LTC-033_stimulus.mp3",
+            "generation": "1789680194909322",
+            "md5Hash": "6DiV3MLdJkVr5gH6Kdcl7w==",
+            "size": 509073,
+            "sha256": "3fb3a61d2f17744f2845857b6f093030ff13c189b0609279a55aae24ddf24b19",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 110
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 55
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 56
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 95
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 59
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 70
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-034": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-034/LTC-034_stimulus.mp3",
+          "textSha256": "cd7993a25ea48b11933052e17df89a491a4c74b6892f37ecec07ea2ac2c2ce36",
+          "renderSha256": "8eb1ec775ee0f213923d76e2fcb03161f88e65f2b93cdcf0e32169dfc7e86eee",
+          "textSent": "Hi, I need to mail this vase to my sister, but it's pretty fragile. What are my options? We have a fragile-handling service for five dollars extra, it gets extra padding and a separate bin during transport. That sounds worth it. How much longer does that add to delivery time? Usually just one extra day, so still within the week if you're not in a rush. That's fine, she's not expecting it until next weekend anyway. Perfect, I'll get the fragile sticker and start the extra padding now.",
+          "chars": 488,
+          "words": 88,
+          "bytes": 581007,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.1,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.45,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.73,
+            "truePeakDb": -2.72,
+            "durationIn": 36.24,
+            "durationOut": 36.54,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.45 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f15d58b6ace81625d11d27197f5f805292e4b526d459f5b6dc8fe63802e8f8ae",
+            "normalizedSha256": "4fb842713bc9f4791c67ce828216d900145d56f395b3056e6348a52afc75f87f",
+            "bytes": 585559,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-034/LTC-034_stimulus.mp3",
+            "generation": "1789680195062989",
+            "md5Hash": "yktwYzUHg4wvyjxB9XSM9g==",
+            "size": 585559,
+            "sha256": "4fb842713bc9f4791c67ce828216d900145d56f395b3056e6348a52afc75f87f",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 88
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 117
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 69
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 77
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 62
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 70
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-035": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-035/LTC-035_stimulus.mp3",
+          "textSha256": "f57aa78d955252d7076dabb5c69ae459ce63b220154b0d8ef5e9bd707ff65c83",
+          "renderSha256": "38e987e93dcbc48e25fdf18f3d64fe542bd41c4febc737452e3e04b6d7978258",
+          "textSent": "I booked my flight for the reunion, landing Friday afternoon. Are you driving or flying? Flying too, actually, I found a cheaper flight that gets in Friday morning. Even better, you could grab the rental car before I land then. Good idea, I'll reserve it under my name and just add you as a second driver. Perfect. Should we stay at the same hotel as everyone else, or the one Mom mentioned? Let's do the one Mom mentioned, it's closer to the venue and she already checked the rates.",
+          "chars": 483,
+          "words": 89,
+          "bytes": 550078,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.82,
+            "tailPaddedMs": 250,
+            "minTailMs": 300,
+            "gainDb": -2.73,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.69,
+            "truePeakDb": -3.68,
+            "durationIn": 34.32,
+            "durationOut": 34.57,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.73 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "af24974fac01b0d9f0c0abe383d341301c8309046df3e77442729e345f0ef1c2",
+            "normalizedSha256": "324f9803e5855c6e016cbb89b46ce66d9bef3de1bf639b2a7fe5e0f7661c16ef",
+            "bytes": 554212,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-035/LTC-035_stimulus.mp3",
+            "generation": "1789680195310596",
+            "md5Hash": "BwC60XKHayJRZ7qZ/6KioQ==",
+            "size": 554212,
+            "sha256": "324f9803e5855c6e016cbb89b46ce66d9bef3de1bf639b2a7fe5e0f7661c16ef",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 88
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 75
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 62
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 77
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 85
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 91
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-036": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-036/LTC-036_stimulus.mp3",
+          "textSha256": "796eba9815c11fcd6b7092c04e2679446a7c3ce3dc3a4621cc459711e294cf23",
+          "renderSha256": "f1284554bd8c4567fcc06679eff4d619681fb563a0b37c484cc49d043e2c4171",
+          "textSent": "Hi, this is Marisol from the Chen party -- our guest count just went from thirty to forty-two. I can add twelve portions, but the tent only seats forty, so a few guests may need patio tables. That's fine, my sister already offered two folding tables for the patio. Good. I'll also swap the appetizer trays to the larger size at no extra charge. Thank you. Can everything arrive by four instead of five? Four works -- I'll move your slot up and confirm by text tonight.",
+          "chars": 468,
+          "words": 85,
+          "bytes": 568050,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.59,
+            "tailPaddedMs": 290,
+            "minTailMs": 300,
+            "gainDb": -1.95,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.34,
+            "truePeakDb": -3.33,
+            "durationIn": 35.44,
+            "durationOut": 35.73,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.95 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "bf5e55f10857061528b2207624c11207f484bc9c73afdd7a1711741c85a54dc7",
+            "normalizedSha256": "bbb313829917e99fe241aaeb4237cecb9c3de36299e18f60cfcbfd61fc67ec0a",
+            "bytes": 572603,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-036/LTC-036_stimulus.mp3",
+            "generation": "1789680195945388",
+            "md5Hash": "zDXrH85u6YAJIwOfN9TbXA==",
+            "size": 572603,
+            "sha256": "bbb313829917e99fe241aaeb4237cecb9c3de36299e18f60cfcbfd61fc67ec0a",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 94
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 96
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 72
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 79
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 57
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 65
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-037": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-037/LTC-037_stimulus.mp3",
+          "textSha256": "bfdbfc2714200f7cf55badfdb154b07482235b37206b0fc4a116849010ae1937",
+          "renderSha256": "b8f62fa7bf6254c54fcaaa851d2138b335629df32c5cea7e9fef86e77def49ba",
+          "textSent": "Marketing asked if our team wants a lunch-and-learn slot next month. Are you interested in presenting? I could talk about the new inventory system, I built most of it myself. That would actually be really useful, half the team still asks me basic questions about it. True. How long are these usually, thirty minutes? Forty-five with time for questions, and they provide lunch for everyone who attends. Good incentive. I'll draft an outline this week and send it to you.",
+          "chars": 469,
+          "words": 80,
+          "bytes": 440155,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.61,
+            "tailPaddedMs": 130,
+            "minTailMs": 300,
+            "gainDb": -1.94,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.04,
+            "truePeakDb": -3.04,
+            "durationIn": 27.44,
+            "durationOut": 27.57,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.94 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "50a420a2c45bcc5abf01fd029e0c593c4fc1fe37661076f5f663c67a84daad43",
+            "normalizedSha256": "9a60d8079649a1fd2ff79721cd0bf5c38f933757c88eb011d84c16c0cd045798",
+            "bytes": 442199,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-037/LTC-037_stimulus.mp3",
+            "generation": "1789680195689443",
+            "md5Hash": "Zyz/oacVnNVz8vePydxorQ==",
+            "size": 442199,
+            "sha256": "9a60d8079649a1fd2ff79721cd0bf5c38f933757c88eb011d84c16c0cd045798",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 102
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 71
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 91
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 49
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 84
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 67
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-038": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-038/LTC-038_stimulus.mp3",
+          "textSha256": "cd0beb2660a12ec0c9c7844fc9e4c24900145b436ed5619398ccd6e2fa52ef98",
+          "renderSha256": "889465ff42691c05848ed96bde62f6abe97584d674bfeb989b4f215822c7409d",
+          "textSent": "Good to be back. What did I miss while I was out? Not too much, though we did switch to the new expense software last week. Oh, I saw an email about that but didn't read it closely. Is it a big change? Not really, receipts upload automatically now instead of you scanning them yourself. That's actually an improvement. Anything else? Just that Fridays are dress-down now, company-wide, starting this month.",
+          "chars": 406,
+          "words": 71,
+          "bytes": 373699,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.86,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -0.7,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -1.91,
+            "truePeakDb": -1.91,
+            "durationIn": 23.28,
+            "durationOut": 23.58,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.70 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "fb6925f9fc1e0693f54fa67c22854bcbc072ca64e5c07aa38970db9e90251168",
+            "normalizedSha256": "8236b38bb36169aace4e9b5856c91f227d9444421affe0b5b8a5868320916206",
+            "bytes": 378252,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-038/LTC-038_stimulus.mp3",
+            "generation": "1789680195734168",
+            "md5Hash": "pPHeEIdjzmvzPRjNVyS8gQ==",
+            "size": 378252,
+            "sha256": "8236b38bb36169aace4e9b5856c91f227d9444421affe0b5b8a5868320916206",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 49
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 73
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 77
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 84
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 46
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 72
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-039": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-039/LTC-039_stimulus.mp3",
+          "textSha256": "a64896543b8c5ed2c86dcced121ae6974ddc9a858b31efe4f5890db59159e5c5",
+          "renderSha256": "5b9a4ea408a7f9a1af0cc2906a457f5913d977222d37a0fe8c3335cb26e8888e",
+          "textSent": "The plow guy quoted forty dollars for our shared driveway this winter. That's less than last year -- want to split it evenly like before? Actually, I was hoping you'd cover a bit more since I shoveled the walkway alone last month. Fair enough, I'll pay twenty-five and you pay fifteen. Deal. Should we pay him per storm or set up a season contract? Season contract -- it's cheaper if we get more than four storms.",
+          "chars": 413,
+          "words": 74,
+          "bytes": 455619,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.71,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -3.85,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -4.68,
+            "truePeakDb": -4.66,
+            "durationIn": 28.4,
+            "durationOut": 28.7,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -3.85 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "6964e1ecf39f43a10e2de74bdfb60df9985fc69a62a81fb12e2b65c06cc16b55",
+            "normalizedSha256": "4c39ef9f43f11fd30e7e8da2d9567395a990587b88bbdb3e5e091ee6ad1ff8fb",
+            "bytes": 460172,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-039/LTC-039_stimulus.mp3",
+            "generation": "1789680196014037",
+            "md5Hash": "WFJ57vwNdCAf6u9izPJ4hw==",
+            "size": 460172,
+            "sha256": "4c39ef9f43f11fd30e7e8da2d9567395a990587b88bbdb3e5e091ee6ad1ff8fb",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 70
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 66
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 92
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 54
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 62
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 64
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-040": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-040/LTC-040_stimulus.mp3",
+          "textSha256": "2896e71e264ffa1c821b864c2015c47bc23af49af8a8810e3d73ef74035cccd1",
+          "renderSha256": "ee046f4de737d35607a50caa5394f778d7975804e223fbb1eec205c661ed51e0",
+          "textSent": "I was thinking we host board-game night this time, maybe eight people total? That works, though we'd need a second table for that many. I have a folding one we can use. Perfect. What games do we have that support that many players? Just the party trivia one, honestly. We might need to borrow something bigger from Dana. Good idea, she mentioned owning a few strategy games last time we talked. I'll text her tonight and ask what she can bring.",
+          "chars": 444,
+          "words": 81,
+          "bytes": 453111,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16,
+            "tailPaddedMs": 240,
+            "minTailMs": 300,
+            "gainDb": -3.55,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -4.39,
+            "truePeakDb": -4.34,
+            "durationIn": 28.24,
+            "durationOut": 28.48,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -3.55 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "b92050f661d728e542a73378cdf5dc8da10c6b71f800ffc81ea8513bb720efbb",
+            "normalizedSha256": "1e5b4c8fe85e0df27ffee0cf856d8fdc544019a6180cbb2a8ecb886331d66ad4",
+            "bytes": 456828,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-040/LTC-040_stimulus.mp3",
+            "generation": "1789680196341297",
+            "md5Hash": "NekfrBQRDnONp20gVy3GIQ==",
+            "size": 456828,
+            "sha256": "1e5b4c8fe85e0df27ffee0cf856d8fdc544019a6180cbb2a8ecb886331d66ad4",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NZ_M",
+        "TOEFL_TTS_VOICE_NZ_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 76
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 91
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 62
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 88
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+          "chars": 73
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+          "chars": 49
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NZ",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-041": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-041/LTC-041_stimulus.mp3",
+          "textSha256": "9ada5945a93ea71b110939bb44062aa460953ccc9f01d5f24432dbb9ae6e18b2",
+          "renderSha256": "bdd363455f1c7547ae26744908a85485560dc71de7b2a9b370b0dc11a39e50cd",
+          "textSent": "I booked the moving truck for Saturday at eight -- a sixteen-footer, so it'll fit everything in one trip. Good. I called the utility company -- electric and water transfer to the new address by Friday, but internet takes an extra week. That's fine, we can hotspot off my phone until it's connected. I also need you to pick up boxes from the hardware store before Thursday. I'll grab those tomorrow on my way home. I'll finish labeling the kitchen boxes tonight.",
+          "chars": 461,
+          "words": 80,
+          "bytes": 499087,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.78,
+            "tailPaddedMs": 180,
+            "minTailMs": 300,
+            "gainDb": -1.77,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.65,
+            "truePeakDb": -3.57,
+            "durationIn": 31.12,
+            "durationOut": 31.3,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.77 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "62d14a60b2a952169d813e97003940607c87b4065eda2b0b0aafc6cd3ae41f03",
+            "normalizedSha256": "b68d40ef45109ce473707041bb85c7150f85799e5bf2e80111af62a5c2bd0028",
+            "bytes": 501968,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-041/LTC-041_stimulus.mp3",
+            "generation": "1789680196493593",
+            "md5Hash": "wOUssomXcVTLtKpIUnDx4Q==",
+            "size": 501968,
+            "sha256": "b68d40ef45109ce473707041bb85c7150f85799e5bf2e80111af62a5c2bd0028",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 105
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 129
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 62
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 73
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 40
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 47
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-042": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-042/LTC-042_stimulus.mp3",
+          "textSha256": "7d6c8ffd0cfea0d58fcbfde8a6763e846668f6bbc983ee43ef48d068ff327495",
+          "renderSha256": "af4055d7ae6ffa2825b8a37073139baef7f372e68e3e578c086502970213e3db",
+          "textSent": "I can't make my Saturday morning shift at the shelter -- my sister's flying in that day. I could take Saturday if you cover my Tuesday evening shift instead. Tuesday evening works for me. What does that shift usually involve? Mostly walking the dogs and restocking food bins before closing at seven. Got it. I'll message the coordinator so she updates the schedule. Thanks -- I'll bring the new volunteer up to speed on Saturday's routine before I go.",
+          "chars": 451,
+          "words": 77,
+          "bytes": 474845,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.78,
+            "tailPaddedMs": 60,
+            "minTailMs": 300,
+            "gainDb": -1.77,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.83,
+            "truePeakDb": -2.8,
+            "durationIn": 29.6,
+            "durationOut": 29.66,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.77 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ccd7598c79a90dad9e80fdd9cb3be695f25432280726669141688c92a0291ea5",
+            "normalizedSha256": "2135088b05953c717335d465f237455f2c22ae6a6006c66ade2adb30307a3b5b",
+            "bytes": 475636,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-042/LTC-042_stimulus.mp3",
+            "generation": "1789680196775609",
+            "md5Hash": "42QdUi6tZn+C+ZsvBBDwKQ==",
+            "size": 475636,
+            "sha256": "2135088b05953c717335d465f237455f2c22ae6a6006c66ade2adb30307a3b5b",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_NA_M",
+        "TOEFL_TTS_VOICE_NA_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 88
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 68
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 67
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 73
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+          "chars": 65
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+          "chars": 85
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "NA",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-043": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-043/LTC-043_stimulus.mp3",
+          "textSha256": "048fa0e3303e7a6cce195990ee2718016bae368bd4681c6a52bd71c0a981a99b",
+          "renderSha256": "d8192fd7ef55ba0a53d0d592ec9f16af85907ce9f4a364502cc3b9e423cb8a71",
+          "textSent": "Do you know how much longer construction next door will last? It's been loud all week. I asked the foreman yesterday -- framing's done by Friday, then it's quieter interior work. That's a relief, I have a work call every morning and it's been hard to hear anything. Same, actually. I've been stepping outside for calls just to get away from the hammering. Maybe we should both email the property manager about compensation for the noise. Good idea, I'll draft something tonight and send it to you to add your name.",
+          "chars": 514,
+          "words": 90,
+          "bytes": 598979,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.49,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -2.06,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.75,
+            "truePeakDb": -2.75,
+            "durationIn": 37.36,
+            "durationOut": 37.66,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -2.06 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "b934dc7032f643e56741f61d84e4a9f63fd5dfbfef24ab0f0bb3980acc5e5e6e",
+            "normalizedSha256": "a067f5269e9c5eaf021e6e7a67f3a922c1b65f6ced4b3a01aa62da0d0507e68b",
+            "bytes": 603532,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-043/LTC-043_stimulus.mp3",
+            "generation": "1789680196901507",
+            "md5Hash": "j/cS/G1jlpkMTeVCar451w==",
+            "size": 603532,
+            "sha256": "a067f5269e9c5eaf021e6e7a67f3a922c1b65f6ced4b3a01aa62da0d0507e68b",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 86
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 91
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 86
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 89
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 81
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 76
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-044": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-044/LTC-044_stimulus.mp3",
+          "textSha256": "ef02d64c1d7ce720d0fb59fb57b4adf30b246fe80ccdb715c84bf77c1da3a115",
+          "renderSha256": "4bfee846a414934018167d7f52f9c9b1cacf1342c5bf8b212bf2967d93f8b6f8",
+          "textSent": "I'm setting up the honey booth next to yours again this Saturday -- same corner spot? They moved us one row back -- the fire lane needs to stay clear near the entrance. Got it. What time do vendors start setting up, six or seven? Six-thirty now -- they pushed it back since the market doesn't open until nine. I'll bring my canopy then, since it takes longer to set up than yours. I'll save you the spot next to the produce stand.",
+          "chars": 430,
+          "words": 80,
+          "bytes": 517059,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_UK_M+TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.8,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -1.74,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.03,
+            "truePeakDb": -3,
+            "durationIn": 32.24,
+            "durationOut": 32.54,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.74 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ef9bd0a6ad4d6ddc7b291f84d7e8c306fb4f035fee69fb859b5df68286de240a",
+            "normalizedSha256": "5458c4fed4fdb50166a7549b35a2060a3e61d3826735f5eda1bd13ab087fcc0a",
+            "bytes": 521612,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-044/LTC-044_stimulus.mp3",
+            "generation": "1789680197049369",
+            "md5Hash": "YDHKzj6JszGEWcMfaEf2mw==",
+            "size": 521612,
+            "sha256": "5458c4fed4fdb50166a7549b35a2060a3e61d3826735f5eda1bd13ab087fcc0a",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_UK_M",
+        "TOEFL_TTS_VOICE_UK_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 85
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 82
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 60
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 79
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+          "chars": 70
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+          "chars": 49
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "UK",
+      "preset": "toefl_ltc_conversation"
+    },
+    "LTC-045": {
+      "clips": {
+        "stimulus": {
+          "file": "ltc/LTC-045/LTC-045_stimulus.mp3",
+          "textSha256": "476cd8b1d496bd940e6bb7419e8333cca9fd97819576775a87dfcd3666655a45",
+          "renderSha256": "1a542ae97186367c7fdf63a54b28b0028f0efad7cc16b0ee1f863d9c0168d050",
+          "textSent": "I mapped two routes for the trip. The coastal one adds about two hours but has better views. Let's do the coastal route then, we're not in a rush. Where should we stop overnight? There's a small town about halfway with decent inns, or we could push through to the bigger city. Let's stop at the small town, breaking up a long drive with a bigger city stop after sounds exhausting. Good call. I'll book a room there tonight before they fill up. I'll handle snacks and drinks for the drive then.",
+          "chars": 493,
+          "words": 92,
+          "bytes": 446424,
+          "settings": {
+            "stability": 0.5,
+            "use_speaker_boost": true,
+            "modelId": "eleven_v3"
+          },
+          "modelId": "eleven_v3",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.95,
+            "tailPaddedMs": 300,
+            "minTailMs": 300,
+            "gainDb": -0.6,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -1.69,
+            "truePeakDb": -1.69,
+            "durationIn": 27.84,
+            "durationOut": 28.14,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.60 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "aeb87cb89187d5bad0635956022a839007e02836d45549c1d3a878547a0953fb",
+            "normalizedSha256": "2a7d44a40a678d201dc5b3831d4759f4a704c40570e43bc2b188ff18f9c1d19a",
+            "bytes": 451394,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/ltc/LTC-045/LTC-045_stimulus.mp3",
+            "generation": "1789680197159251",
+            "md5Hash": "QgzeDPG4DQ7S6Mrlkbl0rQ==",
+            "size": 451394,
+            "sha256": "2a7d44a40a678d201dc5b3831d4759f4a704c40570e43bc2b188ff18f9c1d19a",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstants": [
+        "TOEFL_TTS_VOICE_AU_M",
+        "TOEFL_TTS_VOICE_AU_F"
+      ],
+      "turns": [
+        {
+          "turnIndex": 1,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 92
+        },
+        {
+          "turnIndex": 2,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 85
+        },
+        {
+          "turnIndex": 3,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 97
+        },
+        {
+          "turnIndex": 4,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 103
+        },
+        {
+          "turnIndex": 5,
+          "speakerLabel": "Woman",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+          "chars": 62
+        },
+        {
+          "turnIndex": 6,
+          "speakerLabel": "Man",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+          "chars": 49
+        }
+      ],
+      "modelId": "eleven_v3",
+      "accent": "AU",
+      "preset": "toefl_ltc_conversation"
+    }
+  }
+}
