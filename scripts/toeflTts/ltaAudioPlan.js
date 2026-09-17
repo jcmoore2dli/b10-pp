@@ -35,7 +35,7 @@ function readStatus(dir, itemId) {
 // line followed by the next bare label — the same shape importToeflCorpus.js
 // reads with plainBlock().
 function parseLtaAnnouncement(body) {
-  const m = /^ANNOUNCEMENT TEXT:\s*\n([\s\S]*?)(?=\n\s*\n[A-Z][A-Z0-9 \-/']*:|\n\s*\nQ\d|$)/m.exec(body);
+  const m = /^ANNOUNCEMENT TEXT:\s*\n([\s\S]*?)(?=\n\s*\n[A-Z][A-Z0-9 \-/']*:|\n\s*\nQ\d|(?![\s\S]))/m.exec(body);
   if (!m) throw new Error("no ANNOUNCEMENT TEXT block");
   const text = collapse(m[1]);
   if (!text) throw new Error("empty ANNOUNCEMENT TEXT block");

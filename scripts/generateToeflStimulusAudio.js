@@ -15,6 +15,8 @@
 //   at   — scripts/toeflTts/atAudioPlan.js    voice and register from the item's STATUS
 //   lta  — scripts/toeflTts/ltaAudioPlan.js   voice from lta_voice_manifest.json (rotation default)
 //   lcr  — scripts/toeflTts/lcrAudioPlan.js   voice from lcr_voice_manifest.json (gender confirmed, accent default)
+//   ltc  — scripts/toeflTts/ltcAudioPlan.js   two voices per item, generated natively by
+//          /v1/text-to-dialogue with eleven_v3 (JC 2026-09-17, after the A/B on LTC-001)
 //
 // Dry run by default. With --generate, calls ElevenLabs using
 // TOEFL_TTS_API_KEY only (never B10-PP's ELEVENLABS_API_KEY), sends the fixed
@@ -79,6 +81,24 @@ const TYPES = {
       "from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented " +
       "starting value (JC 2026-09-17); nothing here has been heard",
   },
+  ltc: {
+    schema: "toefl-ltc-audio-manifest/1",
+    dialogue: true,
+    build: (corpusRoot, opts) => {
+      const fs = require("fs");
+      const file = path.join(outRoot, "manifests", "ltc_voice_manifest.json");
+      if (!fs.existsSync(file)) throw new Error(`no ${file} — run: node scripts/buildToeflVoiceManifest.js --type ltc --write`);
+      return require("./toeflTts/ltcAudioPlan").buildLtcPlan(corpusRoot, JSON.parse(fs.readFileSync(file, "utf8")), opts);
+    },
+    confirmed: new Set(),
+    confirmedNote: null,
+    defaultNote:
+      "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with " +
+      "eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 " +
+      "(JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice " +
+      "artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender " +
+      "and accent come from the rotation in ltc_voice_manifest.json",
+  },
 };
 
 function argValue(flag, fallback) {
@@ -136,6 +156,26 @@ function writeManifest(manifest) {
 const renderSha256 = (voiceId, clip, settings) =>
   sha256(JSON.stringify({ voiceId, text: clip.textSent, settings, modelId: MODEL_ID, seed: TTS_SEED }));
 
+// One /v1/text-to-dialogue call: one input per turn, each with its speaker's
+// voice. eleven_v3 only; the endpoint rejects eleven_multilingual_v2.
+async function synthesizeDialogue(apiKey, item, clip) {
+  const res = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-dialogue?output_format=${encodeURIComponent(OUTPUT_FORMAT)}`,
+    {
+      method: "POST",
+      headers: { "xi-api-key": apiKey, "Content-Type": "application/json", Accept: "audio/mpeg" },
+      body: JSON.stringify({
+        inputs: clip.turns.map((t) => ({ text: t.text, voice_id: VOICES[t.voiceConstant].voiceId })),
+        model_id: item.modelId,
+        seed: TTS_SEED,
+        settings: { stability: item.stability, use_speaker_boost: true },
+      }),
+    }
+  );
+  if (!res.ok) throw new Error(`ElevenLabs ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  return Buffer.from(await res.arrayBuffer());
+}
+
 async function synthesize(apiKey, voiceId, text, settings) {
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=${encodeURIComponent(OUTPUT_FORMAT)}`,
@@ -154,8 +194,10 @@ async function main() {
   const manifest = readManifest();
   const rows = items.map((item) => {
     const clip = item.clips[0];
-    const settings = { ...PRESETS[item.preset] };
-    const pair = `${item.preset}|${item.voiceConstant}`;
+    const settings = cfg.dialogue
+      ? { stability: item.stability, use_speaker_boost: true, modelId: item.modelId }
+      : { ...PRESETS[item.preset] };
+    const pair = `${item.preset}|${item.voiceConstant ?? item.voiceConstants.join("+")}`;
     const heard = cfg.confirmed.has(pair);
     return {
       item, clip, settings,
@@ -169,7 +211,7 @@ async function main() {
   let upToDate = 0;
   for (const row of rows) {
     const { item, clip, settings } = row;
-    const voiceId = VOICES[item.voiceConstant].voiceId;
+    const voiceId = cfg.dialogue ? item.voiceConstants.join("+") : VOICES[item.voiceConstant].voiceId;
     const onDisk = fs.existsSync(path.join(outRoot, clip.file));
     const prev = manifest.items[item.itemId];
     if (onDisk && prev && prev.clips?.[clip.clip]?.renderSha256 === renderSha256(voiceId, clip, settings)) upToDate++;
@@ -178,22 +220,30 @@ async function main() {
   }
 
   const chars = todo.reduce((n, r) => n + r.clip.textSent.length, 0);
-  const count = (key, val) => rows.filter((r) => (key === "voice" ? r.item.voiceConstant : key === "preset" ? r.item.preset : r.confirmation) === val).length;
+  const voiceKey = (item) => item.voiceConstant ?? item.voiceConstants.join("+");
+  const count = (key, val) => rows.filter((r) => (key === "voice" ? voiceKey(r.item) : key === "preset" ? r.item.preset : r.confirmation) === val).length;
   console.log(`type:      ${taskType}`);
   console.log(`corpus:    ${corpusRoot}`);
   console.log(`audio out: ${outRoot}`);
   console.log(`manifest:  ${manifestFile}`);
   console.log(`seed:      ${TTS_SEED}   one stimulus clip per item, no pause tags, no question clips`);
+  if (cfg.dialogue) {
+    const turns = rows.reduce((n, r) => n + r.clip.turns.length, 0);
+    console.log(`model:     ${rows[0]?.item.modelId} via /v1/text-to-dialogue, ${turns} turns across ${rows.length} items, stability ${rows[0]?.item.stability}`);
+    console.log(`cost:      $0.10 per 1,000 characters (same rate as eleven_multilingual_v2, checked against elevenlabs.io/pricing/api 2026-09-17)`);
+  }
   console.log(`items: ${rows.length}  clips: ${rows.length}  up to date: ${upToDate}  to generate: ${todo.length} (${chars} chars)`);
   console.log(`presets: ${[...new Set(rows.map((r) => r.item.preset))].map((p) => `${p} ${count("preset", p)}`).join(", ")}`);
-  console.log(`voices:  ${[...new Set(rows.map((r) => r.item.voiceConstant))].sort().map((v) => `${v.slice(-4)} ${count("voice", v)}`).join(", ")}`);
+  console.log(`voices:  ${[...new Set(rows.map((r) => voiceKey(r.item)))].sort().map((v) => `${v.replace(/TOEFL_TTS_VOICE_/g, "")} ${count("voice", v)}`).join(", ")}`);
   console.log(`confirmation: confirmed ${count("c", "confirmed")}, default ${count("c", "default")} (default applied, not individually confirmed)`);
   for (const e of excluded) console.log(`excluded: ${e.itemId} (${e.reason})`);
   for (const r of changed) console.log(`CHANGED, not regenerated (use --force): ${r.clip.file}`);
 
   if (!generate) {
     for (const r of rows) {
-      console.log(`${r.item.itemId} ${r.item.voiceConstant.slice(-4)} ${r.item.preset.padEnd(18)} ${String(r.clip.words).padStart(3)}w ${r.confirmation.padEnd(9)} | ${r.clip.textSent.slice(0, 60)}…`);
+      const v = cfg.dialogue ? r.item.voiceConstants.map((c) => c.slice(-4)).join("+") : r.item.voiceConstant.slice(-4);
+      const extra = cfg.dialogue ? `${r.clip.turns.length} turns ` : "";
+      console.log(`${r.item.itemId} ${v.padEnd(11)} ${r.item.preset.padEnd(22)} ${String(r.clip.words).padStart(3)}w ${extra}${r.confirmation.padEnd(9)} | ${r.clip.textSent.slice(0, 50)}…`);
     }
     const defs = rows.filter((r) => r.confirmation === "default");
     if (defs.length) {
@@ -210,15 +260,23 @@ async function main() {
   const today = new Date().toISOString().slice(0, 10);
   let done = 0;
   for (const { item, clip, settings, confirmation, confirmationNote } of todo) {
-    const voice = VOICES[item.voiceConstant];
-    const audio = await synthesize(apiKey, voice.voiceId, clip.textSent, settings);
+    const voice = cfg.dialogue ? { voiceId: item.voiceConstants.join("+"), name: "dialogue" } : VOICES[item.voiceConstant];
+    const audio = cfg.dialogue
+      ? await synthesizeDialogue(apiKey, item, clip)
+      : await synthesize(apiKey, voice.voiceId, clip.textSent, settings);
     const dest = path.join(outRoot, clip.file);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, audio);
     const entry = (manifest.items[item.itemId] ??= { clips: {} });
-    entry.voiceConstant = item.voiceConstant;
-    entry.voiceId = voice.voiceId;
-    entry.gender = item.gender;
+    if (cfg.dialogue) {
+      entry.voiceConstants = item.voiceConstants;
+      entry.turns = clip.turns.map((t) => ({ turnIndex: t.turnIndex, speakerLabel: t.speakerLabel, voiceConstant: t.voiceConstant, chars: t.text.length }));
+      entry.modelId = item.modelId;
+    } else {
+      entry.voiceConstant = item.voiceConstant;
+      entry.voiceId = voice.voiceId;
+      entry.gender = item.gender;
+    }
     entry.accent = item.accent;
     entry.preset = item.preset;
     if (item.register) entry.register = item.register;
@@ -231,7 +289,7 @@ async function main() {
       words: clip.words,
       bytes: audio.length,
       settings,
-      modelId: MODEL_ID,
+      modelId: cfg.dialogue ? item.modelId : MODEL_ID,
       seed: TTS_SEED,
       confirmation,
       confirmationNote,

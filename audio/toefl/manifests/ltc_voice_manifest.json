@@ -1,0 +1,909 @@
+{
+  "schema": "toefl-ltc-voice-manifest/1",
+  "rule": "Gender and accent assigned by rotation over the item number (gender F/M, accent NA/UK/AU/NZ). DEFAULT, not confirmed: neither field exists in the corpus or the Content Spec for this type (JC 2026-09-17). Clips generated from these assignments are flagged default in the audio manifest.",
+  "genderCycle": "FM",
+  "accentCycle": "NA,UK,AU,NZ (advancing every two items)",
+  "items": [
+    {
+      "itemId": "LTC-001",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-002",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-003",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-004",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-005",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-006",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-007",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-008",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-009",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-010",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-011",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-012",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-013",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-014",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-015",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-016",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-017",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-018",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-019",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-020",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-021",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-022",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-023",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-024",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-025",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-026",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-027",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-028",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-029",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-030",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-031",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-032",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-033",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-034",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-035",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-036",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-037",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-038",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-039",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-040",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-041",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-042",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-043",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-044",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTC-045",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": "Man",
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        },
+        {
+          "speakerLabel": "Woman",
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    }
+  ],
+  "removedItems": []
+}
