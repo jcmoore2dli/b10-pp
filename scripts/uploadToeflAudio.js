@@ -2,10 +2,11 @@
 "use strict";
 
 // ─────────────────────────────────────────────────
-// B10-PP · scripts/uploadToeflIntAudio.js
-// Uploads the normalised Interview clips (audio/toefl/int/, never int_raw/) to
-// Firebase Storage under audio/toefl/int/... and records each upload in the
-// manifest as `storage`. See scripts/toeflTts/storageUpload.js.
+// B10-PP · scripts/uploadToeflAudio.js
+// Uploads one task type's normalised clips (audio/toefl/<type>/, never
+// <type>_raw/) to Firebase Storage under audio/toefl/<type>/... and records
+// each upload in the manifest as `storage`. <type> is int (Interview) or lar
+// (Listen and Repeat). See scripts/toeflTts/storageUpload.js.
 //
 // Dry run by default. Credentials: Application Default Credentials
 // (gcloud auth application-default login), like importToeflCorpus.js.
@@ -13,8 +14,8 @@
 // data-model decision for Interview question audio.
 //
 // Usage:
-//   node scripts/uploadToeflIntAudio.js                 dry run: plan only
-//   node scripts/uploadToeflIntAudio.js --upload        upload new clips
+//   node scripts/uploadToeflAudio.js --type lar            dry run: plan only
+//   node scripts/uploadToeflAudio.js --type lar --upload   upload new clips
 //   ... --force        also replace clips whose remote copy differs
 //   ... --verify       re-check every remote copy against the local file
 // ─────────────────────────────────────────────────
@@ -24,10 +25,17 @@ const path = require("path");
 const admin = require("firebase-admin");
 const { eligibleClips, planUploads, uploadClip, verifyRemote } = require("./toeflTts/storageUpload");
 
+const TYPES = { int: "toefl-int-audio-manifest/1", lar: "toefl-lar-audio-manifest/1" };
+const typeArg = process.argv.includes("--type") ? process.argv[process.argv.indexOf("--type") + 1] : null;
+if (!TYPES[typeArg]) {
+  console.error(`ERROR: --type is required, one of: ${Object.keys(TYPES).join(", ")}`);
+  process.exit(1);
+}
+const TASK_TYPE = typeArg;
 const BUCKET = process.env.TOEFL_STORAGE_BUCKET || "b10-practice-platform.firebasestorage.app";
 const PROJECT = process.env.GCLOUD_PROJECT || "b10-practice-platform";
 const audioRoot = path.join(__dirname, "..", "audio", "toefl");
-const manifestFile = path.join(audioRoot, "manifests", "int_audio_manifest.json");
+const manifestFile = path.join(audioRoot, "manifests", `${TASK_TYPE}_audio_manifest.json`);
 const upload = process.argv.includes("--upload");
 const force = process.argv.includes("--force");
 const verifyAll = process.argv.includes("--verify");
@@ -43,15 +51,19 @@ async function main() {
   const bucket = admin.storage().bucket();
   const manifest = JSON.parse(fs.readFileSync(manifestFile, "utf8"));
 
+  if (manifest.schema !== TYPES[TASK_TYPE]) {
+    throw new Error(`${manifestFile}: schema ${manifest.schema} is not ${TYPES[TASK_TYPE]} for --type ${TASK_TYPE}`);
+  }
+
   const { clips, problems } = eligibleClips(manifest, audioRoot);
   if (problems.length) {
     for (const p of problems) console.log(`NOT ELIGIBLE: ${p}`);
-    throw new Error(`${problems.length} clip(s) not eligible; run normalizeToeflIntAudio.py first`);
+    throw new Error(`${problems.length} clip(s) not eligible; run normalizeToeflAudio.py --type ${TASK_TYPE} first`);
   }
   const plan = await planUploads(bucket, clips);
   const count = (a) => plan.filter((p) => p.action === a).length;
   const mb = (plan.filter((p) => p.action === "upload").reduce((n, p) => n + p.size, 0) / 1e6).toFixed(1);
-  console.log(`bucket: gs://${BUCKET}  prefix: audio/toefl/`);
+  console.log(`bucket: gs://${BUCKET}  prefix: audio/toefl/${TASK_TYPE}/  type: ${TASK_TYPE}`);
   console.log(`clips: ${plan.length}  to upload: ${count("upload")} (${mb} MB)  already uploaded: ${count("skip")}  conflicts: ${count("conflict")}`);
   for (const p of plan.filter((x) => x.action === "conflict")) {
     console.log(`CONFLICT${force ? " (will replace)" : " (use --force)"}: ${p.storagePath} remote sha256 ${p.remote.metadata?.sha256 ?? "none"}`);

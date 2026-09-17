@@ -23,7 +23,7 @@ const STORAGE_PREFIX = "audio/toefl/";
 const digest = (file, algo, enc) => crypto.createHash(algo).update(fs.readFileSync(file)).digest(enc);
 
 function storagePathFor(clipFile) {
-  if (clipFile.startsWith("int_raw/") || path.isAbsolute(clipFile) || clipFile.includes("..")) {
+  if (/^[a-z]+_raw\//.test(clipFile) || path.isAbsolute(clipFile) || clipFile.includes("..")) {
     throw new Error(`refusing to map ${clipFile} to Storage`);
   }
   return STORAGE_PREFIX + clipFile.split(path.sep).join("/");

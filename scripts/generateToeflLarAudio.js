@@ -237,7 +237,7 @@ async function main() {
     console.log(`[${++done}/${todo.length}] ${clip.file} (${audio.length} bytes)`);
   }
   console.log("done.");
-  if (done) console.log("Next: python3 scripts/normalizeToeflLarAudio.py (not written yet) or extend normalizeToeflIntAudio.py to LAR before upload.");
+  if (done) console.log("Next: python3 scripts/normalizeToeflAudio.py --type lar, then node scripts/uploadToeflAudio.js --type lar --upload");
 }
 
 main().catch((err) => {
