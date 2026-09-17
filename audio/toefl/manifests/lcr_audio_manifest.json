@@ -1,0 +1,2705 @@
+{
+  "schema": "toefl-lcr-audio-manifest/1",
+  "items": {
+    "LCR-001": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-001/LCR-001_stimulus.mp3",
+          "textSha256": "7db7bdba05358939d9bbee1e621f550aca9f4037ff84382624bb0f7be3e2b323",
+          "renderSha256": "e1606b363c3a02622c4a17be4ee35ed4d650a6166da8ecbb4f96d6d314bf7abd",
+          "textSent": "Where's the updated vacation request form kept?",
+          "chars": 47,
+          "words": 7,
+          "bytes": 44347,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -26.41,
+            "gainDb": 6.86,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.83,
+            "truePeakDb": -2.81,
+            "durationIn": 2.694,
+            "durationOut": 2.694,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +6.86 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "df9d2fe09bf9a9b44bd6e3226357eb1036253931b4aa634ad53bb3848c5dd9b8",
+            "normalizedSha256": "0560bd16e5a8b0026d8afc798caa085ade274bc5072d8ed45b186dc408602d66",
+            "bytes": 44302,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-001/LCR-001_stimulus.mp3",
+            "generation": "1789678128424264",
+            "md5Hash": "6+EzwWIYRj2PwB6qO+sVkQ==",
+            "size": 44302,
+            "sha256": "0560bd16e5a8b0026d8afc798caa085ade274bc5072d8ed45b186dc408602d66",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-002": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-002/LCR-002_stimulus.mp3",
+          "textSha256": "9526273eb9cf00a202bb6e8614aac2a833bd208a0270971db2a0e67322e34279",
+          "renderSha256": "d100e7a4e61d80d0c30a356946e8bf7220e6feac2284c5b36f58a38c7b02f9fe",
+          "textSent": "Who's bringing snacks to Thursday's team meeting?",
+          "chars": 49,
+          "words": 7,
+          "bytes": 43511,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.25,
+            "gainDb": 5.73,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -1.58,
+            "truePeakDb": -1.57,
+            "durationIn": 2.647,
+            "durationOut": 2.647,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +5.73 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ac4491a98b5b8ecf8459756204d244898af6137f4d3bca93eb8817c7b0557994",
+            "normalizedSha256": "3cf7849bf412f28c111cc40c7df7af29cb1e02ab1093645fdb3b9c6511252d76",
+            "bytes": 43466,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-002/LCR-002_stimulus.mp3",
+            "generation": "1789678128516808",
+            "md5Hash": "Mu1eXlctPX5COitbk0GNUA==",
+            "size": 43466,
+            "sha256": "3cf7849bf412f28c111cc40c7df7af29cb1e02ab1093645fdb3b9c6511252d76",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-003": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-003/LCR-003_stimulus.mp3",
+          "textSha256": "a98d9f837aa29083f0570a138dfb866554ea5314a976153bbfab4cd3cc3d9045",
+          "renderSha256": "e7da0f72d2a39c76e03d617d18a28156c2cfdd0e110ebc40f99ffbe41a42ee0e",
+          "textSent": "Want to try that new pottery class with me?",
+          "chars": 43,
+          "words": 9,
+          "bytes": 38914,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.79,
+            "gainDb": 0.24,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.1,
+            "truePeakDb": -3.08,
+            "durationIn": 2.368,
+            "durationOut": 2.368,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +0.24 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "bf1b381890f837affe8c94fdd863f1b46d2d2acedaf7c26de303431e79886c8b",
+            "normalizedSha256": "cc56d70edcc9e08f6abcdec718468cdd33530ffddb109aaba3cc4edcf2cd97e9",
+            "bytes": 38869,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-003/LCR-003_stimulus.mp3",
+            "generation": "1789678128529969",
+            "md5Hash": "FK9zH1nNofrajTsg160tTA==",
+            "size": 38869,
+            "sha256": "cc56d70edcc9e08f6abcdec718468cdd33530ffddb109aaba3cc4edcf2cd97e9",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-004": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-004/LCR-004_stimulus.mp3",
+          "textSha256": "491ebbe0663e9e85dd79ad3bdabe9c68217f8e7bffa73ebba0bde670581cbbb7",
+          "renderSha256": "760b49d002320d792b5fede0f21512f6221b6e4bcbc2dbb2aef4188e081209c5",
+          "textSent": "What time does the computer lab close on Fridays?",
+          "chars": 49,
+          "words": 9,
+          "bytes": 50199,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -26.22,
+            "gainDb": 6.69,
+            "limiterMaxReductionDb": -0.47,
+            "lufsOut": -20.01,
+            "samplePeakDb": -1.49,
+            "truePeakDb": -1.48,
+            "durationIn": 3.065,
+            "durationOut": 3.065,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +6.69 dB, peak limiter up to 0.47 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "e48fd615fb840b832f45a99416ee5ebc2ef6fb2544a48ba523adf71802d50ccc",
+            "normalizedSha256": "5146d226e2d9907649a95ab0328d4810d36112a6eb91e3714738a6fe3e39ffce",
+            "bytes": 50154,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-004/LCR-004_stimulus.mp3",
+            "generation": "1789678128549787",
+            "md5Hash": "mBcFGEAyB/Fss9gjVTQ05g==",
+            "size": 50154,
+            "sha256": "5146d226e2d9907649a95ab0328d4810d36112a6eb91e3714738a6fe3e39ffce",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-005": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-005/LCR-005_stimulus.mp3",
+          "textSha256": "6c00287d58b94c512a134c046154bf95613dfc810c237139c12fe48a46c5decd",
+          "renderSha256": "a8da1ea415e88f924e6e737b243323c8741b0dc83f935e327b0fb0007d59b8d2",
+          "textSent": "Are you joining the block cleanup Saturday morning?",
+          "chars": 51,
+          "words": 8,
+          "bytes": 38078,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.59,
+            "gainDb": 0.04,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.1,
+            "truePeakDb": -2.1,
+            "durationIn": 2.322,
+            "durationOut": 2.322,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +0.04 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "d33b15316dc83ec3a9b71561791ff59261812f22f4e7ebf9f4543da167418bab",
+            "normalizedSha256": "6b2eda3e9547266400644ebdfbdbb874df2ab0b5d605be21b638f02fc6a7bc2b",
+            "bytes": 38033,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-005/LCR-005_stimulus.mp3",
+            "generation": "1789678128701657",
+            "md5Hash": "nxXgIAHCu2M1RYLK+ETe3g==",
+            "size": 38033,
+            "sha256": "6b2eda3e9547266400644ebdfbdbb874df2ab0b5d605be21b638f02fc6a7bc2b",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-006": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-006/LCR-006_stimulus.mp3",
+          "textSha256": "798d3aaf7463466f7ac6c0cb897b090d9abd86c552eb2f43d858e6bbc2f01bf0",
+          "renderSha256": "ce4dc8b73b9829e6300d44bd6c1a553ad3d4caaffc84c2c1c296cb67b991fc81",
+          "textSent": "When will the draft report be ready?",
+          "chars": 36,
+          "words": 7,
+          "bytes": 37660,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -21.6,
+            "gainDb": 2.04,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -2.91,
+            "truePeakDb": -2.89,
+            "durationIn": 2.276,
+            "durationOut": 2.276,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +2.04 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "878fcbbab686bcaeaf47fc05220ea9566e4dd0aa9227e07afe18732bbcc65902",
+            "normalizedSha256": "8361c160900688cd6e859dbb68552c53a530ca0be41aa31c3bf3e1b70af95b6e",
+            "bytes": 37615,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-006/LCR-006_stimulus.mp3",
+            "generation": "1789678128826160",
+            "md5Hash": "nX+0Z+WuLyzW51G/YvDu3w==",
+            "size": 37615,
+            "sha256": "8361c160900688cd6e859dbb68552c53a530ca0be41aa31c3bf3e1b70af95b6e",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "voiceId": "WLKp2jV6nrS8aMkPPDRO",
+      "gender": "M",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-007": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-007/LCR-007_stimulus.mp3",
+          "textSha256": "6368971a2640f1c711ccaa4b4da047145e6b032ed8eeab9fe606067d432b302c",
+          "renderSha256": "23e351912b37990ed2054cda4af16797e45595806dbb16157dc29b45343064df",
+          "textSent": "Where did that package end up getting delivered?",
+          "chars": 48,
+          "words": 8,
+          "bytes": 38078,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.32,
+            "gainDb": -1.23,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.84,
+            "truePeakDb": -3.74,
+            "durationIn": 2.322,
+            "durationOut": 2.322,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.23 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "9ec8d2791f1b7d636e059ace6aa763e33c3f3613dd6f8a39230f32b61c2c96ee",
+            "normalizedSha256": "df961e6003b591414a2005db04e1ccc80bdb4f2ad4dfb1cfecf2d666042f4d6b",
+            "bytes": 38033,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-007/LCR-007_stimulus.mp3",
+            "generation": "1789678128888696",
+            "md5Hash": "jwSP4D9s0nbGzTOFwMCoUg==",
+            "size": 38033,
+            "sha256": "df961e6003b591414a2005db04e1ccc80bdb4f2ad4dfb1cfecf2d666042f4d6b",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "voiceId": "A3TiUH9xcSptIzvOUBnB",
+      "gender": "F",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-008": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-008/LCR-008_stimulus.mp3",
+          "textSha256": "5b73b1c485e5360d22cacaeca6c76629bd58148d10b3474e73b4f990d184287a",
+          "renderSha256": "a0fc33108eefdbd0f0475984f553ff8ed6b77a5c92aa894081ccbd381bf2b0b5",
+          "textSent": "How long do I have to return this toaster?",
+          "chars": 42,
+          "words": 9,
+          "bytes": 35152,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.11,
+            "gainDb": 3.55,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -4.28,
+            "truePeakDb": -4.28,
+            "durationIn": 2.136,
+            "durationOut": 2.136,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.55 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "e39e3e65085505e4dcc0d6feb940ed2bc431fd672d8d2e328adc950058b6d993",
+            "normalizedSha256": "b6bfc030f876f6430e49c4a5bf6a4a51a64cc2fec9b1af8143de11dc91de4a76",
+            "bytes": 35107,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-008/LCR-008_stimulus.mp3",
+            "generation": "1789678128875271",
+            "md5Hash": "VCsQELUmv23ymO/00Djmww==",
+            "size": 35107,
+            "sha256": "b6bfc030f876f6430e49c4a5bf6a4a51a64cc2fec9b1af8143de11dc91de4a76",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "voiceId": "3Mb3pRhm3AnXiPCSQNXS",
+      "gender": "M",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-009": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-009/LCR-009_stimulus.mp3",
+          "textSha256": "03501aee48076652a6dfc3feba3eec2673b09cd96aecd452847a25eda3b48af5",
+          "renderSha256": "f3fa325c6cd27fd9bf0e978f49c74c34a7b31615b8ec50f6c72ba5651126df2d",
+          "textSent": "Where do I go to get a replacement ID card?",
+          "chars": 43,
+          "words": 10,
+          "bytes": 35152,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.74,
+            "gainDb": 1.19,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.89,
+            "truePeakDb": -3.86,
+            "durationIn": 2.136,
+            "durationOut": 2.136,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +1.19 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "4cb7b8a473ba0bbf920f320d5b43059db08a9d66126ea316d23c7a839f628ca1",
+            "normalizedSha256": "662df482cd0e43a15ea25012d4fee72409bd9fa5e59c8f044c12ab8ddb967e1d",
+            "bytes": 35107,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-009/LCR-009_stimulus.mp3",
+            "generation": "1789678129014840",
+            "md5Hash": "OHtxtVfJtsl8E8KeR/TAHg==",
+            "size": 35107,
+            "sha256": "662df482cd0e43a15ea25012d4fee72409bd9fa5e59c8f044c12ab8ddb967e1d",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-010": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-010/LCR-010_stimulus.mp3",
+          "textSha256": "55c50d547217b9c212a48b675c1a7829e348e65262d30b3435cdf4fc7a9fbd0c",
+          "renderSha256": "639dfe599b5a1af002a4f5f72a66c7fbcdf16f35c055d50c71c75f80fa8f6e20",
+          "textSent": "How long is the wait at the clinic right now?",
+          "chars": 45,
+          "words": 10,
+          "bytes": 33062,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -27.91,
+            "gainDb": 8.36,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.51,
+            "truePeakDb": -2.51,
+            "durationIn": 1.997,
+            "durationOut": 1.997,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +8.36 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "5fb59332cf9bc50e2b9ec4b26b73c8c28c2551d18ce7f3748249f4a37639b333",
+            "normalizedSha256": "6eddcd26863444574decd54d6827fba681e0fe9899336b5e97cd5b607bad47b9",
+            "bytes": 33017,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-010/LCR-010_stimulus.mp3",
+            "generation": "1789678129142658",
+            "md5Hash": "KAjkLh7pmTXO7PO/DWLq1A==",
+            "size": 33017,
+            "sha256": "6eddcd26863444574decd54d6827fba681e0fe9899336b5e97cd5b607bad47b9",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-011": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-011/LCR-011_stimulus.mp3",
+          "textSha256": "86882b2582dc2a5cecc88bcd58f54001db0e291cd48c3f617a75f3c81b39093f",
+          "renderSha256": "c281d7470f1037985af50d5bbb11364f9791fc0320e8cfd61f8c1148282f34b8",
+          "textSent": "Are you using your ladder this weekend?",
+          "chars": 39,
+          "words": 7,
+          "bytes": 37660,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.61,
+            "gainDb": -1.94,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.91,
+            "truePeakDb": -3.88,
+            "durationIn": 2.276,
+            "durationOut": 2.276,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.94 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "561b51382593f9c4b3791c90835234da35c8cf69c2cff86163b6c63cb89e58a7",
+            "normalizedSha256": "837db8a44b915d63eac0b72852fd353fbdb1f2756b0636f184e772b4b331a5bc",
+            "bytes": 37615,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-011/LCR-011_stimulus.mp3",
+            "generation": "1789678129129490",
+            "md5Hash": "/uyOKSZ/VeNd2Ujb9k8avQ==",
+            "size": 37615,
+            "sha256": "837db8a44b915d63eac0b72852fd353fbdb1f2756b0636f184e772b4b331a5bc",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-012": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-012/LCR-012_stimulus.mp3",
+          "textSha256": "67a0c81b1d7756fe89c278f0802d743a3efaada5df2e5d6bc98563b1fc46542d",
+          "renderSha256": "534011c4ddeb91753cbfa787bcbb406e4bc4b52898fc9f3be8606d0dceaa83d0",
+          "textSent": "Which stop is closest to the hospital?",
+          "chars": 38,
+          "words": 7,
+          "bytes": 41004,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.81,
+            "gainDb": 6.26,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.98,
+            "samplePeakDb": -4.83,
+            "truePeakDb": -4.82,
+            "durationIn": 2.508,
+            "durationOut": 2.508,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +6.26 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c4d6263282da872ac57324b7dbc0bce3eab71e8aa09f647cd0b4091a449b8c9e",
+            "normalizedSha256": "38a25858f462e3dd1cbf28d682e6ddef41ac264ac4a8a2a1f14a37b0168f3faf",
+            "bytes": 40959,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-012/LCR-012_stimulus.mp3",
+            "generation": "1789678129184410",
+            "md5Hash": "nFcFyMrWhN8kMldkTi5kUQ==",
+            "size": 40959,
+            "sha256": "38a25858f462e3dd1cbf28d682e6ddef41ac264ac4a8a2a1f14a37b0168f3faf",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-013": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-013/LCR-013_stimulus.mp3",
+          "textSha256": "4c6307ff97666013f8df5e54f4e29ae7bf37f395f449015265ab20e20d3ccd10",
+          "renderSha256": "0e21d232afec2e6ef80187c5f33ac794ca74ff7cb1014260b31bbbef6bc35299",
+          "textSent": "Does three o'clock still work for the meeting?",
+          "chars": 46,
+          "words": 8,
+          "bytes": 33898,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -21.03,
+            "gainDb": 1.48,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -6.61,
+            "truePeakDb": -6.6,
+            "durationIn": 2.043,
+            "durationOut": 2.043,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +1.48 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f60b2758ef8ca5c3cdd318eb155e5f5f5b7e557df701140aefc64c374256cdde",
+            "normalizedSha256": "66877ffb825def3b061f2e8d1e69c1453089a1ae747af2d873430038c7dbfcbe",
+            "bytes": 33853,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-013/LCR-013_stimulus.mp3",
+            "generation": "1789678129358522",
+            "md5Hash": "LW0Ny2xgRpsoVOrHChUqHw==",
+            "size": 33853,
+            "sha256": "66877ffb825def3b061f2e8d1e69c1453089a1ae747af2d873430038c7dbfcbe",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-014": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-014/LCR-014_stimulus.mp3",
+          "textSha256": "53442e48e64e87465bf9ef223e339867f1d59263c87d3c57b3f0fcfd17913f27",
+          "renderSha256": "8a67cddf3aad3bf62c340c651dff82c2f45f0a6766f6bd0a27993affe4ceb6ec",
+          "textSent": "Where do I renew my parking permit?",
+          "chars": 35,
+          "words": 7,
+          "bytes": 38078,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -21.14,
+            "gainDb": 1.59,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.95,
+            "truePeakDb": -3.95,
+            "durationIn": 2.322,
+            "durationOut": 2.322,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +1.59 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "8b8a4868010f04e8a9dbb20d748d5351a95ca548ad723da47818c2cd7ff93eed",
+            "normalizedSha256": "9b1d67299a5c6fa2ff343ea1e500afc2d5bd483f0c7b64b70158636bf094a60f",
+            "bytes": 38033,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-014/LCR-014_stimulus.mp3",
+            "generation": "1789678129414298",
+            "md5Hash": "H94sNy1IynPxKuP1G1nB6A==",
+            "size": 38033,
+            "sha256": "9b1d67299a5c6fa2ff343ea1e500afc2d5bd483f0c7b64b70158636bf094a60f",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "voiceId": "WLKp2jV6nrS8aMkPPDRO",
+      "gender": "M",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-015": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-015/LCR-015_stimulus.mp3",
+          "textSha256": "8fc2add952cc9c6351ae31bf83edd9f6ffda0a67708b796a7d681f99aac64974",
+          "renderSha256": "736fecc9508797cb03623d2e5bf67e2a040ebd85dfd4bb042c3adf5f36529490",
+          "textSent": "Who had the project binder last?",
+          "chars": 32,
+          "words": 6,
+          "bytes": 31391,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -17.63,
+            "gainDb": -1.92,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -5.93,
+            "truePeakDb": -5.91,
+            "durationIn": 1.904,
+            "durationOut": 1.904,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.92 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "56230a35c48068841c39932daa3817ce7eb9559342e00d9ea79ef36786cc603e",
+            "normalizedSha256": "9da2e293de942cf77079a2cecc38697b1c31349e5bb1b09e434136f27e85e873",
+            "bytes": 31346,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-015/LCR-015_stimulus.mp3",
+            "generation": "1789678129463582",
+            "md5Hash": "ydXTC456CRkVLYj4e9Xuaw==",
+            "size": 31346,
+            "sha256": "9da2e293de942cf77079a2cecc38697b1c31349e5bb1b09e434136f27e85e873",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "voiceId": "A3TiUH9xcSptIzvOUBnB",
+      "gender": "F",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-016": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-016/LCR-016_stimulus.mp3",
+          "textSha256": "eed5ac756d00464d47a86e75b98d723ea8ebaae67633e52d381f7d1311ed41b8",
+          "renderSha256": "b17a073061749590229a2a72affefed2492a8b984667b4ba61814caf30f1fd1a",
+          "textSent": "How many boxes are still out on the loading dock?",
+          "chars": 49,
+          "words": 10,
+          "bytes": 42675,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.32,
+            "gainDb": 3.76,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.03,
+            "samplePeakDb": -3,
+            "truePeakDb": -3,
+            "durationIn": 2.601,
+            "durationOut": 2.601,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.76 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "3e31fcc5e3afd1d378dbb77b3d5784e022a74b27c865efe564231608bd08bdeb",
+            "normalizedSha256": "dc9f51ebdb00976f44c648931e22eb531b940f3a8d601289f59fd54bf976b4e5",
+            "bytes": 42630,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-016/LCR-016_stimulus.mp3",
+            "generation": "1789678129453695",
+            "md5Hash": "pyPUiQsromEFirVEj/LZBQ==",
+            "size": 42630,
+            "sha256": "dc9f51ebdb00976f44c648931e22eb531b940f3a8d601289f59fd54bf976b4e5",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "voiceId": "3Mb3pRhm3AnXiPCSQNXS",
+      "gender": "M",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-017": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-017/LCR-017_stimulus.mp3",
+          "textSha256": "3094cfe02bdd0dcfcd842081a8183672c24ec3ed31618990675bdfba1357cbe7",
+          "renderSha256": "55b776e6a1dcd545bd6bd4ad4fb4982a7c69a1ff4fd651d6f7f10b42d2ea8780",
+          "textSent": "How long has the elevator been out of service?",
+          "chars": 46,
+          "words": 9,
+          "bytes": 36824,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.19,
+            "gainDb": 3.63,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.02,
+            "samplePeakDb": -5.81,
+            "truePeakDb": -5.77,
+            "durationIn": 2.229,
+            "durationOut": 2.229,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.63 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ddd7bfb5182e53d4564d9ea5aee654bfeb541397a7d6263b153ffa7876002488",
+            "normalizedSha256": "f7eb9e8b6926c45795c1889fab0718bc052d10e03f46ad7cd5b1e9889d60134f",
+            "bytes": 36779,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-017/LCR-017_stimulus.mp3",
+            "generation": "1789678129712342",
+            "md5Hash": "DL11ulhyClKI8MVUhommfg==",
+            "size": 36779,
+            "sha256": "f7eb9e8b6926c45795c1889fab0718bc052d10e03f46ad7cd5b1e9889d60134f",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-018": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-018/LCR-018_stimulus.mp3",
+          "textSha256": "0a2f674b3d8625948ef2bd5c01c22925c5d3f31354624be682356a2e07d75196",
+          "renderSha256": "f1212555a52871286a9212e4584770b438c4ceca759255a9bd1f02d95d141646",
+          "textSent": "What time does the badge office open on Saturdays?",
+          "chars": 50,
+          "words": 9,
+          "bytes": 44347,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -26.71,
+            "gainDb": 7.16,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.36,
+            "truePeakDb": -2.31,
+            "durationIn": 2.694,
+            "durationOut": 2.694,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +7.16 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "e899bb3a477e95eadd88acb2abe8adf6c53dccdb055ddbe73918c3c186bacb1a",
+            "normalizedSha256": "0bf448608efa00b70881f6e7b04863bbd9cb60979d5d8dbad20167394acc3886",
+            "bytes": 44302,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-018/LCR-018_stimulus.mp3",
+            "generation": "1789678129708617",
+            "md5Hash": "PrIuLjWneerNXyrNAF6BwQ==",
+            "size": 44302,
+            "sha256": "0bf448608efa00b70881f6e7b04863bbd9cb60979d5d8dbad20167394acc3886",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-019": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-019/LCR-019_stimulus.mp3",
+          "textSha256": "ed7d58939b2a6f323f62f2ee722ec7da79d394afe42ee7b82935cbd9d0c78be5",
+          "renderSha256": "102d717cf7a37af88049a1588445ec909e67d7bb07e530e0766871c7229b5b18",
+          "textSent": "What's the largest size this jacket comes in?",
+          "chars": 45,
+          "words": 8,
+          "bytes": 44347,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.31,
+            "gainDb": 0.76,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.1,
+            "truePeakDb": -2.09,
+            "durationIn": 2.694,
+            "durationOut": 2.694,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +0.76 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "68b3b51685eddeae5478be4c49d08267b35c2a08512221ce8a2f364a73232d65",
+            "normalizedSha256": "fdae50268f132dfd13ae8128880c3edc555c1aac9ed67eb9d4af1fb679326be1",
+            "bytes": 44302,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-019/LCR-019_stimulus.mp3",
+            "generation": "1789678129749364",
+            "md5Hash": "r0q9f7BUW7ouTcLIXzPSoA==",
+            "size": 44302,
+            "sha256": "fdae50268f132dfd13ae8128880c3edc555c1aac9ed67eb9d4af1fb679326be1",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-020": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-020/LCR-020_stimulus.mp3",
+          "textSha256": "a63fa2d838a3e9c56c87e9f5b4e5e388404dc8f90054f08ee2db5ec15d1410af",
+          "renderSha256": "8192e141585ced5d7173bceb18fda0f364ef0c8a28c63ede3af585f589b21e64",
+          "textSent": "What's the earliest you could have this cake ready?",
+          "chars": 51,
+          "words": 9,
+          "bytes": 51035,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.32,
+            "gainDb": 4.77,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -3.12,
+            "truePeakDb": -3.11,
+            "durationIn": 3.111,
+            "durationOut": 3.111,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +4.77 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "5a4be50f1238f006136fda5d1a2d69dba6f4ba12e75b0f05307efc8432699006",
+            "normalizedSha256": "6323a83b3e49b08dc76e01ce210481580d6db616702419bdd547db09d75d2473",
+            "bytes": 50990,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-020/LCR-020_stimulus.mp3",
+            "generation": "1789678129758641",
+            "md5Hash": "zZtg7yy329ZOFp9lVHhaKg==",
+            "size": 50990,
+            "sha256": "6323a83b3e49b08dc76e01ce210481580d6db616702419bdd547db09d75d2473",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-021": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-021/LCR-021_stimulus.mp3",
+          "textSha256": "08b87781c52e8cc86c8e00e4f380d5b010abf46d7f3a1ff391ead1e41faf598e",
+          "renderSha256": "61ceda98da2a8a92f82da346fcc6cdbb7dc2724074094d3a78617eeca42835c0",
+          "textSent": "Are you free to meet at the park Sunday morning?",
+          "chars": 48,
+          "words": 10,
+          "bytes": 38078,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.57,
+            "gainDb": 1.02,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -5.86,
+            "truePeakDb": -5.84,
+            "durationIn": 2.322,
+            "durationOut": 2.322,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +1.02 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c9e6d222488d775688dbca904e1174b97c927623a297138bc23ec83e564cc4f7",
+            "normalizedSha256": "4087789122f012f97aff517687df9d81ae3fabd0f86f3af0b59ae66e3c3f1ae1",
+            "bytes": 38033,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-021/LCR-021_stimulus.mp3",
+            "generation": "1789678130001372",
+            "md5Hash": "HeOUVphus5spmML/Q8s7BA==",
+            "size": 38033,
+            "sha256": "4087789122f012f97aff517687df9d81ae3fabd0f86f3af0b59ae66e3c3f1ae1",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-022": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-022/LCR-022_stimulus.mp3",
+          "textSha256": "ea4ff7a1dcbbfd8b79d7a00cefcbc37a70c3e2d7768ead9475345e66ccb58e78",
+          "renderSha256": "82d686392eebc4b6039f5c962231fbb48b9de0e06a403977b3a4885e02c323bf",
+          "textSent": "What time is the study group meeting tonight?",
+          "chars": 45,
+          "words": 8,
+          "bytes": 39750,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.6,
+            "gainDb": 5.15,
+            "limiterMaxReductionDb": -0.99,
+            "lufsOut": -20,
+            "samplePeakDb": -1.49,
+            "truePeakDb": -1.48,
+            "durationIn": 2.415,
+            "durationOut": 2.415,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +5.15 dB, peak limiter up to 0.99 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "8eb8facafe7950d3c1bc5238e6491b3b85898c978049868c13c99d22761748ea",
+            "normalizedSha256": "bfe8800419631d63e7aa15b922d9249ece684943eb27d5744aa687d0e26aecd1",
+            "bytes": 39705,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-022/LCR-022_stimulus.mp3",
+            "generation": "1789678130042000",
+            "md5Hash": "8tsH8owsQtX+fHDCySWGYw==",
+            "size": 39705,
+            "sha256": "bfe8800419631d63e7aa15b922d9249ece684943eb27d5744aa687d0e26aecd1",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "voiceId": "WLKp2jV6nrS8aMkPPDRO",
+      "gender": "M",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-023": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-023/LCR-023_stimulus.mp3",
+          "textSha256": "4fb4e1f335e5e33dd398926280aca9c0c8577c55697ce774ac22c63ea6a05882",
+          "renderSha256": "6ce729529a50ada996b0a846122c4f38e4693a7b23973f05eccc2295773829ab",
+          "textSent": "Where should we stop for the night on this route?",
+          "chars": 49,
+          "words": 10,
+          "bytes": 35988,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.11,
+            "gainDb": -1.43,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.98,
+            "samplePeakDb": -4.64,
+            "truePeakDb": -4.63,
+            "durationIn": 2.183,
+            "durationOut": 2.183,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.43 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "ce43b5d25e1e4c07d0fceb8d9e4cec8f8f076518100e0d3654566cfb7b76c50e",
+            "normalizedSha256": "3d5a98aa063e652fec102952f4c2c100f712564c440881d20981327311bb1f42",
+            "bytes": 35943,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-023/LCR-023_stimulus.mp3",
+            "generation": "1789678130032034",
+            "md5Hash": "Qp42TKIevI+KjfD6XzmstQ==",
+            "size": 35943,
+            "sha256": "3d5a98aa063e652fec102952f4c2c100f712564c440881d20981327311bb1f42",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "voiceId": "A3TiUH9xcSptIzvOUBnB",
+      "gender": "F",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-024": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-024/LCR-024_stimulus.mp3",
+          "textSha256": "c4c87636aaf9476645de61bd1527095232ad4c4c87a87a50b16a2e05176f3cd0",
+          "renderSha256": "b427865da0d9815ecf65498ece9f896031672ced1c6ffd0d089a551b4bf58fdd",
+          "textSent": "Is practice canceled because of the rain?",
+          "chars": 41,
+          "words": 7,
+          "bytes": 37660,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.86,
+            "gainDb": 4.53,
+            "limiterMaxReductionDb": -1.41,
+            "lufsOut": -19.95,
+            "samplePeakDb": -1.44,
+            "truePeakDb": -1.43,
+            "durationIn": 2.276,
+            "durationOut": 2.276,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +4.53 dB, peak limiter up to 1.41 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "e1833f7ae60d7cb62775cf7187dbb2b97bc17b7b72e9279e5b65cb6ed7e893ee",
+            "normalizedSha256": "838fb86f29f136583a8b4e26c55efedbd04d5727069660c2a60686404b93a480",
+            "bytes": 37615,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-024/LCR-024_stimulus.mp3",
+            "generation": "1789678130062728",
+            "md5Hash": "iS4ldKH2U/KdCCoL/1RvHQ==",
+            "size": 37615,
+            "sha256": "838fb86f29f136583a8b4e26c55efedbd04d5727069660c2a60686404b93a480",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "voiceId": "3Mb3pRhm3AnXiPCSQNXS",
+      "gender": "M",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-025": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-025/LCR-025_stimulus.mp3",
+          "textSha256": "88a841793fa819bedd6d1c11ffa0a56a331e23f133039e955e9a2bb3d4f13145",
+          "renderSha256": "af528056e05d61fcc0865ba2c7929966e9beb49c391a98ce9abc42efa3987611",
+          "textSent": "Where's the coat check for this show?",
+          "chars": 37,
+          "words": 7,
+          "bytes": 33062,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.42,
+            "gainDb": 4.87,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -4.46,
+            "truePeakDb": -4.45,
+            "durationIn": 1.997,
+            "durationOut": 1.997,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +4.87 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "73d8018eb274084d73c542eb90e87aebc4c0a5225ed94ae10360591615c74f7a",
+            "normalizedSha256": "0501f9ecf049b220ad7bf50d4676dca55fc08e31fd83807169661cf71272693c",
+            "bytes": 33017,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-025/LCR-025_stimulus.mp3",
+            "generation": "1789678130255443",
+            "md5Hash": "mOjqZM2oONsLFmy+nOq8Jw==",
+            "size": 33017,
+            "sha256": "0501f9ecf049b220ad7bf50d4676dca55fc08e31fd83807169661cf71272693c",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-026": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-026/LCR-026_stimulus.mp3",
+          "textSha256": "4f9fd5672f8406e69dd73615c44ff7adc66542f4b5f6be3ff156e1561b6d0bb5",
+          "renderSha256": "f1ecdd72ef6c9695994d0e17265198daf189493d819286c3123df20a833eeb18",
+          "textSent": "Which conference room is free this afternoon?",
+          "chars": 45,
+          "words": 7,
+          "bytes": 35988,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.59,
+            "gainDb": 6.04,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.19,
+            "truePeakDb": -2.18,
+            "durationIn": 2.183,
+            "durationOut": 2.183,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +6.04 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "38e6657634eb28669cee537bdd3b2cae6026c1bc4568144eb1a005819581f9d2",
+            "normalizedSha256": "f65a81441cdfca2078c0f8148003a99ae5c192724c6930fea597d0b2540341c2",
+            "bytes": 35943,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-026/LCR-026_stimulus.mp3",
+            "generation": "1789678130336623",
+            "md5Hash": "REy3gfBCJ+ABZ0oHTp6sAQ==",
+            "size": 35943,
+            "sha256": "f65a81441cdfca2078c0f8148003a99ae5c192724c6930fea597d0b2540341c2",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-027": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-027/LCR-027_stimulus.mp3",
+          "textSha256": "a0340a5fb9a138639395597900ac99305afefc21a5f47de2098cd551037fc2c5",
+          "renderSha256": "e791e0c5f6260b8b15cc5b685bc96709001280a486c801bc69e68dd7aaa15ce5",
+          "textSent": "Are you free to cover the desk at noon?",
+          "chars": 39,
+          "words": 9,
+          "bytes": 39750,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.09,
+            "gainDb": -0.46,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.69,
+            "truePeakDb": -2.64,
+            "durationIn": 2.415,
+            "durationOut": 2.415,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.46 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "272ad25ca54cfb1fe4e453fefdecfd0315fcc9adf895065e57dbc73db414aa4c",
+            "normalizedSha256": "3d97671e4d82ca12630b6f42df015d93ca1ac4781c72b47b1730e74e3a53bbb8",
+            "bytes": 39705,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-027/LCR-027_stimulus.mp3",
+            "generation": "1789678130351775",
+            "md5Hash": "JHe1xlKUr4pSGGwe7oIw4A==",
+            "size": 39705,
+            "sha256": "3d97671e4d82ca12630b6f42df015d93ca1ac4781c72b47b1730e74e3a53bbb8",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-028": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-028/LCR-028_stimulus.mp3",
+          "textSha256": "4cc3bbfa30982cdbbaea40a5bbbadbf72e7fd7845ef7745203a6fe206240fe2a",
+          "renderSha256": "3a76b308f4833bf71749e59c6aa5a6e5a7209efdbc6d70fbd26814121299cb12",
+          "textSent": "How long has the coffee machine been broken?",
+          "chars": 44,
+          "words": 8,
+          "bytes": 34316,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.16,
+            "gainDb": 4.61,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.63,
+            "truePeakDb": -2.62,
+            "durationIn": 2.09,
+            "durationOut": 2.09,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +4.61 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c295a82a3c69de467eb963e0f527d8124811effb34ba789cb90c1f7690d669dc",
+            "normalizedSha256": "a21ce28bc3e8daec3024d4028a4c2cf40da08a3c43c29cce209c55294f7a967f",
+            "bytes": 34271,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-028/LCR-028_stimulus.mp3",
+            "generation": "1789678130365907",
+            "md5Hash": "xyq6wmthcABRaap7741Ikg==",
+            "size": 34271,
+            "sha256": "a21ce28bc3e8daec3024d4028a4c2cf40da08a3c43c29cce209c55294f7a967f",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-029": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-029/LCR-029_stimulus.mp3",
+          "textSha256": "711febabd5e1b77924b4ac28c1ecba5bc3d0f872ee3ddc8a758852ee45aba59d",
+          "renderSha256": "9bbe563e5977ba2bb3757195d08ef2926070e8263beb687689cddbd13831bb70",
+          "textSent": "Should we just split a ride to the party?",
+          "chars": 41,
+          "words": 9,
+          "bytes": 33898,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.83,
+            "gainDb": 1.28,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.95,
+            "truePeakDb": -3.93,
+            "durationIn": 2.043,
+            "durationOut": 2.043,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +1.28 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "7a1a948007b1759579c4fa2744b16c402fca30c0bf189c9c22a7e847fcc3fb98",
+            "normalizedSha256": "40402273abe4e153080d870a05a8b290699475a494b760e129b31cb1fd6ba10c",
+            "bytes": 33853,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-029/LCR-029_stimulus.mp3",
+            "generation": "1789678130649713",
+            "md5Hash": "efaHHfJRr/ma3GpW52P8iA==",
+            "size": 33853,
+            "sha256": "40402273abe4e153080d870a05a8b290699475a494b760e129b31cb1fd6ba10c",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-030": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-030/LCR-030_stimulus.mp3",
+          "textSha256": "5ab94146a1ed7d14e749cb4d24ddd45159d5c6e8afdccff59a3d70db4cb58f46",
+          "renderSha256": "6b6b2a4b821c317f8aadb6d0da0dd02c68d7c1ccc8def42e3f95386dd8d1dec8",
+          "textSent": "How long has the kitchen sink been draining slowly?",
+          "chars": 51,
+          "words": 9,
+          "bytes": 51453,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.63,
+            "gainDb": 5.08,
+            "limiterMaxReductionDb": -0.19,
+            "lufsOut": -20.02,
+            "samplePeakDb": -1.49,
+            "truePeakDb": -1.48,
+            "durationIn": 3.158,
+            "durationOut": 3.158,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +5.08 dB, peak limiter up to 0.19 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "d88393220e01a435484d39116914ff361a5165fc2bc95243df9f6d45825d58e1",
+            "normalizedSha256": "e7ccfaff6194838f1b1c0f0743f19de06dbf9663fcbf935ff4e9b6cfaf64b780",
+            "bytes": 51408,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-030/LCR-030_stimulus.mp3",
+            "generation": "1789678130640821",
+            "md5Hash": "x+tLKfBHaMWZ7VW9RKgm8w==",
+            "size": 51408,
+            "sha256": "e7ccfaff6194838f1b1c0f0743f19de06dbf9663fcbf935ff4e9b6cfaf64b780",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "voiceId": "WLKp2jV6nrS8aMkPPDRO",
+      "gender": "M",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-031": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-031/LCR-031_stimulus.mp3",
+          "textSha256": "f2a5f26348417d2a4a05f9740ac52ecec1283bd6aa29907b86b254e842863491",
+          "renderSha256": "05b320115c2270be95ca2f434aa1278a2bebadf7b8bcb1fb4bd3c5ec5db5705a",
+          "textSent": "Who has notes from Tuesday's lecture?",
+          "chars": 37,
+          "words": 6,
+          "bytes": 33898,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -16.19,
+            "gainDb": -3.36,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -6.81,
+            "truePeakDb": -6.79,
+            "durationIn": 2.043,
+            "durationOut": 2.043,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -3.36 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "27fea3d450b7088c843fdec3fc0f76edf8930771b94e5dbdb4ffb7d5d48a4efc",
+            "normalizedSha256": "a205d5af04d03ca35898d9d1c45f6312bf4d8f4731be44cebfd527f1fb2d9ef6",
+            "bytes": 33853,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-031/LCR-031_stimulus.mp3",
+            "generation": "1789678130638903",
+            "md5Hash": "8njH9JDUqkQFE7c4lfO8Jg==",
+            "size": 33853,
+            "sha256": "a205d5af04d03ca35898d9d1c45f6312bf4d8f4731be44cebfd527f1fb2d9ef6",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "voiceId": "A3TiUH9xcSptIzvOUBnB",
+      "gender": "F",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-032": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-032/LCR-032_stimulus.mp3",
+          "textSha256": "2afe344b5b131d1b58606b1d6db0b8e6b4971d316d1da24cf72d02b011482b93",
+          "renderSha256": "f5809ed2602324ef84c72b1b657ef65e8e8d3519a9347c57fd66c7fc4f7b08e6",
+          "textSent": "How much cheaper is it listed online?",
+          "chars": 37,
+          "words": 7,
+          "bytes": 35988,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.9,
+            "gainDb": 1.39,
+            "limiterMaxReductionDb": -0.4,
+            "lufsOut": -20.01,
+            "samplePeakDb": -1.46,
+            "truePeakDb": -1.45,
+            "durationIn": 2.183,
+            "durationOut": 2.183,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +1.39 dB, peak limiter up to 0.40 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "b13dc0f8ba72437650c2751e891cccb9d56c7340430d652e0a19bdd5a4281dc5",
+            "normalizedSha256": "37f9dc61f87664cfe9dc9b88033cd53f2ac0859141be4e4200f368f306702433",
+            "bytes": 35943,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-032/LCR-032_stimulus.mp3",
+            "generation": "1789678130658867",
+            "md5Hash": "EBlaft7Zn8+3NusX7mkygg==",
+            "size": 35943,
+            "sha256": "37f9dc61f87664cfe9dc9b88033cd53f2ac0859141be4e4200f368f306702433",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "voiceId": "3Mb3pRhm3AnXiPCSQNXS",
+      "gender": "M",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-033": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-033/LCR-033_stimulus.mp3",
+          "textSha256": "a2ea3d9ab925422b70e0b5e4faa56eb3c18005a8edb577f001439fbf29623533",
+          "renderSha256": "0560ecd49713c9edd05f35ea0447ded43c7fef41b3907b2fe05fde79a3a8b908",
+          "textSent": "Which dishes on the menu are nut-free?",
+          "chars": 38,
+          "words": 7,
+          "bytes": 35988,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.7,
+            "gainDb": 1.16,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -5.17,
+            "truePeakDb": -5.15,
+            "durationIn": 2.183,
+            "durationOut": 2.183,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +1.16 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "9844a0f0f40f60db85d46b7da416ef88b9dc84c865d8fa795895eebfe18c8636",
+            "normalizedSha256": "1587e76f1f073f17cc40cd2753b64a0faf95c9cb91b45779d5337c2dfb180992",
+            "bytes": 35943,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-033/LCR-033_stimulus.mp3",
+            "generation": "1789678130971103",
+            "md5Hash": "tuIWyE5YGw8ARwIp+JNfpQ==",
+            "size": 35943,
+            "sha256": "1587e76f1f073f17cc40cd2753b64a0faf95c9cb91b45779d5337c2dfb180992",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-034": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-034/LCR-034_stimulus.mp3",
+          "textSha256": "16496eceb98306ecc5daac9757011d2f0d6a333927e969fd44839232bc5f6042",
+          "renderSha256": "eb9d7eeb6adb75f39283d4d9ed37d9c3f8fc3b0b4936ee037d14b5c1c266bf1e",
+          "textSent": "Who's watching the bags while we're in line?",
+          "chars": 44,
+          "words": 8,
+          "bytes": 33898,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -22.05,
+            "gainDb": 2.5,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.03,
+            "truePeakDb": -3,
+            "durationIn": 2.043,
+            "durationOut": 2.043,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +2.50 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "18779951fe2068622ec6a66482313d691770cca616e3cda272242bd1896bb5c7",
+            "normalizedSha256": "0ffe6392e0200c9cc64efc2c7727486794f51ddde85a4a748e048fb41ec36b40",
+            "bytes": 33853,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-034/LCR-034_stimulus.mp3",
+            "generation": "1789678130999425",
+            "md5Hash": "MBEE6tT3OdqzrBjQ5Qdy4A==",
+            "size": 33853,
+            "sha256": "0ffe6392e0200c9cc64efc2c7727486794f51ddde85a4a748e048fb41ec36b40",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-035": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-035/LCR-035_stimulus.mp3",
+          "textSha256": "7e9bf548fca81603a70add4b7927bc41d9741eab3db73aa82619fb0c6b46bed5",
+          "renderSha256": "77e6e1893125bbd5d886b7bcda120e7f9850e2f45b08d2970d5b68b6d3695e23",
+          "textSent": "Should we take the shorter trail on the way back?",
+          "chars": 49,
+          "words": 10,
+          "bytes": 45601,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.54,
+            "gainDb": 0.99,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.67,
+            "truePeakDb": -2.66,
+            "durationIn": 2.786,
+            "durationOut": 2.786,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +0.99 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "89886dca4e3ed408fce9126729e0e181d1eb91cbab5a909c45300590a7496a40",
+            "normalizedSha256": "b0156af84f02b62faca97444802a299822219845072dc2c65171c576a0068259",
+            "bytes": 45556,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-035/LCR-035_stimulus.mp3",
+            "generation": "1789678130998759",
+            "md5Hash": "F7LKLLxd94AomaHmRtjhAA==",
+            "size": 45556,
+            "sha256": "b0156af84f02b62faca97444802a299822219845072dc2c65171c576a0068259",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-036": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-036/LCR-036_stimulus.mp3",
+          "textSha256": "f2f82096ea81ee0bbf75b64cc4c2a58bc945780ddd949b53fadb6034ea5797ab",
+          "renderSha256": "6742e7887abd83ee9815ced4a51ada7b2e26aede39de511888f7be1942ac77f8",
+          "textSent": "Where's the mail room from here?",
+          "chars": 32,
+          "words": 6,
+          "bytes": 24703,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -22.24,
+            "gainDb": 2.68,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -4.46,
+            "truePeakDb": -4.4,
+            "durationIn": 1.486,
+            "durationOut": 1.486,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +2.68 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "4e09cf65d4aeead24ac6fbe5dacafc7c2c916da271fdefe16aefa2e2d6981155",
+            "normalizedSha256": "764b17e6863dced19d46547f0a27b01ad83f421548e09c0013ae33ced8aeb1df",
+            "bytes": 24658,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-036/LCR-036_stimulus.mp3",
+            "generation": "1789678131035539",
+            "md5Hash": "CgE2tp3ecSLwykR6cpWEzg==",
+            "size": 24658,
+            "sha256": "764b17e6863dced19d46547f0a27b01ad83f421548e09c0013ae33ced8aeb1df",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-037": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-037/LCR-037_stimulus.mp3",
+          "textSha256": "8e16739f7951ac64e4ca11380224f55de80f1d1c12a490edf4509c00f6f909f4",
+          "renderSha256": "9f1423212a7cd2f1fbc389dd06306986b4fdbfd83e84a06b3f05a1ed7b8be900",
+          "textSent": "What time do you need to leave for your appointment?",
+          "chars": 52,
+          "words": 10,
+          "bytes": 38078,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -20.5,
+            "gainDb": 0.95,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -5.37,
+            "truePeakDb": -5.37,
+            "durationIn": 2.322,
+            "durationOut": 2.322,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +0.95 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "a84614814e7c01c5698e50f6a7088d1b38c4ba6a538bddba4c6d18c4551c1f0a",
+            "normalizedSha256": "7e49343110be4e19995b8f36c886eed4beda1299a403822c76adf7f08fa9abc0",
+            "bytes": 38033,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-037/LCR-037_stimulus.mp3",
+            "generation": "1789678131224394",
+            "md5Hash": "V9JBYmWBICVqw8y5KugbfA==",
+            "size": 38033,
+            "sha256": "7e49343110be4e19995b8f36c886eed4beda1299a403822c76adf7f08fa9abc0",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-038": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-038/LCR-038_stimulus.mp3",
+          "textSha256": "756e39094ef0db3f2b922281807a486d7372ce2b6033cea71e007a1352d1cb08",
+          "renderSha256": "1173a76246497df677f896fa1728b71808458bd29a98bb9ef4cb9435c4bef3c0",
+          "textSent": "Do you need your charger for the next hour?",
+          "chars": 43,
+          "words": 9,
+          "bytes": 41004,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.07,
+            "gainDb": 5.22,
+            "limiterMaxReductionDb": -4.3,
+            "lufsOut": -20.01,
+            "samplePeakDb": -1.49,
+            "truePeakDb": -1.49,
+            "durationIn": 2.508,
+            "durationOut": 2.508,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +5.22 dB, peak limiter up to 4.30 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "6037c88fc06ed3b0f8260899c6b5dc9732904aa2734dcb2a39db13c3df96d457",
+            "normalizedSha256": "e07022927296e89cb21546d8a30c3e7c88338d69a9f94c2806801ff85de2a14e",
+            "bytes": 40959,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-038/LCR-038_stimulus.mp3",
+            "generation": "1789678131286910",
+            "md5Hash": "Rg6NnABZa96it0MuI5f6YQ==",
+            "size": 40959,
+            "sha256": "e07022927296e89cb21546d8a30c3e7c88338d69a9f94c2806801ff85de2a14e",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "voiceId": "WLKp2jV6nrS8aMkPPDRO",
+      "gender": "M",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-039": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-039/LCR-039_stimulus.mp3",
+          "textSha256": "f07733852bbdc9af4b79f37830b153ec4e892039881dc6f3e88b7ea7e009edaa",
+          "renderSha256": "9b2266c7c3aa97c87ffbb26c081049523bcf24259a943d89b8b58ca96033bbee",
+          "textSent": "What time did you finally leave last night?",
+          "chars": 43,
+          "words": 8,
+          "bytes": 32226,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -15.9,
+            "gainDb": -3.66,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.01,
+            "samplePeakDb": -6.81,
+            "truePeakDb": -6.78,
+            "durationIn": 1.95,
+            "durationOut": 1.95,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -3.66 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "4bb11e9a24edfd88913e7723c28f62218171225f7bfb0ceb5f8e9cdfa7a59bfb",
+            "normalizedSha256": "2896892201a425d9be40eeadf4307f66092df961ed8544cce5b27087e5451805",
+            "bytes": 32181,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-039/LCR-039_stimulus.mp3",
+            "generation": "1789678131308885",
+            "md5Hash": "E8WUv2uLzgccKIkrxTvkUg==",
+            "size": 32181,
+            "sha256": "2896892201a425d9be40eeadf4307f66092df961ed8544cce5b27087e5451805",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "voiceId": "A3TiUH9xcSptIzvOUBnB",
+      "gender": "F",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-040": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-040/LCR-040_stimulus.mp3",
+          "textSha256": "01f963db1c7ff98c75f0c5ff45818857e87266356eea6757cc4d925952bf8290",
+          "renderSha256": "fdb466212c93bb01a714f279e6d7dcdd734de9717ab9e8ca715a14a63eeb6449",
+          "textSent": "Which day next week works best for a shift trade?",
+          "chars": 49,
+          "words": 10,
+          "bytes": 46437,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NZ_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -22.65,
+            "gainDb": 3.09,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.72,
+            "truePeakDb": -3.71,
+            "durationIn": 2.833,
+            "durationOut": 2.833,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.09 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "53bf6ccc842b9c042bbf400d70596077cf943f871d50491a0ea81b11b9450ecb",
+            "normalizedSha256": "d387f42b877ad8bca51d2c01737195196bb2274f332aadd9e46433a17097b37f",
+            "bytes": 46392,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-040/LCR-040_stimulus.mp3",
+            "generation": "1789678131326375",
+            "md5Hash": "8Sa+hHTZQvWXjKPnYctEMw==",
+            "size": 46392,
+            "sha256": "d387f42b877ad8bca51d2c01737195196bb2274f332aadd9e46433a17097b37f",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "voiceId": "3Mb3pRhm3AnXiPCSQNXS",
+      "gender": "M",
+      "accent": "NZ",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-041": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-041/LCR-041_stimulus.mp3",
+          "textSha256": "232d8ffa24b02efbc0c0aec5aee5927a58907b2c15821d4ee40e4076fee8ea6f",
+          "renderSha256": "a4edf881328bd137c1ec78d376f1d5aa24ddb231b3d7cb09a916958fbf0bade5",
+          "textSent": "Whose turn is it to buy dish soap?",
+          "chars": 34,
+          "words": 8,
+          "bytes": 33898,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.51,
+            "gainDb": 3.96,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.02,
+            "samplePeakDb": -5.23,
+            "truePeakDb": -5.22,
+            "durationIn": 2.043,
+            "durationOut": 2.043,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.96 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "eb2f10d0d8e562b3994985753d4fa4d86b98e89c89021a088b79079eab098294",
+            "normalizedSha256": "a726f1d0ea37d664656918d38f311289c214aaa669e5120df3077ee456ef44ac",
+            "bytes": 33853,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-041/LCR-041_stimulus.mp3",
+            "generation": "1789678131493242",
+            "md5Hash": "7Zlvs+JW26Z6MlOWLC2ZBw==",
+            "size": 33853,
+            "sha256": "a726f1d0ea37d664656918d38f311289c214aaa669e5120df3077ee456ef44ac",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-042": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-042/LCR-042_stimulus.mp3",
+          "textSha256": "9fd11cdf89ab8e8f6f76e0b4f8d71a7dc49da0980daabdb7c98216dd2b353017",
+          "renderSha256": "98990e0fb7f459496f5374de60ba1fba6f83452decaf4a071bcfaecdd0c4caf0",
+          "textSent": "Who's a good pet sitter you'd recommend?",
+          "chars": 40,
+          "words": 7,
+          "bytes": 33898,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.31,
+            "gainDb": 5.75,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20.02,
+            "samplePeakDb": -3.82,
+            "truePeakDb": -3.8,
+            "durationIn": 2.043,
+            "durationOut": 2.043,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +5.75 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "47bfb9cac0219f1d64f4ffb91eded85d191b7d7fb05ed9aa6e31a9cec2c0f2de",
+            "normalizedSha256": "3115fe5b8439585990c5fc6fbbd3a5c53268d4f3ab3401dcaa20bcd11ef38f57",
+            "bytes": 33853,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-042/LCR-042_stimulus.mp3",
+            "generation": "1789678131539531",
+            "md5Hash": "31Aud36LP4pfJwbz3FsupQ==",
+            "size": 33853,
+            "sha256": "3115fe5b8439585990c5fc6fbbd3a5c53268d4f3ab3401dcaa20bcd11ef38f57",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-043": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-043/LCR-043_stimulus.mp3",
+          "textSha256": "f78bc583dfbd9c6f2f651f5e40dddf36c87fc7a72569301bdea27ecb00b9d2fc",
+          "renderSha256": "69cd159b61195f4f0fe6f32e5ae798d370d4f884948e7f1afb409e5d0b96a9ab",
+          "textSent": "When are you planning to send the project slides?",
+          "chars": 49,
+          "words": 9,
+          "bytes": 40586,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.33,
+            "gainDb": -0.22,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -3.7,
+            "truePeakDb": -3.69,
+            "durationIn": 2.461,
+            "durationOut": 2.461,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -0.22 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c8a911cb350a643f4b5c44f981688fd69d6eaf7f9bd095b2e0b901fd9a8d327c",
+            "normalizedSha256": "acb917fffff4c3c0db2d812a159bf1dc099c809d691aa6f75fa4c4cc9325b397",
+            "bytes": 40541,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-043/LCR-043_stimulus.mp3",
+            "generation": "1789678131602539",
+            "md5Hash": "v94X9f7fOvt4Rfe7GJLbng==",
+            "size": 40541,
+            "sha256": "acb917fffff4c3c0db2d812a159bf1dc099c809d691aa6f75fa4c4cc9325b397",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-044": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-044/LCR-044_stimulus.mp3",
+          "textSha256": "28dc4ccf92b53460352a7c3a395fc92978c917df5fcf82e49a7b02af6c8f722c",
+          "renderSha256": "a8fd03cdfbede2571cc8117ebef76393bb95a46d6fe8f79f6ae9ed342f895ec5",
+          "textSent": "What time do walk-in tutoring hours start today?",
+          "chars": 48,
+          "words": 8,
+          "bytes": 51453,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.31,
+            "gainDb": 5.76,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -2.78,
+            "truePeakDb": -2.78,
+            "durationIn": 3.158,
+            "durationOut": 3.158,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +5.76 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "daba2d43e666539220d2d25155667b576362818a241c5199af6cf9fe782f4495",
+            "normalizedSha256": "0d254bed7a5e391a978e3a29c36dc1510c0cb3252d4bd305ff8c4d83fc3bc634",
+            "bytes": 51408,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-044/LCR-044_stimulus.mp3",
+            "generation": "1789678131671675",
+            "md5Hash": "nfCiB61RU1zaYi8kqN6Irg==",
+            "size": 51408,
+            "sha256": "0d254bed7a5e391a978e3a29c36dc1510c0cb3252d4bd305ff8c4d83fc3bc634",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lcr_prompt"
+    },
+    "LCR-045": {
+      "clips": {
+        "stimulus": {
+          "file": "lcr/LCR-045/LCR-045_stimulus.mp3",
+          "textSha256": "9008b430789d78a7802dde0147006ec8636d22e832e1a51f910cae6415c6b5e4",
+          "renderSha256": "c3301cdccd8aaac06c0c2548c667eb7620cb436c19eab7f147411ac76fb10965",
+          "textSent": "Should we just order delivery tonight?",
+          "chars": 38,
+          "words": 6,
+          "bytes": 33062,
+          "settings": {
+            "stability": 0.45,
+            "similarity_boost": 0.8,
+            "style": 0.2,
+            "use_speaker_boost": true,
+            "speed": 1
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lcr_prompt|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23,
+            "gainDb": 3.45,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -6.75,
+            "truePeakDb": -6.72,
+            "durationIn": 1.997,
+            "durationOut": 1.997,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.45 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "9b68c9392c8e49ab634663e93d119d57d2b969b456bdaa789e9c699cd32d9eef",
+            "normalizedSha256": "549901daa484af00aab471058ccb7a5c90cdd9f739e026229ad1362996fcd904",
+            "bytes": 33017,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lcr/LCR-045/LCR-045_stimulus.mp3",
+            "generation": "1789678131766911",
+            "md5Hash": "JCmaCWnSvfofRkfIGxFpdg==",
+            "size": 33017,
+            "sha256": "549901daa484af00aab471058ccb7a5c90cdd9f739e026229ad1362996fcd904",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lcr_prompt"
+    }
+  }
+}
