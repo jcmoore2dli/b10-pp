@@ -2045,6 +2045,14 @@ async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
       // field as perUtteranceResults[].referenceText, and v1.18 settles the
       // spec name as the one of record (JC 2026-09-17).
       referenceText: targets[u.utteranceIndex - 1],
+      // The student side of the pair. Data model v1.17 lists it in
+      // perUtteranceResults and nothing was writing it, which left the output
+      // with no student text at all — so "reference: X, you said: Y" feedback
+      // was structurally impossible (JC 2026-09-17). The comparer already
+      // segments the transcript per utterance; this is that segment's words, in
+      // the comparer's normalised form (lower case, no punctuation, hyphens
+      // split), which is what it actually scored against the reference.
+      matchedTranscript: (u.hypTokens || []).join(" "),
       part: utterances[u.utteranceIndex - 1].part,
       matchedClauses: u.matchedClauses,
       capsApplied: u.capsApplied,
