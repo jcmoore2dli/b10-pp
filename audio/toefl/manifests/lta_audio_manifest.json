@@ -1,0 +1,725 @@
+{
+  "schema": "toefl-lta-audio-manifest/1",
+  "items": {
+    "LTA-001": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-001/LTA-001_stimulus.mp3",
+          "textSha256": "e85183e3d3960b27746bdc7e3ae7b2f150a9ecd2e59ff9411df37e4ef7aa99a3",
+          "renderSha256": "4339b2affbcbd0a62379fe8ce0eca42eafd9fb751da206016698b49c4acf16f4",
+          "textSent": "Attention drivers: Lot C behind the science building will close for repaving starting Wednesday morning and reopening Friday afternoon. During the closure, please use the visitor lot near the library, which will offer free parking with a valid campus permit. Signs will mark the detour route. Contact facilities services with any questions about accessible parking during this period.",
+          "chars": 384,
+          "words": 58,
+          "bytes": 383730,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -24.75,
+            "gainDb": 5.2,
+            "limiterMaxReductionDb": -0.19,
+            "lufsOut": -20.01,
+            "samplePeakDb": -1.52,
+            "truePeakDb": -1.51,
+            "durationIn": 23.917,
+            "durationOut": 23.917,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +5.20 dB, peak limiter up to 0.19 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f011d37623ab35877914066b8f99dc04eb265cca43a551d47be1cd3bcc7c1d3b",
+            "normalizedSha256": "38680477535639d3a5706a6821f0950a425b5a638148bd3fcb8e8bcd2a7f354e",
+            "bytes": 383685,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-001/LTA-001_stimulus.mp3",
+            "generation": "1789677958206188",
+            "md5Hash": "EgY1jVAD5KtDq49pgw/5wA==",
+            "size": 383685,
+            "sha256": "38680477535639d3a5706a6821f0950a425b5a638148bd3fcb8e8bcd2a7f354e",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-002": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-002/LTA-002_stimulus.mp3",
+          "textSha256": "dde5e9415df842c1092eaedfb81a4f393477a31d2e4cdd62b1912a460fe065a6",
+          "renderSha256": "ae67908d4d3964fca1cf978f62758c737043e49a61d1dd0dc63119ab61518596",
+          "textSent": "This is a campus radio update: starting next Monday, the evening shuttle will run every twenty minutes instead of every thirty, with the last pickup moved from ten o'clock to eleven. The route itself stays the same, stopping at the library, the dining hall, and student housing. Riders can check exact times on the shuttle app before heading out.",
+          "chars": 346,
+          "words": 59,
+          "bytes": 351965,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.8,
+            "gainDb": 6.33,
+            "limiterMaxReductionDb": -1.46,
+            "lufsOut": -19.99,
+            "samplePeakDb": -1.49,
+            "truePeakDb": -1.48,
+            "durationIn": 21.92,
+            "durationOut": 21.92,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +6.33 dB, peak limiter up to 1.46 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "531412a009e69f6cfbaa62539b4f1a64862cb2d80feac5288501233e1108215a",
+            "normalizedSha256": "09c326c829f85e8176640f7265fa384af87c0209f86255ed04f74fbeb3ebfcbc",
+            "bytes": 351920,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-002/LTA-002_stimulus.mp3",
+            "generation": "1789677956051185",
+            "md5Hash": "Mo3wsvARavbCWhgqoQKzAw==",
+            "size": 351920,
+            "sha256": "09c326c829f85e8176640f7265fa384af87c0209f86255ed04f74fbeb3ebfcbc",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-003": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-003/LTA-003_stimulus.mp3",
+          "textSha256": "cee704f1748397921ad37f7ea8812041d41fca6c50fb61433cd0194e6e038a49",
+          "renderSha256": "01a4eeac0728127d300f8a7341769e346ad712d51235479ef50e7512eeac00e9",
+          "textSent": "Campus Health Services will host a free flu-shot clinic this Thursday and Friday from nine in the morning until three in the afternoon in the student union's second-floor conference room. No appointment is needed, but students should bring their campus ID. The clinic is open to all currently enrolled students at no cost, regardless of insurance coverage.",
+          "chars": 356,
+          "words": 57,
+          "bytes": 369519,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -18.16,
+            "gainDb": -1.39,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.31,
+            "truePeakDb": -2.3,
+            "durationIn": 23.034,
+            "durationOut": 23.034,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain -1.39 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "e594d73699c63818c066f1eca0807d2f507fd8a642455423aa456a75e5bd072e",
+            "normalizedSha256": "e4e452d6bcfdef9013d7c18e5dbcc5c92fb74998cc37e201636df10bc81ac6f5",
+            "bytes": 369474,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-003/LTA-003_stimulus.mp3",
+            "generation": "1789677958309264",
+            "md5Hash": "LSsbj7UTC+2L5Su+VRuBQg==",
+            "size": 369474,
+            "sha256": "e4e452d6bcfdef9013d7c18e5dbcc5c92fb74998cc37e201636df10bc81ac6f5",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-004": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-004/LTA-004_stimulus.mp3",
+          "textSha256": "b7e75140841053eaf726d7bff937eb4c5da6052a44b29499d45a26bcda5ddb35",
+          "renderSha256": "03ff3a2b683f84d5aafd170fb9d541aa7484dfa03fa40c9dc72297beee1d22e2",
+          "textSent": "Mark your calendars: the annual student film festival kicks off this Saturday at seven in the evening in the auditorium, featuring twelve short films made by students across every department. Tickets are free but limited, so arrive early to guarantee a seat. A panel of local filmmakers will judge the entries, and winners will be announced at Sunday's closing reception.",
+          "chars": 371,
+          "words": 60,
+          "bytes": 384566,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.91,
+            "gainDb": 4.58,
+            "limiterMaxReductionDb": -3.9,
+            "lufsOut": -19.98,
+            "samplePeakDb": -1.51,
+            "truePeakDb": -1.46,
+            "durationIn": 23.963,
+            "durationOut": 23.963,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +4.58 dB, peak limiter up to 3.90 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f64b62b0417b4744ad58d01b2b8d8fe624ead843d09d234edb0f3076067eed5d",
+            "normalizedSha256": "efba85a1eafe44c7576dd6dc91298a29c42bf6139aa3488426f042d51582e02a",
+            "bytes": 384521,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-004/LTA-004_stimulus.mp3",
+            "generation": "1789677958508725",
+            "md5Hash": "qpccdYjnp8OTHj/PWRlJWQ==",
+            "size": 384521,
+            "sha256": "efba85a1eafe44c7576dd6dc91298a29c42bf6139aa3488426f042d51582e02a",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-005": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-005/LTA-005_stimulus.mp3",
+          "textSha256": "e257e1a5b62e332c79ce75c4bdbfd5243feb9f41953b434fb136bf319c1ae1a6",
+          "renderSha256": "484049e791f96955c875ca0041211c50eaf3174d985562589635f8818db2c2ba",
+          "textSent": "Attention, students: there will be a scheduled fire drill today at two o'clock. When the alarm sounds, please stop what you're doing, leave your belongings, and exit the building calmly through the nearest marked exit. Gather in the west parking lot and remain with your class until I confirm that everyone is accounted for. This drill should last about ten minutes.",
+          "chars": 366,
+          "words": 61,
+          "bytes": 299720,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_AU_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -21.34,
+            "gainDb": 1.93,
+            "limiterMaxReductionDb": -2,
+            "lufsOut": -19.99,
+            "samplePeakDb": -1.5,
+            "truePeakDb": -1.49,
+            "durationIn": 18.669,
+            "durationOut": 18.669,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +1.93 dB, peak limiter up to 2.00 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "139c3371cf7ab4c097f825665e70435984eb4dac1473a42b029439203d2616a8",
+            "normalizedSha256": "58bdaa8aa8dea0a604178d632819a7d5429e01e417e0b4a545f33a4f86eec3d2",
+            "bytes": 299675,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-005/LTA-005_stimulus.mp3",
+            "generation": "1789677958525315",
+            "md5Hash": "tGEK3hmzbeFVeLrYfNr1ww==",
+            "size": 299675,
+            "sha256": "58bdaa8aa8dea0a604178d632819a7d5429e01e417e0b4a545f33a4f86eec3d2",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "voiceId": "56bWURjYFHyYyVf490Dp",
+      "gender": "F",
+      "accent": "AU",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-006": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-006/LTA-006_stimulus.mp3",
+          "textSha256": "5fa2c0cafd076e41a3f0a4931fce3805754a66e0824b34e221580f5014670bb5",
+          "renderSha256": "b6a5e04999887eec5b01320032389e10e65c16fee838ac4fa2ad4e760b5b00a4",
+          "textSent": "A reminder for chemistry students: all borrowed lab goggles must be returned to the supply cabinet by Friday afternoon. Goggles left in lockers or backpacks over the weekend will be marked as lost, and students will be charged a replacement fee. If your pair is damaged, report it to me instead of returning it directly, so a note can be added to your file.",
+          "chars": 357,
+          "words": 64,
+          "bytes": 313931,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_AU_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -22.87,
+            "gainDb": 3.34,
+            "limiterMaxReductionDb": -1.6,
+            "lufsOut": -20,
+            "samplePeakDb": -1.42,
+            "truePeakDb": -1.4,
+            "durationIn": 19.551,
+            "durationOut": 19.551,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +3.34 dB, peak limiter up to 1.60 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "4c352e451ee009e6cc8e68af46e9bb97cb5a91e3cff11e4acf141d7cbaf99c6b",
+            "normalizedSha256": "7679ce5f70b1149578d1289a30863f4660111045d83617155d1145e9ca6c8bcf",
+            "bytes": 313886,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-006/LTA-006_stimulus.mp3",
+            "generation": "1789677960202712",
+            "md5Hash": "GhTPTCAaeh0NhU0oTDb9uA==",
+            "size": 313886,
+            "sha256": "7679ce5f70b1149578d1289a30863f4660111045d83617155d1145e9ca6c8bcf",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "voiceId": "WLKp2jV6nrS8aMkPPDRO",
+      "gender": "M",
+      "accent": "AU",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-007": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-007/LTA-007_stimulus.mp3",
+          "textSha256": "679f5500eabc4005e9a6ed9d2a5a65e18585c856c2e628973351a7aa3e8eebc0",
+          "renderSha256": "bd7e8d62bddbc9c7d50bc1231efc0c017758b459bc74facdf4e4560ae26116d3",
+          "textSent": "A quick update for this afternoon's guest lecture: because of higher than expected interest, the talk has been moved from Room 210 to the larger auditorium on the first floor. The start time stays the same, at one thirty. Please pass this along to classmates who might not have checked their email, and allow a few extra minutes to find seating.",
+          "chars": 345,
+          "words": 61,
+          "bytes": 295123,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_NZ_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.59,
+            "gainDb": 0.04,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -1.86,
+            "truePeakDb": -1.83,
+            "durationIn": 18.39,
+            "durationOut": 18.39,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +0.04 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "f2d1d07bccaea630e2ccdb803bd01f836c434916afa568eb403046e3f53d15e9",
+            "normalizedSha256": "c702afe58d5dd4da64f393907b54c0c6d96057095c2912ff435252e2457e9ab3",
+            "bytes": 295078,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-007/LTA-007_stimulus.mp3",
+            "generation": "1789677960391422",
+            "md5Hash": "4Hl/jUOhif+xlKH80CdPyA==",
+            "size": 295078,
+            "sha256": "c702afe58d5dd4da64f393907b54c0c6d96057095c2912ff435252e2457e9ab3",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "voiceId": "A3TiUH9xcSptIzvOUBnB",
+      "gender": "F",
+      "accent": "NZ",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-008": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-008/LTA-008_stimulus.mp3",
+          "textSha256": "48bc30b4c29488ec91a40fd3eeb90136e29a983c2af7e6bd43dacbd060e76738",
+          "renderSha256": "448c8656946e208de1f21283436bc8c3fe61c7362d367b39e53611917f1cf542",
+          "textSent": "Before you head out today: the building will close at three o'clock tomorrow instead of the usual six, ahead of the holiday weekend. Anyone who needs to pick up materials from a classroom or locker should plan to do so before then. Heating will also be lowered starting this evening, so bring a jacket if you're staying late.",
+          "chars": 325,
+          "words": 58,
+          "bytes": 288017,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_NZ_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -23.7,
+            "gainDb": 4.15,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -20,
+            "samplePeakDb": -1.81,
+            "truePeakDb": -1.8,
+            "durationIn": 17.926,
+            "durationOut": 17.926,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +4.15 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "b841d04c98756dad2f1567a82320ba1d8fd4178c160d00063b9fb55b107e29dd",
+            "normalizedSha256": "7a41a55d1775f68f7f385df5b9618dfb6dd09016d0ade302a5bff492b872bdf6",
+            "bytes": 287972,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-008/LTA-008_stimulus.mp3",
+            "generation": "1789677959820848",
+            "md5Hash": "HsCJzQAFzioIg0bj/JpEQw==",
+            "size": 287972,
+            "sha256": "7a41a55d1775f68f7f385df5b9618dfb6dd09016d0ade302a5bff492b872bdf6",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "voiceId": "3Mb3pRhm3AnXiPCSQNXS",
+      "gender": "M",
+      "accent": "NZ",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-009": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-009/LTA-009_stimulus.mp3",
+          "textSha256": "14ceecaf242116d1d23a01f5d822357cb6d3ebc8a0d4ab19c89999cdf3910a0e",
+          "renderSha256": "8e7ab8015530b3572c096268741849ec596529686b6bddb85f797218bb32504a",
+          "textSent": "A note about the lounge's lost-and-found box: any unclaimed items still there after this Friday will be donated to a local shelter. So far the box holds several water bottles, a gray hoodie, and at least two umbrellas. If any of these are yours, please stop by the front desk this week to claim them before they're given away.",
+          "chars": 326,
+          "words": 59,
+          "bytes": 315185,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_NA_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -22.6,
+            "gainDb": 3.05,
+            "limiterMaxReductionDb": 0,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.04,
+            "truePeakDb": -2.03,
+            "durationIn": 19.644,
+            "durationOut": 19.644,
+            "passes": 2,
+            "ok": true,
+            "limited": false,
+            "note": "loudness normalized to -20 LUFS: gain +3.05 dB, no limiting",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "1edbf7993409eda70833518c3baa21adb61da64999275396fd0bb5ae01e83fb4",
+            "normalizedSha256": "ac33b384dcdd33df56675867ea11b03bf303230ed956752454cc8e29fc034096",
+            "bytes": 315140,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-009/LTA-009_stimulus.mp3",
+            "generation": "1789677960584257",
+            "md5Hash": "3Bgr5dKXoqvfyk3t9JUgqA==",
+            "size": 315140,
+            "sha256": "ac33b384dcdd33df56675867ea11b03bf303230ed956752454cc8e29fc034096",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "voiceId": "DIS307HFaAvJZzq496qM",
+      "gender": "F",
+      "accent": "NA",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-010": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-010/LTA-010_stimulus.mp3",
+          "textSha256": "b8f170c9a6e1e4bdcc3cd2fd714dd26fc822a1802b33ca96243eb8d7460e6c9f",
+          "renderSha256": "69c9d53ec15e222ba09f0df6ef11ffa23bd7bd3052110d9603001cd8afb4a756",
+          "textSent": "Attention lounge regulars: tonight's game night starts at seven and runs until ten, with board games, cards, and a video game tournament set up in the back corner. Snacks are provided, but feel free to bring your own favorite game to share. Winners of the video game tournament will get first pick of prizes at the table near the entrance.",
+          "chars": 339,
+          "words": 60,
+          "bytes": 339008,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_NA_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -27.48,
+            "gainDb": 7.97,
+            "limiterMaxReductionDb": -1.6,
+            "lufsOut": -19.99,
+            "samplePeakDb": -1.46,
+            "truePeakDb": -1.46,
+            "durationIn": 21.13,
+            "durationOut": 21.13,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +7.97 dB, peak limiter up to 1.60 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "67a2cf59bba6d15d6bbda6e119ae2ec973dabc4221d04954309c2d3ef4488b8a",
+            "normalizedSha256": "d2a57a18c07c24e2830c09467628380f0dccd8775b02373f0c0e2877e41dda97",
+            "bytes": 338963,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-010/LTA-010_stimulus.mp3",
+            "generation": "1789677960946800",
+            "md5Hash": "jZH5t96ySkl7c2ptzGCkeg==",
+            "size": 338963,
+            "sha256": "d2a57a18c07c24e2830c09467628380f0dccd8775b02373f0c0e2877e41dda97",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "voiceId": "uFIXVu9mmnDZ7dTKCBTX",
+      "gender": "M",
+      "accent": "NA",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-011": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-011/LTA-011_stimulus.mp3",
+          "textSha256": "13e101983674145bbced99a443186896cb03186da5cb76d8a1f015ebf4b1c5ce",
+          "renderSha256": "fb5b46c7083706ccdb4c87faca6f598a9d0676aa4b3775e589eb23ff60f7a42d",
+          "textSent": "Weather update for the lounge: a severe thunderstorm warning is in effect until six this evening. Please move away from the large windows and stay in the interior seating area until the warning is lifted. If you hear the emergency alarm, head to the stairwell on the east side, not the elevator. Staff will post updates on the lounge's front board.",
+          "chars": 348,
+          "words": 61,
+          "bytes": 415495,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_UK_F)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -19.64,
+            "gainDb": 0.1,
+            "limiterMaxReductionDb": -0.31,
+            "lufsOut": -19.99,
+            "samplePeakDb": -1.49,
+            "truePeakDb": -1.49,
+            "durationIn": 25.913,
+            "durationOut": 25.913,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +0.10 dB, peak limiter up to 0.31 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "c9225aee555dc74bc77955ccef09e903b822d744fb13fd126256a70848a1e140",
+            "normalizedSha256": "cab3469d9bfa4c26f32aa2c0c319c22980b1e703a34a391cf389d256ddf76ef2",
+            "bytes": 415450,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-011/LTA-011_stimulus.mp3",
+            "generation": "1789677961352186",
+            "md5Hash": "HGu9wachrA7BhhA22wQtHw==",
+            "size": 415450,
+            "sha256": "cab3469d9bfa4c26f32aa2c0c319c22980b1e703a34a391cf389d256ddf76ef2",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "voiceId": "8z5UhJ1uv7X8TN5yg8oI",
+      "gender": "F",
+      "accent": "UK",
+      "preset": "toefl_lta_announcement"
+    },
+    "LTA-012": {
+      "clips": {
+        "stimulus": {
+          "file": "lta/LTA-012/LTA-012_stimulus.mp3",
+          "textSha256": "3aad6bc410618f1d080374b3ce8efd8451a4bed1caa1f6c8dc792363d3c26a1f",
+          "renderSha256": "292c460e56e297bdb11baf4dbddb59779eacb994d96969bd97859d0e472cd1e2",
+          "textSent": "Because of this afternoon's rain, the club fair has moved indoors to the lounge instead of the courtyard. Tables for each club are being set up now along the west wall, and the event will still run from noon until two. If your club signed up for an outdoor table, check in with the student activities desk to get your new indoor spot.",
+          "chars": 334,
+          "words": 63,
+          "bytes": 359906,
+          "settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.8,
+            "style": 0.1,
+            "use_speaker_boost": true,
+            "speed": 0.97
+          },
+          "modelId": "eleven_multilingual_v2",
+          "seed": 20260915,
+          "confirmation": "default",
+          "confirmationNote": "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting value (JC 2026-09-17); nothing here has been heard (toefl_lta_announcement|TOEFL_TTS_VOICE_UK_M)",
+          "generatedOn": "2026-09-17",
+          "loudness": {
+            "targetLufs": -20,
+            "peakLimitDb": -1,
+            "lufsIn": -25.87,
+            "gainDb": 6.41,
+            "limiterMaxReductionDb": -2.06,
+            "lufsOut": -20,
+            "samplePeakDb": -1.44,
+            "truePeakDb": -1.44,
+            "durationIn": 22.43,
+            "durationOut": 22.43,
+            "passes": 2,
+            "ok": true,
+            "limited": true,
+            "note": "loudness normalized to -20 LUFS: gain +6.41 dB, peak limiter up to 2.06 dB",
+            "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
+            "rawSha256": "854b2b145879895da216a73b1241f9a4059da33d03d387e60b8a461e1dcdfcb8",
+            "normalizedSha256": "2c6a4513c96ca918c2a563e822b740cd841d0510407d569ed2b3999d4c38d216",
+            "bytes": 359861,
+            "normalizedOn": "2026-09-17"
+          },
+          "storage": {
+            "bucket": "b10-practice-platform.firebasestorage.app",
+            "path": "audio/toefl/lta/LTA-012/LTA-012_stimulus.mp3",
+            "generation": "1789677961441272",
+            "md5Hash": "D7Jd+/HnwuEubUHOjRrLOg==",
+            "size": 359861,
+            "sha256": "2c6a4513c96ca918c2a563e822b740cd841d0510407d569ed2b3999d4c38d216",
+            "uploadedOn": "2026-09-17"
+          }
+        }
+      },
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "voiceId": "UEKYgullGqaF0keqT8Bu",
+      "gender": "M",
+      "accent": "UK",
+      "preset": "toefl_lta_announcement"
+    }
+  }
+}
