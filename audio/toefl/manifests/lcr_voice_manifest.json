@@ -1,0 +1,368 @@
+{
+  "schema": "toefl-lcr-voice-manifest/1",
+  "rule": "Alternate speaker gender across LCR items in corpus ID order (LCR Content Spec v1.4 §TTS; ID-order alternation approved by JC 2026-09-15). Accent rotates NA/UK/AU/NZ by item number — a DEFAULT, not a ruling: LCR's accent rule is still undecided (JC 2026-09-17), so clips generated from it are flagged default.",
+  "startGender": "F",
+  "items": [
+    {
+      "itemId": "LCR-001",
+      "gender": "F",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-002",
+      "gender": "M",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-003",
+      "gender": "F",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-004",
+      "gender": "M",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-005",
+      "gender": "F",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-006",
+      "gender": "M",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-007",
+      "gender": "F",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-008",
+      "gender": "M",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-009",
+      "gender": "F",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-010",
+      "gender": "M",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-011",
+      "gender": "F",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-012",
+      "gender": "M",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-013",
+      "gender": "F",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-014",
+      "gender": "M",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-015",
+      "gender": "F",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-016",
+      "gender": "M",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-017",
+      "gender": "F",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-018",
+      "gender": "M",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-019",
+      "gender": "F",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-020",
+      "gender": "M",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-021",
+      "gender": "F",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-022",
+      "gender": "M",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-023",
+      "gender": "F",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-024",
+      "gender": "M",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-025",
+      "gender": "F",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-026",
+      "gender": "M",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-027",
+      "gender": "F",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-028",
+      "gender": "M",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-029",
+      "gender": "F",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-030",
+      "gender": "M",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-031",
+      "gender": "F",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-032",
+      "gender": "M",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-033",
+      "gender": "F",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-034",
+      "gender": "M",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-035",
+      "gender": "F",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-036",
+      "gender": "M",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-037",
+      "gender": "F",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-038",
+      "gender": "M",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-039",
+      "gender": "F",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-040",
+      "gender": "M",
+      "accent": "NZ",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NZ_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-041",
+      "gender": "F",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-042",
+      "gender": "M",
+      "accent": "NA",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_NA_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-043",
+      "gender": "F",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_F",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-044",
+      "gender": "M",
+      "accent": "UK",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_UK_M",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LCR-045",
+      "gender": "F",
+      "accent": "AU",
+      "accentStatus": "default",
+      "voiceConstant": "TOEFL_TTS_VOICE_AU_F",
+      "assignedOn": "2026-09-17"
+    }
+  ],
+  "removedItems": []
+}

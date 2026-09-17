@@ -39,7 +39,14 @@ describe("assignGenders", () => {
     assert.deepStrictEqual(added, ids(5));
     assert.deepStrictEqual(warnings, []);
     assert.strictEqual(manifest.schema, SCHEMA);
-    assert.ok(manifest.items.every((it) => it.accent === null && it.voiceConstant === null));
+    // Accent added 2026-09-17: rotates NA/UK/AU/NZ by item number, marked a
+    // default because LCR's accent rule is still undecided.
+    assert.deepStrictEqual(manifest.items.map((it) => it.accent), ["NA", "NA", "UK", "UK", "AU"]);
+    assert.ok(manifest.items.every((it) => it.accentStatus === "default"));
+    assert.deepStrictEqual(
+      manifest.items.map((it) => it.voiceConstant),
+      ["TOEFL_TTS_VOICE_NA_F", "TOEFL_TTS_VOICE_NA_M", "TOEFL_TTS_VOICE_UK_F", "TOEFL_TTS_VOICE_UK_M", "TOEFL_TTS_VOICE_AU_F"]
+    );
   });
 
   it("is idempotent: a rerun on the same items changes nothing", () => {

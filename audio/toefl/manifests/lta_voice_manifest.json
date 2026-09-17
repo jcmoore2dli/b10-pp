@@ -1,0 +1,177 @@
+{
+  "schema": "toefl-lta-voice-manifest/1",
+  "rule": "Gender and accent assigned by rotation over the item number (gender F/M, accent NA/UK/AU/NZ). DEFAULT, not confirmed: neither field exists in the corpus or the Content Spec for this type (JC 2026-09-17). Clips generated from these assignments are flagged default in the audio manifest.",
+  "genderCycle": "FM",
+  "accentCycle": "NA,UK,AU,NZ (advancing every two items)",
+  "items": [
+    {
+      "itemId": "LTA-001",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-002",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-003",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-004",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-005",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "F",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-006",
+      "accent": "AU",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "M",
+          "accent": "AU",
+          "voiceConstant": "TOEFL_TTS_VOICE_AU_M"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-007",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "F",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-008",
+      "accent": "NZ",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "M",
+          "accent": "NZ",
+          "voiceConstant": "TOEFL_TTS_VOICE_NZ_M"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-009",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "F",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-010",
+      "accent": "NA",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "M",
+          "accent": "NA",
+          "voiceConstant": "TOEFL_TTS_VOICE_NA_M"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-011",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "F",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_F"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    },
+    {
+      "itemId": "LTA-012",
+      "accent": "UK",
+      "voices": [
+        {
+          "speakerLabel": null,
+          "gender": "M",
+          "accent": "UK",
+          "voiceConstant": "TOEFL_TTS_VOICE_UK_M"
+        }
+      ],
+      "assignmentStatus": "default",
+      "assignedOn": "2026-09-17"
+    }
+  ],
+  "removedItems": []
+}

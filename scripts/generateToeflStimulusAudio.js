@@ -12,7 +12,9 @@
 // has question clips.
 //
 // Each type supplies a plan module that decides the voice and preset per item:
-//   at  — scripts/toeflTts/atAudioPlan.js   voice and register from the item's STATUS
+//   at   — scripts/toeflTts/atAudioPlan.js    voice and register from the item's STATUS
+//   lta  — scripts/toeflTts/ltaAudioPlan.js   voice from lta_voice_manifest.json (rotation default)
+//   lcr  — scripts/toeflTts/lcrAudioPlan.js   voice from lcr_voice_manifest.json (gender confirmed, accent default)
 //
 // Dry run by default. With --generate, calls ElevenLabs using
 // TOEFL_TTS_API_KEY only (never B10-PP's ELEVENLABS_API_KEY), sends the fixed
@@ -46,6 +48,36 @@ const TYPES = {
       "default applied, not individually confirmed: this preset/voice pair has not been heard. The 2026-09-15 AT " +
       "calibration covered toefl_at_lecture on NA_F and UK_M only; toefl_at_podcast and the other voices are " +
       "calibration values",
+  },
+  lta: {
+    schema: "toefl-lta-audio-manifest/1",
+    build: (corpusRoot, opts) => {
+      const fs = require("fs");
+      const file = path.join(outRoot, "manifests", "lta_voice_manifest.json");
+      if (!fs.existsSync(file)) throw new Error(`no ${file} — run: node scripts/buildToeflVoiceManifest.js --type lta --write`);
+      return require("./toeflTts/ltaAudioPlan").buildLtaPlan(corpusRoot, JSON.parse(fs.readFileSync(file, "utf8")), opts);
+    },
+    confirmed: new Set(),
+    confirmedNote: null,
+    defaultNote:
+      "default applied, not individually confirmed: LTA had no voice fields and no preset. Gender and accent come " +
+      "from the rotation in lta_voice_manifest.json and the preset toefl_lta_announcement is a documented starting " +
+      "value (JC 2026-09-17); nothing here has been heard",
+  },
+  lcr: {
+    schema: "toefl-lcr-audio-manifest/1",
+    build: (corpusRoot, opts) => {
+      const fs = require("fs");
+      const file = path.join(outRoot, "manifests", "lcr_voice_manifest.json");
+      if (!fs.existsSync(file)) throw new Error(`no ${file} — run: node scripts/buildToeflLcrVoiceManifest.js --write`);
+      return require("./toeflTts/lcrAudioPlan").buildLcrPlan(corpusRoot, JSON.parse(fs.readFileSync(file, "utf8")), opts);
+    },
+    confirmed: new Set(),
+    confirmedNote: null,
+    defaultNote:
+      "default applied, not individually confirmed: gender follows LCR's confirmed alternation, but the accent comes " +
+      "from a rotation default (LCR's accent rule is undecided) and the preset toefl_lcr_prompt is a documented " +
+      "starting value (JC 2026-09-17); nothing here has been heard",
   },
 };
 

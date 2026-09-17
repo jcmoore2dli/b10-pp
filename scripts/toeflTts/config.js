@@ -80,6 +80,43 @@ const PRESETS = Object.freeze({
     // and 0.91 matches 0.92. One value for both voices, no per-voice override.
     speed: 0.90,
   },
+
+  // DEFAULT APPLIED, NOT INDIVIDUALLY CONFIRMED (JC 2026-09-17): the three
+  // types below had no preset at all. These are documented starting values,
+  // taken from each Content Spec's own delivery language, and every clip
+  // generated under them is flagged "default" in its manifest until heard.
+  //
+  // "campus-radio-style delivery for radio announcements, more
+  // direct/instructional delivery for in-classroom announcements"
+  // (LTA_Content_Spec v1.0 §6) — one setting for both, clarity first.
+  toefl_lta_announcement: {
+    stability: 0.6,
+    similarity_boost: 0.8,
+    style: 0.1,
+    use_speaker_boost: true,
+    speed: 0.97,
+  },
+  // "Intonation — critical: intonation carries the speech act (question vs.
+  // statement vs. request)" (LCR_Content_Spec v1.4 §6). Lower stability and a
+  // little style keep the contour audible; full speed, since each prompt is
+  // one short utterance.
+  toefl_lcr_prompt: {
+    stability: 0.45,
+    similarity_boost: 0.8,
+    style: 0.2,
+    use_speaker_boost: true,
+    speed: 1.0,
+  },
+  // "natural conversational pacing — this is dialogue, not monologue
+  // delivery" (LTC_Content_Spec v1.1 §6). Same family as the interviewer
+  // preset, the closest confirmed conversational setting.
+  toefl_ltc_conversation: {
+    stability: 0.45,
+    similarity_boost: 0.75,
+    style: 0.15,
+    use_speaker_boost: true,
+    speed: 1.0,
+  },
 });
 
 // Interview short questions (JC 2026-09-16). A question stem of maxWords or

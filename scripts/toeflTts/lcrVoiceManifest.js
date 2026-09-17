@@ -8,22 +8,37 @@
 // The manifest is the record. Once an item has a gender it keeps it across
 // reruns; new items continue the alternation from the item before them.
 // Adjacent same-gender pairs (e.g. after an item is retired) are reported as
-// warnings, never silently re-assigned. Accent and voice stay null until
-// LCR's accent rule is decided.
+// warnings, never silently re-assigned.
+//
+// ACCENT, added 2026-09-17 (JC): LCR's accent rule was still undecided, so
+// accent is assigned by rotation over the item number (NA, UK, AU, NZ — the
+// four regions corpus confirmed on 2026-09-15) and marked accentStatus
+// "default". Gender remains a confirmed rule (the Content Spec's alternation);
+// only the accent is a default, and every clip generated from it is flagged
+// "default applied, not individually confirmed" in the audio manifest.
 
 "use strict";
 
 const fs = require("fs");
 const path = require("path");
+const { voiceConstantFor } = require("./config");
 
 const SCHEMA = "toefl-lcr-voice-manifest/1";
 const LCR_FOLDER = "07_listen_choose_response";
 const START_GENDER = "F";
 const RULE =
   "Alternate speaker gender across LCR items in corpus ID order " +
-  "(LCR Content Spec v1.4 §TTS; ID-order alternation approved by JC 2026-09-15).";
+  "(LCR Content Spec v1.4 §TTS; ID-order alternation approved by JC 2026-09-15). " +
+  "Accent rotates NA/UK/AU/NZ by item number — a DEFAULT, not a ruling: LCR's accent rule " +
+  "is still undecided (JC 2026-09-17), so clips generated from it are flagged default.";
 
 const otherGender = (g) => (g === "F" ? "M" : "F");
+const ACCENT_CYCLE = Object.freeze(["NA", "UK", "AU", "NZ"]);
+// Accent advances every TWO items, not every item: gender already alternates
+// every item, so a per-item accent rotation would only ever produce four of
+// the eight voices (NA_F, UK_M, AU_F, NZ_M). Advancing every two items pairs
+// each accent with both genders and uses all eight.
+const accentFor = (itemId) => ACCENT_CYCLE[Math.floor((idNumber(itemId) - 1) / 2) % ACCENT_CYCLE.length];
 const idNumber = (itemId) => Number(/^LCR-(\d+)$/.exec(itemId)[1]);
 
 // STATUS filename varies by batch; same three patterns as importToeflCorpus.js.
@@ -77,11 +92,14 @@ function assignGenders(activeIds, previous, today) {
       continue;
     }
     const before = items[items.length - 1];
+    const gender = before ? otherGender(before.gender) : START_GENDER;
+    const accent = accentFor(itemId);
     items.push({
       itemId,
-      gender: before ? otherGender(before.gender) : START_GENDER,
-      accent: null,
-      voiceConstant: null,
+      gender,
+      accent,
+      accentStatus: "default",
+      voiceConstant: voiceConstantFor(accent, gender),
       assignedOn: today,
     });
   }
