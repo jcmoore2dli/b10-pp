@@ -2041,7 +2041,10 @@ async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
       // practice focus rather than evidence. Same copy-back reasoning as MCQ's
       // rationales and BAS's correctOrder.
       diffResult: u.diffResult,
-      target: targets[u.utteranceIndex - 1],
+      // Named referenceText, not target: data model v1.17 already defined this
+      // field as perUtteranceResults[].referenceText, and v1.18 settles the
+      // spec name as the one of record (JC 2026-09-17).
+      referenceText: targets[u.utteranceIndex - 1],
       part: utterances[u.utteranceIndex - 1].part,
       matchedClauses: u.matchedClauses,
       capsApplied: u.capsApplied,

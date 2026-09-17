@@ -25,7 +25,7 @@ const path = require("path");
 const admin = require("firebase-admin");
 const { eligibleClips, planUploads, uploadClip, verifyRemote } = require("./toeflTts/storageUpload");
 
-const TYPES = { int: "toefl-int-audio-manifest/1", lar: "toefl-lar-audio-manifest/1" };
+const TYPES = Object.fromEntries(["int", "lar", "at", "lta", "lcr", "ltc"].map((t) => [t, `toefl-${t}-audio-manifest/1`]));
 const typeArg = process.argv.includes("--type") ? process.argv[process.argv.indexOf("--type") + 1] : null;
 if (!TYPES[typeArg]) {
   console.error(`ERROR: --type is required, one of: ${Object.keys(TYPES).join(", ")}`);

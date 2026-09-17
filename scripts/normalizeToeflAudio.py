@@ -25,7 +25,7 @@ import argparse, datetime, hashlib, json, os, shutil, stat, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "toeflTts"))
 import normalize_core as N  # noqa: E402
 
-TYPES = {"int": "toefl-int-audio-manifest/1", "lar": "toefl-lar-audio-manifest/1"}
+TYPES = {t: f"toefl-{t}-audio-manifest/1" for t in ("int", "lar", "at", "lta", "lcr", "ltc")}
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--type", required=True, choices=sorted(TYPES),
