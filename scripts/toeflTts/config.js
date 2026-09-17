@@ -73,7 +73,12 @@ const PRESETS = Object.freeze({
     similarity_boost: 0.85,
     style: 0.0,
     use_speaker_boost: true,
-    speed: 0.92,
+    // was 0.92; JC 2026-09-17 after a speed ladder on LAR-001 u7 (the longest
+    // utterance, 17 words) in both LAR voices, seed 20260915. At 0.92 Justin
+    // read it at 184 WPM against Cecilia's 169; at 0.90 they measure 172 and
+    // 161. The setting moves in ~0.02 steps, so 0.89 and 0.90 are identical
+    // and 0.91 matches 0.92. One value for both voices, no per-voice override.
+    speed: 0.90,
   },
 });
 

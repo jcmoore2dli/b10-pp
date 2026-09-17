@@ -44,18 +44,21 @@ const { buildLarPlan, PRESET, UTTERANCE_COUNT, sha256 } = require("./toeflTts/la
 
 const MANIFEST_SCHEMA = "toefl-lar-audio-manifest/1";
 
-// Cecilia was heard on this preset on 2026-09-15 and judged fine; Justin was
-// not heard on it at all. Recorded per clip so the gap is tracked, not hidden.
+// Both LAR voices have now been heard on this preset: Cecilia on 2026-09-15,
+// and both voices on 2026-09-17's speed ladder, where JC set speed 0.90.
+// Recorded per clip so a later reader knows what was actually judged.
 const CONFIRMATION = {
   TOEFL_TTS_VOICE_NA_F: {
     confirmation: "confirmed",
-    note: "toefl_lar_trainer heard on Cecilia (NA_F) 2026-09-15: judged fine, no changes",
+    note:
+      "toefl_lar_trainer heard on Cecilia (NA_F): 2026-09-15 judged fine, and 2026-09-17 speed " +
+      "ladder on LAR-001 u7 where JC confirmed speed 0.90 for both voices",
   },
   TOEFL_TTS_VOICE_NA_M: {
-    confirmation: "default",
+    confirmation: "confirmed",
     note:
-      "default applied, not individually confirmed: Justin Time (NA_M) has never been heard on " +
-      "toefl_lar_trainer; the 2026-09-15 LAR listening covered Cecilia and Alexander (now out of LAR)",
+      "toefl_lar_trainer heard on Justin Time (NA_M): 2026-09-17 spot check (intro, u1, u7) plus a " +
+      "speed ladder on LAR-001 u7; JC confirmed speed 0.90 by direct listening",
   },
 };
 
