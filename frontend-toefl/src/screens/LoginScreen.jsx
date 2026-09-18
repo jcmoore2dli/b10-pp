@@ -93,7 +93,7 @@ export default function LoginScreen() {
         <h1 className="text-3xl font-bold mb-2" style={{ color: '#1e3a5f' }}>
           TOEFL Prep
         </h1>
-        <p className="text-gray-500 text-base">Reading &amp; Listening Practice — DLIELC</p>
+        <p className="text-gray-500 text-base">Reading, Listening, Speaking &amp; Writing Practice — DLIELC</p>
       </div>
 
       <div className="w-full max-w-sm flex rounded-xl overflow-hidden border border-gray-200 mb-6">
