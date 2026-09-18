@@ -5,6 +5,7 @@ import { db } from '../services/firebase'
 import StubScreen from '../components/StubScreen'
 import MCQRenderer from '../components/MCQRenderer'
 import TypedResponseRenderer from '../components/TypedResponseRenderer'
+import InterviewRecorder from '../components/InterviewRecorder'
 
 // One route for all twelve task types, per the scaffold spec: dispatch by
 // taskType (read from the toeflItems doc) happens inside this component,
@@ -12,8 +13,8 @@ import TypedResponseRenderer from '../components/TypedResponseRenderer'
 //
 // The five MCQ types share one renderer, per data model v1.15 Collection 1.
 // EM and DISC share one typed-response renderer: same {text, wordCount}
-// response shape, different stimulus. The other five are separately scheduled
-// and deliberately not built here.
+// response shape, different stimulus. INT has its own recorder (four spoken
+// clips). The other four are separately scheduled and deliberately not built here.
 const MCQ_TYPES = ['AP', 'AT', 'RDL', 'LCR', 'LTA']
 const TYPED_TYPES = ['EM', 'DISC']
 
@@ -68,11 +69,15 @@ export default function ItemScreen() {
     return <TypedResponseRenderer itemId={itemId} />
   }
 
+  if (taskType === 'INT') {
+    return <InterviewRecorder itemId={itemId} />
+  }
+
   return (
     <StubScreen
       route={`/item/${itemId}`}
       title="Item"
-      note={`taskType = ${taskType}. Renderer for this type is not built yet — only ${[...MCQ_TYPES, ...TYPED_TYPES].join(', ')} are live.`}
+      note={`taskType = ${taskType}. Renderer for this type is not built yet — only ${[...MCQ_TYPES, ...TYPED_TYPES, 'INT'].join(', ')} are live.`}
     />
   )
 }
