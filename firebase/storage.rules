@@ -1,10 +1,37 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /audio/{allPaths=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null
-        && request.auth.token.b10Id != null;
+
+    // TOEFL enrollment gate (2026-09-18), mirroring hasToeflAccess() in
+    // firestore.rules. TOEFL and B10-PP share one Auth pool, and the old
+    // /audio/{allPaths=**} rule let every signed-in account read all TOEFL
+    // listening audio. Only callers who already passed request.auth != null
+    // reach this, so the token is safe to read.
+    function hasToeflAccess() {
+      // .get() with a default: most tokens carry no toefl or role claim, and
+      // a missing property would otherwise be an evaluation error.
+      return request.auth.token.get('toefl', false) == true ||
+        request.auth.token.get('role', '') in ['instructor', 'admin'];
+    }
+
+    // One match for all of audio/, split on the first segment. A separate
+    // match for audio/toefl/** would not narrow anything: Storage allows a
+    // request if ANY matching rule allows it, so the broad rule has to carry
+    // the exception itself. {rest=**} matches zero or more segments (rules
+    // v2), so files directly under audio/ still match with top = file name.
+    match /audio/{top}/{rest=**} {
+      // TOEFL stimulus audio: enrolled students and staff only. Everything
+      // else under audio/ is unchanged (any signed-in account).
+      allow read: if request.auth != null &&
+        (top != "toefl" || hasToeflAccess());
+
+      // Unchanged for B10-PP and for student recordings, which live under
+      // audio/{b10Id}/... (TOEFL's included: audio/{b10Id}/toefl_{attemptId}/).
+      // audio/toefl/ itself is stimulus, written only by the admin-SDK upload
+      // scripts, which bypass rules; no client may write there.
+      allow write: if request.auth != null &&
+        request.auth.token.get('b10Id', null) != null &&
+        top != "toefl";
     }
   }
 }

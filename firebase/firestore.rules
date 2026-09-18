@@ -405,8 +405,19 @@ match /accessCodes/{codeId} {
         request.auth.token.b10Id == studentId;
     }
 
+    // TOEFL enrollment gate (2026-09-18). TOEFL and B10-PP share one Auth
+    // pool and one set of claims, so signedIn() let every B10-PP student read
+    // all TOEFL items. TOEFL students now carry an explicit `toefl: true`
+    // custom claim (scripts/setToeflClaim.js, which merges, never replaces);
+    // instructors and admins pass by role. Mirrored in storage.rules for
+    // audio/toefl/**.
+    function hasToeflAccess() {
+      return signedIn() &&
+        (request.auth.token.get('toefl', false) == true || isAdminOrInstructor());
+    }
+
     match /toeflItems/{itemId} {
-      allow read: if signedIn();
+      allow read: if hasToeflAccess();
       allow write: if isAdminOrInstructor();
 
       match /answerKey/{key} {
@@ -417,8 +428,10 @@ match /accessCodes/{codeId} {
 
     match /toeflAttempts/{attemptId} {
       allow read: if isOwner(resource.data.studentId) || isAdminOrInstructor();
-      allow create: if isOwner(request.resource.data.studentId);
-      allow update: if isOwner(resource.data.studentId) &&
+      // Creating and continuing an attempt need enrollment too. Reading one's
+      // own existing documents does not: that is ownership, not new access.
+      allow create: if isOwner(request.resource.data.studentId) && hasToeflAccess();
+      allow update: if isOwner(resource.data.studentId) && hasToeflAccess() &&
         request.resource.data.studentId == resource.data.studentId &&
         request.resource.data.itemId == resource.data.itemId;
       allow delete: if false;
@@ -441,7 +454,9 @@ match /accessCodes/{codeId} {
     // else, which only a client trying to fabricate a timestamp would do.
     match /toeflSubmissions/{submissionId} {
       allow read: if isOwner(resource.data.studentId) || isAdminOrInstructor();
-      allow create: if isOwner(request.resource.data.studentId) &&
+      // hasToeflAccess(): a submission starts paid scoring (Deepgram and
+      // Anthropic), so an unenrolled account must not be able to create one.
+      allow create: if isOwner(request.resource.data.studentId) && hasToeflAccess() &&
         !('perQuestionResults' in request.resource.data) &&
         (!('scoredAt' in request.resource.data) || request.resource.data.scoredAt == null) &&
         !('layerA' in request.resource.data) &&

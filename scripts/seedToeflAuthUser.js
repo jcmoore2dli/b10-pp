@@ -72,9 +72,11 @@ async function main() {
   // The claims every TOEFL rule reads. isOwner() checks b10Id; the staff-route
   // guards in App.jsx check role. A user without these is signed in but denied
   // by every rule, which is the failure this script exists to prevent.
+  // toefl: the enrollment claim hasToeflAccess() requires (2026-09-18).
   await admin.auth().setCustomUserClaims(user.uid, {
     b10Id: B10_ID,
     role: "student",
+    toefl: true,
   });
 
   // Read back rather than assume the write landed.

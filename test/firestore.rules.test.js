@@ -392,9 +392,17 @@ const OWNER_B10 = "TEST-STUDENT-01";
 const OTHER_UID = "auth-uid-student-02";
 const OTHER_B10 = "TEST-STUDENT-02";
 
-// The claim shape a real signed-in student carries, per LoginScreen.jsx.
+// The claim shape a real signed-in TOEFL student carries: B10-PP's own
+// claims (createStudentAccount) plus the TOEFL enrollment claim
+// (scripts/setToeflClaim.js, 2026-09-18).
 function studentDb(uid, b10Id) {
-  return testEnv.authenticatedContext(uid, { b10Id, role: "student" }).firestore();
+  return testEnv.authenticatedContext(uid, { b10Id, role: "student", groupId: "DLIELC", toefl: true }).firestore();
+}
+
+// An ordinary B10-PP student: same pool, same claims, no TOEFL enrollment.
+// Before 2026-09-18 this account could read every TOEFL item.
+function b10OnlyDb(uid, b10Id) {
+  return testEnv.authenticatedContext(uid, { b10Id, role: "student", groupId: "DLIELC" }).firestore();
 }
 
 function instructorDb() {
@@ -633,3 +641,70 @@ describe("toeflAttempts collection", () => {
     await assertFails(deleteDoc(doc(db, "toeflAttempts", "TA-011")));
   });
 });
+
+// ══════════════════════════════════════════════════════════════════════════
+// TOEFL enrollment gate (2026-09-18): hasToeflAccess()
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("TOEFL enrollment gate", () => {
+  const ITEM = { taskType: "AP", status: "active" };
+
+  it("an enrolled TOEFL student can read an item", async () => {
+    await seedToefl("toeflItems", "AP-001", ITEM);
+    await assertSucceeds(getDoc(doc(studentDb(OWNER_UID, OWNER_B10), "toeflItems", "AP-001")));
+  });
+
+  it("a B10-PP student without the toefl claim CANNOT read an item", async () => {
+    await seedToefl("toeflItems", "AP-002", ITEM);
+    await assertFails(getDoc(doc(b10OnlyDb(OWNER_UID, OWNER_B10), "toeflItems", "AP-002")));
+  });
+
+  it("toefl claim must be exactly true (a string does not count)", async () => {
+    await seedToefl("toeflItems", "AP-003", ITEM);
+    const db = testEnv.authenticatedContext(OWNER_UID, { b10Id: OWNER_B10, role: "student", toefl: "true" }).firestore();
+    await assertFails(getDoc(doc(db, "toeflItems", "AP-003")));
+  });
+
+  it("instructors and admins read items by role, without the claim", async () => {
+    await seedToefl("toeflItems", "AP-004", ITEM);
+    await assertSucceeds(getDoc(doc(instructorDb(), "toeflItems", "AP-004")));
+    const admin = testEnv.authenticatedContext("auth-uid-admin", { role: "admin" }).firestore();
+    await assertSucceeds(getDoc(doc(admin, "toeflItems", "AP-004")));
+  });
+
+  it("signed-out and unclaimed accounts cannot read an item", async () => {
+    await seedToefl("toeflItems", "AP-005", ITEM);
+    await assertFails(getDoc(doc(anonDb(), "toeflItems", "AP-005")));
+    await assertFails(getDoc(doc(noClaimsDb(), "toeflItems", "AP-005")));
+  });
+
+  it("answerKey stays staff-only, enrolled or not", async () => {
+    await seedToefl("toeflItems/AP-006/answerKey", "key", { correct: "a" });
+    await assertFails(getDoc(doc(studentDb(OWNER_UID, OWNER_B10), "toeflItems/AP-006/answerKey", "key")));
+  });
+
+  it("a B10-PP student cannot create a TOEFL attempt, even as its owner", async () => {
+    await assertFails(setDoc(doc(b10OnlyDb(OWNER_UID, OWNER_B10), "toeflAttempts", "TA-G1"), VALID_ATTEMPT));
+  });
+
+  it("a B10-PP student cannot create a TOEFL submission (it would start paid scoring)", async () => {
+    await assertFails(setDoc(doc(b10OnlyDb(OWNER_UID, OWNER_B10), "toeflSubmissions", "TS-G1"), VALID_SUBMISSION));
+  });
+
+  it("a B10-PP student cannot update an existing TOEFL attempt", async () => {
+    await seedToefl("toeflAttempts", "TA-G2", VALID_ATTEMPT);
+    await assertFails(updateDoc(doc(b10OnlyDb(OWNER_UID, OWNER_B10), "toeflAttempts", "TA-G2"), { completedAt: null }));
+  });
+
+  it("an enrolled student still creates and completes their own attempt", async () => {
+    const db = studentDb(OWNER_UID, OWNER_B10);
+    await assertSucceeds(setDoc(doc(db, "toeflAttempts", "TA-G3"), VALID_ATTEMPT));
+    await assertSucceeds(updateDoc(doc(db, "toeflAttempts", "TA-G3"), { completedAt: null }));
+  });
+
+  it("an owner can still READ their own existing submission without the claim (ownership, not new access)", async () => {
+    await seedToefl("toeflSubmissions", "TS-G2", VALID_SUBMISSION);
+    await assertSucceeds(getDoc(doc(b10OnlyDb(OWNER_UID, OWNER_B10), "toeflSubmissions", "TS-G2")));
+  });
+});
+
