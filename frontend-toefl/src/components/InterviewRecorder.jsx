@@ -31,13 +31,12 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
 import { useRecorder } from '../hooks/useRecorder'
+import { useAudioPlayer, useMicCheck } from '../hooks/audioPlayback'
+import { MicCheck, Shell, Button, Center } from './recorderUi'
 import {
   INT_QUESTION_COUNT, RESPONSE_MS, TRANSITION_MS, MIN_RESPONSE_MS,
   findAudioClip, missingAudio, nextQuestionIndex, upsertClip, clipStoragePath, clipEntry, buildSubmission,
 } from '../lib/interviewFlow'
-
-const LEVEL_THRESHOLD = 0.04   // pre-flight: RMS the meter must reach once ("say a few words")
-const TONE_MS = 150
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -55,14 +54,11 @@ export default function InterviewRecorder({ itemId }) {
   const [resumeAt, setResumeAt] = useState(null)          // 0-based, or null
   const [message, setMessage] = useState(null)
   const [elapsedMs, setElapsedMs] = useState(0)
-  const [level, setLevel] = useState(0)
-  const [heardSignal, setHeardSignal] = useState(false)
-  const [micTestOn, setMicTestOn] = useState(false)     // meter started by a tap (Chrome keeps an untapped AudioContext suspended)
 
   const attemptRef = useRef(null)        // { id, clips }
   const urlsRef = useRef({})             // 'intro' | 'q1'..'q4' -> download URL
-  const audioElRef = useRef(null)        // ONE element for every clip (iOS: unlocked by the Start tap)
-  const audioCtxRef = useRef(null)
+  const player = useAudioPlayer()        // one <audio> + AudioContext, unlocked by a tap (recorderUi)
+  const mic = useMicCheck(player, phase === 'preflight')
   const runRef = useRef(0)               // bumped on unmount; stale async flows stop
   const finishingRef = useRef(false)     // one finish per question (Stop vs auto-stop)
   const currentQRef = useRef(0)
@@ -151,49 +147,8 @@ export default function InterviewRecorder({ itemId }) {
     })()
   }, [item, studentId, itemId])
 
-  // ── Pre-flight mic check with a live level meter ───────────────────────────
-  // Runs only after the "Test my microphone" tap, which also created and
-  // resumed the AudioContext; a context made outside a tap stays suspended and
-  // the meter would read zero forever.
-  useEffect(() => {
-    if (phase !== 'preflight' || !micTestOn) return
-    let stream = null, raf = null, stopped = false
-    ;(async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-        if (stopped) { stream.getTracks().forEach((t) => t.stop()); return }
-        const ctx = audioCtxRef.current
-        const analyser = ctx.createAnalyser()
-        analyser.fftSize = 1024
-        ctx.createMediaStreamSource(stream).connect(analyser)
-        const buf = new Float32Array(analyser.fftSize)
-        const loop = () => {
-          analyser.getFloatTimeDomainData(buf)
-          const rms = Math.sqrt(buf.reduce((s, v) => s + v * v, 0) / buf.length)
-          setLevel(rms)
-          if (rms > LEVEL_THRESHOLD) setHeardSignal(true)
-          raf = requestAnimationFrame(loop)
-        }
-        loop()
-      } catch (err) {
-        if (!stopped) setMessage(err?.name === 'NotAllowedError'
-          ? 'Microphone access was denied. Please allow microphone access and reload the page.'
-          : 'Could not access your microphone. Please check it and reload the page.')
-      }
-    })()
-    return () => {
-      stopped = true
-      if (raf) cancelAnimationFrame(raf)
-      stream?.getTracks().forEach((t) => t.stop())
-    }
-  }, [phase, micTestOn])
-
-  // ── Unmount: stop every flow and every sound (the hook frees the mic) ───────
-  useEffect(() => () => {
-    runRef.current++
-    audioElRef.current?.pause()
-    audioCtxRef.current?.close?.()
-  }, [])
+  // ── Unmount: stop every flow (useAudioPlayer stops sound, useRecorder frees the mic)
+  useEffect(() => () => { runRef.current++ }, [])
 
   // ── Countdown tick while recording ─────────────────────────────────────────
   const getRecordedMs = rec.getRecordedMs   // stable: the recorder is created once
@@ -212,29 +167,6 @@ export default function InterviewRecorder({ itemId }) {
     return () => window.removeEventListener('beforeunload', warn)
   }, [phase])
 
-  // Plays one clip on the shared element. play() is called synchronously, so
-  // the first call can be made inside the Start tap (iOS autoplay rule).
-  const playClip = useCallback((url) => {
-    const el = audioElRef.current
-    return new Promise((resolve, reject) => {
-      el.onended = () => resolve()
-      el.onerror = () => reject(new Error('audio playback failed'))
-      el.src = url
-      el.play().catch(reject)
-    })
-  }, [])
-
-  const tone = useCallback(async () => {
-    const ctx = audioCtxRef.current
-    if (!ctx) return
-    const osc = ctx.createOscillator(), gain = ctx.createGain()
-    osc.frequency.value = 880
-    gain.gain.value = 0.15
-    osc.connect(gain).connect(ctx.destination)
-    osc.start(); osc.stop(ctx.currentTime + TONE_MS / 1000)
-    await sleep(TONE_MS)   // the tone ends before recording begins, so it is not in the clip
-  }, [])
-
   // ── One question: play once, tone, record ──────────────────────────────────
   // `firstPlay`, when given, is the question's playback already started inside
   // the Start tap; otherwise there is a transition beat first.
@@ -251,12 +183,12 @@ export default function InterviewRecorder({ itemId }) {
         setPhase('transition')
         await sleep(TRANSITION_MS)
         if (!live()) return
-        playing = playClip(urlsRef.current[`q${i + 1}`])
+        playing = player.play(urlsRef.current[`q${i + 1}`])
       }
       setPhase('playing')
       await playing
       if (!live()) return
-      await tone()
+      await player.tone()   // ends before recording starts, so it is not in the clip
       if (!live()) return
       const started = await rec.start()
       if (!live()) return
@@ -272,7 +204,7 @@ export default function InterviewRecorder({ itemId }) {
       setMessage('The question audio could not be played. Check your connection, then try again.')
       setPhase('retryQuestion')
     }
-  }, [playClip, tone, rec])
+  }, [player, rec])
 
   // ── Submission: once, after all four clips ─────────────────────────────────
   const submit = useCallback(async () => {
@@ -350,34 +282,25 @@ export default function InterviewRecorder({ itemId }) {
     finishQuestion(await rec.stop())
   }
 
-  function handleMicTest() {
-    if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
-    audioCtxRef.current.resume?.()
-    setMessage(null)
-    setMicTestOn(true)
-  }
-
   // ── Start (or resume): a user tap, so audio may play ───────────────────────
   function handleStart() {
-    if (!audioElRef.current) audioElRef.current = new Audio()
-    if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
-    audioCtxRef.current.resume?.()
+    player.unlock()
     const start = resumeAt ?? 0
     if (start >= INT_QUESTION_COUNT) { submit(); return }     // all clips uploaded earlier; only the submission is missing
     if (start === 0) {
-      const intro = playClip(urlsRef.current.intro)            // play() inside the tap
+      const intro = player.play(urlsRef.current.intro)         // play() inside the tap
       setPhase('intro')
       const token = runRef.current
       intro.then(() => { if (token === runRef.current) runQuestion(0) })
         .catch(() => { if (token === runRef.current) { setMessage('The introduction could not be played. Check your connection, then start again.'); setPhase('preflight') } })
     } else {
-      runQuestion(start, playClip(urlsRef.current[`q${start + 1}`]))
+      runQuestion(start, player.play(urlsRef.current[`q${start + 1}`]))
     }
   }
 
   function handleReplayQuestion() {
     // A tap again, so playback is allowed even if the element lost its unlock.
-    runQuestion(currentQRef.current, playClip(urlsRef.current[`q${currentQRef.current + 1}`]))
+    runQuestion(currentQRef.current, player.play(urlsRef.current[`q${currentQRef.current + 1}`]))
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -402,21 +325,9 @@ export default function InterviewRecorder({ itemId }) {
             After each question you will hear a short tone — then speak your answer. You have up to
             45 seconds, and you can stop early.
           </p>
-          {resumeAt < INT_QUESTION_COUNT && (
-            !micTestOn ? (
-              <div className="mb-4"><Button onClick={handleMicTest}>Test my microphone</Button></div>
-            ) : (
-              <>
-                <p className="text-sm font-semibold mb-2">Microphone check — say a few words.</p>
-                <LevelMeter level={level} />
-                <p className="text-xs text-gray-500 mt-2 mb-4">
-                  {heardSignal ? 'Your microphone is working.' : 'Waiting to hear you…'}
-                </p>
-              </>
-            )
-          )}
+          {resumeAt < INT_QUESTION_COUNT && <MicCheck check={mic} />}
           {message && <p className="text-red-600 text-sm mb-3">{message}</p>}
-          <Button onClick={handleStart} disabled={resumeAt < INT_QUESTION_COUNT && !heardSignal}>
+          <Button onClick={handleStart} disabled={resumeAt < INT_QUESTION_COUNT && !mic.heard}>
             {resumeAt >= INT_QUESTION_COUNT ? 'Submit your answers'
               : resumeAt > 0 ? `Resume at Question ${resumeAt + 1} of ${INT_QUESTION_COUNT}`
               : 'Start the interview'}
@@ -484,49 +395,10 @@ export default function InterviewRecorder({ itemId }) {
   )
 }
 
-function Center({ big, small }) {
-  return (
-    <div className="text-center py-10">
-      <p className="text-xl font-semibold">{big}</p>
-      {small && <p className="text-sm text-gray-500 mt-2">{small}</p>}
-    </div>
-  )
-}
-
-function LevelMeter({ level }) {
-  const pct = Math.min(100, Math.round((level / 0.2) * 100))
-  return (
-    <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden" aria-label="microphone level">
-      <div className="h-full bg-green-500 transition-[width] duration-75" style={{ width: `${pct}%` }} />
-    </div>
-  )
-}
-
 function Progress({ done }) {
   return (
     <p className="text-xs text-gray-400 text-center mt-6">
       {done} of {INT_QUESTION_COUNT} answers saved
     </p>
-  )
-}
-
-function Button({ onClick, disabled, danger, children }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`w-full py-3 rounded-lg text-white text-sm font-semibold disabled:opacity-40 ${danger ? 'bg-red-600' : ''}`}
-      style={danger ? undefined : { backgroundColor: '#1e3a5f' }}
-    >
-      {children}
-    </button>
-  )
-}
-
-function Shell({ children }) {
-  return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-md p-6">{children}</div>
-    </div>
   )
 }
