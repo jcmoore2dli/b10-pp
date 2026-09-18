@@ -20,8 +20,9 @@
 //   INT (scoreInterview / buildInterviewInput):
 //     toeflAttempts.interviewClips[i].transcriptStatus   'complete' | 'error'
 //     toeflSubmissions.responseContent.transcripts       [{questionIndex,
-//       transcript, deliveryEvidence, sttMeta}], 0-based, the shape
-//       scripts/seedToeflIntFixture.js defines
+//       transcript, speechDetected, deliveryEvidence, sttMeta}], 0-based, the
+//       shape scripts/seedToeflIntFixture.js defines plus speechDetected
+//       (false when a recording was transcribed but no words were heard)
 //   LAR (scoreListenAndRepeat):
 //     toeflSubmissions.responseContent.transcript, .wordTimings (integer ms),
 //     .sttMeta. Exactly B10-PP's Stage 00 (index.js step 13b): UNFILTERED
@@ -154,7 +155,13 @@ async function transcribeInterview({
         clip: { ...clip, transcriptStatus: "complete" },
         entry: {
           questionIndex: clip.questionIndex,
-          transcript,   // raw Pass 1 text, unmodified (invariant 1)
+          transcript,   // raw Pass 1 text, unmodified (invariant 1), "" when silent
+          // Recorded and transcribed, but no words heard. The stored transcript
+          // stays the raw empty string; the scorer turns it into the
+          // [RECORDED, NO SPEECH DETECTED] marker in the model's input, and
+          // this flag lets instructor/results views tell it apart without
+          // re-deriving it.
+          speechDetected: transcript.trim() !== "",
           deliveryEvidence: deliveryEvidence(words, clip.durationSeconds),
           sttMeta: buildSttMeta(words),
         },

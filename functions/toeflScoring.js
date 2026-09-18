@@ -190,7 +190,7 @@ const DISC_FLAGS = new Set([
   "INCOMPLETE_DATA",
 ]);
 
-// Interview's closed lists, from TOEFL_Interview_Scoring_Prompt_LayerAB_v1_1.md.
+// Interview's closed lists, from TOEFL_Interview_Scoring_Prompt_LayerAB_v1_2.md (unchanged since v1.1).
 // Six features and five flags — the largest set of the three constructed-
 // response types, because INT is the only one with delivery evidence to judge
 // (Fluency signals, Intelligibility) on top of the text.
@@ -265,6 +265,44 @@ const DELIVERY_PAUSE_THRESHOLDS = { long: 1.5, severe: 2.5 };
 // interviewClips is the four-clip parent shape; the prompt's OUTPUT requires
 // exactly four entries in each array).
 const INT_QUESTION_COUNT = 4;
+
+// The literal tokens the Interview input contract passes in place of a
+// transcript, so the model never has to infer band 0 from a missing or blank
+// line. Both are band 0; the reason label differs, for the instructor:
+//   [NO RECORDING]                  storagePath absent: the student never
+//                                   recorded. band0Gate "no response".
+//   [RECORDED, NO SPEECH DETECTED]  a recording exists and Deepgram succeeded
+//                                   but heard no words (empty or whitespace
+//                                   transcript), possibly a mic or room
+//                                   problem. band0Gate "recorded, no speech"
+//                                   (corpus ruling 2026-09-18, strings
+//                                   pending corpus confirmation).
+// A transcription FAILURE is neither: the model is never called (see
+// buildInterviewInput). The stored transcript stays the raw empty string; the
+// marker exists only in the model's input, like [NO RECORDING].
+//
+// ENFORCED, not requested (corpus, 2026-09-18): "when the trigger synthesizes
+// either marker, it should set score: 0 and the corresponding band0Gate string
+// server-side, unconditionally - not read them back from the model's output at
+// all for these two cases." See pinMarkerQuestions.
+const INT_NO_RECORDING_MARKER = "[NO RECORDING]";
+const INT_NO_SPEECH_MARKER = "[RECORDED, NO SPEECH DETECTED]";
+const INT_MARKER_CASES = {
+  noRecording: { marker: INT_NO_RECORDING_MARKER, band0Gate: "no response" },
+  noSpeech: { marker: INT_NO_SPEECH_MARKER, band0Gate: "recorded, no speech" },
+};
+
+// Which input a question gets: "noRecording", "noSpeech", or "speech". The
+// ONE place the decision is made, so the marker the model is shown and the
+// value the server pins can never disagree. Precedence as in
+// buildInterviewInput: storagePath absence wins. Only called once the
+// transcription-failure check has passed, so a present recording here always
+// has a transcript string.
+function interviewQuestionCase(hasRecording, transcriptText) {
+  if (!hasRecording) return "noRecording";
+  if (typeof transcriptText === "string" && transcriptText.trim() === "") return "noSpeech";
+  return "speech";
+}
 
 // Seven utterances per LAR item, fixed. The importer's LAR parser enforces it
 // (scripts/importToeflCorpus.js — "LAR must have exactly 7 utterances") and the
@@ -1179,7 +1217,7 @@ function buildDiscussionInput({
 
 // INT — Interview. Four questions, one attempt, ONE model call, two parallel
 // four-entry arrays out. Governed by
-// TOEFL_Interview_Scoring_Prompt_LayerAB_v1_1.md, whose "Trigger-side
+// TOEFL_Interview_Scoring_Prompt_LayerAB_v1_2.md, whose "Trigger-side
 // requirements" section specifies this function's five obligations.
 //
 // Requirements 1 and 3 are discharged by the shared helpers parseLayerAB and
@@ -1246,8 +1284,12 @@ async function scoreInterview(db, { submissionId, submission, itemId }) {
   // exactly the keys layerA and layerB — is identical for INT; only what those
   // keys hold differs, and it does not inspect that.
   const parsed = parseLayerAB(raw, ctx);
-  const layerA = validateLayerAArray(parsed.layerA, parsed.layerB, raw, ctx);
-  const layerB = buildLayerBArray(parsed.layerB, layerA, ctx);
+  // Marker questions are pinned BEFORE validation, so the model's entries for
+  // them are never read: not even a malformed entry there can error the
+  // submission (corpus: "not read them back from the model's output at all").
+  const pinned = pinMarkerQuestions(parsed, interviewQuestionCases(submission, attempt), ctx);
+  const layerA = validateLayerAArray(pinned.layerA, pinned.layerB, raw, ctx);
+  const layerB = buildLayerBArray(pinned.layerB, layerA, ctx);
 
   // Nothing is averaged, aggregated, or reduced to a task score. The OUTPUT
   // rules are explicit: "no task score, no average, no 1-6 band anywhere in
@@ -1270,6 +1312,58 @@ async function scoreInterview(db, { submissionId, submission, itemId }) {
   };
 }
 
+// Per-question case for a whole attempt, from the same inputs and the same
+// lookups buildInterviewInput uses (0-based questionIndex on clips and
+// transcripts).
+function interviewQuestionCases(submission, attempt) {
+  const clips = Array.isArray(attempt.interviewClips) ? attempt.interviewClips : [];
+  const transcripts = Array.isArray(submission.responseContent?.transcripts)
+    ? submission.responseContent.transcripts
+    : [];
+  const cases = [];
+  for (let i = 0; i < INT_QUESTION_COUNT; i++) {
+    const clip = clips.find((c) => c && c.questionIndex === i);
+    const entry = transcripts.find((t) => t && t.questionIndex === i);
+    const hasRecording = !!(clip && clip.storagePath);
+    const transcriptText = entry && typeof entry.transcript === "string" ? entry.transcript : null;
+    cases.push(interviewQuestionCase(hasRecording, transcriptText));
+  }
+  return cases;
+}
+
+// Server-side enforcement for the two marker cases. For each such question the
+// model's layerA/layerB entries are replaced, not checked: score 0, the case's
+// band0Gate, empty rationale, empty Layer B (no items, no flags, the fixed
+// label). A correction is logged when the model's entry differed, so prompt
+// drift stays visible during calibration. Non-arrays are passed through
+// untouched for validateLayerAArray to reject as before.
+function pinMarkerQuestions(parsed, cases, ctx) {
+  const layerA = Array.isArray(parsed.layerA) ? [...parsed.layerA] : parsed.layerA;
+  const layerB = Array.isArray(parsed.layerB) ? [...parsed.layerB] : parsed.layerB;
+  if (!Array.isArray(layerA) || !Array.isArray(layerB)) return { layerA, layerB };
+  cases.forEach((kase, i) => {
+    if (kase === "speech") return;
+    const { band0Gate } = INT_MARKER_CASES[kase];
+    const pinA = { questionIndex: i, score: 0, band0Gate, rationale: "" };
+    const pinB = { questionIndex: i, items: [], flags: [], label: LAYER_B_LABEL };
+    const modelA = layerA[i], modelB = layerB[i];
+    const agreed =
+      modelA && modelA.score === 0 && modelA.band0Gate === band0Gate &&
+      (modelA.rationale ?? "") === "" &&
+      modelB && Array.isArray(modelB.items) && modelB.items.length === 0 &&
+      Array.isArray(modelB.flags) && modelB.flags.length === 0;
+    if (!agreed) {
+      logger.warn("scoreInterview: marker question pinned; model output differed", {
+        ...ctx, questionIndex: i, case: kase,
+        model: { score: modelA?.score, band0Gate: modelA?.band0Gate, items: modelB?.items?.length, flags: modelB?.flags },
+      });
+    }
+    layerA[i] = pinA;
+    layerB[i] = pinB;
+  });
+  return { layerA, layerB };
+}
+
 // The prompt doc's input contract, assembled from the item, the attempt's
 // interviewClips, and the submission's per-question transcripts.
 //
@@ -1282,6 +1376,12 @@ async function scoreInterview(db, { submissionId, submission, itemId }) {
 //                       is told "[NO RECORDING]" for that question, and scores
 //                       it band 0 / "no response" / empty Layer B. The other
 //                       three questions score normally.
+//
+//   recorded, silent    per QUESTION.  storagePath present, transcriptStatus
+//                       "complete", transcript empty or whitespace. The model
+//                       IS called, told "[RECORDED, NO SPEECH DETECTED]", and
+//                       scores it band 0 / "recorded, no speech" (corpus,
+//                       2026-09-18): same score as no recording, distinct label.
 //
 //   transcription fail  per ATTEMPT.   storagePath PRESENT but no usable
 //                       transcript. The model is never called at all; this
@@ -1400,12 +1500,17 @@ function renderQuestionBlock({
     `  STEM: ${question.stem}`,
   ];
 
-  if (!hasRecording) {
-    // The literal token the input contract specifies. The model reads this and
-    // scores the question band 0 with band0Gate "no response" — it is not
-    // asked to infer anything from a missing line.
-    lines.push(`  TRANSCRIPT: [NO RECORDING]`);
-    lines.push(`  DELIVERY EVIDENCE: [NO RECORDING]`);
+  // [NO RECORDING] and [RECORDED, NO SPEECH DETECTED]: a literal token on both
+  // lines, never a blank for the model to interpret, and never the "delivery
+  // evidence not available" fallback, which would ask for Layer B on a band-0
+  // question. The score for these questions is pinned server-side anyway
+  // (pinMarkerQuestions); the prompt still names the case (v1.2) so the model's
+  // other three judgments aren't confused by it.
+  const kase = interviewQuestionCase(hasRecording, transcriptText);
+  if (kase !== "speech") {
+    const { marker } = INT_MARKER_CASES[kase];
+    lines.push(`  TRANSCRIPT: ${marker}`);
+    lines.push(`  DELIVERY EVIDENCE: ${marker}`);
     return lines.join("\n");
   }
 

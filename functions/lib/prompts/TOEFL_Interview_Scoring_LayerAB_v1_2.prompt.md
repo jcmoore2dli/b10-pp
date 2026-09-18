@@ -24,7 +24,7 @@ QUESTION [n]:
 
 **Missing or malformed delivery evidence** for any question: do not estimate. Score Layer A from the transcript alone for that question, state in its rationale that delivery could not be assessed, and raise `INCOMPLETE_DATA` in that question's `layerB[n].flags`. Never substitute a default.
 
-**No transcript** for any question — this is the trigger's distinction to make, never yours, and it matters: a student who recorded nothing and a Deepgram call that failed look identical from where you sit, and only one of them is a band 0. The trigger checks Storage: if no recording exists for the question, it passes you `TRANSCRIPT: [NO RECORDING]` and you score that question band 0, `band0Gate: "no response"`, empty Layer B. If a recording exists but transcription failed, the trigger never calls you for this attempt at all — it sets the submission to `scoringStatus: "error"` so the failure is visible and retryable. **You will never be asked to score a system failure as a student's zero.**
+**No transcript** for any question — this is the trigger's distinction to make, never yours, and it matters: a student who recorded nothing and a Deepgram call that failed look identical from where you sit, and only one of them is a band 0. The trigger checks Storage: if no recording exists for the question, it passes you `TRANSCRIPT: [NO RECORDING]` and you score that question band 0, `band0Gate: "no response"`, empty Layer B. A third case: TRANSCRIPT: [RECORDED, NO SPEECH DETECTED] (and the matching DELIVERY EVIDENCE: marker) - a recording exists and transcription succeeded, but no speech was detected: silence, dead air, or a non-verbal sound with nothing to transcribe. Score this question band 0 with band0Gate: "recorded, no speech" - a distinct reason from [NO RECORDING]'s "no response", even though the numeric outcome is identical. The distinction is for instructor review, not scoring: it may signal a technical problem rather than genuine non-attempt. Layer B is empty for this case, same as any band-0 question. If a recording exists but transcription failed, the trigger never calls you for this attempt at all — it sets the submission to `scoringStatus: "error"` so the failure is visible and retryable. **You will never be asked to score a system failure as a student's zero.**
 
 ---
 
@@ -51,7 +51,8 @@ You score all four questions in this one call, and each question is placed on it
 
 Before anything else, decide whether this question's response is scorable at all. It is **band 0** if any of these holds, and in that case you stop: set `score: 0`, name the reason in `band0Gate`, leave `rationale` empty, and do not produce Layer B for that question.
 
-- No response, or the transcript is empty.
+- No recording exists for this question - band0Gate: 'no response'.
+- A recording exists but no speech was detected - band0Gate: 'recorded, no speech'.
 - The speech is entirely unintelligible — the transcript is noise, fragments with no recoverable meaning, or the confidence pattern shows nothing was recognized.
 - Not in English.
 - Entirely copied from the question — the response repeats the stem and adds nothing of its own.

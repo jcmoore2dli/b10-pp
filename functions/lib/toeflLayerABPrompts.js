@@ -66,7 +66,7 @@ const DISC_RUBRIC_PROMPT = loadPrompt(
 );
 
 // INT — Interview. Four questions, one attempt, one call.
-// Source: TOEFL_Interview_Scoring_Prompt_LayerAB_v1_1.md, lines 20-206 — the
+// Source: TOEFL_Interview_Scoring_Prompt_LayerAB_v1_2.md, lines 20-207 — the
 // `## Input contract` section through the end of `## PROMPT`.
 //
 // Same range choice as EM and DISC, and again for a reason verified against
@@ -80,8 +80,11 @@ const DISC_RUBRIC_PROMPT = loadPrompt(
 //
 // Verified byte-identical to the source range at extraction time (diff, not
 // eyeball). No rubric text edited — rubric content is governed, CLAUDE.md.
+// v1.2 (2026-09-18): corpus's approved recorded-but-silent text, JC sign-off;
+// re-extracted from v1.2 and checked against v1.1's extract plus exactly the
+// two approved edits.
 const INT_RUBRIC_PROMPT = loadPrompt(
-  "TOEFL_Interview_Scoring_LayerAB_v1_1.prompt.md"
+  "TOEFL_Interview_Scoring_LayerAB_v1_2.prompt.md"
 );
 
 module.exports = { EM_RUBRIC_PROMPT, DISC_RUBRIC_PROMPT, INT_RUBRIC_PROMPT };

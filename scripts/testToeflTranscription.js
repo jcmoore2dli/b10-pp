@@ -18,6 +18,9 @@
 //      the real scoreListenAndRepeat must report ONLY intelligibility missing.
 //   E. The trigger: claim, then transcribe, then score. On a Deepgram failure
 //      the submission ends "error" and Anthropic is never called.
+//   F. Marker questions ([NO RECORDING], [RECORDED, NO SPEECH DETECTED]) are
+//      pinned server-side: score 0, the case's band0Gate, empty rationale and
+//      Layer B, whatever the model returned for them.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const fs = require("fs");
@@ -123,8 +126,9 @@ section("A. deepgramSTT allowEmpty");
   const tr = db.data["toeflSubmissions/sub1"].responseContent.transcripts;
   eq(tr.map((t) => t.questionIndex), [0, 1, 2, 3], "transcripts 0-based, ordered");
   eq(tr[0].transcript, "I usually uh study alone", "raw transcript, filler kept, unmodified");
+  eq(tr.map((t) => t.speechDetected), [true, false, true, true], "speechDetected false only for the silent answer");
   ok(!tr.some((t) => t.transcript === "CLIENT FORGED"), "client-forged transcript overwritten");
-  eq(tr[1], { questionIndex: 1, transcript: "", deliveryEvidence: null, sttMeta: { provider: "deepgram", model: "nova-2", meanConf: null, minConf: null, wordCount: 0 } }, "silent answer: empty transcript, no evidence, still complete");
+  eq(tr[1], { questionIndex: 1, transcript: "", speechDetected: false, deliveryEvidence: null, sttMeta: { provider: "deepgram", model: "nova-2", meanConf: null, minConf: null, wordCount: 0 } }, "silent answer: empty transcript, no evidence, still complete");
   const ev = tr[0].deliveryEvidence;
   eq([ev.longPauseCount, ev.longPauseTimestamps, ev.severePauseCount, ev.filledPauseCount, ev.durationSeconds],
      [1, "1.5s", 0, 1, 20], "evidence: 2.0 s pause counted at 1.5 s tier only, 1 filler, clip duration");
@@ -209,8 +213,20 @@ section("A. deepgramSTT allowEmpty");
   const text = typeof input === "string" ? input : JSON.stringify(input);
   ok(text.includes("TRANSCRIPT: I usually uh study alone"), "Q1 transcript rendered verbatim");
   ok((text.match(/DELIVERY EVIDENCE:\n/g) || []).length === 3, "real delivery evidence for the 3 spoken answers");
-  ok((text.match(/NOT AVAILABLE/g) || []).length === 1, "only the silent answer falls back to NOT AVAILABLE");
+  ok((text.match(/NOT AVAILABLE/g) || []).length === 0, "silent answer does NOT fall back to delivery NOT AVAILABLE");
+  ok(text.includes("QUESTION 2:") && /QUESTION 2:[\s\S]*?TRANSCRIPT: \[RECORDED, NO SPEECH DETECTED\]\n  DELIVERY EVIDENCE: \[RECORDED, NO SPEECH DETECTED\]/.test(text),
+     "silent answer: both lines carry the [RECORDED, NO SPEECH DETECTED] marker, same shape as [NO RECORDING]");
   ok(!text.includes("[NO RECORDING]"), "a silent recording is not mistaken for no recording");
+  ok(!/TRANSCRIPT: \n/.test(text) && !/TRANSCRIPT: $/m.test(text), "no blank TRANSCRIPT line reaches the model");
+  eq(db.data["toeflSubmissions/sub1"].responseContent.transcripts[1].transcript, "", "stored transcript stays the raw empty string (marker is input-only)");
+  // Whitespace-only transcript is treated the same as empty.
+  const ws = JSON.parse(JSON.stringify(produced)); ws.responseContent.transcripts[1].transcript = "   \n ";
+  const wsText = S.buildInterviewInput({ itemId: "INT-001", submission: ws, item, attempt: db.data["toeflAttempts/att1"], ctx: { submissionId: "sub1", taskType: "INT", itemId: "INT-001" } });
+  ok(/QUESTION 2:[\s\S]*?TRANSCRIPT: \[RECORDED, NO SPEECH DETECTED\]/.test(wsText), "whitespace-only transcript -> same marker");
+  // No recording still gets its own, different marker (precedence: storagePath absence wins).
+  const nr = JSON.parse(JSON.stringify(db.data["toeflAttempts/att1"])); nr.interviewClips[1] = { questionIndex: 1, storagePath: null, durationSeconds: 0, transcriptStatus: "none" };
+  const nrText = S.buildInterviewInput({ itemId: "INT-001", submission: produced, item, attempt: nr, ctx: { submissionId: "sub1", taskType: "INT", itemId: "INT-001" } });
+  ok(/QUESTION 2:[\s\S]*?TRANSCRIPT: \[NO RECORDING\]\n  DELIVERY EVIDENCE: \[NO RECORDING\]/.test(nrText) && !nrText.includes("NO SPEECH"), "no recording keeps [NO RECORDING], never the no-speech marker");
   // And the failure path: an 'error' status makes the scorer refuse, as designed.
   const errAttempt = JSON.parse(JSON.stringify(db.data["toeflAttempts/att1"])); errAttempt.interviewClips[2].transcriptStatus = "error";
   let refused = null;
@@ -286,6 +302,63 @@ section("A. deepgramSTT allowEmpty");
   makeTrigger(db, fakeBucket(files), async (...a) => { dgCalls++; return transcribeOK(...a); });
   await handler({ params: { submissionId: "sub1" }, data: { data: () => db.data["toeflSubmissions/sub1"] } });
   eq(dgCalls, 0, "redelivery of a scored submission: no second Deepgram call (claim)");
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  section("F. server-side enforcement: marker questions pinned, model output never read for them");
+  const LABEL = "practice focus — project diagnostic, not part of the score";
+  const runScored = async ({ attemptClips, transcribe, modelFor }) => {
+    const warns = [];
+    const data = { ...trigData() };
+    data["toeflAttempts/att1"] = { itemId: "INT-001", interviewClips: attemptClips };
+    const dbF = fakeDb(data);
+    let promptSeen = null;
+    class ModelAnthropic { constructor() { this.messages = { create: async (req) => { promptSeen = req.messages[0].content; return { content: [{ text: JSON.stringify(modelFor()) }] }; } }; } }
+    const stubs = {
+      ...scoringStubs,
+      "firebase-functions/logger": { info() {}, warn: (m, d) => warns.push({ m, d }), error() {} },
+      "firebase-functions/v2/firestore": { onDocumentCreated: (opts, h) => { handler = h; return h; } },
+      "firebase-functions/params": { defineSecret: (name) => ({ name, value: () => `${name}-VALUE` }) },
+      "firebase-admin": { firestore: () => dbF, storage: () => ({ bucket: () => fakeBucket(files) }) },
+      "@anthropic-ai/sdk": ModelAnthropic,
+      "firebase-admin/firestore": { FieldValue: { serverTimestamp: () => "TS" } },
+      "./lib/toeflTranscription": { TRANSCRIBERS: { INT: (args) => T.transcribeInterview({ ...args, transcribe, sleep: async () => {} }) } },
+    };
+    loadWith(path.join(FN, "toeflScoring.js"), stubs);
+    await handler({ params: { submissionId: "sub1" }, data: { data: () => dbF.data["toeflSubmissions/sub1"] } });
+    return { sub: dbF.data["toeflSubmissions/sub1"], warns, promptSeen };
+  };
+  const speechA = (i, score) => ({ questionIndex: i, score, band0Gate: false, rationale: `model rationale q${i}` });
+  const speechB = (i) => ({ questionIndex: i, items: [{ feature: "Elaboration", observation: "o", target: "t" }], flags: [], label: LABEL });
+  // Q1 speech, Q2 recorded-but-silent, Q3 speech, Q4 NO recording.
+  const clipsF = CLIPS.map((c, i) => (i === 3 ? { questionIndex: 3, storagePath: null, durationSeconds: 0, transcriptStatus: "none" } : c));
+  const wrongModel = () => ({
+    layerA: [speechA(0, 4), { questionIndex: 1, score: 3, band0Gate: false, rationale: "invented" }, speechA(2, 2), { questionIndex: 3, score: "banana", band0Gate: 7 }],
+    layerB: [speechB(0), speechB(1), speechB(2), { questionIndex: 3, items: "nope", flags: ["INCOMPLETE_DATA"] }],
+  });
+  let r = await runScored({ attemptClips: clipsF, transcribe: transcribeOK, modelFor: wrongModel });
+  eq(r.sub.scoringStatus, "scored", "malformed model entry on a marker question does NOT error the submission");
+  eq(r.sub.layerA[1], { questionIndex: 1, score: 0, band0Gate: "recorded, no speech", rationale: "" }, "silent answer pinned: 0 / 'recorded, no speech' / empty rationale");
+  eq(r.sub.layerB[1], { questionIndex: 1, items: [], flags: [], label: LABEL }, "silent answer: empty Layer B");
+  eq(r.sub.layerA[3], { questionIndex: 3, score: 0, band0Gate: "no response", rationale: "" }, "no recording pinned: 0 / 'no response'");
+  eq(r.sub.layerB[3], { questionIndex: 3, items: [], flags: [], label: LABEL }, "no recording: empty Layer B (model's flag not read)");
+  eq([r.sub.layerA[0].score, r.sub.layerA[2].score], [4, 2], "speech questions keep the model's own scores");
+  eq(r.sub.layerB[0].items.length, 1, "speech questions keep the model's Layer B");
+  eq(r.warns.filter((w) => /marker question pinned/.test(w.m)).map((w) => [w.d.questionIndex, w.d.case]), [[1, "noSpeech"], [3, "noRecording"]], "each correction logged with its case");
+  ok(/QUESTION 2:[\s\S]*?\[RECORDED, NO SPEECH DETECTED\]/.test(r.promptSeen) && /QUESTION 4:[\s\S]*?\[NO RECORDING\]/.test(r.promptSeen), "the model was shown the matching markers");
+
+  const rightModel = () => ({
+    layerA: [speechA(0, 4), { questionIndex: 1, score: 0, band0Gate: "recorded, no speech", rationale: "" }, speechA(2, 2), { questionIndex: 3, score: 0, band0Gate: "no response", rationale: "" }],
+    layerB: [speechB(0), { questionIndex: 1, items: [], flags: [], label: LABEL }, speechB(2), { questionIndex: 3, items: [], flags: [], label: LABEL }],
+  });
+  r = await runScored({ attemptClips: clipsF, transcribe: transcribeOK, modelFor: rightModel });
+  eq(r.sub.scoringStatus, "scored", "agreeing model: scored");
+  eq(r.warns.filter((w) => /marker question pinned/.test(w.m)).length, 0, "no correction logged when the model already agreed");
+
+  // No marker questions at all: nothing pinned, nothing logged.
+  const allSpeech = async (k, buf, mime, o) => ({ transcript: "words here", words: [W("words", 0, 0.4), W("here", 0.5, 0.9)], allWords: [] });
+  r = await runScored({ attemptClips: CLIPS, transcribe: allSpeech, modelFor: () => ({ layerA: [0, 1, 2, 3].map((i) => speechA(i, 3)), layerB: [0, 1, 2, 3].map(speechB) }) });
+  eq(r.sub.layerA.map((a) => a.score), [3, 3, 3, 3], "all-speech attempt: model scores untouched");
+  eq(r.warns.filter((w) => /marker question pinned/.test(w.m)).length, 0, "nothing pinned");
 
   console.log(`\n${passes} passed, ${failures} failed`);
   if (failures === 0) console.log("TOEFL TRANSCRIPTION PASSED — Pass 1 reused, scorer contract met, failures never reach the model.");
