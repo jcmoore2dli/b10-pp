@@ -47,6 +47,7 @@ const stubs = {
   // must appear here or the eval throws at load time. The real module: pure
   // logic, no network, no Firestore, no model call.
   "./lib/lar": require("../functions/lib/lar"),
+  "./lib/lar/intelligibility": require("../functions/lib/lar/intelligibility"),
   "./lib/toeflTranscription": require("../functions/lib/toeflTranscription"),
 };
 const src =

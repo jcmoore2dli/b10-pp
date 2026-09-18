@@ -15,7 +15,7 @@
 //      buildInterviewInput, which must accept it and render real transcripts
 //      and delivery evidence, not the "NOT AVAILABLE" fallback.
 //   D. transcribeListenAndRepeat: B10-PP Stage 00 on toeflSubmissions, then
-//      the real scoreListenAndRepeat must report ONLY intelligibility missing.
+//      the real scoreListenAndRepeat must then score, computing intelligibility itself.
 //   E. The trigger: claim, then transcribe, then score. On a Deepgram failure
 //      the submission ends "error" and Anthropic is never called.
 //   F. Marker questions ([NO RECORDING], [RECORDED, NO SPEECH DETECTED]) are
@@ -256,9 +256,14 @@ section("A. deepgramSTT allowEmpty");
     "toeflItems/LAR-001": { utterances: [1, 2, 3, 4, 5, 6, 7].map((i) => ({ utteranceIndex: i, part: "greeting" })) },
     "toeflItems/LAR-001/restricted/heard": { utterances: [1, 2, 3, 4, 5, 6, 7].map((i) => ({ utteranceIndex: i, text: `Sentence ${i}.` })) },
   });
-  let larErr = null;
-  try { await S.scoreListenAndRepeat(larDb, { submissionId: "lar1", submission: larOut, itemId: "LAR-001" }); } catch (e) { larErr = e.message; }
-  ok(larErr && /missing intelligibility \(/.test(larErr), `LAR scorer now missing ONLY intelligibility: ${larErr}`);
+  // With transcription's wordTimings and the screen's boundaries, the scorer
+  // has everything: intelligibility is computed server-side, so nothing is
+  // missing and the submission scores end to end.
+  let larErr = null, larScored = null;
+  try { larScored = await S.scoreListenAndRepeat(larDb, { submissionId: "lar1", submission: larOut, itemId: "LAR-001" }); } catch (e) { larErr = e.message; }
+  ok(!larErr && larScored && larScored.perUtteranceResults.length === 7, `LAR scorer scores from transcription output alone: ${larErr}`);
+  ok(larScored && larScored.perUtteranceResults.every((r) => r.intelligibility && ["clear", "uncertain"].includes(r.intelligibility.verdict)),
+    "every utterance carries a server-computed intelligibility verdict (clear/uncertain only)");
 
   // ═══════════════════════════════════════════════════════════════════════════
   section("E. trigger: claim -> transcribe -> score; failure never reaches Anthropic");

@@ -32,6 +32,9 @@ const {
 // LAR's comparer. Deterministic and self-contained — no network, no model
 // call, no Firestore. Stages 01-06 with their own suite (npm run test:lar).
 const { compareLAR } = require("./lib/lar");
+// LAR's intelligibility producer: the verdict compareLAR takes as injected.
+// Pure, same inputs as the comparer; see its header for JC's 2026-09-18 rules.
+const { assessIntelligibility } = require("./lib/lar/intelligibility");
 // Modular import deliberately: under the functions emulator, the namespaced
 // admin.firestore.FieldValue is undefined (the runtime wraps admin.firestore
 // without carrying its statics). This form is unaffected, and is the v13
@@ -331,6 +334,10 @@ const LAR_FEATURES = new Set([
 // cannot arise here: a LAR submission missing its runtime inputs throws as a
 // data failure long before Layer B is built.
 const LAR_FLAGS = new Set(["INTELLIGIBILITY_UNCERTAIN", "PARTIAL_ATTEMPT"]);
+
+// What a student reads on an utterance capped by an automated "uncertain"
+// verdict. Neutral and reasonless by ruling (JC 2026-09-18).
+const LAR_FLAGGED_RATIONALE = "Flagged for your instructor to listen to.";
 
 // Four rationales plus up to twelve item/observation/target triples from one
 // call — materially more output than EM or DISC. Raised above their 2048 for
@@ -1933,11 +1940,15 @@ function larRationale(u, overall) {
   // capped to 4 by uncertain delivery would otherwise read "Repeated exactly
   // and intelligibly" next to a 4. Both lowering steps are handled before the
   // matched-clause path is reached.
+  //
+  // Capped by an uncertain verdict: neutral, and deliberately no reason (JC
+  // 2026-09-18). The verdict comes from recognizer confidence, which cannot
+  // tell unclear speech from an accent it handles badly, so the student is
+  // told only that a person will listen.
   if (u.band < u.cappedBand) {
-    return (
-      `Delivery was ${verdict}, so band ${u.cappedBand} is withheld — ` +
-      `the repetition itself was otherwise ${u.bandLabel}.`
-    );
+    return verdict === "uncertain"
+      ? LAR_FLAGGED_RATIONALE
+      : `Band ${u.cappedBand} is withheld — the repetition itself was otherwise ${u.bandLabel}.`;
   }
   const loweredBy = (u.capsApplied || []).find((c) => c.lowered);
   if (loweredBy) {
@@ -2022,13 +2033,10 @@ function larLayerB(u, overall) {
         "Carry the whole sentence through to its end before correcting detail."
       );
     }
-    if (verdict !== "clear") {
-      add(
-        "Intelligibility",
-        `Delivery was ${verdict} for this utterance.`,
-        "Slow slightly and finish each word — clarity is part of the score."
-      );
-    }
+    // No "Intelligibility" item, ever (JC 2026-09-18): no inferred
+    // pronunciation feedback of any kind. The verdict comes from recognizer
+    // confidence, which is not evidence of how the student should speak. The
+    // INTELLIGIBILITY_UNCERTAIN flag below routes it to an instructor instead.
   }
 
   const flags = [];
@@ -2052,15 +2060,13 @@ function larLayerB(u, overall) {
   return { items, flags, label: LAYER_B_LABEL };
 }
 
-// WHY THIS THROWS TODAY. None of the three runtime inputs has a producer yet:
-// wordTimings and sttMeta are written by B10-PP's own pipeline into the
-// `submissions` collection (functions/index.js Stage 00), NOT into
-// toeflSubmissions; responseBoundaries has no producer anywhere in the repo;
-// and intelligibility is an injected verdict the comparer refuses to infer.
-// Week 1's transcription work is what lands them. Until then this is a data
-// failure and is reported as one, naming exactly which inputs are absent — the
-// same discipline BAS established: a missing input is never a student's zero.
-// When the inputs land, the fix is to stop throwing, not to write this.
+// RUNTIME INPUTS. wordTimings come from the transcription step
+// (lib/toeflTranscription.js), responseBoundaries from the LAR recording
+// screen, and the intelligibility verdict is computed here from those two
+// (lib/lar/intelligibility.js), never taken from the client. A missing input
+// is a data failure and is reported as one, naming exactly which inputs are
+// absent: the same discipline BAS established, a missing input is never a
+// student's zero.
 async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
   const ctx = { submissionId, taskType: "LAR", itemId };
 
@@ -2127,29 +2133,40 @@ async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
   const missing = [];
   if (!Array.isArray(rc.wordTimings)) missing.push("wordTimings");
   if (!Array.isArray(rc.responseBoundaries)) missing.push("responseBoundaries");
-  if (!rc.intelligibility) missing.push("intelligibility");
 
   if (missing.length) {
     logger.error("scoreListenAndRepeat: runtime inputs not available", {
       ...ctx,
       missing,
       note:
-        "LAR scoring needs word-level timings, per-utterance response " +
-        "boundaries, and an injected intelligibility verdict. None has a " +
-        "producer yet — Week 1 transcription work lands them. The comparer " +
-        "itself is built and tested; this is missing input, not missing logic.",
+        "LAR scoring needs word-level timings (written by the transcription " +
+        "step) and per-utterance response boundaries (written by the LAR " +
+        "recording screen). This is missing input, not missing logic.",
     });
     throw new Error(
       `submission ${submissionId}: LAR cannot be scored — responseContent is ` +
-        `missing ${missing.join(", ")} (no producer exists yet)`
+        `missing ${missing.join(", ")}`
     );
   }
+
+  // Intelligibility is computed HERE, server-side, every time. Whatever a
+  // client wrote into responseContent.intelligibility is ignored: the create
+  // rule does not validate responseContent, and a client-supplied verdict
+  // could otherwise lift a cap or withhold a response.
+  if (rc.intelligibility !== undefined) {
+    logger.warn("scoreListenAndRepeat: ignoring client-written intelligibility", ctx);
+  }
+  const intelligibility = assessIntelligibility({
+    wordTimings: rc.wordTimings,
+    boundaries: rc.responseBoundaries,
+    targets,
+  });
 
   const result = compareLAR({
     targets,
     boundaries: rc.responseBoundaries,
     wordTimings: rc.wordTimings,
-    intelligibility: rc.intelligibility,
+    intelligibility,
   });
 
   // DEFERRED, deliberately: the withheld-status design question.
@@ -2183,11 +2200,41 @@ async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
   // entry carrying EM/DISC/INT's layerA/layerB shape. NO aggregate band: the
   // spec forbids a response-level rollup outright, matching INT's precedent,
   // so there is nothing to total here.
+  const assessed = new Map(intelligibility.perUtterance.map((p) => [p.utteranceIndex, p]));
+  const rows = result.utterances.map((u) => {
+    const a = assessed.get(u.utteranceIndex);
+    const uncertain = larEffectiveVerdict(u, result.intelligibilityOverall) === "uncertain";
+    // Band lowered by the verdict itself, as opposed to the mechanical caps
+    // that ran before it (cappedBand is the band after those, before the gate).
+    const capped = uncertain && u.band < u.cappedBand;
+    return {
+      u,
+      uncertain,
+      record: {
+        verdict: a.verdict,
+        source: a.source,
+        provisional: intelligibility.provisional,
+        conf: a.conf,
+        // Counts only — no word identities (see lib/lar/intelligibility.js).
+        evidence: a.evidence,
+        capped,
+        // What an instructor's restore puts back: the band and rationale this
+        // utterance earns without the cap. Computed now, by the same code, so
+        // a restore never re-derives anything.
+        bandBeforeCap: capped ? u.cappedBand : null,
+        rationaleBeforeCap: capped ? larRationale({ ...u, band: u.cappedBand }, "clear") : null,
+        // Set only by the instructor review callable (toeflLarReview.js).
+        review: null,
+      },
+    };
+  });
+
   return {
-    perUtteranceResults: result.utterances.map((u) => ({
+    perUtteranceResults: rows.map(({ u, uncertain, record }) => ({
       utteranceIndex: u.utteranceIndex,
       layerA: { score: u.band, rationale: larRationale(u, result.intelligibilityOverall) },
       layerB: larLayerB(u, result.intelligibilityOverall),
+      intelligibility: record,
       // Sibling to layerA/layerB, not folded into either: the spec requires a
       // human reviewer to see the evidence behind the band, and Layer B is
       // practice focus rather than evidence. Same copy-back reasoning as MCQ's
@@ -2209,9 +2256,15 @@ async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
       matchedClauses: u.matchedClauses,
       capsApplied: u.capsApplied,
       selfCorrections: u.selfCorrections,
+      // The comparer's own review request. An uncertain verdict's is tracked
+      // separately (intelligibility.review, intelligibilityReviewPending) so an
+      // instructor's review can clear one without touching the other.
       needsHumanReview: u.needsHumanReview,
     })),
-    needsHumanReview: result.needsHumanReview,
+    needsHumanReview: result.needsHumanReview || rows.some((r) => r.uncertain),
+    // Utterances whose uncertain flag no instructor has reviewed yet. The
+    // review callable decrements it, so a queue can query for > 0.
+    intelligibilityReviewPending: rows.filter((r) => r.uncertain).length,
     orphanCount: result.orphanCount,
     orphanFlag: result.orphanFlag,
   };

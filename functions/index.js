@@ -1502,3 +1502,7 @@ exports.createStudentAccount = onCall(async (request) => {
 // which would redeploy B10-PP's live routes alongside it.
 // ─────────────────────────────────────────────────────────────────────────────
 exports.onToeflSubmissionCreated = require("./toeflScoring").onToeflSubmissionCreated;
+// LAR intelligibility review: an instructor resolves an "uncertain" flag
+// (restore the uncapped band, or keep the cap), logged. Deploy scoped the same
+// way: `--only functions:reviewLarIntelligibility`.
+exports.reviewLarIntelligibility = require("./toeflLarReview").reviewLarIntelligibility;

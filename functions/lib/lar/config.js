@@ -53,13 +53,25 @@ const SELF_CORRECTION_MIN_PREFIX = 2;
 // "the man walked to the store" repeats "the" at distance 4.
 const SELF_CORRECTION_MAX_ABORTED_RUN = 2;
 
-// ── Intelligibility (Decision 3, CONFIRMED) ────────────────────────────────
-// Decision 3: unintelligible WITHHOLDS; it never floors.
-// Confidence thresholds are provisional — the spec does not supply them.
+// ── Intelligibility (Decision 3, CONFIRMED; producer ruling JC 2026-09-18) ──
+// Decision 3: unintelligible WITHHOLDS; it never floors. Only a human in
+// live-class Layer 3 may reach it — the automated producer
+// (lib/lar/intelligibility.js) can say "clear" or "uncertain", never
+// "unintelligible". The old 0.85 / 0.60 thresholds, whose "below 0.60 →
+// unintelligible" contradicted that ruling, were never read and are gone.
+//
+// PROVISIONAL, ALL THREE NUMBERS: chosen before any real learner speech
+// existed, so none is validated. An utterance is "uncertain" only when BOTH
+// hold — broad (most words low) AND sustained (a run of low words together).
+// Either alone is an isolated dip and triggers nothing.
 const INTELLIGIBILITY = {
   provisional: true,
-  clearMinConf: 0.85,
-  uncertainMinConf: 0.60, // below this → unintelligible
+  lowWordConf: 0.70,  // a word below this Deepgram confidence is "low"
+  minLowShare: 0.50,  // broad: at least this share of the utterance's words low
+  minLowRun: 3,       // sustained: at least this many low words in a row
+  // Filled pauses carry no content to be trustworthy about. Same set as
+  // claudeScorer's FILLED_PAUSE_TOKENS, which counts them for delivery.
+  fillerTokens: ["uh", "um", "eh", "uh-huh", "mm"],
 };
 
 // ── Orphan policy (Decision 5, CONFIRMED) ──────────────────────────────────
