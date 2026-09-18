@@ -37,7 +37,11 @@
         "destination": "/index.html"
       },
       {
-        "source": "/toefl/!(assets)**",
+        "source": "/toefl/!(assets)",
+        "destination": "/toefl/index.html"
+      },
+      {
+        "source": "/toefl/!(assets)/**",
         "destination": "/toefl/index.html"
       }
     ]
