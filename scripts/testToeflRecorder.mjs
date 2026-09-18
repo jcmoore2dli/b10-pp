@@ -21,7 +21,7 @@ function makeEnv({ gumError = null, ctorError = null, pause = true, emptyData = 
       getUserMedia: async () => {
         if (gumDelay) await gumDelay
         if (gumError) { const e = new Error(gumError); e.name = gumError; throw e }
-        const track = { stopped: false, stop() { this.stopped = true } }
+        const track = { stopped: false, stop() { this.stopped = true }, end() { this.onended?.() } }
         tracks.push(track)
         return { getTracks: () => [track] }
       },
@@ -194,6 +194,19 @@ await test('11. LAR-style boundaries line up with the audio timeline across repl
   ok(JSON.stringify(bounds.map((b) => [b.responseStartMs, b.responseEndMs])) === JSON.stringify([[0, 3000], [3000, 5500], [5500, 10500]]),
      `boundaries contiguous on the audio timeline: ${JSON.stringify(bounds.map((b) => [b.responseStartMs, b.responseEndMs]))}`)
   ok(res.durationMs === 10500, `file length = sum of response windows (got ${res.durationMs})`)
+})
+
+await test('12. mic lost mid-recording: reset, nothing kept, onMicLost fires, reusable', async () => {
+  const env = makeEnv(); let lost = 0
+  const r = createRecorder({ env, onMicLost: () => lost++ })
+  await r.start(); await env.advance(3000)
+  env.tracks[0].end()                      // unplugged
+  ok(lost === 1, 'onMicLost fired once')
+  ok(r.getState() === 'idle' && r.getRecording() === null, 'idle, nothing kept')
+  ok(env.tracks[0].stopped, 'track released')
+  await env.advance(60000)
+  ok(lost === 1, 'no auto-stop or second callback afterwards')
+  ok((await r.start()).success, 'can record again (retry the question)')
 })
 
 console.log(`\n${passes} passed, ${failures} failed`)

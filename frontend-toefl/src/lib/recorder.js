@@ -35,6 +35,7 @@ export const RECORDER_ERRORS = {
   noMic: 'No microphone was found. Please connect one and try again.',
   busy: 'Your microphone is being used by another application. Please close it and try again.',
   failed: 'Could not start recording. Please check your microphone and try again.',
+  lost: 'Your microphone stopped working during the recording.',
 }
 
 // Same order as B10-PP: mp4/AAC first for iOS Safari, then webm/opus for Chrome.
@@ -53,7 +54,7 @@ function errorMessage(err) {
 }
 
 // env is injectable for tests: { mediaDevices, MediaRecorder, now, setTimeout, clearTimeout }.
-export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, onAutoStop, onChange, env } = {}) {
+export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, onAutoStop, onMicLost, onChange, env } = {}) {
   const E = env ?? {
     mediaDevices: globalThis.navigator?.mediaDevices,
     MediaRecorder: globalThis.MediaRecorder,
@@ -118,6 +119,8 @@ export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, on
         return { success: false, error: RECORDER_ERRORS.failed }
       }
       stream = s
+      // Mic unplugged or revoked mid-recording: the track ends on its own.
+      stream.getTracks().forEach((t) => { t.onended = () => micLost() })
       const mimeType = MIME_PREFERENCE.find((m) => E.MediaRecorder.isTypeSupported?.(m)) || ''
       mr = mimeType ? new E.MediaRecorder(stream, { mimeType }) : new E.MediaRecorder(stream)
       chunks = []; startedAt = null; pausedTotal = 0; pausedAt = null; stopPromise = null
@@ -182,6 +185,20 @@ export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, on
       mr.stop()
     })
     return stopPromise
+  }
+
+  // The recording in progress is unusable once the mic is gone: nothing is
+  // kept, the recorder resets, and onMicLost lets the screen offer a retry.
+  function micLost() {
+    if (state !== 'recording' && state !== 'paused' && state !== 'starting') return
+    clearAuto()
+    if (mr) { mr.onstop = null; if (mr.state !== 'inactive') { try { mr.stop() } catch { /* already stopped */ } } }
+    releaseMic()
+    mr = null; chunks = []; kept = null; stopPromise = null
+    startedAt = null; pausedTotal = 0; pausedAt = null
+    lastError = RECORDER_ERRORS.lost
+    set('idle')
+    onMicLost?.()
   }
 
   function discard() { kept = null; emit() }

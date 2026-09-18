@@ -17,15 +17,18 @@
 //   rec.discard()        drop the kept recording after a successful upload
 //
 // maxDurationMs: null means no auto-stop. onAutoStop(result) fires when the cap
-// ends the recording; a Stop tap racing it gets the same result.
+// ends the recording; a Stop tap racing it gets the same result. onMicLost()
+// fires if the microphone disappears mid-recording; nothing is kept.
 
 import { useEffect, useRef, useState } from 'react'
 import { createRecorder } from '../lib/recorder'
 
-export function useRecorder({ maxDurationMs = 45000, minDurationMs = 1000, onAutoStop } = {}) {
+export function useRecorder({ maxDurationMs = 45000, minDurationMs = 1000, onAutoStop, onMicLost } = {}) {
   const [snap, setSnap] = useState({ state: 'idle', error: null, hasRecording: false })
   const onAutoStopRef = useRef(onAutoStop)
-  onAutoStopRef.current = onAutoStop   // always call the latest callback
+  onAutoStopRef.current = onAutoStop   // always call the latest callbacks
+  const onMicLostRef = useRef(onMicLost)
+  onMicLostRef.current = onMicLost
 
   const recRef = useRef(null)
   if (recRef.current === null) {
@@ -33,6 +36,7 @@ export function useRecorder({ maxDurationMs = 45000, minDurationMs = 1000, onAut
       maxDurationMs,
       minDurationMs,
       onAutoStop: (result) => onAutoStopRef.current?.(result),
+      onMicLost: () => onMicLostRef.current?.(),
       onChange: setSnap,
     })
   }
