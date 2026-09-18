@@ -27,7 +27,9 @@ import { useNavigate } from 'react-router-dom'
 import {
   addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where,
 } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { uploadWithStallTimeout, UPLOAD_STALL_MS } from '../lib/stallUpload'
+import { withTimeout } from '../lib/withTimeout'
 import { db, storage } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
 import { useRecorder } from '../hooks/useRecorder'
@@ -48,12 +50,16 @@ export default function InterviewRecorder({ itemId }) {
   const [item, setItem] = useState(null)
   const [blocked, setBlocked] = useState(null)        // message; the interview cannot run
   const [phase, setPhase] = useState('loading')
-  // loading | preflight | intro | transition | playing | recording | uploading
-  // | uploadFailed | retryQuestion | submitting | submitFailed
+  // loading | preflight | intro | transition | playing | recording | finishing
+  // | uploading | uploadFailed | retryQuestion | submitting | submitFailed
+  // finishing = waiting for the browser to finalize the clip (rec.stop);
+  // uploading = sending it to Storage. Separate so the screen, and any error,
+  // names the step that is running or failed.
   const [questionIndex, setQuestionIndex] = useState(0)   // 0-based, current question
   const [resumeAt, setResumeAt] = useState(null)          // 0-based, or null
   const [message, setMessage] = useState(null)
   const [elapsedMs, setElapsedMs] = useState(0)
+  const [saveProgress, setSaveProgress] = useState(null)  // 0..1 while uploading
 
   const attemptRef = useRef(null)        // { id, clips }
   const urlsRef = useRef({})             // 'intro' | 'q1'..'q4' -> download URL
@@ -160,7 +166,7 @@ export default function InterviewRecorder({ itemId }) {
 
   // ── Warn before leaving mid-question (clips already uploaded are safe) ─────
   useEffect(() => {
-    const active = ['intro', 'transition', 'playing', 'recording', 'uploading'].includes(phase)
+    const active = ['intro', 'transition', 'playing', 'recording', 'finishing', 'uploading'].includes(phase)
     if (!active) return
     const warn = (e) => { e.preventDefault(); e.returnValue = '' }
     window.addEventListener('beforeunload', warn)
@@ -214,22 +220,28 @@ export default function InterviewRecorder({ itemId }) {
     try {
       // A submission may already exist if completing the attempt failed last
       // time; never create a second one for the same attempt.
-      const existing = await getDocs(query(
+      // Every step is bounded and named (lib/withTimeout.js): on a dead
+      // connection a Firestore write never settles, which would leave this
+      // screen on "Submitting…" forever.
+      const existing = await withTimeout(getDocs(query(
         collection(db, 'toeflSubmissions'),
         where('studentId', '==', studentId),
         where('attemptId', '==', attemptId),
-      ))
+      )), 'Checking for an earlier submission')
       const submissionId = existing.empty
-        ? (await addDoc(collection(db, 'toeflSubmissions'), buildSubmission({ attemptId, studentId, interviewClips: clips }))).id
+        ? (await withTimeout(addDoc(collection(db, 'toeflSubmissions'), buildSubmission({ attemptId, studentId, interviewClips: clips })), 'Creating the submission')).id
         : existing.docs[0].id
       try {
-        await updateDoc(doc(db, 'toeflAttempts', attemptId), { completedAt: serverTimestamp() })
+        // Non-fatal, but bounded: an unbounded hang here would block the
+        // navigation to results even though the submission exists.
+        await withTimeout(updateDoc(doc(db, 'toeflAttempts', attemptId), { completedAt: serverTimestamp() }), 'Completing the attempt')
       } catch (err) {
         console.error('could not complete attempt', attemptId, err)   // non-fatal, as in the other renderers
       }
       navigate(`/results/${submissionId}`)
     } catch (err) {
-      setMessage(`Could not submit: ${err.message}`)
+      // err.message names the step when it timed out (StepTimeoutError).
+      setMessage(`Submitting failed: ${err.message}. Your recording is saved; check your connection and retry.`)
       setPhase('submitFailed')
     }
   }, [navigate, studentId])
@@ -241,10 +253,16 @@ export default function InterviewRecorder({ itemId }) {
     setMessage(null)
     const { id: attemptId } = attemptRef.current
     const path = clipStoragePath(studentId, attemptId, i, result.mimeType)
+    setSaveProgress(null)
     try {
-      await uploadBytes(ref(storage, path), result.blob, { contentType: result.mimeType })
+      // Stall timeout, not a total one: a slow upload that keeps moving is
+      // never cut off (lib/stallUpload.js).
+      await uploadWithStallTimeout(
+        () => uploadBytesResumable(ref(storage, path), result.blob, { contentType: result.mimeType }),
+        { onProgress: setSaveProgress }
+      )
       const clips = upsertClip(attemptRef.current.clips, clipEntry(i, path, result.durationMs))
-      await updateDoc(doc(db, 'toeflAttempts', attemptId), { interviewClips: clips })
+      await withTimeout(updateDoc(doc(db, 'toeflAttempts', attemptId), { interviewClips: clips }), 'Recording the answer on the attempt')
       attemptRef.current = { id: attemptId, clips }
       rec.discard()
       if (token !== runRef.current) return
@@ -254,7 +272,14 @@ export default function InterviewRecorder({ itemId }) {
     } catch (err) {
       if (token !== runRef.current) return
       console.error('clip upload failed', path, err)
-      setMessage('Your answer was recorded but could not be uploaded. Check your connection and retry — you will not need to record it again.')
+      // Name the step that failed: the upload itself, or recording the
+      // uploaded clip on the attempt (which can time out after a good upload).
+      const failed = err?.code === 'step-timeout'
+        ? `Saving failed: ${err.message}`
+        : `Upload failed (${err?.code === 'upload-stalled'
+            ? `no progress for ${Math.round(UPLOAD_STALL_MS / 1000)} seconds`
+            : (err?.code || err?.message || 'unknown error')})`
+      setMessage(`${failed}. Your answer was recorded and is kept on this device: check your connection and retry — you will not need to record it again.`)
       setPhase('uploadFailed')
     }
   }, [studentId, rec, runQuestion, submit])
@@ -263,6 +288,13 @@ export default function InterviewRecorder({ itemId }) {
     if (finishingRef.current) return
     finishingRef.current = true
     const i = currentQRef.current
+    if (result?.failed) {
+      // The browser never finalized the clip (recorder stop timeout); nothing
+      // was captured, so this question is answered again.
+      setMessage(`Finishing the recording failed: ${result.error} This question will play again so you can answer.`)
+      setPhase('retryQuestion')
+      return
+    }
     if (!result || result.empty) {
       setMessage('Nothing was recorded for this question. It will play again so you can answer.')
       setPhase('retryQuestion')
@@ -279,6 +311,7 @@ export default function InterviewRecorder({ itemId }) {
 
   async function handleStop() {
     if (rec.getRecordedMs() < MIN_RESPONSE_MS) return
+    setPhase('finishing')
     finishQuestion(await rec.stop())
   }
 
@@ -361,9 +394,16 @@ export default function InterviewRecorder({ itemId }) {
         </div>
       )}
 
-      {(phase === 'uploading' || phase === 'submitting') && (
-        <Center big={phase === 'uploading' ? `Saving your answer to Question ${n}…` : 'Submitting your interview…'} />
+      {phase === 'finishing' && <Center big={`Finishing your answer to Question ${n}…`} />}
+
+      {phase === 'uploading' && (
+        <Center
+          big={`Saving your answer to Question ${n}…`}
+          small={saveProgress === null ? 'Starting upload…' : `Uploaded ${Math.round(saveProgress * 100)}%`}
+        />
       )}
+
+      {phase === 'submitting' && <Center big="Submitting your interview…" />}
 
       {phase === 'uploadFailed' && (
         <div>

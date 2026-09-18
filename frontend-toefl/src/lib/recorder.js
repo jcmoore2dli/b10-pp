@@ -36,7 +36,14 @@ export const RECORDER_ERRORS = {
   busy: 'Your microphone is being used by another application. Please close it and try again.',
   failed: 'Could not start recording. Please check your microphone and try again.',
   lost: 'Your microphone stopped working during the recording.',
+  stopTimeout: "The recording could not be finished: the browser's recorder stopped responding.",
 }
+
+// How long stop() waits for MediaRecorder's own stop event. It normally
+// arrives within milliseconds; if it never does, stop() would otherwise hang
+// forever with the screen stuck on "Saving…" (JC's iPhone test, 2026-09-18,
+// was a slow upload, not this, but nothing here guarded against it).
+export const STOP_TIMEOUT_MS = 8000
 
 // Same order as B10-PP: mp4/AAC first for iOS Safari, then webm/opus for Chrome.
 const MIME_PREFERENCE = ['audio/mp4;codecs=mp4a.40.2', 'audio/mp4', 'audio/webm;codecs=opus', 'audio/webm']
@@ -54,7 +61,7 @@ function errorMessage(err) {
 }
 
 // env is injectable for tests: { mediaDevices, MediaRecorder, now, setTimeout, clearTimeout }.
-export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, onAutoStop, onMicLost, onChange, env } = {}) {
+export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, stopTimeoutMs = STOP_TIMEOUT_MS, onAutoStop, onMicLost, onChange, env } = {}) {
   const E = env ?? {
     mediaDevices: globalThis.navigator?.mediaDevices,
     MediaRecorder: globalThis.MediaRecorder,
@@ -161,7 +168,11 @@ export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, on
     return true
   }
 
-  // Resolves to the finished recording, or null if nothing was recording.
+  // Resolves to the finished recording, or null if nothing was recording, or
+  // { failed: 'stop-timeout', error } if MediaRecorder never reported stopping
+  // within stopTimeoutMs. No timeslice is used, so no audio exists until the
+  // stop event: a timed-out recording is unrecoverable, the recorder resets,
+  // and the caller must say so and start over.
   // Concurrent calls (the Stop button racing the auto-stop) share one promise.
   function stop() {
     if (stopPromise) return stopPromise
@@ -171,7 +182,20 @@ export function createRecorder({ maxDurationMs = 45000, minDurationMs = 1000, on
     const durationMs = Math.round(getRecordedMs())
     set('stopping')
     stopPromise = new Promise((resolve) => {
+      const stuck = mr
+      const timer = E.setTimeout(() => {
+        if (mr !== stuck) return            // already finished or reset
+        stuck.onstop = null
+        try { if (stuck.state !== 'inactive') stuck.stop() } catch { /* already stopped */ }
+        releaseMic()
+        mr = null; chunks = []; kept = null; startedAt = null; pausedTotal = 0; pausedAt = null
+        stopPromise = null
+        lastError = RECORDER_ERRORS.stopTimeout
+        set('idle')
+        resolve({ failed: 'stop-timeout', error: lastError })
+      }, stopTimeoutMs)
       mr.onstop = () => {
+        E.clearTimeout(timer)
         const mimeType = (mr.mimeType || 'audio/webm').split(';')[0]
         const blob = new Blob(chunks, { type: mimeType })
         releaseMic()

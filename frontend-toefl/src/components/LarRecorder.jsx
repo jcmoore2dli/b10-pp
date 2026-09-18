@@ -34,7 +34,9 @@ import { useNavigate } from 'react-router-dom'
 import {
   addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where,
 } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { uploadWithStallTimeout, UPLOAD_STALL_MS } from '../lib/stallUpload'
+import { withTimeout } from '../lib/withTimeout'
 import { db, storage } from '../services/firebase'
 import { useAuth } from '../context/useAuth'
 import { useRecorder } from '../hooks/useRecorder'
@@ -54,13 +56,17 @@ export default function LarRecorder({ itemId }) {
   const [item, setItem] = useState(null)
   const [blocked, setBlocked] = useState(null)
   const [phase, setPhase] = useState('loading')
-  // loading | preflight | intro | playing | responding | replaying | uploading
-  // | uploadFailed | submitting | submitFailed | restart
+  // loading | preflight | intro | playing | responding | replaying | finishing
+  // | uploading | uploadFailed | submitting | submitFailed | restart
+  // finishing = waiting for the browser to finalize the recording (rec.stop);
+  // uploading = sending it to Storage. Separate so the screen, and any error,
+  // names the step that is running or failed.
   const [utterance, setUtterance] = useState(1)       // 1-based, current sentence
   const [message, setMessage] = useState(null)
   const [remainingMs, setRemainingMs] = useState(LAR_RESPONSE_MS)
   const [windowMs, setWindowMs] = useState(0)          // recorded time in the current window
   const [replayUsed, setReplayUsed] = useState(false)
+  const [saveProgress, setSaveProgress] = useState(null)  // 0..1 while uploading
 
   const attemptRef = useRef(null)          // { id }
   const urlsRef = useRef({})               // 'intro' | 'u1'..'u7' -> download URL
@@ -178,7 +184,7 @@ export default function LarRecorder({ itemId }) {
 
   // ── Warn before leaving mid-set: the recording can't be recovered ──────────
   useEffect(() => {
-    if (!['intro', 'playing', 'responding', 'replaying', 'uploading'].includes(phase)) return
+    if (!['intro', 'playing', 'responding', 'replaying', 'finishing', 'uploading'].includes(phase)) return
     const warn = (e) => { e.preventDefault(); e.returnValue = '' }
     window.addEventListener('beforeunload', warn)
     return () => window.removeEventListener('beforeunload', warn)
@@ -190,25 +196,31 @@ export default function LarRecorder({ itemId }) {
     setMessage(null)
     const attemptId = attemptRef.current.id
     try {
-      const existing = await getDocs(query(
+      // Every step is bounded and named (lib/withTimeout.js): on a dead
+      // connection a Firestore write never settles, which would leave this
+      // screen on "Submitting…" forever.
+      const existing = await withTimeout(getDocs(query(
         collection(db, 'toeflSubmissions'),
         where('studentId', '==', studentId),
         where('attemptId', '==', attemptId),
-      ))
+      )), 'Checking for an earlier submission')
       const { storagePath, durationMs } = uploadedRef.current
       const submissionId = existing.empty
-        ? (await addDoc(collection(db, 'toeflSubmissions'), buildLarSubmission({
+        ? (await withTimeout(addDoc(collection(db, 'toeflSubmissions'), buildLarSubmission({
             attemptId, studentId, storagePath, durationMs, boundaries: boundariesRef.current,
-          }))).id
+          })), 'Creating the submission')).id
         : existing.docs[0].id
       try {
-        await updateDoc(doc(db, 'toeflAttempts', attemptId), { completedAt: serverTimestamp() })
+        // Non-fatal, but bounded: an unbounded hang here would block the
+        // navigation to results even though the submission exists.
+        await withTimeout(updateDoc(doc(db, 'toeflAttempts', attemptId), { completedAt: serverTimestamp() }), 'Completing the attempt')
       } catch (err) {
         console.error('could not complete attempt', attemptId, err)   // non-fatal, as in the other renderers
       }
       navigate(`/results/${submissionId}`)
     } catch (err) {
-      setMessage(`Could not submit: ${err.message}`)
+      // err.message names the step when it timed out (StepTimeoutError).
+      setMessage(`Submitting failed: ${err.message}. Your recording is saved; check your connection and retry.`)
       setPhase('submitFailed')
     }
   }, [navigate, studentId])
@@ -217,15 +229,24 @@ export default function LarRecorder({ itemId }) {
   const upload = useCallback(async (result) => {
     setPhase('uploading')
     setMessage(null)
+    setSaveProgress(null)
     const storagePath = larStoragePath(studentId, attemptRef.current.id, result.mimeType)
     try {
-      await uploadBytes(ref(storage, storagePath), result.blob, { contentType: result.mimeType })
+      // Stall timeout, not a total one: a slow upload that keeps moving is
+      // never cut off (lib/stallUpload.js).
+      await uploadWithStallTimeout(
+        () => uploadBytesResumable(ref(storage, storagePath), result.blob, { contentType: result.mimeType }),
+        { onProgress: setSaveProgress }
+      )
       uploadedRef.current = { storagePath, durationMs: result.durationMs }
       rec.discard()
       submit()
     } catch (err) {
       console.error('LAR upload failed', storagePath, err)
-      setMessage('Your recording is complete but could not be uploaded. Check your connection and retry — you will not need to record it again.')
+      const why = err?.code === 'upload-stalled'
+        ? `no progress for ${Math.round(UPLOAD_STALL_MS / 1000)} seconds`
+        : (err?.code || err?.message || 'unknown error')
+      setMessage(`Upload failed (${why}). Your recording is complete and kept on this device: check your connection and retry — you will not need to record it again.`)
       setPhase('uploadFailed')
     }
   }, [studentId, rec, submit])
@@ -240,8 +261,8 @@ export default function LarRecorder({ itemId }) {
     player.stop()
     boundariesRef.current = []
     setMessage(msg)
-    setPhase('uploading')        // brief "saving" state while the recorder stops
-    await rec.stop()             // null if nothing was recording (e.g. mic already lost)
+    setPhase('finishing')        // brief state while the recorder stops
+    await rec.stop()             // null if nothing was recording; bounded by the recorder's stop timeout
     rec.discard()
     setPhase('restart')
   }, [player, rec])
@@ -295,8 +316,14 @@ export default function LarRecorder({ itemId }) {
       return
     }
     // Sentence 7 done: finish the one recording.
-    setPhase('uploading')
+    setPhase('finishing')
     const result = await rec.stop()
+    if (result?.failed) {
+      // The browser never finalized the recording (recorder stop timeout).
+      // Nothing was captured, so the only honest option is to start over.
+      restartWith(`Finishing the recording failed: ${result.error} The set will start again from sentence 1.`)
+      return
+    }
     if (!result || result.empty) {
       restartWith('Nothing was recorded. The set will start again from sentence 1.')
       return
@@ -415,9 +442,16 @@ export default function LarRecorder({ itemId }) {
         </div>
       )}
 
-      {(phase === 'uploading' || phase === 'submitting') && (
-        <Center big={phase === 'uploading' ? 'Saving your recording…' : 'Submitting…'} />
+      {phase === 'finishing' && <Center big="Finishing your recording…" />}
+
+      {phase === 'uploading' && (
+        <Center
+          big="Saving your recording…"
+          small={saveProgress === null ? 'Starting upload…' : `Uploaded ${Math.round(saveProgress * 100)}%`}
+        />
       )}
+
+      {phase === 'submitting' && <Center big="Submitting…" />}
 
       {phase === 'uploadFailed' && (
         <div>

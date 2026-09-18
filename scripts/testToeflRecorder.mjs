@@ -10,7 +10,7 @@ let failures = 0, passes = 0
 const ok = (cond, msg) => { if (cond) passes++; else { failures++; console.log('  FAIL:', msg) } }
 const tick = () => new Promise((r) => setImmediate(r))   // let queued events run
 
-function makeEnv({ gumError = null, ctorError = null, pause = true, emptyData = false, gumDelay = null } = {}) {
+function makeEnv({ gumError = null, ctorError = null, pause = true, emptyData = false, gumDelay = null, neverStops = false } = {}) {
   let now = 0, timers = [], nextId = 1
   const tracks = []
   const env = {
@@ -35,6 +35,8 @@ function makeEnv({ gumError = null, ctorError = null, pause = true, emptyData = 
     }
     start() { this.state = 'recording'; queueMicrotask(() => this.onstart?.()) }
     stop() {
+      this.stopCalls = (this.stopCalls || 0) + 1
+      if (neverStops) return          // the browser never reports stopping (state stays as it was)
       this.state = 'inactive'
       queueMicrotask(() => { this.ondataavailable?.({ data: new Blob(emptyData ? [] : ['audio-bytes']) }); this.onstop?.() })
     }
@@ -207,6 +209,38 @@ await test('12. mic lost mid-recording: reset, nothing kept, onMicLost fires, re
   await env.advance(60000)
   ok(lost === 1, 'no auto-stop or second callback afterwards')
   ok((await r.start()).success, 'can record again (retry the question)')
+})
+
+await test('13. stop timeout: the browser never reports stopping -> named failure, mic released, reusable', async () => {
+  const env = makeEnv({ neverStops: true }); const r = createRecorder({ env, maxDurationMs: null, stopTimeoutMs: 8000 })
+  await r.start(); await env.advance(5000)
+  let res = 'pending'
+  r.stop().then((x) => { res = x })
+  await env.advance(7999)
+  ok(res === 'pending', 'still waiting at 7.999 s')
+  await env.advance(1)
+  ok(res && res.failed === 'stop-timeout', `resolves { failed: 'stop-timeout' } at 8 s (got ${JSON.stringify(res)})`)
+  ok(res.error === RECORDER_ERRORS.stopTimeout, 'error names the step')
+  ok(r.getState() === 'idle' && r.getRecording() === null, 'idle, nothing kept')
+  ok(env.tracks[0].stopped, 'mic released')
+  ok((await r.start()).success, 'can record again')
+})
+
+await test('14. a normal stop clears the stop timer (no late failure afterwards)', async () => {
+  const env = makeEnv(); const r = createRecorder({ env, maxDurationMs: null, stopTimeoutMs: 8000 })
+  await r.start(); await env.advance(3000)
+  const res = await r.stop()
+  ok(res && !res.failed && res.blob.size > 0, 'normal result')
+  await env.advance(20000)
+  ok(r.getState() === 'idle' && r.getRecording() === res, 'still idle with the recording kept after the timeout would have fired')
+})
+
+await test('15. stop while PAUSED also times out cleanly if the browser never reports it', async () => {
+  const env = makeEnv({ neverStops: true }); const r = createRecorder({ env, maxDurationMs: null, stopTimeoutMs: 8000 })
+  await r.start(); await env.advance(2000); r.pause(); await tick()
+  const p = r.stop(); await env.advance(8000)
+  const res = await p
+  ok(res && res.failed === 'stop-timeout', 'paused stop times out with the named failure')
 })
 
 console.log(`\n${passes} passed, ${failures} failed`)
