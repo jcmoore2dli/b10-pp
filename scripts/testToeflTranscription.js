@@ -66,7 +66,7 @@ function fakeDb(initial) {
   });
   return {
     data, writes,
-    collection: (col) => ({ doc: (id) => ref(col, id) }),
+    collection: (col) => ({ doc: (id) => Object.assign(ref(col, id), { collection: (sub) => ({ doc: (sid) => ref(`${col}/${id}/${sub}`, sid) }) }) }),
     async runTransaction(fn) { return fn({ get: (r) => r.get(), update: (r, u) => r.update(u) }); },
   };
 }
@@ -252,8 +252,10 @@ section("A. deepgramSTT allowEmpty");
   eq([lrc.sttMeta.provider, lrc.sttMeta.wordCount, lrc.sttMeta.capturedAt], ["deepgram", 4, "TS"], "sttMeta");
   eq(lrc.responseBoundaries.length, 7, "client responseBoundaries untouched");
   eq(larOut.responseContent.wordTimings.length, 4, "returned submission carries wordTimings");
-  const larItem = { utterances: [1, 2, 3, 4, 5, 6, 7].map((i) => ({ utteranceIndex: i, text: `Sentence ${i}.`, part: "greeting" })) };
-  const larDb = { collection: () => ({ doc: () => ({ get: async () => ({ exists: true, data: () => larItem }) }) }) };
+  const larDb = fakeDb({
+    "toeflItems/LAR-001": { utterances: [1, 2, 3, 4, 5, 6, 7].map((i) => ({ utteranceIndex: i, part: "greeting" })) },
+    "toeflItems/LAR-001/restricted/heard": { utterances: [1, 2, 3, 4, 5, 6, 7].map((i) => ({ utteranceIndex: i, text: `Sentence ${i}.` })) },
+  });
   let larErr = null;
   try { await S.scoreListenAndRepeat(larDb, { submissionId: "lar1", submission: larOut, itemId: "LAR-001" }); } catch (e) { larErr = e.message; }
   ok(larErr && /missing intelligibility \(/.test(larErr), `LAR scorer now missing ONLY intelligibility: ${larErr}`);
@@ -277,7 +279,11 @@ section("A. deepgramSTT allowEmpty");
     };
     loadWith(path.join(FN, "toeflScoring.js"), stubs);
   };
-  const trigData = () => ({ ...baseData(), "toeflItems/INT-001": item, "toeflSubmissions/sub1": { ...baseData()["toeflSubmissions/sub1"], scoringStatus: "queued" } });
+  // v1.18: stems are heard-only. The public item has questionIndex/questionType;
+  // the stems sit in restricted/heard, where the scorer joins them back.
+  const pubItem = { ...item, prompt: { questions: item.prompt.questions.map(({ stem, ...r }) => r) } };
+  const heardDoc = { questions: item.prompt.questions.map((q) => ({ questionIndex: q.questionIndex, stem: q.stem })) };
+  const trigData = () => ({ ...baseData(), "toeflItems/INT-001": pubItem, "toeflItems/INT-001/restricted/heard": heardDoc, "toeflSubmissions/sub1": { ...baseData()["toeflSubmissions/sub1"], scoringStatus: "queued" } });
 
   db = fakeDb(trigData()); calls.length = 0; anthropicCalls.length = 0;
   const seenKeys = [];
@@ -288,6 +294,7 @@ section("A. deepgramSTT allowEmpty");
   ok(anthropicCalls.length === 1, "Anthropic called once, after transcription");
   const sent = JSON.stringify(anthropicCalls[0] || {});
   ok(sent.includes("I usually uh study alone") && sent.includes("DELIVERY EVIDENCE:"), "model prompt carries the transcripts and evidence");
+  ok(sent.includes("STEM: Stem 1?") && sent.includes("STEM: Stem 4?"), "stems reach the model from restricted/heard (public item has none)");
   eq(db.data["toeflSubmissions/sub1"].scoringStatus, "error", "(fake model threw -> error; real model would score)");
 
   db = fakeDb(trigData()); anthropicCalls.length = 0;
@@ -296,6 +303,13 @@ section("A. deepgramSTT allowEmpty");
   eq(anthropicCalls.length, 0, "Deepgram/Storage failure: Anthropic never called");
   eq(db.data["toeflSubmissions/sub1"].scoringStatus, "error", "submission marked error");
   eq(db.data["toeflAttempts/att1"].interviewClips.map((c) => c.transcriptStatus), ["error", "error", "error", "error"], "clip statuses record the failure");
+
+  // restricted/heard missing: an item-data failure, never a fallback to public text.
+  { const d = trigData(); delete d["toeflItems/INT-001/restricted/heard"]; db = fakeDb(d); }
+  anthropicCalls.length = 0;
+  makeTrigger(db, fakeBucket(files), transcribeOK);
+  await handler({ params: { submissionId: "sub1" }, data: { data: () => db.data["toeflSubmissions/sub1"] } });
+  eq([anthropicCalls.length, db.data["toeflSubmissions/sub1"].scoringStatus], [0, "error"], "missing restricted/heard: error, model never called");
 
   db = fakeDb({ ...trigData(), "toeflSubmissions/sub1": { ...trigData()["toeflSubmissions/sub1"], scoringStatus: "scored" } });
   let dgCalls = 0;

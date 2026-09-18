@@ -50,11 +50,21 @@ const check = (label, ok, detail) => {
 
 // One LAR item and one submission whose runtime inputs are a clean read of it.
 const PARTS = ["greeting", "facilities", "facilities", "services", "services", "closing", "closing"];
+// v1.18: the public item carries index and part only; the sentence text is
+// heard-only and lives in toeflItems/{id}/restricted/heard.
 const item = {
   taskType: "LAR",
-  utterances: fx.TARGETS.map((text, i) => ({ utteranceIndex: i + 1, text, part: PARTS[i] })),
+  utterances: fx.TARGETS.map((_, i) => ({ utteranceIndex: i + 1, part: PARTS[i] })),
 };
-const db = { collection: () => ({ doc: () => ({ get: async () => ({ exists: true, data: () => item }) }) }) };
+const heard = { utterances: fx.TARGETS.map((text, i) => ({ utteranceIndex: i + 1, text })) };
+const db = {
+  collection: () => ({
+    doc: () => ({
+      get: async () => ({ exists: true, data: () => item }),
+      collection: (sub) => ({ doc: (id) => ({ get: async () => (sub === "restricted" && id === "heard" ? { exists: true, data: () => heard } : { exists: false, data: () => undefined }) }) }),
+    }),
+  }),
+};
 const submission = {
   responseContent: {
     wordTimings: fx.perfectWords(),
@@ -73,8 +83,8 @@ const submission = {
   check("every field data model v1.17 names is present on every entry", missing.length === 0, `missing: ${missing.join(", ")}`);
 
   check(
-    "referenceText is the item's utterance text, matched by utteranceIndex",
-    rows.every((r) => r.referenceText === item.utterances[r.utteranceIndex - 1].text)
+    "referenceText is the utterance text from restricted/heard, matched by utteranceIndex",
+    rows.every((r) => r.referenceText === heard.utterances[r.utteranceIndex - 1].text)
   );
   check(
     "matchedTranscript is a non-empty string for a clean reading",

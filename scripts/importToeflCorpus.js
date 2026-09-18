@@ -11,9 +11,9 @@
 //       and the answerKey subcollection
 //   · toefl_week_map_v1_0.json (toefl-corpus) — sole scheduling authority
 //   · TOEFL_Firestore_Data_Model_Spec_v1_18.md — `audio` (Appendix B) and
-//       LAR's stimulus.introduction, added 2026-09-18. The rest of v1.18
-//       (restricted/heard, venue, speakerGender, the serving rule) is not yet
-//       applied here.
+//       LAR's stimulus.introduction, added 2026-09-18; restricted/heard (heard-
+//       only text moved off the public document), added 2026-09-18. Not yet
+//       applied: venue, speakerGender, the serving rule.
 //
 // Built per v1.11 plus the four decisions JC confirmed Sep 10, 2026:
 //   1. AP format grouping is the STRUCTURAL result, not v1.11's descriptive
@@ -53,6 +53,7 @@ const CORPUS_ROOT = path.join(os.homedir(), "toefl", "corpus");
 const WEEK_MAP_PATH = path.join(os.homedir(), "toefl-corpus", "toefl_week_map_v1_0.json");
 const MANIFEST_DIR = path.join(__dirname, "..", "audio", "toefl", "manifests");
 const { AUDIO_TYPES, buildItemAudio, verifyClips, stripForWrite } = require("./toeflImport/itemAudio");
+const { splitHeard, findLeaks, HEARD_TYPES } = require("./toeflImport/heardSplit");
 
 // ── CLI ──────────────────────────────────────────────────────────────────────
 
@@ -957,29 +958,34 @@ function buildWeekAllocation(weekMap) {
 function buildDocuments(taskType, itemId, parsed, status, cfg, weekForItem, contentSpecVersion) {
   const isReject = status.verdict.kind === "REJECT";
 
+  // Heard-only text goes to restricted/heard, never the public document
+  // (v1.18; see toeflImport/heardSplit.js). A split failure throws, so it is
+  // an import error and the fail-closed rule halts before any write.
+  const { pub, heard } = splitHeard(taskType, parsed);
+
   const publicDoc = {
     itemId,
     taskType,
     weekAvailability: cfg.week === "ALL_WEEKS" ? "ALL_WEEKS" : weekForItem,
     status: isReject ? "retired" : "active",
-    stimulus: parsed.stimulus || {},
+    stimulus: pub.stimulus,
     contentSpecVersion,
     layer3Status: status.layer3Status,
   };
 
-  if (parsed.questions && cfg.family === "mcq") {
+  if (pub.questions && cfg.family === "mcq") {
     // locked: true for the R6 sentence-insertion question. AP's rule is
     // 100%-confirmed — R6 is always Q5 when present — so this is a mechanical
     // mapping, not an inference. Every other question is false.
-    publicDoc.questions = parsed.questions.map((q) => ({
+    publicDoc.questions = pub.questions.map((q) => ({
       questionIndex: q.questionIndex,
       stem: q.stem,
       locked: taskType === "AP" && status.r6Included && q.questionIndex === 5,
       options: q.options,
     }));
   }
-  if (parsed.prompt) publicDoc.prompt = parsed.prompt;
-  if (parsed.utterances) publicDoc.utterances = parsed.utterances;
+  if (pub.prompt) publicDoc.prompt = pub.prompt;
+  if (pub.utterances) publicDoc.utterances = pub.utterances;
   if (parsed.gaps) publicDoc.gaps = parsed.gaps;
   if (parsed.fragments) publicDoc.fragments = parsed.fragments;
 
@@ -997,7 +1003,7 @@ function buildDocuments(taskType, itemId, parsed, status, cfg, weekForItem, cont
     if (parsed.correctOrder) keyDoc.correctOrder = parsed.correctOrder;
   }
 
-  return { publicDoc, keyDoc };
+  return { publicDoc, keyDoc, heardDoc: heard };
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
@@ -1131,7 +1137,7 @@ async function main() {
         if (status.verdict.kind === "REJECT") perType[taskType].reject++;
 
         const contentSpecVersion = extractContentSpecVersion(body);
-        const { publicDoc, keyDoc } = buildDocuments(
+        const { publicDoc, keyDoc, heardDoc } = buildDocuments(
           taskType,
           itemId,
           parsed,
@@ -1149,7 +1155,7 @@ async function main() {
           : { audio: null, problems: [] };
         publicDoc.audio = null;
 
-        plan.push({ itemId, taskType, dir, cfg, publicDoc, keyDoc, parsed, status, audioBuild });
+        plan.push({ itemId, taskType, dir, cfg, publicDoc, keyDoc, heardDoc, parsed, status, audioBuild });
         perType[taskType].imported++;
         ctx.notes.forEach((n) => notes.push(`${itemId}: ${n}`));
       } catch (err) {
@@ -1208,8 +1214,14 @@ async function main() {
       // v1.16 correction), so every reader fetches it directly.
       await ref.collection("answerKey").doc("key").set(entry.keyDoc);
     }
+    if (entry.heardDoc) {
+      // Literal document ID "heard", always (v1.18 Change 4). No client read
+      // rule exists for restricted/, so students are denied by default; the
+      // scorers read it through the Admin SDK.
+      await ref.collection("restricted").doc("heard").set(entry.heardDoc);
+    }
     written++;
-    if (OPT.verbose) console.log(`  wrote ${entry.itemId}${entry.keyDoc ? " + answerKey/key" : ""}`);
+    if (OPT.verbose) console.log(`  wrote ${entry.itemId}${entry.keyDoc ? " + answerKey/key" : ""}${entry.heardDoc ? " + restricted/heard" : ""}`);
   }
   console.log(`  ${written} item document(s) written.`);
 
@@ -1295,6 +1307,14 @@ async function bothWritesCheck(db, plan) {
         detail: "spurious — this type must NOT have an answer key",
       });
     }
+
+    // restricted/heard (v1.18): present for exactly the six heard types.
+    const heard = await ref.collection("restricted").doc("heard").get();
+    if (HEARD_TYPES.has(entry.taskType) && !heard.exists) {
+      findings.push({ itemId: entry.itemId, field: "restricted/heard", detail: "missing" });
+    } else if (!HEARD_TYPES.has(entry.taskType) && heard.exists) {
+      findings.push({ itemId: entry.itemId, field: "restricted/heard", detail: "spurious — this type has no heard-only text" });
+    }
   }
   return findings;
 }
@@ -1347,25 +1367,43 @@ async function contentVerificationGate(db, plan) {
     // Public: audio (v1.18), exactly as settled before the write.
     compare(findings, itemId, "audio", JSON.stringify(entry.publicDoc.audio ?? null), JSON.stringify(live.audio ?? null));
 
+    // Expected public/restricted split, derived from the FRESH re-parse by the
+    // same function the write used.
+    const split = splitHeard(taskType, reparsed);
+
+    // Restricted: the heard document must equal the re-parse's heard text.
+    const heardSnap = await ref.collection("restricted").doc("heard").get();
+    if (split.heard) {
+      compare(findings, itemId, "restricted/heard", JSON.stringify(split.heard), heardSnap.exists ? JSON.stringify(heardSnap.data()) : "<missing>");
+    } else if (heardSnap.exists) {
+      findings.push({ itemId, field: "restricted/heard", expected: "absent", found: "present" });
+    }
+
+    // Leak scan: no heard-only string may appear ANYWHERE on the public
+    // document, whatever field it might have landed in.
+    for (const leaked of findLeaks(live, split.heard)) {
+      findings.push({ itemId, field: "<public document>", expected: "no heard-only text", found: `contains "${leaked.slice(0, 60)}"` });
+    }
+
     // Public: stimulus fields.
-    for (const [k, v] of Object.entries(reparsed.stimulus || {})) {
+    for (const [k, v] of Object.entries(split.pub.stimulus || {})) {
       if (typeof v === "string") {
         compare(findings, itemId, `stimulus.${k}`, v, live.stimulus ? live.stimulus[k] : undefined);
       }
     }
 
     // Public: MCQ stems and option text.
-    if (reparsed.questions && cfg.family === "mcq") {
+    if (split.pub.questions && cfg.family === "mcq") {
       const liveQs = live.questions || [];
-      if (liveQs.length !== reparsed.questions.length) {
+      if (liveQs.length !== split.pub.questions.length) {
         findings.push({
           itemId,
           field: "questions.length",
-          expected: String(reparsed.questions.length),
+          expected: String(split.pub.questions.length),
           found: String(liveQs.length),
         });
       } else {
-        reparsed.questions.forEach((q, i) => {
+        split.pub.questions.forEach((q, i) => {
           compare(findings, itemId, `questions[${q.questionIndex}].stem`, q.stem, liveQs[i].stem);
           q.options.forEach((o, j) => {
             compare(
@@ -1381,11 +1419,13 @@ async function contentVerificationGate(db, plan) {
     }
 
     // Public: the type-specific arrays.
-    if (reparsed.utterances) {
+    if (split.pub.utterances) {
+      // Public LAR utterances carry index and part only; the text is
+      // restricted (checked above).
       const liveU = live.utterances || [];
-      reparsed.utterances.forEach((u, i) => {
-        compare(findings, itemId, `utterances[${u.utteranceIndex}].text`, u.text, (liveU[i] || {}).text);
+      split.pub.utterances.forEach((u, i) => {
         compare(findings, itemId, `utterances[${u.utteranceIndex}].part`, u.part, (liveU[i] || {}).part);
+        compare(findings, itemId, `utterances[${u.utteranceIndex}] keys`, "part,utteranceIndex", Object.keys(liveU[i] || {}).sort().join(","));
       });
     }
     if (reparsed.gaps) {
@@ -1428,14 +1468,15 @@ async function contentVerificationGate(db, plan) {
           (lp.header || {}).subject
         );
       }
-      if (reparsed.prompt.questions) {
-        reparsed.prompt.questions.forEach((q, i) => {
+      if (split.pub.prompt && split.pub.prompt.questions) {
+        split.pub.prompt.questions.forEach((q, i) => {
+          // The stem is restricted (checked above); the public entry has none.
           compare(
             findings,
             itemId,
             `prompt.questions[${q.questionIndex}].stem`,
-            q.stem,
-            (lp.questions || [])[i] ? lp.questions[i].stem : undefined
+            "<absent>",
+            (lp.questions || [])[i] && "stem" in lp.questions[i] ? "<present>" : "<absent>"
           );
           if (q.questionType !== undefined) {
             compare(

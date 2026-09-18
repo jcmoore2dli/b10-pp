@@ -1229,14 +1229,16 @@ function buildDiscussionInput({
 async function scoreInterview(db, { submissionId, submission, itemId }) {
   const ctx = { submissionId, taskType: "INT", itemId };
 
-  // No answerKey subcollection for INT — there is no fixed answer to hide
-  // (data model v1.17). The item is read for the four stems, their types, and
-  // the interview framing, all of it already public to the student.
+  // No answerKey subcollection for INT — there is no fixed answer to hide.
+  // The public item gives the question types and the interview framing; the
+  // four STEMS are heard-only and live in restricted/heard (data model v1.18),
+  // joined back here by questionIndex.
   const itemSnap = await db.collection("toeflItems").doc(itemId).get();
   if (!itemSnap.exists) {
     throw new Error(`item document missing at toeflItems/${itemId}`);
   }
-  const item = itemSnap.data();
+  const heard = await readHeard(db, itemId);
+  const item = withInterviewStems(itemSnap.data(), heard, itemId);
 
   // The attempt carries the four clips: storagePath, durationSeconds and
   // transcriptStatus per question (data model v1.17, interviewClips). This is
@@ -1310,6 +1312,41 @@ async function scoreInterview(db, { submissionId, submission, itemId }) {
     },
     instructor: null,
   };
+}
+
+// Heard-only text for an item: toeflItems/{itemId}/restricted/heard (data
+// model v1.18 Change 4). Clients cannot read it; the scorers read it here
+// through the Admin SDK. No fallback to the public document: a missing heard
+// document is an item-data failure and says so, rather than silently scoring
+// against text that should not be public in the first place.
+async function readHeard(db, itemId) {
+  const snap = await db
+    .collection("toeflItems").doc(itemId)
+    .collection("restricted").doc("heard")
+    .get();
+  if (!snap.exists) {
+    throw new Error(`restricted/heard missing for toeflItems/${itemId} (heard-only text, data model v1.18)`);
+  }
+  return snap.data();
+}
+
+// The public item with each INT question's stem joined back from
+// restricted/heard by questionIndex. Every public question must have exactly
+// its stem there; a mismatch is an item-data failure.
+function withInterviewStems(item, heard, itemId) {
+  const pubQs = item.prompt?.questions;
+  const stems = new Map(
+    (Array.isArray(heard.questions) ? heard.questions : []).map((h) => [h.questionIndex, h.stem])
+  );
+  if (!Array.isArray(pubQs)) return item;   // buildInterviewInput reports the shape failure
+  const questions = pubQs.map((q) => {
+    const stem = stems.get(q.questionIndex);
+    if (typeof stem !== "string" || stem.trim() === "") {
+      throw new Error(`item ${itemId} question ${q.questionIndex} has no stem in restricted/heard`);
+    }
+    return { ...q, stem };
+  });
+  return { ...item, prompt: { ...item.prompt, questions } };
 }
 
 // Per-question case for a whole attempt, from the same inputs and the same
@@ -2066,11 +2103,18 @@ async function scoreListenAndRepeat(db, { submissionId, submission, itemId }) {
     );
   }
 
+  // The target sentences are heard-only and live in restricted/heard (data
+  // model v1.18), matched to the public utterances by utteranceIndex.
+  const heard = await readHeard(db, itemId);
+  const heardText = new Map(
+    (Array.isArray(heard.utterances) ? heard.utterances : []).map((h) => [h.utteranceIndex, h.text])
+  );
   const targets = utterances.map((u) => {
-    if (typeof u.text !== "string" || u.text.trim() === "") {
-      throw new Error(`item ${itemId} utterance ${u.utteranceIndex} has no text`);
+    const text = heardText.get(u.utteranceIndex);
+    if (typeof text !== "string" || text.trim() === "") {
+      throw new Error(`item ${itemId} utterance ${u.utteranceIndex} has no text in restricted/heard`);
     }
-    return u.text;
+    return text;
   });
 
   // ── Runtime inputs. All three are absent today; see the note above.
