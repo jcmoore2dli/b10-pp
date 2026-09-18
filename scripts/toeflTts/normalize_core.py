@@ -52,6 +52,19 @@ def pad_tail(x, sr, min_tail_s=MIN_TAIL_S):
     return np.concatenate([x, np.zeros(int(round(add * sr)))]), add
 
 
+def fade_tail(x, sr, fade_ms):
+    """Raised-cosine fade over the last fade_ms of the original, applied before
+    pad_tail. A clip that ends mid-sound otherwise steps straight from a live
+    sample to the padded zeros, which clicks (JC 2026-09-18, LTC-024/030). It
+    removes the click only; it cannot restore a syllable the model cut off."""
+    n = int(round(sr * fade_ms / 1000))
+    if n <= 0:
+        return x
+    x = x.copy()
+    x[-n:] *= 0.5 * (1 + np.cos(np.pi * np.arange(n) / n))
+    return x
+
+
 def normalize(x, sr, ceiling_db=LIMITER_CEILING_DB):
     """Returns (y, info). info: gain_db, limiter_max_reduction_db, lufs_out, true_peak_out_db."""
     lufs_in = L.lufs(x, sr)
@@ -79,12 +92,13 @@ def verify(path):
 
 LUFS_TOLERANCE = 0.15
 
-def normalize_file(src, dst):
+def normalize_file(src, dst, fade_out_ms=0):
     """Closed loop: normalise, encode, decode and re-measure; correct gain for
     the encoder's level change and tighten the ceiling if a decoded peak is
     above PEAK_LIMIT_DB. Returns the record for the manifest."""
     x, sr = sf.read(src, dtype="float64")
     dur_in = len(x) / sr
+    x = fade_tail(x, sr, fade_out_ms)
     x, tail_added = pad_tail(x, sr)
     offset, ceiling, passes = 0.0, LIMITER_CEILING_DB, 0
     for passes in range(1, 6):
@@ -98,7 +112,7 @@ def normalize_file(src, dst):
         if not ok_l: offset += TARGET_LUFS - v["lufs"]
         if not ok_p: ceiling -= (max(v["true_peak_db"], v["sample_peak_db"]) - PEAK_LIMIT_DB) + 0.1
     return dict(targetLufs=TARGET_LUFS, peakLimitDb=PEAK_LIMIT_DB, lufsIn=info["lufs_in"],
-                tailPaddedMs=round(tail_added * 1000), minTailMs=round(MIN_TAIL_S * 1000),
+                fadeOutMs=fade_out_ms, tailPaddedMs=round(tail_added * 1000), minTailMs=round(MIN_TAIL_S * 1000),
                 gainDb=round(info["gain_db"] + offset, 2), limiterMaxReductionDb=info["limiter_max_reduction_db"],
                 lufsOut=v["lufs"], samplePeakDb=v["sample_peak_db"], truePeakDb=v["true_peak_db"],
                 durationIn=round(dur_in, 3), durationOut=v["dur"], passes=passes, ok=bool(ok_l and ok_p))

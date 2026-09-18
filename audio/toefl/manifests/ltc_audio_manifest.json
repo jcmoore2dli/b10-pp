@@ -25,6 +25,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.37,
+            "fadeOutMs": 25,
             "tailPaddedMs": 120,
             "minTailMs": 300,
             "gainDb": -2.19,
@@ -40,18 +41,18 @@
             "note": "loudness normalized to -20 LUFS: gain -2.19 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "13cef9ae9be4d101c5e9aa6f5516fded18b140b191caca1acefe8a8b41c6bc57",
-            "normalizedSha256": "9b6ee25718fc3e40c1f5bbb304f5dace57264ab8714430d6981cfdb93d1598ae",
+            "normalizedSha256": "4d348e4eaf36102ecd1106e0f5a58c38b13fd8d5ff39c32a23a9f1db7a8cd71b",
             "bytes": 389537,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-001/LTC-001_stimulus.mp3",
-            "generation": "1789680185645860",
-            "md5Hash": "ToIy+HclEQ82J7ro6/siqA==",
+            "generation": "1789740995588358",
+            "md5Hash": "SzDmrihASz2v0hLi6n+Xwg==",
             "size": 389537,
-            "sha256": "9b6ee25718fc3e40c1f5bbb304f5dace57264ab8714430d6981cfdb93d1598ae",
-            "uploadedOn": "2026-09-17"
+            "sha256": "4d348e4eaf36102ecd1106e0f5a58c38b13fd8d5ff39c32a23a9f1db7a8cd71b",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -125,6 +126,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.16,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
             "gainDb": -2.4,
@@ -140,18 +142,18 @@
             "note": "loudness normalized to -20 LUFS: gain -2.40 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "bfd2ce9c6f387288e0ed066fe6d114788e9fed37325455e0a58dfce4a804497f",
-            "normalizedSha256": "a3291415e802806a978bb489440d8cffd4009c7702c16c4e25738229aec30bb6",
+            "normalizedSha256": "6e38e25a20e616692c4225a0ff1aad3598da6e0ed2522b95c7c37699d2c8ddde",
             "bytes": 442199,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-002/LTC-002_stimulus.mp3",
-            "generation": "1789680186116095",
-            "md5Hash": "rKb2eB5+jCUBJogQofiIAw==",
+            "generation": "1789740995637626",
+            "md5Hash": "FASuXiY0aATJ7D430XUMYw==",
             "size": 442199,
-            "sha256": "a3291415e802806a978bb489440d8cffd4009c7702c16c4e25738229aec30bb6",
-            "uploadedOn": "2026-09-17"
+            "sha256": "6e38e25a20e616692c4225a0ff1aad3598da6e0ed2522b95c7c37699d2c8ddde",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -225,6 +227,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16.89,
+            "fadeOutMs": 25,
             "tailPaddedMs": 100,
             "minTailMs": 300,
             "gainDb": -2.66,
@@ -240,18 +243,18 @@
             "note": "loudness normalized to -20 LUFS: gain -2.66 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "70f06d5e15f24f3316770b5461eb872f432d43b79ed3e1d47d63818d7ce00205",
-            "normalizedSha256": "e4c79a10b72ec47759535d47b5102522cb2be2983eb1edf723ec4fd0fe1f8938",
+            "normalizedSha256": "c758a15000c8e10b8e0f4ea8dc3810361e201dd5ee65a5c718d3589074695b4c",
             "bytes": 559646,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-003/LTC-003_stimulus.mp3",
-            "generation": "1789680186774901",
-            "md5Hash": "s+a1FX4rRQ7stZbdjK4yow==",
+            "generation": "1789740995656226",
+            "md5Hash": "+lDF2yFCcgRZsqFcJa7qoA==",
             "size": 559646,
-            "sha256": "e4c79a10b72ec47759535d47b5102522cb2be2983eb1edf723ec4fd0fe1f8938",
-            "uploadedOn": "2026-09-17"
+            "sha256": "c758a15000c8e10b8e0f4ea8dc3810361e201dd5ee65a5c718d3589074695b4c",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -325,7 +328,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.53,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -2.01,
             "limiterMaxReductionDb": 0,
@@ -333,25 +337,25 @@
             "samplePeakDb": -3.19,
             "truePeakDb": -3.18,
             "durationIn": 33.28,
-            "durationOut": 33.58,
+            "durationOut": 33.57,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -2.01 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "5388a5cb3398f959006b08f3649c5e5e6165f77181791d83c79c6008d86e750f",
-            "normalizedSha256": "4435bd3f5a43b938312920b411372041f510b69a9b1ea78c690c191020c82b77",
+            "normalizedSha256": "760b83076f02d8885a97382c1ad63832aece33a8453382c0e40b5820448e93ef",
             "bytes": 538330,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-004/LTC-004_stimulus.mp3",
-            "generation": "1789680186307796",
-            "md5Hash": "Px/eT02p593Y4zUzi/8l0w==",
+            "generation": "1789740995654358",
+            "md5Hash": "GvHMaOR0L9/HMw2KVZmSzQ==",
             "size": 538330,
-            "sha256": "4435bd3f5a43b938312920b411372041f510b69a9b1ea78c690c191020c82b77",
-            "uploadedOn": "2026-09-17"
+            "sha256": "760b83076f02d8885a97382c1ad63832aece33a8453382c0e40b5820448e93ef",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -425,6 +429,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -19.44,
+            "fadeOutMs": 25,
             "tailPaddedMs": 100,
             "minTailMs": 300,
             "gainDb": -0.11,
@@ -440,18 +445,18 @@
             "note": "loudness normalized to -20 LUFS: gain -0.11 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "92839d986c4fec38cff3df1398bda2dcc41f8da8667cc017b3591c54d988afb7",
-            "normalizedSha256": "de72158c1ea4d65990c8aed452de74f11e054241f052c4c895a49bc50b9b6f1e",
+            "normalizedSha256": "66acca99b11538918889dc165c4fd998c5bf7163243233f7ed272c0de4aad8ba",
             "bytes": 506983,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-005/LTC-005_stimulus.mp3",
-            "generation": "1789680186830605",
-            "md5Hash": "m0GklRGSmQRa5N2qc9SQgw==",
+            "generation": "1789740995918896",
+            "md5Hash": "je+Qd4GGE97fWSF2zSEJiA==",
             "size": 506983,
-            "sha256": "de72158c1ea4d65990c8aed452de74f11e054241f052c4c895a49bc50b9b6f1e",
-            "uploadedOn": "2026-09-17"
+            "sha256": "66acca99b11538918889dc165c4fd998c5bf7163243233f7ed272c0de4aad8ba",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -525,7 +530,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.43,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -1.13,
             "limiterMaxReductionDb": 0,
@@ -533,25 +539,25 @@
             "samplePeakDb": -1.97,
             "truePeakDb": -1.96,
             "durationIn": 27.6,
-            "durationOut": 27.9,
+            "durationOut": 27.89,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -1.13 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "d57e46dd2e8b4c7bf9b6c63f09bab6fe68f8ddf7a1cadea85ad9f5094ef3f5b3",
-            "normalizedSha256": "087ddb4f412c2bec016d887ddca8258a1496c12e5cc1a0dd94c99da25158ab94",
-            "bytes": 447633,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "200d55686e663433eacb89946009655eaa64df7012dc40ac3488f14e96e26203",
+            "bytes": 447215,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-006/LTC-006_stimulus.mp3",
-            "generation": "1789680187070469",
-            "md5Hash": "jVVP03wRZ+G3vAju1svpKg==",
-            "size": 447633,
-            "sha256": "087ddb4f412c2bec016d887ddca8258a1496c12e5cc1a0dd94c99da25158ab94",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740995956023",
+            "md5Hash": "nhesE8YjnwiqYPY63hDWpA==",
+            "size": 447215,
+            "sha256": "200d55686e663433eacb89946009655eaa64df7012dc40ac3488f14e96e26203",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -625,6 +631,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -15.47,
+            "fadeOutMs": 25,
             "tailPaddedMs": 40,
             "minTailMs": 300,
             "gainDb": -4.08,
@@ -640,18 +647,18 @@
             "note": "loudness normalized to -20 LUFS: gain -4.08 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "f2730f6b49e6478d85ceb95624a60815ffcb82d78358462d32bb38a77063bb8c",
-            "normalizedSha256": "bcb2989cc880916a5d2486b259f266bdeba371ab9b296bda6be378e04b01516c",
+            "normalizedSha256": "df818e5b67723fc8a6661b71ca47de15689957930d41f413cc68fc3352a74c97",
             "bytes": 420048,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-007/LTC-007_stimulus.mp3",
-            "generation": "1789680187107549",
-            "md5Hash": "zzFQoBiscHrBlDpQP1tdNA==",
+            "generation": "1789740995943181",
+            "md5Hash": "C1qrmECzKnNF0+Eyse17vw==",
             "size": 420048,
-            "sha256": "bcb2989cc880916a5d2486b259f266bdeba371ab9b296bda6be378e04b01516c",
-            "uploadedOn": "2026-09-17"
+            "sha256": "df818e5b67723fc8a6661b71ca47de15689957930d41f413cc68fc3352a74c97",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -724,10 +731,11 @@
           "loudness": {
             "targetLufs": -20,
             "peakLimitDb": -1,
-            "lufsIn": -15,
+            "lufsIn": -15.01,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
-            "gainDb": -4.55,
+            "gainDb": -4.54,
             "limiterMaxReductionDb": 0,
             "lufsOut": -20,
             "samplePeakDb": -5.34,
@@ -737,21 +745,21 @@
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -4.55 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -4.54 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "66aa4d2350cd83ee50c2fa5152549cc53b6cf342ff889051663a4bc564bb808d",
-            "normalizedSha256": "2a818346f6ef2332fc03054270a9a298d14cedb0d2a59350fbbb846064ab4dfe",
+            "normalizedSha256": "0d8bed50c29ad4d20f3ad59dd9dc4b71b417ecd9e6cb157f49f31d1c7ec425ca",
             "bytes": 425481,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-008/LTC-008_stimulus.mp3",
-            "generation": "1789680188129996",
-            "md5Hash": "2TZJMsQzFD6EBTffgCrWdA==",
+            "generation": "1789740995958010",
+            "md5Hash": "3rhwBEMzppSRST05PthT5w==",
             "size": 425481,
-            "sha256": "2a818346f6ef2332fc03054270a9a298d14cedb0d2a59350fbbb846064ab4dfe",
-            "uploadedOn": "2026-09-17"
+            "sha256": "0d8bed50c29ad4d20f3ad59dd9dc4b71b417ecd9e6cb157f49f31d1c7ec425ca",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -825,7 +833,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.24,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -1.31,
             "limiterMaxReductionDb": 0,
@@ -833,25 +842,25 @@
             "samplePeakDb": -2.61,
             "truePeakDb": -2.59,
             "durationIn": 22.72,
-            "durationOut": 23.02,
+            "durationOut": 23.01,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -1.31 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "ab83b26ba28fdb24a96b6d510aca0dd361d962fd0b503c04334fbbc83643f42a",
-            "normalizedSha256": "f62a8e4373ac01fc1a3ca15b1b98a0c2922ddb97bba8bd5f6a08ee85e1ddbf68",
-            "bytes": 369474,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "5ebed6d836e86735fa3f3ad06fe9ae1f50537a6445664ef37e5b8e66f7e2cd49",
+            "bytes": 369057,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-009/LTC-009_stimulus.mp3",
-            "generation": "1789680187692682",
-            "md5Hash": "zKaeaQi683B2Xu8MKe9pAQ==",
-            "size": 369474,
-            "sha256": "f62a8e4373ac01fc1a3ca15b1b98a0c2922ddb97bba8bd5f6a08ee85e1ddbf68",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740996184140",
+            "md5Hash": "PUAGSD/gMVRyGo3xitof+A==",
+            "size": 369057,
+            "sha256": "5ebed6d836e86735fa3f3ad06fe9ae1f50537a6445664ef37e5b8e66f7e2cd49",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -925,7 +934,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16.56,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -2.99,
             "limiterMaxReductionDb": 0,
@@ -933,25 +943,25 @@
             "samplePeakDb": -3.84,
             "truePeakDb": -3.82,
             "durationIn": 30.8,
-            "durationOut": 31.1,
+            "durationOut": 31.09,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -2.99 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "f839e85167c57eef5864cac2860517ea941a29986345d22fa439e963223836b2",
-            "normalizedSha256": "3459c64fbd937e3d9990cfa8bed2b20b0d5e85db8f673a26a03ff1a910f66ec7",
+            "normalizedSha256": "0b285e2e42fe473b3038d435f2dd3009f8cefb2d8afe5e83714092bd65b13466",
             "bytes": 498624,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-010/LTC-010_stimulus.mp3",
-            "generation": "1789680188581810",
-            "md5Hash": "VmU8ayfQYrQIa69ilmi8zA==",
+            "generation": "1789740996210681",
+            "md5Hash": "vP64CS4fP5fAphZDW+emew==",
             "size": 498624,
-            "sha256": "3459c64fbd937e3d9990cfa8bed2b20b0d5e85db8f673a26a03ff1a910f66ec7",
-            "uploadedOn": "2026-09-17"
+            "sha256": "0b285e2e42fe473b3038d435f2dd3009f8cefb2d8afe5e83714092bd65b13466",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1025,33 +1035,34 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16.71,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 120,
             "minTailMs": 300,
-            "gainDb": -2.83,
+            "gainDb": -2.85,
             "limiterMaxReductionDb": 0,
             "lufsOut": -19.98,
-            "samplePeakDb": -3.56,
+            "samplePeakDb": -3.57,
             "truePeakDb": -3.56,
             "durationIn": 36.64,
-            "durationOut": 36.94,
+            "durationOut": 36.76,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -2.83 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -2.85 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "0ca9191be9dd63b3aef8ee72be0e6f46dca844a179d6ade8bedc6c2aa855c587",
-            "normalizedSha256": "dfce2162e5152cc5bd6c16ac315fa1cfb96412b046110b07d702fd64c98463f6",
-            "bytes": 592247,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "2a958fdf2fc44d0655ed48b49cffaa7d5d4c1b23d1f1aa1f1fcd744bafcb5265",
+            "bytes": 589321,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-011/LTC-011_stimulus.mp3",
-            "generation": "1789680188747922",
-            "md5Hash": "54Dv8W9M1CZSSGH8DcVEhQ==",
-            "size": 592247,
-            "sha256": "dfce2162e5152cc5bd6c16ac315fa1cfb96412b046110b07d702fd64c98463f6",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740996233702",
+            "md5Hash": "eoJUI2xSW5A5RfAoGKLyAw==",
+            "size": 589321,
+            "sha256": "2a958fdf2fc44d0655ed48b49cffaa7d5d4c1b23d1f1aa1f1fcd744bafcb5265",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1119,6 +1130,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.29,
+            "fadeOutMs": 25,
             "tailPaddedMs": 280,
             "minTailMs": 300,
             "gainDb": -1.27,
@@ -1134,18 +1146,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.27 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "4cc02e407551b0209d772e7c9a778029efd9c15502216548d6f7cb7c59776863",
-            "normalizedSha256": "e2786d66ec8353195fb2c3b01f9894f2ef404f2117b3188e433f70146aa9030b",
+            "normalizedSha256": "63a7d9649a3cfe80f279796ecb36e2b0c784ef9c7243f09e5dee1efdb55831f3",
             "bytes": 484413,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-012/LTC-012_stimulus.mp3",
-            "generation": "1789680188978077",
-            "md5Hash": "v6C7lfPkxOFDEnKvcZ13DA==",
+            "generation": "1789740996305114",
+            "md5Hash": "tYlHwOZpb95sjOYjxvA8mQ==",
             "size": 484413,
-            "sha256": "e2786d66ec8353195fb2c3b01f9894f2ef404f2117b3188e433f70146aa9030b",
-            "uploadedOn": "2026-09-17"
+            "sha256": "63a7d9649a3cfe80f279796ecb36e2b0c784ef9c7243f09e5dee1efdb55831f3",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1219,7 +1231,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -19.25,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 280,
             "minTailMs": 300,
             "gainDb": -0.29,
             "limiterMaxReductionDb": -0.2,
@@ -1227,25 +1240,25 @@
             "samplePeakDb": -1.47,
             "truePeakDb": -1.45,
             "durationIn": 27.6,
-            "durationOut": 27.9,
+            "durationOut": 27.88,
             "passes": 2,
             "ok": true,
             "limited": true,
             "note": "loudness normalized to -20 LUFS: gain -0.29 dB, peak limiter up to 0.20 dB",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "2b16eb8a2e508624c2650ed1b5c1a8a7dbefe56ea0f25234d2afac47ec412069",
-            "normalizedSha256": "96d7bbf3971f2a3b924bb1c6edc4ac6a8d7850c40d3e036d933945b707e88756",
-            "bytes": 447633,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "59cc67c26a97548261d41def500e481bcf0cf89bc2d0fad90722cfb165fa97a3",
+            "bytes": 447215,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-013/LTC-013_stimulus.mp3",
-            "generation": "1789680189499859",
-            "md5Hash": "/tI6oclpsUJEtwwPOdGxJA==",
-            "size": 447633,
-            "sha256": "96d7bbf3971f2a3b924bb1c6edc4ac6a8d7850c40d3e036d933945b707e88756",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740996440325",
+            "md5Hash": "yFl8kFrPJaIk0qHbYjfvZg==",
+            "size": 447215,
+            "sha256": "59cc67c26a97548261d41def500e481bcf0cf89bc2d0fad90722cfb165fa97a3",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1319,6 +1332,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -19.7,
+            "fadeOutMs": 25,
             "tailPaddedMs": 80,
             "minTailMs": 300,
             "gainDb": 0.16,
@@ -1334,18 +1348,18 @@
             "note": "loudness normalized to -20 LUFS: gain +0.16 dB, peak limiter up to 0.01 dB",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "255413b3543fb82e2e4b1cd8d0cf171e3aa6aba8fd009b3bdee687a15b5587f5",
-            "normalizedSha256": "4333ad2b95851dde00fe70b0a385764954e9c6c49467a060e98daaf9e1e1ea72",
+            "normalizedSha256": "247123144945f404c52413760008f7b1ccca0540a6514dee4079ca73694f4fa8",
             "bytes": 469367,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-014/LTC-014_stimulus.mp3",
-            "generation": "1789680189987383",
-            "md5Hash": "dNeggqn1cuNPGH0HAcwelQ==",
+            "generation": "1789740996465603",
+            "md5Hash": "DgBv7GTm/1l/bP1mDxM9ZA==",
             "size": 469367,
-            "sha256": "4333ad2b95851dde00fe70b0a385764954e9c6c49467a060e98daaf9e1e1ea72",
-            "uploadedOn": "2026-09-17"
+            "sha256": "247123144945f404c52413760008f7b1ccca0540a6514dee4079ca73694f4fa8",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1419,33 +1433,34 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -15.71,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 140,
             "minTailMs": 300,
-            "gainDb": -3.85,
+            "gainDb": -3.86,
             "limiterMaxReductionDb": 0,
-            "lufsOut": -20.01,
-            "samplePeakDb": -4.57,
+            "lufsOut": -20.02,
+            "samplePeakDb": -4.58,
             "truePeakDb": -4.57,
             "durationIn": 30.8,
-            "durationOut": 31.1,
+            "durationOut": 30.94,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -3.85 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -3.86 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "9c9d03baa11335095f3240ad89fee63ee99b4709b15dac1f0aa365862963b7b9",
-            "normalizedSha256": "6b4bdfb7da3a39aa2f830a790f1445af0c4b5dc3e3bb6bf2c70fed269a9930a6",
-            "bytes": 498624,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "7bbef658260ddba9cffa9b36b0b5e4044ae9c26df8e2b8a67f8a96e6394eed74",
+            "bytes": 496116,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-015/LTC-015_stimulus.mp3",
-            "generation": "1789680190041548",
-            "md5Hash": "6gKiyF+MIynfZN1aQUm+JQ==",
-            "size": 498624,
-            "sha256": "6b4bdfb7da3a39aa2f830a790f1445af0c4b5dc3e3bb6bf2c70fed269a9930a6",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740996518764",
+            "md5Hash": "OFohY4UShMUvimUZ92CnFg==",
+            "size": 496116,
+            "sha256": "7bbef658260ddba9cffa9b36b0b5e4044ae9c26df8e2b8a67f8a96e6394eed74",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1519,6 +1534,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -15.26,
+            "fadeOutMs": 25,
             "tailPaddedMs": 270,
             "minTailMs": 300,
             "gainDb": -4.29,
@@ -1534,18 +1550,18 @@
             "note": "loudness normalized to -20 LUFS: gain -4.29 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "2186f08ab998978b8916682587aac8908114032a765b858a8c6574ade011cf5c",
-            "normalizedSha256": "41a132607b1155839a3729b41778c5cbe5b5b5406ea15c0182b85119c1bfc309",
+            "normalizedSha256": "6e2cef6fe00d18fe3e779afabf8b2daa8c8718ce5f76fa8fefba06900cdf8030",
             "bytes": 439274,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-016/LTC-016_stimulus.mp3",
-            "generation": "1789680190243488",
-            "md5Hash": "a50tcW6gjRpFoxbnso7Wlg==",
+            "generation": "1789740996603253",
+            "md5Hash": "yFArqUSerFxNzxKsnEywLA==",
             "size": 439274,
-            "sha256": "41a132607b1155839a3729b41778c5cbe5b5b5406ea15c0182b85119c1bfc309",
-            "uploadedOn": "2026-09-17"
+            "sha256": "6e2cef6fe00d18fe3e779afabf8b2daa8c8718ce5f76fa8fefba06900cdf8030",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1619,6 +1635,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.61,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
             "gainDb": -1.94,
@@ -1634,18 +1651,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.94 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "61d882b69e8f16a969a88802870e0ffe4843059aa0cc18f32a59084a5340272f",
-            "normalizedSha256": "5ef4fb437b9606bfe05922407aee4d42f08284adb65b87f26443769f2649b608",
+            "normalizedSha256": "454650e39367326761b65b6d680902fc22fb6f6ddc4ea08b97b187ee1d27d3fa",
             "bytes": 542092,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-017/LTC-017_stimulus.mp3",
-            "generation": "1789680190507752",
-            "md5Hash": "n4G2xpTdzcqzmIjaUA62Wg==",
+            "generation": "1789740996730462",
+            "md5Hash": "+mmi770eg8EaGOy1Gl9wzA==",
             "size": 542092,
-            "sha256": "5ef4fb437b9606bfe05922407aee4d42f08284adb65b87f26443769f2649b608",
-            "uploadedOn": "2026-09-17"
+            "sha256": "454650e39367326761b65b6d680902fc22fb6f6ddc4ea08b97b187ee1d27d3fa",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1719,6 +1736,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.95,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
             "gainDb": -1.6,
@@ -1734,18 +1752,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.60 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "c0692612e4a826019a02d5b2527ab86125499432da67bd7c61084f9f0a41f003",
-            "normalizedSha256": "21738c4db2a60eb7f9dc2c8a44554bec3fcfb5f107aaa58a2f3fecefec217ba5",
+            "normalizedSha256": "2ebf46c798f000ee975551fda215cc67b01754cd7d744a133967ee74a6327533",
             "bytes": 473128,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-018/LTC-018_stimulus.mp3",
-            "generation": "1789680191251629",
-            "md5Hash": "zu9SrkeSZhx8IlQivXc/pQ==",
+            "generation": "1789740996720980",
+            "md5Hash": "8t1fiyuYAp04KTw4PGlLIg==",
             "size": 473128,
-            "sha256": "21738c4db2a60eb7f9dc2c8a44554bec3fcfb5f107aaa58a2f3fecefec217ba5",
-            "uploadedOn": "2026-09-17"
+            "sha256": "2ebf46c798f000ee975551fda215cc67b01754cd7d744a133967ee74a6327533",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1819,6 +1837,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.69,
+            "fadeOutMs": 25,
             "tailPaddedMs": 260,
             "minTailMs": 300,
             "gainDb": -1.85,
@@ -1834,18 +1853,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.85 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "b32acba5810f8539fd0da59ed1ea1842d4a116589fc4368c1818b209b89a89c0",
-            "normalizedSha256": "92726b6c5835683f0d22caa72b41f5851531b4232ad927f0950dad30036c99d2",
+            "normalizedSha256": "aff36b8c8930fc8e20ebc736fb94d5cf0f73f6b49cfed7d576adc1056a19049b",
             "bytes": 495280,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-019/LTC-019_stimulus.mp3",
-            "generation": "1789680191036129",
-            "md5Hash": "cdj2DuvsWYrjthm3X7UtDw==",
+            "generation": "1789740996808507",
+            "md5Hash": "goMqlwSGa7VVW9bZEy3sXg==",
             "size": 495280,
-            "sha256": "92726b6c5835683f0d22caa72b41f5851531b4232ad927f0950dad30036c99d2",
-            "uploadedOn": "2026-09-17"
+            "sha256": "aff36b8c8930fc8e20ebc736fb94d5cf0f73f6b49cfed7d576adc1056a19049b",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -1919,6 +1938,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16.87,
+            "fadeOutMs": 25,
             "tailPaddedMs": 90,
             "minTailMs": 300,
             "gainDb": -2.68,
@@ -1934,18 +1954,18 @@
             "note": "loudness normalized to -20 LUFS: gain -2.68 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "551b1f03325ef6edf05473d3934833a21c4a4f51e89986ad2ec7655fa48cfbe2",
-            "normalizedSha256": "8847209326420c2885721b5da7dc9f7ec7b1a0680e7db11c8a77e5dc39cc079d",
+            "normalizedSha256": "46ff42ec06c3cb733fb1841e0de32d4900a73cad2bca275d85955f4a663c0f79",
             "bytes": 534986,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-020/LTC-020_stimulus.mp3",
-            "generation": "1789680191248202",
-            "md5Hash": "Zau1nI48UYLYZvb/AMsmPw==",
+            "generation": "1789740996880433",
+            "md5Hash": "OhFz9lrMAZHqbBMS5l3LGg==",
             "size": 534986,
-            "sha256": "8847209326420c2885721b5da7dc9f7ec7b1a0680e7db11c8a77e5dc39cc079d",
-            "uploadedOn": "2026-09-17"
+            "sha256": "46ff42ec06c3cb733fb1841e0de32d4900a73cad2bca275d85955f4a663c0f79",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2018,34 +2038,35 @@
           "loudness": {
             "targetLufs": -20,
             "peakLimitDb": -1,
-            "lufsIn": -18.91,
+            "lufsIn": -18.89,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
-            "gainDb": -0.65,
+            "gainDb": -0.67,
             "limiterMaxReductionDb": 0,
             "lufsOut": -20.01,
-            "samplePeakDb": -1.69,
+            "samplePeakDb": -1.7,
             "truePeakDb": -1.68,
             "durationIn": 32.88,
             "durationOut": 33.18,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -0.65 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -0.67 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "152ffebf0bf7210f209303cd415503b19d14a93d896e41417f2f35d4eb97ad01",
-            "normalizedSha256": "8007047131c019bf42788f3560f624487e079801ab7945bf8aeafbbe771b655f",
+            "normalizedSha256": "937180aece0fe38a586c1197cdc6764d132efb9a644a4ca6e627b087249085c6",
             "bytes": 532061,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-021/LTC-021_stimulus.mp3",
-            "generation": "1789680191511933",
-            "md5Hash": "F264trxwVZJ6PZPx7QxN6w==",
+            "generation": "1789740997042649",
+            "md5Hash": "R+FHdEaba/ThabxKL0TViA==",
             "size": 532061,
-            "sha256": "8007047131c019bf42788f3560f624487e079801ab7945bf8aeafbbe771b655f",
-            "uploadedOn": "2026-09-17"
+            "sha256": "937180aece0fe38a586c1197cdc6764d132efb9a644a4ca6e627b087249085c6",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2119,6 +2140,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.96,
+            "fadeOutMs": 25,
             "tailPaddedMs": 90,
             "minTailMs": 300,
             "gainDb": -1.61,
@@ -2134,18 +2156,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.61 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "37a185b76424fd80ca092035545f1b1b0a12c27c04e5515be444c2e49d0149ef",
-            "normalizedSha256": "f784c42c1a8222a66612c6e051f20d091da10bfcbe6b1b11490f9ea57cafdb7b",
+            "normalizedSha256": "df218c67c4da471ce60b3fd9c4f57053b528429ecedf85dad5a01a466d556ed7",
             "bytes": 491519,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-022/LTC-022_stimulus.mp3",
-            "generation": "1789680192124628",
-            "md5Hash": "ZC0LhBclU3gKY96cyFgkHw==",
+            "generation": "1789740997027975",
+            "md5Hash": "XBkIYp1XUYOSmx5laDgKgA==",
             "size": 491519,
-            "sha256": "f784c42c1a8222a66612c6e051f20d091da10bfcbe6b1b11490f9ea57cafdb7b",
-            "uploadedOn": "2026-09-17"
+            "sha256": "df218c67c4da471ce60b3fd9c4f57053b528429ecedf85dad5a01a466d556ed7",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2219,6 +2241,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -15.31,
+            "fadeOutMs": 25,
             "tailPaddedMs": 140,
             "minTailMs": 300,
             "gainDb": -4.24,
@@ -2234,18 +2257,18 @@
             "note": "loudness normalized to -20 LUFS: gain -4.24 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "ad73c284cc167d367f2251c18d35999f2267b3caba0357f3adf3f386554fcbf6",
-            "normalizedSha256": "d4f79523f334f304dd953a5f61fb64ceaefbec89fb4381e628ea6f8bcaa02928",
+            "normalizedSha256": "05693a68fe11d6483555016efc6d8ab62581087747263b124ad7b2324f35baef",
             "bytes": 492354,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-023/LTC-023_stimulus.mp3",
-            "generation": "1789680192610113",
-            "md5Hash": "sDsnfvJxzC43jht6wjvupQ==",
+            "generation": "1789740997088413",
+            "md5Hash": "gjvuTlkxLDXhkJ4s9rbeZg==",
             "size": 492354,
-            "sha256": "d4f79523f334f304dd953a5f61fb64ceaefbec89fb4381e628ea6f8bcaa02928",
-            "uploadedOn": "2026-09-17"
+            "sha256": "05693a68fe11d6483555016efc6d8ab62581087747263b124ad7b2324f35baef",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2312,40 +2335,50 @@
           },
           "modelId": "eleven_v3",
           "seed": 20260915,
-          "confirmation": "default",
-          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
-          "generatedOn": "2026-09-17",
+          "confirmation": "confirmed",
+          "confirmationNote": "individually confirmed correction (JC by ear, 2026-09-18): approved; slight cutoff audible but intelligible. Regenerated because the 2026-09-17 take ended mid-sound (no decay at the cutoff; content loss confirmed by waveform analysis 2026-09-18). Approved take: LTC-024_attempt1.",
+          "generatedOn": "2026-09-18",
+          "replacement": {
+            "on": "2026-09-18",
+            "approvedBy": "JC (by ear)",
+            "take": "LTC-024_attempt1",
+            "sourceFile": "~/toefl-staging/LTC_regen_takes_2026-09-18/LTC-024_attempt1.mp3",
+            "sourceSha256": "9969116c0e164c7b58b89775d4280d3919c7d76303ce9c422d4ff69015fcfe35",
+            "method": "production generator (same request and seed), approved take file installed as-is",
+            "backupOfReplaced": "~/toefl-staging/LTC_backup_before_regen_fade_2026-09-18/"
+          },
           "loudness": {
             "targetLufs": -20,
             "peakLimitDb": -1,
-            "lufsIn": -15.51,
+            "lufsIn": -15.63,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
-            "gainDb": -4.05,
+            "gainDb": -3.93,
             "limiterMaxReductionDb": 0,
-            "lufsOut": -20.01,
-            "samplePeakDb": -4.82,
-            "truePeakDb": -4.8,
+            "lufsOut": -20,
+            "samplePeakDb": -4.69,
+            "truePeakDb": -4.63,
             "durationIn": 32.72,
             "durationOut": 33.02,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -4.05 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -3.93 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
-            "rawSha256": "43599bd9c740382885e2ebfd9842541ff88a4a87644ebcc8b5a0c06d46753ccf",
-            "normalizedSha256": "b0eaf6fbdf6c660fa0b17da79c157a973ed1dfc60e9bb12d65bcfce377516a5d",
+            "rawSha256": "9969116c0e164c7b58b89775d4280d3919c7d76303ce9c422d4ff69015fcfe35",
+            "normalizedSha256": "0fcec7cd75b7d261a14c96e4b5acf276cb2329ee3c44a09a879f6662d7e7a4e5",
             "bytes": 529553,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-024/LTC-024_stimulus.mp3",
-            "generation": "1789680192593016",
-            "md5Hash": "zovWbro3zg+eis4pDsXkbg==",
+            "generation": "1789740997196552",
+            "md5Hash": "ocpaleHUuVfohAIYxYn/Yg==",
             "size": 529553,
-            "sha256": "b0eaf6fbdf6c660fa0b17da79c157a973ed1dfc60e9bb12d65bcfce377516a5d",
-            "uploadedOn": "2026-09-17"
+            "sha256": "0fcec7cd75b7d261a14c96e4b5acf276cb2329ee3c44a09a879f6662d7e7a4e5",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2419,7 +2452,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.28,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -1.27,
             "limiterMaxReductionDb": 0,
@@ -2427,25 +2461,25 @@
             "samplePeakDb": -2.06,
             "truePeakDb": -2.05,
             "durationIn": 28.56,
-            "durationOut": 28.86,
+            "durationOut": 28.85,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -1.27 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "8271cbeb6616aefa4e003e28887233ee61fd9b8142b1f6db7b6b310b68fa42d3",
-            "normalizedSha256": "2fb83338228af39ec67ba6a02a1c399037ab76339483e7587fa1a2b35f423023",
+            "normalizedSha256": "51e7ed2c1d5a70ae4e79c5ca6405b77515efef3d1f015ba52f3c9e24a60088ac",
             "bytes": 462679,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-025/LTC-025_stimulus.mp3",
-            "generation": "1789680192793433",
-            "md5Hash": "8UGWs6/xg+Ac/v9l73rKAg==",
+            "generation": "1789740997294227",
+            "md5Hash": "Ly6aoTcZEylrwDL0WryhIA==",
             "size": 462679,
-            "sha256": "2fb83338228af39ec67ba6a02a1c399037ab76339483e7587fa1a2b35f423023",
-            "uploadedOn": "2026-09-17"
+            "sha256": "51e7ed2c1d5a70ae4e79c5ca6405b77515efef3d1f015ba52f3c9e24a60088ac",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2519,6 +2553,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.78,
+            "fadeOutMs": 25,
             "tailPaddedMs": 150,
             "minTailMs": 300,
             "gainDb": -1.77,
@@ -2534,18 +2569,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.77 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "c57e41ed2cb291e71e02e270519108bed0a651876d1669630439bf7dbb5d5466",
-            "normalizedSha256": "fb94c70c705a1d300ccb0236dc636b0128bf40e720585ec7675d1d50d49c8eb1",
+            "normalizedSha256": "783ad23c5fc1d026dc1618cde98a483fe4d4c10bd0b344b8edc0cf0fd856246e",
             "bytes": 428407,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-026/LTC-026_stimulus.mp3",
-            "generation": "1789680192974491",
-            "md5Hash": "1CwsSWXhxbSuLuZsse491Q==",
+            "generation": "1789740997313969",
+            "md5Hash": "JRZb4VQEU4KIeVoVmqaVag==",
             "size": 428407,
-            "sha256": "fb94c70c705a1d300ccb0236dc636b0128bf40e720585ec7675d1d50d49c8eb1",
-            "uploadedOn": "2026-09-17"
+            "sha256": "783ad23c5fc1d026dc1618cde98a483fe4d4c10bd0b344b8edc0cf0fd856246e",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2619,6 +2654,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.17,
+            "fadeOutMs": 25,
             "tailPaddedMs": 120,
             "minTailMs": 300,
             "gainDb": -1.38,
@@ -2634,18 +2670,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.38 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "339d8a1abba8c7bd0c80c49fe63b361ba981b234810b1d98b9ab9a2bf847616c",
-            "normalizedSha256": "0c4fbee00906e7e90b6d19b7d0a85f5a01d437638d65ece8691d2b0aee61b892",
+            "normalizedSha256": "bfe13fb2c98a0f2e8eb1a772480d2d7c1d342c9639fffc5fe3cf8c002ab0cf2c",
             "bytes": 521194,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-027/LTC-027_stimulus.mp3",
-            "generation": "1789680193782102",
-            "md5Hash": "jZooMnxmbNgiWpioWol3xQ==",
+            "generation": "1789740997355889",
+            "md5Hash": "gyfmYFPqv/TCCPT1HNZ+tw==",
             "size": 521194,
-            "sha256": "0c4fbee00906e7e90b6d19b7d0a85f5a01d437638d65ece8691d2b0aee61b892",
-            "uploadedOn": "2026-09-17"
+            "sha256": "bfe13fb2c98a0f2e8eb1a772480d2d7c1d342c9639fffc5fe3cf8c002ab0cf2c",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2719,7 +2755,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.46,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -2.09,
             "limiterMaxReductionDb": 0,
@@ -2727,25 +2764,25 @@
             "samplePeakDb": -3.23,
             "truePeakDb": -3.23,
             "durationIn": 34.16,
-            "durationOut": 34.46,
+            "durationOut": 34.45,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -2.09 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "dd719f0ba90ec38029851046fd06b31b9b0c1e09ea143b5d9ede31782df98a7d",
-            "normalizedSha256": "ce1b295ddcb3ad4ef481f5813ff6a3f193b38bc4347f50c79aa8ffcb1bff8a16",
-            "bytes": 552541,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "10aa84af9d061015f45035c68b8ba47451f0aa4b2daa3c541ed7216c227f42fa",
+            "bytes": 552123,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-028/LTC-028_stimulus.mp3",
-            "generation": "1789680194043330",
-            "md5Hash": "SnC9Dm3ktcpEtluupWxseA==",
-            "size": 552541,
-            "sha256": "ce1b295ddcb3ad4ef481f5813ff6a3f193b38bc4347f50c79aa8ffcb1bff8a16",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740997469708",
+            "md5Hash": "kiF0CA6rj5lFKOqiCy3FfA==",
+            "size": 552123,
+            "sha256": "10aa84af9d061015f45035c68b8ba47451f0aa4b2daa3c541ed7216c227f42fa",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2819,6 +2856,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.11,
+            "fadeOutMs": 25,
             "tailPaddedMs": 220,
             "minTailMs": 300,
             "gainDb": -1.44,
@@ -2834,18 +2872,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.44 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "7377dd62c4dbdb412825e68ee418b42f92aa08926fa51c7c770f39651a481da7",
-            "normalizedSha256": "4351aa34dc7762194cacb5884e4727eea7fff60a55f3a55df53d73df82d5d476",
+            "normalizedSha256": "aae8a1e69f36ff39e62b96f0a97a696f253ce946bedc2551e2c5e146cf02e149",
             "bytes": 445961,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-029/LTC-029_stimulus.mp3",
-            "generation": "1789680194087777",
-            "md5Hash": "nw7aBqV9FYk2XqTpunE+Wg==",
+            "generation": "1789740997590948",
+            "md5Hash": "E+5gvS4w2Xn0EFboiiVT3Q==",
             "size": 445961,
-            "sha256": "4351aa34dc7762194cacb5884e4727eea7fff60a55f3a55df53d73df82d5d476",
-            "uploadedOn": "2026-09-17"
+            "sha256": "aae8a1e69f36ff39e62b96f0a97a696f253ce946bedc2551e2c5e146cf02e149",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -2904,7 +2942,7 @@
           "textSent": "Did you see the driver gave us a three-star rating from Tuesday's ride? Yeah, I checked the app -- it said we were both ten minutes late to the pickup spot. That's fair, we were stuck finishing the meeting. Did he leave a comment too? Just that the pickup location pin was wrong, which wasn't really our fault. I'll message support about the pin -- maybe they can fix the rating. Good idea, I'll forward you the trip receipt for that.",
           "chars": 434,
           "words": 79,
-          "bytes": 401702,
+          "bytes": 402956,
           "settings": {
             "stability": 0.5,
             "use_speaker_boost": true,
@@ -2912,40 +2950,50 @@
           },
           "modelId": "eleven_v3",
           "seed": 20260915,
-          "confirmation": "default",
-          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_AU_M+TOEFL_TTS_VOICE_AU_F)",
-          "generatedOn": "2026-09-17",
+          "confirmation": "confirmed",
+          "confirmationNote": "individually confirmed correction (JC by ear, 2026-09-18): approved. Regenerated because the 2026-09-17 take ended mid-sound (no decay at the cutoff; content loss confirmed by waveform analysis 2026-09-18). Approved take: LTC-030_attempt1.",
+          "generatedOn": "2026-09-18",
           "loudness": {
             "targetLufs": -20,
             "peakLimitDb": -1,
-            "lufsIn": -19.19,
-            "tailPaddedMs": 300,
+            "lufsIn": -19.22,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 230,
             "minTailMs": 300,
-            "gainDb": -0.36,
+            "gainDb": -0.33,
             "limiterMaxReductionDb": 0,
             "lufsOut": -20,
-            "samplePeakDb": -2.01,
-            "truePeakDb": -1.99,
-            "durationIn": 25.04,
-            "durationOut": 25.34,
+            "samplePeakDb": -2.22,
+            "truePeakDb": -2.2,
+            "durationIn": 25.12,
+            "durationOut": 25.35,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -0.36 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -0.33 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
-            "rawSha256": "e4e04d42e60b2d37939d1c4ab9278ae84d9b0a25c5222886aca992fb36586e0e",
-            "normalizedSha256": "45a516ce68dbca8a60a0acfc1829af58b8c530f7fc182e7e75ac0d32db98c45a",
+            "rawSha256": "11581fe819c8232636009d443f4f511f7bf2d4789f9adc3d7025950b2ae2e32a",
+            "normalizedSha256": "462ffdcb1f4bc7aca0896c7511fa76d542068d51627eb8f2b59325a2603ab0b2",
             "bytes": 406673,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
+          },
+          "replacement": {
+            "on": "2026-09-18",
+            "approvedBy": "JC (by ear)",
+            "take": "LTC-030_attempt1",
+            "sourceFile": "~/toefl-staging/LTC_regen_takes_2026-09-18/LTC-030_attempt1.mp3",
+            "sourceSha256": "11581fe819c8232636009d443f4f511f7bf2d4789f9adc3d7025950b2ae2e32a",
+            "method": "production generator (same request and seed), approved take file installed as-is",
+            "backupOfReplaced": "~/toefl-staging/LTC_backup_before_regen_fade_2026-09-18/"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-030/LTC-030_stimulus.mp3",
-            "generation": "1789680194106239",
-            "md5Hash": "0VSS35vVqOE0R/uaPiETtQ==",
+            "generation": "1789740997626160",
+            "md5Hash": "2bEeSrbGtqZB7t2KEFN2bA==",
             "size": 406673,
-            "sha256": "45a516ce68dbca8a60a0acfc1829af58b8c530f7fc182e7e75ac0d32db98c45a",
-            "uploadedOn": "2026-09-17"
+            "sha256": "462ffdcb1f4bc7aca0896c7511fa76d542068d51627eb8f2b59325a2603ab0b2",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3019,7 +3067,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16.13,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 80,
             "minTailMs": 300,
             "gainDb": -3.42,
             "limiterMaxReductionDb": 0,
@@ -3027,25 +3076,25 @@
             "samplePeakDb": -4.14,
             "truePeakDb": -4.07,
             "durationIn": 28.64,
-            "durationOut": 28.94,
+            "durationOut": 28.72,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -3.42 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "3af76b6fa3ea7e3c52a14146584e6c5787960b1dcf2648327cc36b1f234ce750",
-            "normalizedSha256": "4d634a5263d70af52ae6935247fda96f260e93b324465044f0303d972ca52d0a",
-            "bytes": 463933,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "3c5dd00aadffd693323aeed00453157865484cf49741e768687065fdb10ffd9e",
+            "bytes": 460590,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-031/LTC-031_stimulus.mp3",
-            "generation": "1789680194512236",
-            "md5Hash": "xCNdLuKG3MxRXjnALJ1Dtw==",
-            "size": 463933,
-            "sha256": "4d634a5263d70af52ae6935247fda96f260e93b324465044f0303d972ca52d0a",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740997605129",
+            "md5Hash": "otLIWFXaTtKq7UXvRoOufA==",
+            "size": 460590,
+            "sha256": "3c5dd00aadffd693323aeed00453157865484cf49741e768687065fdb10ffd9e",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3119,7 +3168,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -15.34,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -4.21,
             "limiterMaxReductionDb": 0,
@@ -3127,25 +3177,25 @@
             "samplePeakDb": -4.98,
             "truePeakDb": -4.98,
             "durationIn": 29.28,
-            "durationOut": 29.58,
+            "durationOut": 29.57,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -4.21 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "bbefae20fcbd2f4bc9b86125767ed437d69c39764332cb153041760ba4565ff9",
-            "normalizedSha256": "6150a00098549a3928fb958e54899dbc1ea2c7a3e42054a3a56e4e2fdc35b7dc",
-            "bytes": 474382,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "76e9a86ce8e64264302b814ce0cd1061973908897824b14dcbdd77baa9b6dea9",
+            "bytes": 473964,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-032/LTC-032_stimulus.mp3",
-            "generation": "1789680194882763",
-            "md5Hash": "ntmCBv1oyfsY9N6+rRvkJg==",
-            "size": 474382,
-            "sha256": "6150a00098549a3928fb958e54899dbc1ea2c7a3e42054a3a56e4e2fdc35b7dc",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740997899744",
+            "md5Hash": "qt2YzydlcZP+cysgBBhw/Q==",
+            "size": 473964,
+            "sha256": "76e9a86ce8e64264302b814ce0cd1061973908897824b14dcbdd77baa9b6dea9",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3212,40 +3262,50 @@
           },
           "modelId": "eleven_v3",
           "seed": 20260915,
-          "confirmation": "default",
-          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NA_M+TOEFL_TTS_VOICE_NA_F)",
-          "generatedOn": "2026-09-17",
+          "confirmation": "confirmed",
+          "confirmationNote": "individually confirmed correction (JC by ear, 2026-09-18): approved. Regenerated because the 2026-09-17 take ended mid-sound (no decay at the cutoff; content loss confirmed by waveform analysis 2026-09-18). Approved take: LTC-033_attempt1.",
+          "generatedOn": "2026-09-18",
           "loudness": {
             "targetLufs": -20,
             "peakLimitDb": -1,
-            "lufsIn": -17.76,
-            "tailPaddedMs": 300,
+            "lufsIn": -17.71,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 280,
             "minTailMs": 300,
-            "gainDb": -1.79,
+            "gainDb": -1.85,
             "limiterMaxReductionDb": 0,
-            "lufsOut": -20,
-            "samplePeakDb": -2.59,
-            "truePeakDb": -2.57,
+            "lufsOut": -19.99,
+            "samplePeakDb": -2.81,
+            "truePeakDb": -2.8,
             "durationIn": 31.44,
-            "durationOut": 31.74,
+            "durationOut": 31.72,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -1.79 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -1.85 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
-            "rawSha256": "872d0272129c2ecaf9e97b0b7d0b212c7bf6c0175f6fd35b24850ffd8eaa584f",
-            "normalizedSha256": "3fb3a61d2f17744f2845857b6f093030ff13c189b0609279a55aae24ddf24b19",
-            "bytes": 509073,
-            "normalizedOn": "2026-09-17"
+            "rawSha256": "27873bba8b9ace2f0d1eb4b910e11300193e711972a385435a533901422ddc0c",
+            "normalizedSha256": "39ce4bc78a101c41a786a71e6287333219cff071b5cae58a9a4ff90fc67d0561",
+            "bytes": 508655,
+            "normalizedOn": "2026-09-18"
+          },
+          "replacement": {
+            "on": "2026-09-18",
+            "approvedBy": "JC (by ear)",
+            "take": "LTC-033_attempt1",
+            "sourceFile": "~/toefl-staging/LTC_regen_takes_2026-09-18/LTC-033_attempt1.mp3",
+            "sourceSha256": "27873bba8b9ace2f0d1eb4b910e11300193e711972a385435a533901422ddc0c",
+            "method": "production generator (same request and seed), approved take file installed as-is",
+            "backupOfReplaced": "~/toefl-staging/LTC_backup_before_regen_fade_2026-09-18/"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-033/LTC-033_stimulus.mp3",
-            "generation": "1789680194909322",
-            "md5Hash": "6DiV3MLdJkVr5gH6Kdcl7w==",
-            "size": 509073,
-            "sha256": "3fb3a61d2f17744f2845857b6f093030ff13c189b0609279a55aae24ddf24b19",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740997908500",
+            "md5Hash": "qSaC6Ss2n3RUDm+hWa60vA==",
+            "size": 508655,
+            "sha256": "39ce4bc78a101c41a786a71e6287333219cff071b5cae58a9a4ff90fc67d0561",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3319,7 +3379,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.1,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -1.45,
             "limiterMaxReductionDb": 0,
@@ -3327,25 +3388,25 @@
             "samplePeakDb": -2.73,
             "truePeakDb": -2.72,
             "durationIn": 36.24,
-            "durationOut": 36.54,
+            "durationOut": 36.53,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -1.45 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "f15d58b6ace81625d11d27197f5f805292e4b526d459f5b6dc8fe63802e8f8ae",
-            "normalizedSha256": "4fb842713bc9f4791c67ce828216d900145d56f395b3056e6348a52afc75f87f",
+            "normalizedSha256": "42ac90c423647037b06e006f0528aee29913e7327b698f7ef7b549ef8af06bc3",
             "bytes": 585559,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-034/LTC-034_stimulus.mp3",
-            "generation": "1789680195062989",
-            "md5Hash": "yktwYzUHg4wvyjxB9XSM9g==",
+            "generation": "1789740997936963",
+            "md5Hash": "9XtQfISZc01xsTPUSs5Fpw==",
             "size": 585559,
-            "sha256": "4fb842713bc9f4791c67ce828216d900145d56f395b3056e6348a52afc75f87f",
-            "uploadedOn": "2026-09-17"
+            "sha256": "42ac90c423647037b06e006f0528aee29913e7327b698f7ef7b549ef8af06bc3",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3419,6 +3480,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16.82,
+            "fadeOutMs": 25,
             "tailPaddedMs": 250,
             "minTailMs": 300,
             "gainDb": -2.73,
@@ -3434,18 +3496,18 @@
             "note": "loudness normalized to -20 LUFS: gain -2.73 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "af24974fac01b0d9f0c0abe383d341301c8309046df3e77442729e345f0ef1c2",
-            "normalizedSha256": "324f9803e5855c6e016cbb89b46ce66d9bef3de1bf639b2a7fe5e0f7661c16ef",
+            "normalizedSha256": "4ed13e2392da0ba9eb86edcf9c89ad77ad4f552ff13893cb14362bf2e32bf478",
             "bytes": 554212,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-035/LTC-035_stimulus.mp3",
-            "generation": "1789680195310596",
-            "md5Hash": "BwC60XKHayJRZ7qZ/6KioQ==",
+            "generation": "1789740997942628",
+            "md5Hash": "7Z8xSYbJ/F8i0U+4DE7MqA==",
             "size": 554212,
-            "sha256": "324f9803e5855c6e016cbb89b46ce66d9bef3de1bf639b2a7fe5e0f7661c16ef",
-            "uploadedOn": "2026-09-17"
+            "sha256": "4ed13e2392da0ba9eb86edcf9c89ad77ad4f552ff13893cb14362bf2e32bf478",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3519,6 +3581,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.59,
+            "fadeOutMs": 25,
             "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -1.95,
@@ -3534,18 +3597,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.95 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "bf5e55f10857061528b2207624c11207f484bc9c73afdd7a1711741c85a54dc7",
-            "normalizedSha256": "bbb313829917e99fe241aaeb4237cecb9c3de36299e18f60cfcbfd61fc67ec0a",
+            "normalizedSha256": "0cee64b642a61d93ad1b1a9153bcf4d2334b76a60bba64849baa07e5bbe8b131",
             "bytes": 572603,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-036/LTC-036_stimulus.mp3",
-            "generation": "1789680195945388",
-            "md5Hash": "zDXrH85u6YAJIwOfN9TbXA==",
+            "generation": "1789740998164905",
+            "md5Hash": "AhAfGpPK4uTmAtEZHwqfAQ==",
             "size": 572603,
-            "sha256": "bbb313829917e99fe241aaeb4237cecb9c3de36299e18f60cfcbfd61fc67ec0a",
-            "uploadedOn": "2026-09-17"
+            "sha256": "0cee64b642a61d93ad1b1a9153bcf4d2334b76a60bba64849baa07e5bbe8b131",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3619,6 +3682,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.61,
+            "fadeOutMs": 25,
             "tailPaddedMs": 130,
             "minTailMs": 300,
             "gainDb": -1.94,
@@ -3634,18 +3698,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.94 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "50a420a2c45bcc5abf01fd029e0c593c4fc1fe37661076f5f663c67a84daad43",
-            "normalizedSha256": "9a60d8079649a1fd2ff79721cd0bf5c38f933757c88eb011d84c16c0cd045798",
+            "normalizedSha256": "37acac2f21b9ba58d61e35081dec190c734b965a396d80c9045341265d1797df",
             "bytes": 442199,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-037/LTC-037_stimulus.mp3",
-            "generation": "1789680195689443",
-            "md5Hash": "Zyz/oacVnNVz8vePydxorQ==",
+            "generation": "1789740998213707",
+            "md5Hash": "Z/SVecZFSEeAySaFF0PXfA==",
             "size": 442199,
-            "sha256": "9a60d8079649a1fd2ff79721cd0bf5c38f933757c88eb011d84c16c0cd045798",
-            "uploadedOn": "2026-09-17"
+            "sha256": "37acac2f21b9ba58d61e35081dec190c734b965a396d80c9045341265d1797df",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3719,7 +3783,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.86,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 290,
             "minTailMs": 300,
             "gainDb": -0.7,
             "limiterMaxReductionDb": 0,
@@ -3727,25 +3792,25 @@
             "samplePeakDb": -1.91,
             "truePeakDb": -1.91,
             "durationIn": 23.28,
-            "durationOut": 23.58,
+            "durationOut": 23.57,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -0.70 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "fb6925f9fc1e0693f54fa67c22854bcbc072ca64e5c07aa38970db9e90251168",
-            "normalizedSha256": "8236b38bb36169aace4e9b5856c91f227d9444421affe0b5b8a5868320916206",
+            "normalizedSha256": "45f16e44334f8f1402294976efb86ec6a627556de37126ae99868972bd3f4a1b",
             "bytes": 378252,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-038/LTC-038_stimulus.mp3",
-            "generation": "1789680195734168",
-            "md5Hash": "pPHeEIdjzmvzPRjNVyS8gQ==",
+            "generation": "1789740998259858",
+            "md5Hash": "8PPnN5wkSJ13n++AAc/H0A==",
             "size": 378252,
-            "sha256": "8236b38bb36169aace4e9b5856c91f227d9444421affe0b5b8a5868320916206",
-            "uploadedOn": "2026-09-17"
+            "sha256": "45f16e44334f8f1402294976efb86ec6a627556de37126ae99868972bd3f4a1b",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3804,7 +3869,7 @@
           "textSent": "The plow guy quoted forty dollars for our shared driveway this winter. That's less than last year -- want to split it evenly like before? Actually, I was hoping you'd cover a bit more since I shoveled the walkway alone last month. Fair enough, I'll pay twenty-five and you pay fifteen. Deal. Should we pay him per storm or set up a season contract? Season contract -- it's cheaper if we get more than four storms.",
           "chars": 413,
           "words": 74,
-          "bytes": 455619,
+          "bytes": 454365,
           "settings": {
             "stability": 0.5,
             "use_speaker_boost": true,
@@ -3812,40 +3877,50 @@
           },
           "modelId": "eleven_v3",
           "seed": 20260915,
-          "confirmation": "default",
-          "confirmationNote": "default applied, not individually confirmed: LTC is generated natively by /v1/text-to-dialogue with eleven_v3 — the only model that endpoint supports — so it is the one type not on eleven_multilingual_v2 (JC 2026-09-17, after an A/B where the native version had correct closing intonation and no splice artefact). v3's stability scale differs, so the preset's value is snapped to v3's middle setting. Gender and accent come from the rotation in ltc_voice_manifest.json (toefl_ltc_conversation|TOEFL_TTS_VOICE_NZ_M+TOEFL_TTS_VOICE_NZ_F)",
-          "generatedOn": "2026-09-17",
+          "confirmation": "confirmed",
+          "confirmationNote": "individually confirmed correction (JC by ear, 2026-09-18): approved. Regenerated because the 2026-09-17 take ended mid-sound (no decay at the cutoff; content loss confirmed by waveform analysis 2026-09-18). Approved take: LTC-039_attempt3.",
+          "generatedOn": "2026-09-18",
+          "replacement": {
+            "on": "2026-09-18",
+            "approvedBy": "JC (by ear)",
+            "take": "LTC-039_attempt3",
+            "sourceFile": "~/toefl-staging/LTC_regen_takes_2026-09-18/LTC-039_attempt3.mp3",
+            "sourceSha256": "f4aadd5afb0ae60bae9e86797d56f3c4baace6a2d8859846d53593fbe823bbce",
+            "method": "production generator (same request and seed), approved take file installed as-is",
+            "backupOfReplaced": "~/toefl-staging/LTC_backup_before_regen_fade_2026-09-18/"
+          },
           "loudness": {
             "targetLufs": -20,
             "peakLimitDb": -1,
-            "lufsIn": -15.71,
+            "lufsIn": -15.74,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
-            "gainDb": -3.85,
+            "gainDb": -3.82,
             "limiterMaxReductionDb": 0,
             "lufsOut": -20.01,
-            "samplePeakDb": -4.68,
+            "samplePeakDb": -4.71,
             "truePeakDb": -4.66,
-            "durationIn": 28.4,
-            "durationOut": 28.7,
+            "durationIn": 28.32,
+            "durationOut": 28.62,
             "passes": 2,
             "ok": true,
             "limited": false,
-            "note": "loudness normalized to -20 LUFS: gain -3.85 dB, no limiting",
+            "note": "loudness normalized to -20 LUFS: gain -3.82 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
-            "rawSha256": "6964e1ecf39f43a10e2de74bdfb60df9985fc69a62a81fb12e2b65c06cc16b55",
-            "normalizedSha256": "4c39ef9f43f11fd30e7e8da2d9567395a990587b88bbdb3e5e091ee6ad1ff8fb",
-            "bytes": 460172,
-            "normalizedOn": "2026-09-17"
+            "rawSha256": "f4aadd5afb0ae60bae9e86797d56f3c4baace6a2d8859846d53593fbe823bbce",
+            "normalizedSha256": "365c06928f7e42412161f17bf9cf41cff32307defca4ef39519459e30c1c95c1",
+            "bytes": 458918,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-039/LTC-039_stimulus.mp3",
-            "generation": "1789680196014037",
-            "md5Hash": "WFJ57vwNdCAf6u9izPJ4hw==",
-            "size": 460172,
-            "sha256": "4c39ef9f43f11fd30e7e8da2d9567395a990587b88bbdb3e5e091ee6ad1ff8fb",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740998365604",
+            "md5Hash": "/zGCl/jRGDfij6pmjTLKUg==",
+            "size": 458918,
+            "sha256": "365c06928f7e42412161f17bf9cf41cff32307defca4ef39519459e30c1c95c1",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -3919,6 +3994,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -16,
+            "fadeOutMs": 25,
             "tailPaddedMs": 240,
             "minTailMs": 300,
             "gainDb": -3.55,
@@ -3934,18 +4010,18 @@
             "note": "loudness normalized to -20 LUFS: gain -3.55 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "b92050f661d728e542a73378cdf5dc8da10c6b71f800ffc81ea8513bb720efbb",
-            "normalizedSha256": "1e5b4c8fe85e0df27ffee0cf856d8fdc544019a6180cbb2a8ecb886331d66ad4",
+            "normalizedSha256": "8484ce1f34a899ec6115a99ecc7507e252d2b87cb1efbef387b8a09608f9f708",
             "bytes": 456828,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-040/LTC-040_stimulus.mp3",
-            "generation": "1789680196341297",
-            "md5Hash": "NekfrBQRDnONp20gVy3GIQ==",
+            "generation": "1789740998429952",
+            "md5Hash": "BGqRLwA/h/Xa1A0V704ncg==",
             "size": 456828,
-            "sha256": "1e5b4c8fe85e0df27ffee0cf856d8fdc544019a6180cbb2a8ecb886331d66ad4",
-            "uploadedOn": "2026-09-17"
+            "sha256": "8484ce1f34a899ec6115a99ecc7507e252d2b87cb1efbef387b8a09608f9f708",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -4019,6 +4095,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.78,
+            "fadeOutMs": 25,
             "tailPaddedMs": 180,
             "minTailMs": 300,
             "gainDb": -1.77,
@@ -4034,18 +4111,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.77 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "62d14a60b2a952169d813e97003940607c87b4065eda2b0b0aafc6cd3ae41f03",
-            "normalizedSha256": "b68d40ef45109ce473707041bb85c7150f85799e5bf2e80111af62a5c2bd0028",
+            "normalizedSha256": "b40de2171cd0b44c5d1de9fc398825302e77c2a0ea30a7e84cd759e0af7807f3",
             "bytes": 501968,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-041/LTC-041_stimulus.mp3",
-            "generation": "1789680196493593",
-            "md5Hash": "wOUssomXcVTLtKpIUnDx4Q==",
+            "generation": "1789740998505734",
+            "md5Hash": "d5ClqnSAppd+PR9dmkjWig==",
             "size": 501968,
-            "sha256": "b68d40ef45109ce473707041bb85c7150f85799e5bf2e80111af62a5c2bd0028",
-            "uploadedOn": "2026-09-17"
+            "sha256": "b40de2171cd0b44c5d1de9fc398825302e77c2a0ea30a7e84cd759e0af7807f3",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -4119,6 +4196,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.78,
+            "fadeOutMs": 25,
             "tailPaddedMs": 60,
             "minTailMs": 300,
             "gainDb": -1.77,
@@ -4134,18 +4212,18 @@
             "note": "loudness normalized to -20 LUFS: gain -1.77 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "ccd7598c79a90dad9e80fdd9cb3be695f25432280726669141688c92a0291ea5",
-            "normalizedSha256": "2135088b05953c717335d465f237455f2c22ae6a6006c66ade2adb30307a3b5b",
+            "normalizedSha256": "579615971e3e9639d3847833df5914bebfffab4752347c7b35a2aba752cf4fa1",
             "bytes": 475636,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-042/LTC-042_stimulus.mp3",
-            "generation": "1789680196775609",
-            "md5Hash": "42QdUi6tZn+C+ZsvBBDwKQ==",
+            "generation": "1789740998545598",
+            "md5Hash": "hIh1LjC5HdAOfbxBExQ2DQ==",
             "size": 475636,
-            "sha256": "2135088b05953c717335d465f237455f2c22ae6a6006c66ade2adb30307a3b5b",
-            "uploadedOn": "2026-09-17"
+            "sha256": "579615971e3e9639d3847833df5914bebfffab4752347c7b35a2aba752cf4fa1",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -4219,7 +4297,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.49,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 170,
             "minTailMs": 300,
             "gainDb": -2.06,
             "limiterMaxReductionDb": 0,
@@ -4227,25 +4306,25 @@
             "samplePeakDb": -2.75,
             "truePeakDb": -2.75,
             "durationIn": 37.36,
-            "durationOut": 37.66,
+            "durationOut": 37.53,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -2.06 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "b934dc7032f643e56741f61d84e4a9f63fd5dfbfef24ab0f0bb3980acc5e5e6e",
-            "normalizedSha256": "a067f5269e9c5eaf021e6e7a67f3a922c1b65f6ced4b3a01aa62da0d0507e68b",
-            "bytes": 603532,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "9d61c16089972321d9276e9fc30351a18746aa2cce7b60c3b1940c9d9752eb68",
+            "bytes": 601442,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-043/LTC-043_stimulus.mp3",
-            "generation": "1789680196901507",
-            "md5Hash": "j/cS/G1jlpkMTeVCar451w==",
-            "size": 603532,
-            "sha256": "a067f5269e9c5eaf021e6e7a67f3a922c1b65f6ced4b3a01aa62da0d0507e68b",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740998712713",
+            "md5Hash": "faOP13j1eQWQ5Rvpm67jcA==",
+            "size": 601442,
+            "sha256": "9d61c16089972321d9276e9fc30351a18746aa2cce7b60c3b1940c9d9752eb68",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -4319,7 +4398,8 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -17.8,
-            "tailPaddedMs": 300,
+            "fadeOutMs": 25,
+            "tailPaddedMs": 40,
             "minTailMs": 300,
             "gainDb": -1.74,
             "limiterMaxReductionDb": 0,
@@ -4327,25 +4407,25 @@
             "samplePeakDb": -3.03,
             "truePeakDb": -3,
             "durationIn": 32.24,
-            "durationOut": 32.54,
+            "durationOut": 32.28,
             "passes": 2,
             "ok": true,
             "limited": false,
             "note": "loudness normalized to -20 LUFS: gain -1.74 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "ef9bd0a6ad4d6ddc7b291f84d7e8c306fb4f035fee69fb859b5df68286de240a",
-            "normalizedSha256": "5458c4fed4fdb50166a7549b35a2060a3e61d3826735f5eda1bd13ab087fcc0a",
-            "bytes": 521612,
-            "normalizedOn": "2026-09-17"
+            "normalizedSha256": "5257bcfc85f3b5d0559770e9b5abab90ca2b1020f05092bda12c2669c878cb8b",
+            "bytes": 517432,
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-044/LTC-044_stimulus.mp3",
-            "generation": "1789680197049369",
-            "md5Hash": "YDHKzj6JszGEWcMfaEf2mw==",
-            "size": 521612,
-            "sha256": "5458c4fed4fdb50166a7549b35a2060a3e61d3826735f5eda1bd13ab087fcc0a",
-            "uploadedOn": "2026-09-17"
+            "generation": "1789740998814637",
+            "md5Hash": "MGpe3tzmlmqdkZ9ZOgJIYA==",
+            "size": 517432,
+            "sha256": "5257bcfc85f3b5d0559770e9b5abab90ca2b1020f05092bda12c2669c878cb8b",
+            "uploadedOn": "2026-09-18"
           }
         }
       },
@@ -4419,6 +4499,7 @@
             "targetLufs": -20,
             "peakLimitDb": -1,
             "lufsIn": -18.95,
+            "fadeOutMs": 25,
             "tailPaddedMs": 300,
             "minTailMs": 300,
             "gainDb": -0.6,
@@ -4434,18 +4515,18 @@
             "note": "loudness normalized to -20 LUFS: gain -0.60 dB, no limiting",
             "encoder": "libsndfile MPEG_LAYER_III CBR compression_level 0.61 (128 kbps)",
             "rawSha256": "aeb87cb89187d5bad0635956022a839007e02836d45549c1d3a878547a0953fb",
-            "normalizedSha256": "2a7d44a40a678d201dc5b3831d4759f4a704c40570e43bc2b188ff18f9c1d19a",
+            "normalizedSha256": "464b9933065cbfc4a2b0dd0460c6022f34fae250612ffac997f0b0b04c8b8ae5",
             "bytes": 451394,
-            "normalizedOn": "2026-09-17"
+            "normalizedOn": "2026-09-18"
           },
           "storage": {
             "bucket": "b10-practice-platform.firebasestorage.app",
             "path": "audio/toefl/ltc/LTC-045/LTC-045_stimulus.mp3",
-            "generation": "1789680197159251",
-            "md5Hash": "QgzeDPG4DQ7S6Mrlkbl0rQ==",
+            "generation": "1789740998852429",
+            "md5Hash": "JXLD4Inlz6pY//s+8plo7A==",
             "size": 451394,
-            "sha256": "2a7d44a40a678d201dc5b3831d4759f4a704c40570e43bc2b188ff18f9c1d19a",
-            "uploadedOn": "2026-09-17"
+            "sha256": "464b9933065cbfc4a2b0dd0460c6022f34fae250612ffac997f0b0b04c8b8ae5",
+            "uploadedOn": "2026-09-18"
           }
         }
       },

@@ -26,6 +26,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "toe
 import normalize_core as N  # noqa: E402
 
 TYPES = {t: f"toefl-{t}-audio-manifest/1" for t in ("int", "lar", "at", "lta", "lcr", "ltc")}
+# Fade-out before the tail padding, per type (JC 2026-09-18: LTC only, all 45
+# clips). A clip normalised with a different fade is renormalised from its raw.
+FADE_OUT_MS = {"ltc": 25}
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--type", required=True, choices=sorted(TYPES),
@@ -76,8 +79,9 @@ for item_id, item in sorted(manifest["items"].items()):
             # original, it is a fresh generator output: adopt it as the new raw.
             if rel not in sums or sha(out) != sums[rel]:
                 adopt.append((rel, out, raw))
-        elif sums.get(rel) != lo.get("rawSha256") or not os.path.exists(out) or sha(out) != lo.get("normalizedSha256"):
-            pass  # raw changed or output altered: renormalise below
+        elif (sums.get(rel) != lo.get("rawSha256") or not os.path.exists(out) or sha(out) != lo.get("normalizedSha256")
+              or lo.get("fadeOutMs", 0) != FADE_OUT_MS.get(T, 0)):
+            pass  # raw changed, output altered, or fade setting changed: renormalise below
         else:
             skipped += 1
             continue
@@ -123,7 +127,7 @@ if adopt:
 today = datetime.date.today().isoformat()
 for n, (item_id, clip_id, rel, raw, out) in enumerate(todo, 1):
     tmp = out + ".norm.mp3"
-    r = N.normalize_file(raw, tmp)
+    r = N.normalize_file(raw, tmp, FADE_OUT_MS.get(T, 0))
     if not r["ok"]:
         os.remove(tmp)
         sys.exit(f"{rel}: could not meet target (lufs {r['lufsOut']}, peak {r['truePeakDb']}); stopping.")
