@@ -42,6 +42,9 @@ const { FieldValue } = require("firebase-admin/firestore");
 // defineSecret is keyed by name, so declaring it here binds the same secret,
 // it does not create a second one.
 const ANTHROPIC_API_KEY = defineSecret("ANTHROPIC_API_KEY");
+// Same for Deepgram: B10-PP's Pass 1 key, bound by name, not a second secret.
+const DEEPGRAM_API_KEY = defineSecret("DEEPGRAM_API_KEY");
+const { TRANSCRIBERS } = require("./lib/toeflTranscription");
 
 // ── Scorers ───────────────────────────────────────────────────────────────────
 
@@ -2120,10 +2123,14 @@ const SCORERS = {
 // ── Trigger ───────────────────────────────────────────────────────────────────
 
 exports.onToeflSubmissionCreated = onDocumentCreated(
-  // secrets: the EM branch (and INT/DISC after it) calls the Anthropic API.
-  // Declared on the trigger so the runtime mounts it; the five MCQ types never
-  // read it.
-  { document: "toeflSubmissions/{submissionId}", secrets: [ANTHROPIC_API_KEY] },
+  // secrets: the EM branch (and INT/DISC after it) calls the Anthropic API;
+  // INT and LAR are transcribed with Deepgram first (lib/toeflTranscription).
+  // Declared on the trigger so the runtime mounts them; the MCQ types never
+  // read either.
+  {
+    document: "toeflSubmissions/{submissionId}",
+    secrets: [ANTHROPIC_API_KEY, DEEPGRAM_API_KEY],
+  },
   async (event) => {
     const submissionId = event.params.submissionId;
     const submission = event.data?.data();
@@ -2217,7 +2224,24 @@ exports.onToeflSubmissionCreated = onDocumentCreated(
       }
       const itemId = attemptSnap.data().itemId;
 
-      const result = await scorer(db, { submissionId, submission, itemId });
+      // Spoken types: transcribe inside the claimed run, so Deepgram is called
+      // once per submission, then score what was actually heard. A failure
+      // throws into the catch below and the submission is marked "error";
+      // the scorer is never reached.
+      const transcriber = TRANSCRIBERS[taskType];
+      const toScore = transcriber
+        ? await transcriber({
+            db,
+            bucket: admin.storage().bucket(),
+            submissionRef,
+            submission,
+            apiKey: DEEPGRAM_API_KEY.value(),
+            logger,
+            serverTimestamp: () => FieldValue.serverTimestamp(),
+          })
+        : submission;
+
+      const result = await scorer(db, { submissionId, submission: toScore, itemId });
 
       if (result === null) {
         // Unbuilt type. Put the status back rather than leaving it "scoring"

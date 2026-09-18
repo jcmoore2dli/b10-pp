@@ -32,9 +32,14 @@ const { createClient } = require("@deepgram/sdk");
  * @param {string} apiKey - Deepgram API key
  * @param {Buffer} audioBuffer - audio file buffer
  * @param {string} mimeType - e.g. "audio/webm", "audio/mp4", "audio/wav"
+ * @param {{ allowEmpty?: boolean }} [options] - allowEmpty: return an empty
+ *   result instead of throwing when Deepgram hears no words. Off by default,
+ *   so B10-PP's pipeline is unchanged. TOEFL needs it: an Interview answer
+ *   the student left silent is a real, scorable outcome (band 0), not a
+ *   transcription failure, and the TOEFL scorer treats the two differently.
  * @returns {{ transcript: string, words: Array, allWords: Array }}
  */
-async function transcribeAudio(apiKey, audioBuffer, mimeType) {
+async function transcribeAudio(apiKey, audioBuffer, mimeType, { allowEmpty = false } = {}) {
   const deepgram = createClient(apiKey);
 
   const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
@@ -64,6 +69,7 @@ async function transcribeAudio(apiKey, audioBuffer, mimeType) {
   const allWords = channels[0]?.alternatives?.[0]?.words || [];
 
   if (allWords.length === 0) {
+    if (allowEmpty) return { transcript: "", words: [], allWords: [] };
     throw new Error("Deepgram returned empty transcript");
   }
 

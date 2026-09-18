@@ -32,6 +32,7 @@ const stubs = {
   "firebase-admin/firestore": { FieldValue: { serverTimestamp: () => null } },
   "./lib/toeflLayerABPrompts": { EM_RUBRIC_PROMPT: "", DISC_RUBRIC_PROMPT: "", INT_RUBRIC_PROMPT: "" },
   "./lib/lar": require("../functions/lib/lar"),
+  "./lib/toeflTranscription": require("../functions/lib/toeflTranscription"),
 };
 const wrapper = Module.wrap(source + "\n;module.exports.__test = { scoreListenAndRepeat };");
 const mod = { exports: {} };

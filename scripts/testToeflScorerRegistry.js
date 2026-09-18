@@ -56,6 +56,7 @@ const stubs = {
   // one of them has to appear in this map or the eval throws at load time,
   // before a single check runs.
   "./lib/lar": require("../functions/lib/lar"),
+  "./lib/toeflTranscription": require("../functions/lib/toeflTranscription"),
 };
 const src =
   fs.readFileSync(SRC, "utf8") +
