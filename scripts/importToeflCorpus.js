@@ -10,6 +10,10 @@
 //   · TOEFL_Firestore_Data_Model_Spec_v1_17.md — field shapes, Collection 1
 //       and the answerKey subcollection
 //   · toefl_week_map_v1_0.json (toefl-corpus) — sole scheduling authority
+//   · TOEFL_Firestore_Data_Model_Spec_v1_18.md — `audio` (Appendix B) and
+//       LAR's stimulus.introduction, added 2026-09-18. The rest of v1.18
+//       (restricted/heard, venue, speakerGender, the serving rule) is not yet
+//       applied here.
 //
 // Built per v1.11 plus the four decisions JC confirmed Sep 10, 2026:
 //   1. AP format grouping is the STRUCTURAL result, not v1.11's descriptive
@@ -47,6 +51,8 @@ const os = require("os");
 
 const CORPUS_ROOT = path.join(os.homedir(), "toefl", "corpus");
 const WEEK_MAP_PATH = path.join(os.homedir(), "toefl-corpus", "toefl_week_map_v1_0.json");
+const MANIFEST_DIR = path.join(__dirname, "..", "audio", "toefl", "manifests");
+const { AUDIO_TYPES, buildItemAudio, verifyClips, stripForWrite } = require("./toeflImport/itemAudio");
 
 // ── CLI ──────────────────────────────────────────────────────────────────────
 
@@ -767,7 +773,17 @@ const PARSERS = {
       fail(`LAR must represent all 4 parts, found ${[...partsSeen].join(", ")}`);
     }
 
-    return { stimulus: {}, utterances };
+    // Data model v1.18 Appendix A: stimulus.introduction is REQUIRED — an LAR
+    // item without it is rejected (a parse failure, so the import halts rather
+    // than publishing an item the student can't be introduced to). Heard AND
+    // printed, so it stays public. The speaker gender is not written (v1.18's
+    // speakerGender field is not yet applied); it is returned for the audio
+    // check, where Appendix B requires the voice to match it.
+    const introduction = clean(once(body, /^INTRODUCTION:[ \t]*(.+)$/m, "INTRODUCTION")[1]);
+    if (!introduction) fail("LAR INTRODUCTION is empty");
+    const introSpeakerGender = once(body, /^INTRODUCTION SPEAKER GENDER:[ \t]*([MF])[ \t]*$/m, "INTRODUCTION SPEAKER GENDER")[1];
+
+    return { stimulus: { introduction }, utterances, introSpeakerGender };
   },
 
   INT(body, ctx) {
@@ -1015,6 +1031,13 @@ async function main() {
     }
   }
 
+  // Audio manifests (data model v1.18 Appendix B), read once.
+  const manifests = {};
+  for (const { manifest } of Object.values(AUDIO_TYPES)) {
+    const file = path.join(MANIFEST_DIR, `${manifest}_audio_manifest.json`);
+    manifests[manifest] = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")).items || {} : {};
+  }
+
   // ── Phase 1: read and parse everything. No writes yet, per the fail-closed
   // rule — a parse failure anywhere must stop the import before it writes.
   const plan = [];
@@ -1118,7 +1141,15 @@ async function main() {
           contentSpecVersion
         );
 
-        plan.push({ itemId, taskType, dir, cfg, publicDoc, keyDoc, parsed, status });
+        // audio (v1.18): built from the manifest here, verified against Storage
+        // before any write (Phase 1b). Text-only types are always null.
+        const audioBuild = AUDIO_TYPES[taskType]
+          ? buildItemAudio(taskType, manifests[AUDIO_TYPES[taskType].manifest][itemId], parsed,
+              { speakerGender: parsed.introSpeakerGender })
+          : { audio: null, problems: [] };
+        publicDoc.audio = null;
+
+        plan.push({ itemId, taskType, dir, cfg, publicDoc, keyDoc, parsed, status, audioBuild });
         perType[taskType].imported++;
         ctx.notes.forEach((n) => notes.push(`${itemId}: ${n}`));
       } catch (err) {
@@ -1143,22 +1174,27 @@ async function main() {
     process.exit(1);
   }
 
+  const admin = require(require.resolve("firebase-admin", {
+    paths: [path.join(__dirname, "..", "functions")],
+  }));
+
+  // ── Phase 1b: verify every audio clip in Storage (read-only metadata), then
+  // settle each item's `audio`. Runs in dry runs too, so the report is real.
+  // Storage is the live bucket even when Firestore is the emulator; nothing
+  // here writes to it.
+  await settleAudio(admin, plan);
+  reportAudio(plan);
+
   if (OPT.dryRun) {
     console.log("\nDRY RUN — nothing written. Re-run without --dry-run to import.\n");
     process.exit(0);
   }
 
   // ── Phase 2: write.
-  const admin = require(require.resolve("firebase-admin", {
-    paths: [path.join(__dirname, "..", "functions")],
-  }));
   const { FieldValue } = require(require.resolve("firebase-admin/firestore", {
     paths: [path.join(__dirname, "..", "functions")],
   }));
 
-  if (!admin.apps.length) {
-    admin.initializeApp({ projectId: process.env.GCLOUD_PROJECT || "b10-practice-platform" });
-  }
   const db = admin.firestore();
 
   console.log(`\nWriting ${plan.length} item(s)${emulator ? ` to emulator ${emulator}` : " LIVE"}...`);
@@ -1307,6 +1343,9 @@ async function contentVerificationGate(db, plan) {
       continue;
     }
     const live = snap.data();
+
+    // Public: audio (v1.18), exactly as settled before the write.
+    compare(findings, itemId, "audio", JSON.stringify(entry.publicDoc.audio ?? null), JSON.stringify(live.audio ?? null));
 
     // Public: stimulus fields.
     for (const [k, v] of Object.entries(reparsed.stimulus || {})) {
@@ -1488,6 +1527,52 @@ function truncate(v) {
 }
 
 // ── Reporting ────────────────────────────────────────────────────────────────
+
+// ── Audio (data model v1.18 Appendix B) ──────────────────────────────────────
+
+function initAdmin(admin) {
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      projectId: process.env.GCLOUD_PROJECT || "b10-practice-platform",
+      storageBucket: process.env.TOEFL_STORAGE_BUCKET || "b10-practice-platform.firebasestorage.app",
+    });
+  }
+}
+
+// Verify each built audio field's clips in Storage; write only a fully
+// verified field, else null with the reasons ("Otherwise it writes audio: null
+// and reports which clip is missing or mismatched").
+async function settleAudio(admin, plan) {
+  initAdmin(admin);
+  const bucket = admin.storage().bucket();
+  const getMetadata = async (p) => (await bucket.file(p).getMetadata())[0];
+  const queue = plan.filter((e) => e.audioBuild.audio);
+  const worker = async () => {
+    for (let e = queue.shift(); e; e = queue.shift()) {
+      const problems = await verifyClips(e.audioBuild.audio, getMetadata);
+      if (problems.length) e.audioBuild = { audio: null, problems };
+    }
+  };
+  await Promise.all(Array.from({ length: 8 }, worker));
+  for (const e of plan) e.publicDoc.audio = stripForWrite(e.audioBuild.audio);
+}
+
+function reportAudio(plan) {
+  console.log("\n=== Audio (data model v1.18 Appendix B) ===\n");
+  const types = [...new Set(plan.map((e) => e.taskType))].filter((t) => AUDIO_TYPES[t]);
+  for (const t of types) {
+    const es = plan.filter((e) => e.taskType === t);
+    const ok = es.filter((e) => e.publicDoc.audio).length;
+    console.log(`  ${t.padEnd(5)} ${String(ok).padStart(3)} / ${es.length} items with verified audio`);
+  }
+  const bad = plan.filter((e) => AUDIO_TYPES[e.taskType] && !e.publicDoc.audio);
+  if (bad.length) {
+    console.log(`\n  ${bad.length} audio-type item(s) get audio: null (not served until fixed):`);
+    for (const e of bad) {
+      console.log(`    ${e.itemId}: ${e.audioBuild.problems.slice(0, 3).join("; ")}${e.audioBuild.problems.length > 3 ? ` (+${e.audioBuild.problems.length - 3} more)` : ""}`);
+    }
+  }
+}
 
 function banner() {
   console.log("─".repeat(78));
