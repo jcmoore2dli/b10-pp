@@ -29,7 +29,9 @@ const { Timestamp } = require("firebase-admin/firestore");
 
 const FLAG = "INTELLIGIBILITY_UNCERTAIN";
 const ACTIONS = new Set(["restore", "keep"]);
-const REVIEWER_ROLES = new Set(["instructor", "admin"]);
+// Reviewers are TOEFL staff only (admins and T##-INS-# instructors), not every
+// "instructor" role: B10-PP instructors are not TOEFL staff (2026-09-19).
+const { isToeflStaffToken } = require("./lib/toeflStaff");
 
 class ReviewRefused extends Error {
   constructor(code, message) {
@@ -110,10 +112,10 @@ function applyReview(data, { utteranceIndex, action, reviewer, at }) {
 exports.reviewLarIntelligibility = onCall(async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError("unauthenticated", "Must be signed in.");
-  const role = request.auth?.token?.role;
-  if (!REVIEWER_ROLES.has(role)) {
-    throw new HttpsError("permission-denied", "Instructor role required.");
+  if (!isToeflStaffToken(request.auth?.token)) {
+    throw new HttpsError("permission-denied", "TOEFL instructor or admin role required.");
   }
+  const role = request.auth.token.role;
 
   const { submissionId, utteranceIndex, action } = request.data || {};
   if (!submissionId || typeof submissionId !== "string") {

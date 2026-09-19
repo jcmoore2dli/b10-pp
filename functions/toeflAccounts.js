@@ -306,9 +306,75 @@ exports.toeflExpirySweep = onSchedule(
   { schedule: "every day 03:00", timeZone: "America/Chicago" },
   async () => { await runExpirySweep(now()); });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// TOEFL instructor accounts (2026-09-19). Admin only, one step, modelled on
+// B10-PP's createInstructorAccount: the admin gives a number and a password,
+// and the server builds the ID T<yy>-INS-<n> from the current year in
+// America/Chicago (the same zone as the expiry sweep), so T26-INS-* becomes
+// T27-INS-* for instructors created in 2027 without any client involvement.
+// Claims are {b10Id, role: "instructor"} (JC). The T##-INS-# ID is what makes
+// the account TOEFL staff in the rules (isToeflStaff); B10-PP's rules see an
+// ordinary instructor.
+// ─────────────────────────────────────────────────────────────────────────────
+const { TOEFL_INSTRUCTOR_ID_PATTERN } = require("./lib/toeflStaff");
+
+function chicagoYear(d) {
+  return Number(new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", year: "numeric" }).format(d));
+}
+
+function toeflInstructorId(number, at) {
+  return `T${String(chicagoYear(at)).slice(-2)}-INS-${number}`;
+}
+
+// Input: { number: 1..999 (number or digit string), password: string }
+// Returns: { success: true, b10Id }
+exports.createToeflInstructorAccount = onCall(async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in.");
+  if (request.auth.token.role !== "admin") {
+    throw new HttpsError("permission-denied", "Admin role required.");
+  }
+  const { number, password } = request.data || {};
+  const n = typeof number === "number" ? number : /^\d+$/.test(String(number || "").trim()) ? Number(String(number).trim()) : NaN;
+  if (!Number.isInteger(n) || n < 1 || n > 999) {
+    throw new HttpsError("invalid-argument", "number must be a whole number from 1 to 999.");
+  }
+  if (typeof password !== "string" || password.length < 6) {
+    throw new HttpsError("invalid-argument", "Password must be at least 6 characters.");
+  }
+
+  const b10Id = toeflInstructorId(n, now());
+  if (!TOEFL_INSTRUCTOR_ID_PATTERN.test(b10Id)) {
+    throw new HttpsError("internal", `Built an invalid instructor ID: ${b10Id}`);
+  }
+
+  let uid;
+  try {
+    uid = (await admin.auth().createUser({ email: toSyntheticEmail(b10Id), password })).uid;
+  } catch (err) {
+    if (err.code === "auth/email-already-exists") {
+      throw new HttpsError("already-exists", `${b10Id} already exists.`);
+    }
+    logger.error("createToeflInstructorAccount: createUser failed", { b10Id, error: err.message });
+    throw new HttpsError("internal", "Account creation failed.");
+  }
+
+  try {
+    await admin.auth().setCustomUserClaims(uid, { b10Id, role: "instructor" });
+  } catch (err) {
+    // Without claims the login would be a role-less orphan; remove it.
+    await admin.auth().deleteUser(uid).catch(() => {});
+    logger.error("createToeflInstructorAccount: setCustomUserClaims failed", { b10Id, error: err.message });
+    throw new HttpsError("internal", "Account creation failed.");
+  }
+
+  const by = request.auth.token.b10Id || request.auth.uid;
+  logger.info("createToeflInstructorAccount: complete", { uid, b10Id, by });
+  return { success: true, b10Id };
+});
+
 // Exposed for tests.
 exports._internal = {
   normalizeCode, toSyntheticEmail, expiryFor, hourKey, clientIp, TOEFL_ID_PATTERN,
-  FAILS_PER_IP_PER_HOUR, FAILS_GLOBAL_PER_HOUR, THROTTLE, runExpirySweep,
+  FAILS_PER_IP_PER_HOUR, FAILS_GLOBAL_PER_HOUR, THROTTLE, runExpirySweep, toeflInstructorId,
   setNow(fn) { now = fn; },
 };

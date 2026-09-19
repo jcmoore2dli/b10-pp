@@ -25,7 +25,9 @@ if (!PROJECT_ID.startsWith("demo-") || !FS_HOST || !AUTH_HOST) {
 // assertions share one initialized app.
 const admin = require(require.resolve("firebase-admin", { paths: [path.join(__dirname, "../functions")] }));
 admin.initializeApp({ projectId: PROJECT_ID });
-const { createToeflStudentAccount, setToeflFreeze, _internal } = require("../functions/toeflAccounts");
+const { createToeflStudentAccount, setToeflFreeze, createToeflInstructorAccount, _internal } = require("../functions/toeflAccounts");
+const { reviewLarIntelligibility } = require("../functions/toeflLarReview");
+const { isToeflStaffToken } = require("../functions/lib/toeflStaff");
 
 const db = admin.firestore();
 const UNAVAILABLE = "Invalid or unavailable access code.";
@@ -365,5 +367,102 @@ describe("toeflExpirySweep", () => {
     assert.strictEqual(res.throttleDeleted, 1);
     assert.strictEqual((await T.doc("global_2027123000").get()).exists, false);
     assert.strictEqual((await T.doc("global_2028010208").get()).exists, true);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// createToeflInstructorAccount, and the shared TOEFL staff check
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("createToeflInstructorAccount", () => {
+  const mk = (data, auth = ADMIN) => createToeflInstructorAccount.run({ data, auth, rawRequest: {} });
+  afterEach(() => _internal.setNow(() => new Date()));
+
+  it("creates T<yy>-INS-<n> with claims {b10Id, role: instructor}", async () => {
+    _internal.setNow(() => new Date("2026-09-19T15:00:00Z"));
+    const res = await mk({ number: 1, password: "secret123" });
+    assert.deepStrictEqual(res, { success: true, b10Id: "T26-INS-1" });
+    const user = await admin.auth().getUserByEmail("t26-ins-1@b10pp.local");
+    assert.deepStrictEqual(user.customClaims, { b10Id: "T26-INS-1", role: "instructor" });
+  });
+
+  it("the year prefix flips with the Chicago calendar year", async () => {
+    _internal.setNow(() => new Date("2027-01-01T05:59:00Z")); // 23:59 Dec 31 in Chicago
+    assert.strictEqual((await mk({ number: 2, password: "secret123" })).b10Id, "T26-INS-2");
+    _internal.setNow(() => new Date("2027-01-01T06:01:00Z")); // 00:01 Jan 1 in Chicago
+    assert.strictEqual((await mk({ number: 2, password: "secret123" })).b10Id, "T27-INS-2");
+  });
+
+  it("accepts a digit string, and refuses a duplicate", async () => {
+    _internal.setNow(() => new Date("2026-09-19T15:00:00Z"));
+    assert.strictEqual((await mk({ number: " 7 ", password: "secret123" })).b10Id, "T26-INS-7");
+    await assert.rejects(mk({ number: 7, password: "other456" }), (e) => e.code === "already-exists");
+    assert.strictEqual(await userCount(), 1);
+  });
+
+  it("refuses bad numbers and short passwords", async () => {
+    for (const number of [0, 1000, -1, 1.5, "abc", "", null, "1a"]) {
+      await assert.rejects(mk({ number, password: "secret123" }), (e) => e.code === "invalid-argument", `number ${number}`);
+    }
+    await assert.rejects(mk({ number: 3, password: "123" }), (e) => e.code === "invalid-argument");
+    assert.strictEqual(await userCount(), 0);
+  });
+
+  it("admins only: refuses signed-out callers, students, and instructors of either kind", async () => {
+    await assert.rejects(mk({ number: 4, password: "secret123" }, null), (e) => e.code === "unauthenticated");
+    for (const token of [
+      { role: "student", b10Id: "T26-001" },
+      { role: "instructor", b10Id: "T26-INS-1" },
+      { role: "instructor", b10Id: "26-INS-200" },
+    ]) {
+      await assert.rejects(mk({ number: 4, password: "secret123" }, { uid: "x", token }), (e) => e.code === "permission-denied");
+    }
+    assert.strictEqual(await userCount(), 0);
+  });
+
+  it("the created instructor is TOEFL staff by the shared check", async () => {
+    _internal.setNow(() => new Date("2026-09-19T15:00:00Z"));
+    await mk({ number: 5, password: "secret123" });
+    const user = await admin.auth().getUserByEmail("t26-ins-5@b10pp.local");
+    assert.strictEqual(isToeflStaffToken(user.customClaims), true);
+  });
+});
+
+describe("isToeflStaffToken (functions/lib/toeflStaff.js)", () => {
+  it("matches the rules: admins and T##-INS-# instructors only", () => {
+    assert.strictEqual(isToeflStaffToken({ role: "admin" }), true);
+    assert.strictEqual(isToeflStaffToken({ role: "instructor", b10Id: "T26-INS-1" }), true);
+    assert.strictEqual(isToeflStaffToken({ role: "instructor", b10Id: "T27-INS-12" }), true);
+    for (const t of [
+      { role: "instructor", b10Id: "26-INS-200" },
+      { role: "instructor" },
+      { role: "instructor", b10Id: "T26-INS-X" },
+      { role: "instructor", b10Id: "XT26-INS-1" },
+      { role: "instructor", b10Id: "T26-INS-1-2" },
+      { role: "student", b10Id: "T26-INS-1" },
+      {}, null, undefined,
+    ]) {
+      assert.strictEqual(isToeflStaffToken(t), false, JSON.stringify(t));
+    }
+  });
+});
+
+describe("reviewLarIntelligibility: TOEFL staff only", () => {
+  const review = (token) => reviewLarIntelligibility.run({
+    data: { submissionId: "missing-sub", utteranceIndex: 0, action: "keep_cap" },
+    auth: token ? { uid: "u", token } : null, rawRequest: {},
+  });
+
+  it("refuses a B10-PP instructor and a student before touching any data", async () => {
+    await assert.rejects(review({ role: "instructor", b10Id: "26-INS-200" }), (e) => e.code === "permission-denied");
+    await assert.rejects(review({ role: "student", b10Id: "T26-001" }), (e) => e.code === "permission-denied");
+    await assert.rejects(review(null), (e) => e.code === "unauthenticated");
+  });
+
+  it("lets a TOEFL instructor and an admin past the role check", async () => {
+    for (const token of [{ role: "instructor", b10Id: "T26-INS-1" }, { role: "admin" }]) {
+      await assert.rejects(review(token), (e) => e.code !== "permission-denied" && e.code !== "unauthenticated",
+        "should fail later (no such submission), not on role");
+    }
   });
 });

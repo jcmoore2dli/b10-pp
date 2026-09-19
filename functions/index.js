@@ -1515,3 +1515,6 @@ exports.createToeflStudentAccount = require("./toeflAccounts").createToeflStuden
 // Deploy scoped: `--only functions:setToeflFreeze,functions:toeflExpirySweep`.
 exports.setToeflFreeze = require("./toeflAccounts").setToeflFreeze;
 exports.toeflExpirySweep = require("./toeflAccounts").toeflExpirySweep;
+// TOEFL instructor accounts (admin only; T26-INS-1, ...). Deploy scoped:
+// `--only functions:createToeflInstructorAccount`.
+exports.createToeflInstructorAccount = require("./toeflAccounts").createToeflInstructorAccount;
