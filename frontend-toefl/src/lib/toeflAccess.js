@@ -15,3 +15,16 @@ export function isToeflIdExpired(b10Id, now = new Date()) {
   const expiry = toeflExpiryDate(b10Id)
   return expiry !== null && now >= expiry
 }
+
+// TOEFL staff, mirroring isToeflStaff() in firebase/firestore.rules and
+// functions/lib/toeflStaff.js: admins, and instructors whose ID is a TOEFL
+// instructor ID (T26-INS-1). B10-PP instructors (26-INS-*) share the
+// "instructor" role but are not TOEFL staff, so the app treats them like any
+// other account without TOEFL access.
+const TOEFL_INSTRUCTOR_ID_PATTERN = /^T[0-9]{2}-INS-[0-9]+$/
+
+export function isToeflStaffClaims(claims) {
+  if (!claims) return false
+  if (claims.role === 'admin') return true
+  return claims.role === 'instructor' && TOEFL_INSTRUCTOR_ID_PATTERN.test(claims.b10Id || '')
+}

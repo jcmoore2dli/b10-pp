@@ -10,6 +10,7 @@ import InstructorScreen from './screens/InstructorScreen'
 import AdminScreen from './screens/AdminScreen'
 import AccessStatusScreen from './components/AccessStatusScreen'
 import { useToeflAccess } from './hooks/useToeflAccess'
+import { isToeflStaffClaims } from './lib/toeflAccess'
 
 function AppInner() {
   const { currentUser, claims } = useAuth()
@@ -28,7 +29,7 @@ function SignedIn({ claims }) {
     return <AccessStatusScreen status={access} b10Id={claims?.b10Id} />
   }
 
-  const isStaff = claims?.role === 'instructor' || claims?.role === 'admin'
+  const isStaff = isToeflStaffClaims(claims)
 
   return (
     <Routes>

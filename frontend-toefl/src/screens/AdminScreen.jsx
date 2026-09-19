@@ -13,6 +13,8 @@ import { useAuth } from '../context/useAuth'
 //
 //   1. Create per-student access codes: T + year + number (T26-001). The code
 //      becomes the student's ID when they register.
+//   1b. Create TOEFL instructor accounts (T26-INS-1) via
+//      createToeflInstructorAccount.
 //   2. List codes, and deactivate unused ones (unused codes are the ones a
 //      guesser could redeem, so don't leave them lying around).
 //   3. List enrolled students and freeze/unfreeze them. Freezing goes through
@@ -118,6 +120,105 @@ function CreateCode({ adminId }) {
         )}
         <p className="text-xs text-gray-500">
           Create a code shortly before handing it to the student, and deactivate any that go unused.
+        </p>
+      </div>
+    </Section>
+  )
+}
+
+// ── 1b. Create a TOEFL instructor ────────────────────────────────────────────
+// Calls createToeflInstructorAccount. The server builds the ID from the
+// current year (America/Chicago), so the prefix shown here is a preview; the
+// ID in the success message is the real one.
+function CreateInstructor() {
+  const prefix = `${currentYearCode()}-INS-`
+  const [number, setNumber] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [message, setMessage] = useState(null)
+
+  const digits = number.trim()
+  const validNumber = /^\d{1,3}$/.test(digits) && Number(digits) >= 1
+  const ready = validNumber && password.length >= 6 && password === confirm
+
+  async function create() {
+    if (!ready) return
+    setBusy(true)
+    setMessage(null)
+    try {
+      const fn = httpsCallable(functions, 'createToeflInstructorAccount')
+      const res = await fn({ number: Number(digits), password })
+      setMessage({ ok: true, text: `Created ${res.data.b10Id}. They sign in with that ID and this password.` })
+      setNumber('')
+      setPassword('')
+      setConfirm('')
+    } catch (err) {
+      setMessage({ ok: false, text: err.message || 'Could not create the instructor.' })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const hint = !validNumber && digits ? 'Use a number from 1 to 999.'
+    : password && password.length < 6 ? 'Password must be at least 6 characters.'
+    : confirm && password !== confirm ? 'Passwords do not match.'
+    : null
+
+  return (
+    <Section title="Create a TOEFL instructor">
+      <div className="flex flex-col gap-4">
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-semibold text-gray-700">Instructor number</span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-gray-500">{prefix}</span>
+            <input
+              inputMode="numeric"
+              placeholder="1"
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+              className="w-24 border border-gray-300 rounded-lg px-3 py-2 font-mono"
+              disabled={busy}
+            />
+          </div>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-semibold text-gray-700">Password</span>
+          <input
+            type="password"
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2"
+            disabled={busy}
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-semibold text-gray-700">Confirm password</span>
+          <input
+            type="password"
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2"
+            disabled={busy}
+          />
+        </label>
+        {hint && <p className="text-xs text-gray-500">{hint}</p>}
+        <button
+          onClick={create}
+          disabled={!ready || busy}
+          className="py-2 rounded-xl text-white font-semibold text-sm disabled:opacity-50"
+          style={{ backgroundColor: NAVY }}
+        >
+          {busy ? 'Creating…' : validNumber ? `Create ${prefix}${Number(digits)}` : 'Create instructor'}
+        </button>
+        {message && (
+          <p role="status" className={`text-sm ${message.ok ? 'text-green-700' : 'text-red-600'}`}>{message.text}</p>
+        )}
+        <p className="text-xs text-gray-500">
+          TOEFL instructors can look up any TOEFL student and manage their own roster. They also have
+          B10-PP instructor access, because they carry the same instructor role.
         </p>
       </div>
     </Section>
@@ -324,6 +425,7 @@ export default function AdminScreen() {
           <Link to="/" className="text-blue-600 underline text-xs">← entry</Link>
         </div>
         <CreateCode adminId={claims?.b10Id || currentUser?.uid} />
+        <CreateInstructor />
         <EnrollmentList enrollments={enrollments} error={enrollmentsError} />
         <CodeList codes={codes} error={codesError} />
       </div>

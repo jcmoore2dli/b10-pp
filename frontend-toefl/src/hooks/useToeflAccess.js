@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs, limit, query } from 'firebase/firestore'
 import { db } from '../services/firebase'
-import { isToeflIdExpired } from '../lib/toeflAccess'
+import { isToeflIdExpired, isToeflStaffClaims } from '../lib/toeflAccess'
 
 // Decides which screen a signed-in user sees before the app proper:
-//   'staff'    instructors and admins, who pass the rules by role
+//   'staff'    TOEFL staff (admins, T##-INS-# instructors), who pass by role
 //   'expired'  a T account past its expiry (known from the ID year)
 //   'checking' probe in flight
 //   'active'   the rules let this student read TOEFL items
@@ -13,7 +13,7 @@ import { isToeflIdExpired } from '../lib/toeflAccess'
 // the rules directly with a one-document read of toeflItems. The result only
 // picks a message; the rules are what actually block access.
 export function useToeflAccess(claims) {
-  const isStaff = claims?.role === 'instructor' || claims?.role === 'admin'
+  const isStaff = isToeflStaffClaims(claims)
   const expired = !isStaff && isToeflIdExpired(claims?.b10Id)
   const [probe, setProbe] = useState('checking')
 
