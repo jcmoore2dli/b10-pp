@@ -27,6 +27,9 @@ const claims = {
   toeflStudent: { b10Id: "26-022", role: "student", groupId: "DLIELC" },
   b10Student:   { b10Id: "26-999", role: "student", groupId: "DLIELC" },
   oldClaimOnly: { b10Id: "26-998", role: "student", groupId: "DLIELC", toefl: true },
+  frozen:       { b10Id: "T26-901", role: "student" },
+  expired:      { b10Id: "T26-902", role: "student" },
+  notYetExpired: { b10Id: "T26-903", role: "student" },
   instructor:   { role: "instructor" },
   admin:        { role: "admin" },
   noClaims:     {},
@@ -40,9 +43,9 @@ async function seed(path) {
   });
 }
 
-async function enroll(b10Id) {
+async function enroll(b10Id, extra = {}) {
   await testEnv.withSecurityRulesDisabled(async (c) => {
-    await setDoc(doc(c.firestore(), "toeflEnrollment", b10Id), { enrolledBy: "rules-test" });
+    await setDoc(doc(c.firestore(), "toeflEnrollment", b10Id), { enrolledBy: "rules-test", ...extra });
   });
 }
 
@@ -92,6 +95,26 @@ describe("audio/toefl/** — TOEFL stimulus audio", () => {
   it("a file directly at audio/toefl (no subpath) is gated too", async () => {
     await seed("audio/toefl");
     await assertFails(getBytes(ref(as("b10Student"), "audio/toefl")));
+  });
+});
+
+describe("audio/toefl/** — enrollment must be active (frozen, expiresAt)", () => {
+  const P = "audio/toefl/lar/LAR-001/LAR-001_u1.mp3";
+
+  it("a frozen student cannot read TOEFL audio", async () => {
+    await enroll("T26-901", { frozen: true });
+    await seed(P);
+    await assertFails(getBytes(ref(as("frozen"), P)));
+  });
+  it("an expired student cannot read TOEFL audio", async () => {
+    await enroll("T26-902", { expiresAt: new Date("2020-01-01T00:00:00Z") });
+    await seed(P);
+    await assertFails(getBytes(ref(as("expired"), P)));
+  });
+  it("a student before their expiresAt reads TOEFL audio", async () => {
+    await enroll("T26-903", { expiresAt: new Date("2099-01-01T00:00:00Z") });
+    await seed(P);
+    await assertSucceeds(getBytes(ref(as("notYetExpired"), P)));
   });
 });
 

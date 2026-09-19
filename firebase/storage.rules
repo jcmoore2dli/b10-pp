@@ -11,13 +11,24 @@ service firebase.storage {
     // service to hold Firestore read permission on this project, which the
     // console offers to grant on the first deploy of these rules. Only
     // callers who already passed request.auth != null reach this, so the
-    // token is safe to read.
+    // token is safe to read. The enrollment must also be active, exactly as
+    // in firestore.rules: not frozen, and not past expiresAt.
+    function toeflEnrollmentPath() {
+      return /databases/(default)/documents/toeflEnrollment/$(request.auth.token.b10Id);
+    }
+
+    function isActiveToeflEnrollment(e) {
+      return e.get('frozen', false) != true &&
+        (e.get('expiresAt', null) == null || request.time < e.expiresAt);
+    }
+
     function hasToeflAccess() {
       // .get() with a default: most tokens carry no role or b10Id claim, and
       // a missing property would otherwise be an evaluation error.
       return request.auth.token.get('role', '') in ['instructor', 'admin'] ||
         (request.auth.token.get('b10Id', null) != null &&
-         firestore.exists(/databases/(default)/documents/toeflEnrollment/$(request.auth.token.b10Id)));
+         firestore.exists(toeflEnrollmentPath()) &&
+         isActiveToeflEnrollment(firestore.get(toeflEnrollmentPath()).data));
     }
 
     // One match for all of audio/, split on the first segment. A separate

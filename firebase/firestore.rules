@@ -410,14 +410,44 @@ match /accessCodes/{codeId} {
     // all TOEFL items. A student is enrolled when toeflEnrollment/{b10Id}
     // exists for their b10Id claim. Membership lives in that document, not in
     // a custom claim, because B10-PP's claim callables replace claims
-    // wholesale. The collection has no match block, so clients can neither
-    // read nor write it; staff manage it through the console or Admin SDK.
-    // Instructors and admins pass by role. Mirrored in storage.rules for
-    // audio/toefl/**.
+    // wholesale. Instructors and admins pass by role. Mirrored in
+    // storage.rules for audio/toefl/**.
+    //
+    // The enrollment must also be active (2026-09-19): not frozen, and not
+    // past expiresAt. Both are enforced here, not only in the app, so a frozen
+    // or expired student's token reads nothing even if used directly. A
+    // document without these fields (e.g. 26-022, created before they
+    // existed) is active with no expiry.
+    function toeflEnrollmentPath() {
+      return /databases/$(database)/documents/toeflEnrollment/$(request.auth.token.b10Id);
+    }
+
+    function isActiveToeflEnrollment(e) {
+      return e.get('frozen', false) != true &&
+        (e.get('expiresAt', null) == null || request.time < e.expiresAt);
+    }
+
     function hasToeflAccess() {
       return signedIn() &&
         (isAdminOrInstructor() ||
-         exists(/databases/$(database)/documents/toeflEnrollment/$(request.auth.token.b10Id)));
+         (exists(toeflEnrollmentPath()) &&
+          isActiveToeflEnrollment(get(toeflEnrollmentPath()).data)));
+    }
+
+    // Enrollment documents: admins read them (the admin screen lists them).
+    // No client writes, not even admins: enrollment is created by the sign-up
+    // function, and freezing also disables the Auth account, so both go
+    // through the Admin SDK.
+    match /toeflEnrollment/{b10Id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // TOEFL access codes, separate from B10-PP's accessCodes. One code per
+    // student; redeemed only by the sign-up function (Admin SDK). Admins
+    // create, list and deactivate them. Students never read them.
+    match /toeflAccessCodes/{code} {
+      allow read, create, update, delete: if isAdmin();
     }
 
     match /toeflItems/{itemId} {

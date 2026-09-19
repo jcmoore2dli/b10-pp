@@ -427,10 +427,14 @@ async function seedToefl(collectionName, id, data) {
 }
 
 // Enrolls a student in TOEFL the way staff do in production: a
-// toeflEnrollment/{b10Id} document, written with rules bypassed.
-async function enroll(b10Id) {
-  await seedToefl("toeflEnrollment", b10Id, { enrolledBy: "rules-test" });
+// toeflEnrollment/{b10Id} document, written with rules bypassed. `extra`
+// sets frozen / expiresAt for the active-enrollment cases.
+async function enroll(b10Id, extra = {}) {
+  await seedToefl("toeflEnrollment", b10Id, { enrolledBy: "rules-test", ...extra });
 }
+
+const PAST = new Date("2020-01-01T00:00:00Z");
+const FUTURE = new Date("2099-01-01T00:00:00Z");
 
 const VALID_SUBMISSION = {
   attemptId: "ATT-1",
@@ -742,6 +746,95 @@ describe("TOEFL enrollment gate", () => {
   it("an owner can still READ their own existing submission without enrollment (ownership, not new access)", async () => {
     await seedToefl("toeflSubmissions", "TS-G2", VALID_SUBMISSION);
     await assertSucceeds(getDoc(doc(b10OnlyDb(OWNER_UID, OWNER_B10), "toeflSubmissions", "TS-G2")));
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// Active enrollment (2026-09-19): frozen and expiresAt, enforced in rules
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("TOEFL enrollment must be active", () => {
+  const ITEM = { taskType: "AP", status: "active" };
+  const readItem = () => getDoc(doc(studentDb(OWNER_UID, OWNER_B10), "toeflItems", "AP-A1"));
+  beforeEach(() => seedToefl("toeflItems", "AP-A1", ITEM));
+
+  it("a frozen student cannot read an item", async () => {
+    await enroll(OWNER_B10, { frozen: true });
+    await assertFails(readItem());
+  });
+
+  it("a frozen student cannot create an attempt or a submission", async () => {
+    await enroll(OWNER_B10, { frozen: true });
+    const db = studentDb(OWNER_UID, OWNER_B10);
+    await assertFails(setDoc(doc(db, "toeflAttempts", "TA-A1"), VALID_ATTEMPT));
+    await assertFails(setDoc(doc(db, "toeflSubmissions", "TS-A1"), VALID_SUBMISSION));
+  });
+
+  it("an unfrozen student (frozen: false) reads normally", async () => {
+    await enroll(OWNER_B10, { frozen: false });
+    await assertSucceeds(readItem());
+  });
+
+  it("an expired student cannot read an item", async () => {
+    await enroll(OWNER_B10, { expiresAt: PAST });
+    await assertFails(readItem());
+  });
+
+  it("a student before their expiresAt reads normally", async () => {
+    await enroll(OWNER_B10, { expiresAt: FUTURE });
+    await assertSucceeds(readItem());
+  });
+
+  it("freezing is not bypassed by a future expiry", async () => {
+    await enroll(OWNER_B10, { frozen: true, expiresAt: FUTURE });
+    await assertFails(readItem());
+  });
+
+  it("staff pass by role regardless of any enrollment document", async () => {
+    await assertSucceeds(getDoc(doc(instructorDb(), "toeflItems", "AP-A1")));
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// toeflEnrollment and toeflAccessCodes: admin-managed collections
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("toeflEnrollment and toeflAccessCodes access", () => {
+  const adminDbT = () => testEnv.authenticatedContext("auth-uid-admin", { role: "admin" }).firestore();
+  const CODE = { code: "T26-001", active: true, instructorUid: null };
+
+  it("an admin can read enrollment documents (for the admin list)", async () => {
+    await enroll(OWNER_B10);
+    await assertSucceeds(getDoc(doc(adminDbT(), "toeflEnrollment", OWNER_B10)));
+  });
+
+  it("no client writes enrollment documents, not even an admin", async () => {
+    await assertFails(setDoc(doc(adminDbT(), "toeflEnrollment", OWNER_B10), { frozen: true }));
+  });
+
+  it("an instructor cannot read enrollment documents", async () => {
+    await enroll(OWNER_B10);
+    await assertFails(getDoc(doc(instructorDb(), "toeflEnrollment", OWNER_B10)));
+  });
+
+  it("an admin can create, read, update and delete TOEFL access codes", async () => {
+    const db = adminDbT();
+    await assertSucceeds(setDoc(doc(db, "toeflAccessCodes", "T26-001"), CODE));
+    await assertSucceeds(getDoc(doc(db, "toeflAccessCodes", "T26-001")));
+    await assertSucceeds(updateDoc(doc(db, "toeflAccessCodes", "T26-001"), { active: false }));
+    await assertSucceeds(deleteDoc(doc(db, "toeflAccessCodes", "T26-001")));
+  });
+
+  it("students and instructors cannot read or create TOEFL access codes", async () => {
+    await seedToefl("toeflAccessCodes", "T26-002", CODE);
+    await assertFails(getDoc(doc(studentDb(OWNER_UID, OWNER_B10), "toeflAccessCodes", "T26-002")));
+    await assertFails(getDoc(doc(instructorDb(), "toeflAccessCodes", "T26-002")));
+    await assertFails(setDoc(doc(studentDb(OWNER_UID, OWNER_B10), "toeflAccessCodes", "T26-003"), CODE));
+  });
+
+  it("signed-out callers cannot read TOEFL access codes", async () => {
+    await seedToefl("toeflAccessCodes", "T26-004", CODE);
+    await assertFails(getDoc(doc(anonDb(), "toeflAccessCodes", "T26-004")));
   });
 });
 
