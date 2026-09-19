@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha test/firestore.rules.test.js --timeout 10000",
     "test:lar": "mocha \"test/lar/*.test.js\"",
-    "test:toefl-accounts": "firebase emulators:exec --only auth,firestore --project demo-toefl-accounts \"mocha test/toeflAccounts.test.js --timeout 15000\""
+    "test:toefl-accounts": "firebase emulators:exec --only auth,firestore --project demo-toefl-accounts \"mocha test/toeflAccounts.test.js --timeout 15000\"",
+    "test:toefl-frontend": "mocha \"test/frontend/*.test.mjs\""
   },
   "dependencies": {
     "firebase": "^12.12.1",

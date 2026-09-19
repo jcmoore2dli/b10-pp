@@ -422,7 +422,11 @@ export default function AdminScreen() {
       <div className="max-w-3xl mx-auto flex flex-col gap-6">
         <div className="flex items-baseline justify-between">
           <h1 className="text-2xl font-bold" style={{ color: NAVY }}>TOEFL admin</h1>
-          <Link to="/" className="text-blue-600 underline text-xs">← entry</Link>
+          <span className="text-xs">
+            <Link to="/instructor" className="text-blue-600 underline">Instructor view</Link>
+            {' · '}
+            <Link to="/" className="text-blue-600 underline">entry</Link>
+          </span>
         </div>
         <CreateCode adminId={claims?.b10Id || currentUser?.uid} />
         <CreateInstructor />
