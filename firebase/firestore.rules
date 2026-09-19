@@ -410,7 +410,7 @@ match /accessCodes/{codeId} {
     // all TOEFL items. A student is enrolled when toeflEnrollment/{b10Id}
     // exists for their b10Id claim. Membership lives in that document, not in
     // a custom claim, because B10-PP's claim callables replace claims
-    // wholesale. Instructors and admins pass by role. Mirrored in
+    // wholesale. TOEFL staff (below) pass without enrollment. Mirrored in
     // storage.rules for audio/toefl/**.
     //
     // The enrollment must also be active (2026-09-19): not frozen, and not
@@ -427,20 +427,55 @@ match /accessCodes/{codeId} {
         (e.get('expiresAt', null) == null || request.time < e.expiresAt);
     }
 
+    // TOEFL staff (2026-09-19): admins, and instructors whose ID is a TOEFL
+    // instructor ID (T26-INS-1, T27-INS-4, ...), created by
+    // createToeflInstructorAccount. B10-PP instructors (26-INS-*) carry the
+    // same "instructor" role but are not TOEFL staff, so they get no TOEFL
+    // access. Every TOEFL rule uses this instead of isAdminOrInstructor().
+    function isToeflInstructor() {
+      return isInstructor() &&
+        request.auth.token.get('b10Id', '').matches('^T[0-9]{2}-INS-[0-9]+$');
+    }
+
+    function isToeflStaff() {
+      return isAdmin() || isToeflInstructor();
+    }
+
     function hasToeflAccess() {
       return signedIn() &&
-        (isAdminOrInstructor() ||
+        (isToeflStaff() ||
          (exists(toeflEnrollmentPath()) &&
           isActiveToeflEnrollment(get(toeflEnrollmentPath()).data)));
     }
 
-    // Enrollment documents: admins read them (the admin screen lists them).
-    // No client writes, not even admins: enrollment is created by the sign-up
-    // function, and freezing also disables the Auth account, so both go
-    // through the Admin SDK.
+    // Enrollment documents: TOEFL staff read them (the admin list, and the
+    // instructor lookup of any TOEFL student). No client writes, not even
+    // admins: enrollment is created by the sign-up function, and freezing
+    // also disables the Auth account, so both go through the Admin SDK.
     match /toeflEnrollment/{b10Id} {
-      allow read: if isAdmin();
+      allow read: if isToeflStaff();
       allow write: if false;
+    }
+
+    // Instructor rosters (2026-09-19): toeflRosters/{instructorId}/students/
+    // {studentId}, keyed by the instructor's TOEFL ID. An instructor may look
+    // up any TOEFL student and add or remove them on their OWN roster; admins
+    // may manage any roster. Only enrolled students can be added. Entries are
+    // add/remove only: no edits, and the fields are pinned.
+    function canManageToeflRoster(instructorId) {
+      return isAdmin() ||
+        (isToeflInstructor() && request.auth.token.b10Id == instructorId);
+    }
+
+    match /toeflRosters/{instructorId}/students/{studentId} {
+      allow read: if canManageToeflRoster(instructorId);
+      allow create: if canManageToeflRoster(instructorId) &&
+        exists(/databases/$(database)/documents/toeflEnrollment/$(studentId)) &&
+        request.resource.data.keys().hasOnly(['addedAt', 'addedBy']) &&
+        request.resource.data.addedAt == request.time &&
+        request.resource.data.addedBy == request.auth.token.get('b10Id', request.auth.uid);
+      allow update: if false;
+      allow delete: if canManageToeflRoster(instructorId);
     }
 
     // TOEFL access codes, separate from B10-PP's accessCodes. One code per
@@ -452,16 +487,16 @@ match /accessCodes/{codeId} {
 
     match /toeflItems/{itemId} {
       allow read: if hasToeflAccess();
-      allow write: if isAdminOrInstructor();
+      allow write: if isToeflStaff();
 
       match /answerKey/{key} {
-        allow read: if isAdminOrInstructor();
-        allow write: if isAdminOrInstructor();
+        allow read: if isToeflStaff();
+        allow write: if isToeflStaff();
       }
     }
 
     match /toeflAttempts/{attemptId} {
-      allow read: if isOwner(resource.data.studentId) || isAdminOrInstructor();
+      allow read: if isOwner(resource.data.studentId) || isToeflStaff();
       // Creating and continuing an attempt need enrollment too. Reading one's
       // own existing documents does not: that is ownership, not new access.
       allow create: if isOwner(request.resource.data.studentId) && hasToeflAccess();
@@ -487,7 +522,7 @@ match /accessCodes/{codeId} {
     // key is absent OR explicitly null; blocked the moment it's anything
     // else, which only a client trying to fabricate a timestamp would do.
     match /toeflSubmissions/{submissionId} {
-      allow read: if isOwner(resource.data.studentId) || isAdminOrInstructor();
+      allow read: if isOwner(resource.data.studentId) || isToeflStaff();
       // hasToeflAccess(): a submission starts paid scoring (Deepgram and
       // Anthropic), so an unenrolled account must not be able to create one.
       allow create: if isOwner(request.resource.data.studentId) && hasToeflAccess() &&
@@ -502,7 +537,7 @@ match /accessCodes/{codeId} {
     }
 
     match /toeflCourseStats/{statId} {
-      allow read: if isAdminOrInstructor();
+      allow read: if isToeflStaff();
       allow write: if false;
     }
 

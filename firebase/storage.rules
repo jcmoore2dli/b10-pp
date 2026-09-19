@@ -22,10 +22,19 @@ service firebase.storage {
         (e.get('expiresAt', null) == null || request.time < e.expiresAt);
     }
 
+    // TOEFL staff, exactly as in firestore.rules: admins, and instructors with
+    // a TOEFL instructor ID (T26-INS-1). B10-PP instructors (26-INS-*) share
+    // the "instructor" role but are not TOEFL staff.
+    function isToeflStaff() {
+      return request.auth.token.get('role', '') == 'admin' ||
+        (request.auth.token.get('role', '') == 'instructor' &&
+         request.auth.token.get('b10Id', '').matches('^T[0-9]{2}-INS-[0-9]+$'));
+    }
+
     function hasToeflAccess() {
       // .get() with a default: most tokens carry no role or b10Id claim, and
       // a missing property would otherwise be an evaluation error.
-      return request.auth.token.get('role', '') in ['instructor', 'admin'] ||
+      return isToeflStaff() ||
         (request.auth.token.get('b10Id', null) != null &&
          firestore.exists(toeflEnrollmentPath()) &&
          isActiveToeflEnrollment(firestore.get(toeflEnrollmentPath()).data));

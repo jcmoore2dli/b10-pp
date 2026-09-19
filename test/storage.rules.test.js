@@ -30,7 +30,8 @@ const claims = {
   frozen:       { b10Id: "T26-901", role: "student" },
   expired:      { b10Id: "T26-902", role: "student" },
   notYetExpired: { b10Id: "T26-903", role: "student" },
-  instructor:   { role: "instructor" },
+  instructor:   { b10Id: "T26-INS-1", role: "instructor" },   // TOEFL instructor
+  b10Instructor: { b10Id: "26-INS-200", role: "instructor", groupId: "DLIELC" },
   admin:        { role: "admin" },
   noClaims:     {},
 };
@@ -78,7 +79,11 @@ describe("audio/toefl/** — TOEFL stimulus audio", () => {
     await seed(P);
     await assertFails(getBytes(ref(as("oldClaimOnly"), P)));
   });
-  it("instructor and admin can read by role", async () => {
+  it("a B10-PP instructor cannot read TOEFL audio (not TOEFL staff)", async () => {
+    await seed(P);
+    await assertFails(getBytes(ref(as("b10Instructor"), P)));
+  });
+  it("TOEFL instructor and admin can read by role", async () => {
     await seed(P);
     await assertSucceeds(getBytes(ref(as("instructor"), P)));
     await assertSucceeds(getBytes(ref(as("admin"), P)));
@@ -139,6 +144,10 @@ describe("the rest of audio/ — unchanged for B10-PP", () => {
     await assertSucceeds(uploadBytes(ref(as("toeflStudent"), "audio/26-022/toefl_ATT1/lar.mp4"), BYTES));
   });
   it("upload without a b10Id claim is refused, as before", async () => {
-    await assertFails(uploadBytes(ref(as("instructor"), "audio/x/recording.mp4"), BYTES));
+    await assertFails(uploadBytes(ref(as("admin"), "audio/x/recording.mp4"), BYTES));
+  });
+  it("a B10-PP instructor still reads B10-PP audio", async () => {
+    await seed("audio/core/CORE-001.mp3");
+    await assertSucceeds(getBytes(ref(as("b10Instructor"), "audio/core/CORE-001.mp3")));
   });
 });

@@ -1,6 +1,6 @@
 const { readFileSync } = require("fs");
 const { initializeTestEnvironment, assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
-const { doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, limit } = require("firebase/firestore");
+const { doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, limit, where, serverTimestamp } = require("firebase/firestore");
 
 // A DEDICATED project, deliberately not the shared one. afterEach() below
 // calls clearFirestore(), which is scoped to this projectId — so when this
@@ -409,8 +409,15 @@ function b10OnlyDb(uid, b10Id) {
   return testEnv.authenticatedContext(uid, { b10Id, role: "student", groupId: "DLIELC" }).firestore();
 }
 
+// A TOEFL instructor (createToeflInstructorAccount): role "instructor" plus a
+// T##-INS-# ID. Only this shape is TOEFL staff (2026-09-19).
 function instructorDb() {
-  return testEnv.authenticatedContext("auth-uid-instructor", { role: "instructor" }).firestore();
+  return testEnv.authenticatedContext("auth-uid-instructor", { b10Id: "T26-INS-1", role: "instructor" }).firestore();
+}
+
+// A B10-PP instructor: same "instructor" role, B10-PP ID. Not TOEFL staff.
+function b10InstructorDb() {
+  return testEnv.authenticatedContext("auth-uid-b10-instructor", { b10Id: "26-INS-200", role: "instructor", groupId: "DLIELC" }).firestore();
 }
 
 // A freshly created emulator user, before setCustomUserClaims has run. This is
@@ -812,9 +819,10 @@ describe("toeflEnrollment and toeflAccessCodes access", () => {
     await assertFails(setDoc(doc(adminDbT(), "toeflEnrollment", OWNER_B10), { frozen: true }));
   });
 
-  it("an instructor cannot read enrollment documents", async () => {
+  it("a TOEFL instructor can read enrollment documents; a B10-PP instructor cannot", async () => {
     await enroll(OWNER_B10);
-    await assertFails(getDoc(doc(instructorDb(), "toeflEnrollment", OWNER_B10)));
+    await assertSucceeds(getDoc(doc(instructorDb(), "toeflEnrollment", OWNER_B10)));
+    await assertFails(getDoc(doc(b10InstructorDb(), "toeflEnrollment", OWNER_B10)));
   });
 
   it("an admin can create, read, update and delete TOEFL access codes", async () => {
@@ -872,11 +880,136 @@ describe("TOEFL app queries", () => {
     await assertSucceeds(getDocs(collection(adminDbQ(), "toeflAccessCodes")));
   });
 
-  it("students and instructors cannot list enrollments or access codes", async () => {
+  it("students and B10-PP instructors cannot list enrollments or access codes", async () => {
     await enroll(OWNER_B10);
-    for (const db of [studentDb(OWNER_UID, OWNER_B10), instructorDb()]) {
+    for (const db of [studentDb(OWNER_UID, OWNER_B10), b10InstructorDb()]) {
       await assertFails(getDocs(collection(db, "toeflEnrollment")));
       await assertFails(getDocs(collection(db, "toeflAccessCodes")));
+    }
+  });
+
+  it("a TOEFL instructor can list enrollments (lookup) but not access codes", async () => {
+    await enroll(OWNER_B10);
+    await assertSucceeds(getDocs(collection(instructorDb(), "toeflEnrollment")));
+    await assertFails(getDocs(collection(instructorDb(), "toeflAccessCodes")));
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// TOEFL staff (2026-09-19): admins + T##-INS-# instructors only
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("TOEFL staff vs B10-PP instructors", () => {
+  const ITEM = { taskType: "AP", status: "active" };
+  const asRole = (b10Id, role) => testEnv.authenticatedContext(`uid-${b10Id}`, { b10Id, role }).firestore();
+
+  it("a TOEFL instructor reads items, answer keys, and any student's attempts and submissions", async () => {
+    await seedToefl("toeflItems", "AP-S1", ITEM);
+    await seedToefl("toeflItems/AP-S1/answerKey", "key", { correct: "a" });
+    await seedToefl("toeflAttempts", "TA-S1", VALID_ATTEMPT);
+    await seedToefl("toeflSubmissions", "TS-S1", VALID_SUBMISSION);
+    const db = instructorDb();
+    await assertSucceeds(getDoc(doc(db, "toeflItems", "AP-S1")));
+    await assertSucceeds(getDoc(doc(db, "toeflItems/AP-S1/answerKey", "key")));
+    await assertSucceeds(getDocs(query(collection(db, "toeflAttempts"), where("studentId", "==", OWNER_B10))));
+    await assertSucceeds(getDocs(query(collection(db, "toeflSubmissions"), where("studentId", "==", OWNER_B10))));
+  });
+
+  it("a B10-PP instructor gets none of it", async () => {
+    await seedToefl("toeflItems", "AP-S2", ITEM);
+    await seedToefl("toeflItems/AP-S2/answerKey", "key", { correct: "a" });
+    await seedToefl("toeflAttempts", "TA-S2", VALID_ATTEMPT);
+    await seedToefl("toeflSubmissions", "TS-S2", VALID_SUBMISSION);
+    const db = b10InstructorDb();
+    await assertFails(getDoc(doc(db, "toeflItems", "AP-S2")));
+    await assertFails(getDoc(doc(db, "toeflItems/AP-S2/answerKey", "key")));
+    await assertFails(getDoc(doc(db, "toeflAttempts", "TA-S2")));
+    await assertFails(getDoc(doc(db, "toeflSubmissions", "TS-S2")));
+    await assertFails(getDocs(query(collection(db, "toeflItems"), limit(1))));
+  });
+
+  it("a B10-PP instructor keeps their B10-PP access (students collection)", async () => {
+    await testEnv.withSecurityRulesDisabled(async (c) => {
+      await setDoc(doc(c.firestore(), "students", "26-001"), { studentId: "26-001", track: "B" });
+    });
+    await assertSucceeds(getDoc(doc(b10InstructorDb(), "students", "26-001")));
+  });
+
+  it("only role instructor + an exact T##-INS-# ID counts", async () => {
+    await seedToefl("toeflItems", "AP-S3", ITEM);
+    const read = (db) => getDoc(doc(db, "toeflItems", "AP-S3"));
+    await assertSucceeds(read(asRole("T27-INS-12", "instructor")));
+    await assertFails(read(asRole("T26-INS-1", "student")));     // wrong role
+    await assertFails(read(asRole("T26-INS-X", "instructor")));  // not a number
+    await assertFails(read(asRole("XT26-INS-1", "instructor"))); // prefix
+    await assertFails(read(asRole("T26-INS-1-2", "instructor"))); // suffix
+    await assertFails(read(asRole("T26-001", "instructor")));    // a student-style ID
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// toeflRosters/{instructorId}/students/{studentId} (2026-09-19)
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("TOEFL instructor rosters", () => {
+  const INS = "T26-INS-1";
+  const rosterDoc = (db, instructorId, studentId) => doc(db, "toeflRosters", instructorId, "students", studentId);
+  const entry = (by) => ({ addedAt: serverTimestamp(), addedBy: by });
+  const otherInstructorDb = () => testEnv.authenticatedContext("auth-uid-ins2", { b10Id: "T26-INS-2", role: "instructor" }).firestore();
+  const adminDbR = () => testEnv.authenticatedContext("auth-uid-admin", { b10Id: "ADMIN001", role: "admin" }).firestore();
+
+  it("an instructor adds an enrolled student to their own roster, reads it, and removes them", async () => {
+    await enroll(OWNER_B10);
+    const db = instructorDb();
+    await assertSucceeds(setDoc(rosterDoc(db, INS, OWNER_B10), entry(INS)));
+    await assertSucceeds(getDocs(collection(db, "toeflRosters", INS, "students")));
+    await assertSucceeds(deleteDoc(rosterDoc(db, INS, OWNER_B10)));
+  });
+
+  it("any TOEFL student can be added, not only the instructor's own code holders", async () => {
+    await enroll("T26-777", { instructorId: "T26-INS-9" });
+    await assertSucceeds(setDoc(rosterDoc(instructorDb(), INS, "T26-777"), entry(INS)));
+  });
+
+  it("an instructor cannot touch another instructor's roster", async () => {
+    await enroll(OWNER_B10);
+    await testEnv.withSecurityRulesDisabled(async (c) => {
+      await setDoc(rosterDoc(c.firestore(), "T26-INS-2", OWNER_B10), { addedAt: new Date(), addedBy: "T26-INS-2" });
+    });
+    const db = instructorDb();
+    await assertFails(setDoc(rosterDoc(db, "T26-INS-2", "T26-888"), entry(INS)));
+    await assertFails(getDocs(collection(db, "toeflRosters", "T26-INS-2", "students")));
+    await assertFails(deleteDoc(rosterDoc(db, "T26-INS-2", OWNER_B10)));
+    await assertSucceeds(getDocs(collection(otherInstructorDb(), "toeflRosters", "T26-INS-2", "students")));
+  });
+
+  it("only enrolled students can be added", async () => {
+    await assertFails(setDoc(rosterDoc(instructorDb(), INS, "T26-404"), entry(INS)));
+  });
+
+  it("entries are pinned: no extra fields, no forged addedBy or addedAt, no edits", async () => {
+    await enroll(OWNER_B10);
+    const db = instructorDb();
+    await assertFails(setDoc(rosterDoc(db, INS, OWNER_B10), { ...entry(INS), note: "x" }));
+    await assertFails(setDoc(rosterDoc(db, INS, OWNER_B10), entry("T26-INS-2")));
+    await assertFails(setDoc(rosterDoc(db, INS, OWNER_B10), { addedAt: new Date("2020-01-01"), addedBy: INS }));
+    await assertSucceeds(setDoc(rosterDoc(db, INS, OWNER_B10), entry(INS)));
+    await assertFails(updateDoc(rosterDoc(db, INS, OWNER_B10), { addedBy: INS }));
+  });
+
+  it("an admin can manage any instructor's roster", async () => {
+    await enroll(OWNER_B10);
+    const db = adminDbR();
+    await assertSucceeds(setDoc(rosterDoc(db, INS, OWNER_B10), entry("ADMIN001")));
+    await assertSucceeds(getDocs(collection(db, "toeflRosters", INS, "students")));
+    await assertSucceeds(deleteDoc(rosterDoc(db, INS, OWNER_B10)));
+  });
+
+  it("students and B10-PP instructors cannot read or write rosters", async () => {
+    await enroll(OWNER_B10);
+    for (const [db, id] of [[studentDb(OWNER_UID, OWNER_B10), OWNER_B10], [b10InstructorDb(), "26-INS-200"]]) {
+      await assertFails(setDoc(rosterDoc(db, id, OWNER_B10), entry(id)));
+      await assertFails(getDocs(collection(db, "toeflRosters", INS, "students")));
     }
   });
 });
