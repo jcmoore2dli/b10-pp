@@ -1511,3 +1511,7 @@ exports.reviewLarIntelligibility = require("./toeflLarReview").reviewLarIntellig
 // toeflAccessCodes and toeflEnrollment. Deploy scoped:
 // `--only functions:createToeflStudentAccount`.
 exports.createToeflStudentAccount = require("./toeflAccounts").createToeflStudentAccount;
+// TOEFL freeze/unfreeze (admin) and the daily expiry sweep, same module.
+// Deploy scoped: `--only functions:setToeflFreeze,functions:toeflExpirySweep`.
+exports.setToeflFreeze = require("./toeflAccounts").setToeflFreeze;
+exports.toeflExpirySweep = require("./toeflAccounts").toeflExpirySweep;
