@@ -19,6 +19,24 @@ function AppInner() {
 
   const isInstructorOrAdmin = claims?.role === 'instructor' || claims?.role === 'admin'
 
+  // Auto-expiry: students lose access 2 years after enrollment year
+  // e.g. 26-xxx expires when current year becomes 28
+  if (claims?.b10Id && claims?.role === 'student') {
+    const enrollYear = parseInt('20' + claims.b10Id.slice(0, 2), 10)
+    const currentYear = new Date().getFullYear()
+    if (currentYear >= enrollYear + 2) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+          <div className="bg-white rounded-2xl shadow p-8 max-w-sm w-full text-center">
+            <p className="text-2xl mb-3">🔒</p>
+            <h2 className="text-lg font-bold text-gray-800 mb-2">Account Expired</h2>
+            <p className="text-sm text-gray-500">Your B10-PP account ({claims.b10Id}) is no longer active. Please contact your instructor if you believe this is an error.</p>
+          </div>
+        </div>
+      )
+    }
+  }
+
   return (
     <Routes>
       <Route path="/b10_practice_platform/" element={
