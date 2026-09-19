@@ -1506,3 +1506,8 @@ exports.onToeflSubmissionCreated = require("./toeflScoring").onToeflSubmissionCr
 // (restore the uncapped band, or keep the cap), logged. Deploy scoped the same
 // way: `--only functions:reviewLarIntelligibility`.
 exports.reviewLarIntelligibility = require("./toeflLarReview").reviewLarIntelligibility;
+// TOEFL self-registration with a per-student TOEFL access code (T26-001, ...).
+// Separate from B10-PP's createStudentAccount: reads and writes only
+// toeflAccessCodes and toeflEnrollment. Deploy scoped:
+// `--only functions:createToeflStudentAccount`.
+exports.createToeflStudentAccount = require("./toeflAccounts").createToeflStudentAccount;
