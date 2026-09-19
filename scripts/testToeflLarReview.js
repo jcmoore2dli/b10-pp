@@ -161,10 +161,12 @@ function fakeFirestore(docs) {
     "firebase-admin/firestore": { Timestamp: { now: () => "SERVER-NOW" } },
   }).reviewLarIntelligibility;
   const call = async (auth, data) => { try { return await callable({ auth, data }); } catch (e) { return { err: e.code }; } };
-  const inst = { uid: "inst9", token: { role: "instructor", email: "i9@example.org" } };
+  // A TOEFL instructor (T##-INS-#): since 2026-09-19 only TOEFL staff may review.
+  const inst = { uid: "inst9", token: { role: "instructor", b10Id: "T26-INS-9", email: "i9@example.org" } };
 
   eq(await call(null, { submissionId: "S1", utteranceIndex: 2, action: "restore" }), { err: "unauthenticated" }, "signed out refused");
   eq(await call({ uid: "stu", token: { role: "student" } }, { submissionId: "S1", utteranceIndex: 2, action: "restore" }), { err: "permission-denied" }, "student refused");
+  eq(await call({ uid: "b10i", token: { role: "instructor", b10Id: "26-INS-200" } }, { submissionId: "S1", utteranceIndex: 2, action: "restore" }), { err: "permission-denied" }, "B10-PP instructor refused (not TOEFL staff)");
   eq(await call(inst, { submissionId: "S1", utteranceIndex: "2", action: "restore" }), { err: "invalid-argument" }, "string utteranceIndex refused");
   eq(await call(inst, { submissionId: "NOPE", utteranceIndex: 2, action: "restore" }), { err: "not-found" }, "missing submission refused");
   eq(store.updates.length, 0, "no writes from refused calls");
