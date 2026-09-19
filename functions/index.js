@@ -729,11 +729,11 @@ exports.enrollStudent = onCall(async (request) => {
   const codeRef = db.collection("accessCodes").doc(code);
   const codeSnap = await codeRef.get();
   if (!codeSnap.exists) {
-    throw new HttpsError("not-found", "Access code not found.");
+    throw new HttpsError("not-found", "Invalid or unavailable access code.");
   }
   const codeData = codeSnap.data();
   if (!codeData.active) {
-    throw new HttpsError("failed-precondition", "Access code is no longer active.");
+    throw new HttpsError("failed-precondition", "Invalid or unavailable access code.");
   }
 
   const { groupId } = codeData;
@@ -747,7 +747,7 @@ exports.enrollStudent = onCall(async (request) => {
       const newCount = count + 1;
       const newB10Id = `${code}-${newCount}`;
 
-      tx.update(codeRef, { enrolledCount: newCount });
+      tx.update(codeRef, { enrolledCount: newCount, active: false });
       tx.set(db.collection("students").doc(newB10Id), {
         b10Id:        newB10Id,
         uid:          uid,
@@ -1345,11 +1345,11 @@ exports.createStudentAccount = onCall(async (request) => {
   const codeRef = db.collection("accessCodes").doc(code);
   const codeSnap = await codeRef.get();
   if (!codeSnap.exists) {
-    throw new HttpsError("not-found", "Access code not found.");
+    throw new HttpsError("not-found", "Invalid or unavailable access code.");
   }
   const codeData = codeSnap.data();
   if (!codeData.active) {
-    throw new HttpsError("failed-precondition", "Access code is no longer active.");
+    throw new HttpsError("failed-precondition", "Invalid or unavailable access code.");
   }
 
   const { groupId } = codeData;
