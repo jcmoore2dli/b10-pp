@@ -405,15 +405,19 @@ match /accessCodes/{codeId} {
         request.auth.token.b10Id == studentId;
     }
 
-    // TOEFL enrollment gate (2026-09-18). TOEFL and B10-PP share one Auth
+    // TOEFL enrollment gate (2026-09-19). TOEFL and B10-PP share one Auth
     // pool and one set of claims, so signedIn() let every B10-PP student read
-    // all TOEFL items. TOEFL students now carry an explicit `toefl: true`
-    // custom claim (scripts/setToeflClaim.js, which merges, never replaces);
-    // instructors and admins pass by role. Mirrored in storage.rules for
+    // all TOEFL items. A student is enrolled when toeflEnrollment/{b10Id}
+    // exists for their b10Id claim. Membership lives in that document, not in
+    // a custom claim, because B10-PP's claim callables replace claims
+    // wholesale. The collection has no match block, so clients can neither
+    // read nor write it; staff manage it through the console or Admin SDK.
+    // Instructors and admins pass by role. Mirrored in storage.rules for
     // audio/toefl/**.
     function hasToeflAccess() {
       return signedIn() &&
-        (request.auth.token.get('toefl', false) == true || isAdminOrInstructor());
+        (isAdminOrInstructor() ||
+         exists(/databases/$(database)/documents/toeflEnrollment/$(request.auth.token.b10Id)));
     }
 
     match /toeflItems/{itemId} {
