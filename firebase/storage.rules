@@ -2,16 +2,22 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // TOEFL enrollment gate (2026-09-18), mirroring hasToeflAccess() in
+    // TOEFL enrollment gate (2026-09-19), mirroring hasToeflAccess() in
     // firestore.rules. TOEFL and B10-PP share one Auth pool, and the old
     // /audio/{allPaths=**} rule let every signed-in account read all TOEFL
-    // listening audio. Only callers who already passed request.auth != null
-    // reach this, so the token is safe to read.
+    // listening audio. A student is enrolled when toeflEnrollment/{b10Id}
+    // exists in Firestore for their b10Id claim, checked through a
+    // cross-service firestore.exists() call. That call needs the Storage
+    // service to hold Firestore read permission on this project, which the
+    // console offers to grant on the first deploy of these rules. Only
+    // callers who already passed request.auth != null reach this, so the
+    // token is safe to read.
     function hasToeflAccess() {
-      // .get() with a default: most tokens carry no toefl or role claim, and
+      // .get() with a default: most tokens carry no role or b10Id claim, and
       // a missing property would otherwise be an evaluation error.
-      return request.auth.token.get('toefl', false) == true ||
-        request.auth.token.get('role', '') in ['instructor', 'admin'];
+      return request.auth.token.get('role', '') in ['instructor', 'admin'] ||
+        (request.auth.token.get('b10Id', null) != null &&
+         firestore.exists(/databases/(default)/documents/toeflEnrollment/$(request.auth.token.b10Id)));
     }
 
     // One match for all of audio/, split on the first segment. A separate

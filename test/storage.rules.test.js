@@ -1,23 +1,32 @@
 // test/storage.rules.test.js
-// Storage rules for audio/, including the TOEFL enrollment gate (2026-09-18).
-// Runs against the Storage emulator only, under a demo- project id, which the
-// emulator treats as offline: nothing here can reach the real bucket.
+// Storage rules for audio/, including the TOEFL enrollment gate (2026-09-18;
+// document-based 2026-09-19). Runs against the Storage AND Firestore
+// emulators, under a demo- project id, which the emulators treat as offline:
+// nothing here can reach the real bucket or database. Firestore is needed
+// because hasToeflAccess() calls firestore.exists() on toeflEnrollment/{b10Id}.
+// The emulator cannot prove the production half of that: the Storage service's
+// permission to read Firestore, granted on first deploy, must be checked live.
 //
-//   firebase emulators:exec --only storage --project demo-b10-rules \
+//   firebase emulators:exec --only storage,firestore --project demo-b10-rules \
 //     "npx mocha test/storage.rules.test.js --timeout 10000"
 
 const { readFileSync } = require("fs");
 const { initializeTestEnvironment, assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
 const { ref, getBytes, uploadBytes } = require("firebase/storage");
+const { doc, setDoc } = require("firebase/firestore");
 
 const PROJECT_ID = "demo-b10-rules";
 const BYTES = new Uint8Array([1, 2, 3]);
 
 let testEnv;
 
+// toeflStudent is enrolled by the toeflEnrollment/26-022 document seeded in
+// beforeEach, not by anything in its token. oldClaimOnly carries the
+// superseded toefl: true claim (172161d3, never deployed) and no document.
 const claims = {
-  toeflStudent: { b10Id: "26-022", role: "student", groupId: "DLIELC", toefl: true },
+  toeflStudent: { b10Id: "26-022", role: "student", groupId: "DLIELC" },
   b10Student:   { b10Id: "26-999", role: "student", groupId: "DLIELC" },
+  oldClaimOnly: { b10Id: "26-998", role: "student", groupId: "DLIELC", toefl: true },
   instructor:   { role: "instructor" },
   admin:        { role: "admin" },
   noClaims:     {},
@@ -31,13 +40,24 @@ async function seed(path) {
   });
 }
 
+async function enroll(b10Id) {
+  await testEnv.withSecurityRulesDisabled(async (c) => {
+    await setDoc(doc(c.firestore(), "toeflEnrollment", b10Id), { enrolledBy: "rules-test" });
+  });
+}
+
 before(async () => {
   testEnv = await initializeTestEnvironment({
     projectId: PROJECT_ID,
     storage: { rules: readFileSync("./firebase/storage.rules", "utf8"), host: "127.0.0.1", port: 9199 },
+    firestore: { rules: readFileSync("./firebase/firestore.rules", "utf8"), host: "127.0.0.1", port: 8080 },
   });
 });
-afterEach(async () => { await testEnv.clearStorage(); });
+beforeEach(async () => { await enroll("26-022"); });
+afterEach(async () => {
+  await testEnv.clearStorage();
+  await testEnv.clearFirestore();
+});
 after(async () => { await testEnv.cleanup(); });
 
 describe("audio/toefl/** — TOEFL stimulus audio", () => {
@@ -47,9 +67,13 @@ describe("audio/toefl/** — TOEFL stimulus audio", () => {
     await seed(P);
     await assertSucceeds(getBytes(ref(as("toeflStudent"), P)));
   });
-  it("B10-PP student WITHOUT the toefl claim cannot read", async () => {
+  it("B10-PP student with no enrollment document cannot read", async () => {
     await seed(P);
     await assertFails(getBytes(ref(as("b10Student"), P)));
+  });
+  it("the old toefl: true claim alone no longer grants access", async () => {
+    await seed(P);
+    await assertFails(getBytes(ref(as("oldClaimOnly"), P)));
   });
   it("instructor and admin can read by role", async () => {
     await seed(P);
