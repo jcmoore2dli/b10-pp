@@ -1,6 +1,6 @@
 const { readFileSync } = require("fs");
 const { initializeTestEnvironment, assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
-const { doc, getDoc, setDoc, updateDoc, deleteDoc } = require("firebase/firestore");
+const { doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, limit } = require("firebase/firestore");
 
 // A DEDICATED project, deliberately not the shared one. afterEach() below
 // calls clearFirestore(), which is scoped to this projectId — so when this
@@ -801,7 +801,7 @@ describe("TOEFL enrollment must be active", () => {
 
 describe("toeflEnrollment and toeflAccessCodes access", () => {
   const adminDbT = () => testEnv.authenticatedContext("auth-uid-admin", { role: "admin" }).firestore();
-  const CODE = { code: "T26-001", active: true, instructorUid: null };
+  const CODE = { code: "T26-001", active: true, instructorId: null };
 
   it("an admin can read enrollment documents (for the admin list)", async () => {
     await enroll(OWNER_B10);
@@ -838,3 +838,45 @@ describe("toeflEnrollment and toeflAccessCodes access", () => {
   });
 });
 
+
+// ══════════════════════════════════════════════════════════════════════════
+// The queries the TOEFL app actually runs (Phase 4 screens)
+// ══════════════════════════════════════════════════════════════════════════
+
+describe("TOEFL app queries", () => {
+  const adminDbQ = () => testEnv.authenticatedContext("auth-uid-admin", { role: "admin" }).firestore();
+  const probe = (db) => getDocs(query(collection(db, "toeflItems"), limit(1)));
+
+  // useToeflAccess(): a one-document list of toeflItems decides which screen
+  // a student sees. It must follow hasToeflAccess() exactly.
+  it("the access probe succeeds for an enrolled student", async () => {
+    await enroll(OWNER_B10);
+    await seedToefl("toeflItems", "AP-Q1", { taskType: "AP" });
+    await assertSucceeds(probe(studentDb(OWNER_UID, OWNER_B10)));
+  });
+
+  it("the access probe is refused for unenrolled, frozen and expired students", async () => {
+    await seedToefl("toeflItems", "AP-Q2", { taskType: "AP" });
+    await assertFails(probe(b10OnlyDb(OWNER_UID, OWNER_B10)));
+    await enroll(OTHER_B10, { frozen: true });
+    await assertFails(probe(studentDb(OTHER_UID, OTHER_B10)));
+    await enroll("TEST-STUDENT-03", { expiresAt: PAST });
+    await assertFails(probe(studentDb("auth-uid-student-03", "TEST-STUDENT-03")));
+  });
+
+  // AdminScreen lists both collections live.
+  it("an admin can list enrollments and access codes", async () => {
+    await enroll(OWNER_B10);
+    await seedToefl("toeflAccessCodes", "T26-500", { code: "T26-500", active: true });
+    await assertSucceeds(getDocs(collection(adminDbQ(), "toeflEnrollment")));
+    await assertSucceeds(getDocs(collection(adminDbQ(), "toeflAccessCodes")));
+  });
+
+  it("students and instructors cannot list enrollments or access codes", async () => {
+    await enroll(OWNER_B10);
+    for (const db of [studentDb(OWNER_UID, OWNER_B10), instructorDb()]) {
+      await assertFails(getDocs(collection(db, "toeflEnrollment")));
+      await assertFails(getDocs(collection(db, "toeflAccessCodes")));
+    }
+  });
+});

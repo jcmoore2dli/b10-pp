@@ -174,7 +174,7 @@ exports.createToeflStudentAccount = onCall(async (request) => {
         b10Id: code,
         uid,
         accessCode: code,
-        instructorUid: data.instructorUid || null,
+        instructorId: data.instructorId || null,
         frozen: false,
         expiresAt: expiryFor(code),
         enrolledAt: FieldValue.serverTimestamp(),

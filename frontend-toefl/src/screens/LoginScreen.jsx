@@ -31,7 +31,7 @@ export default function LoginScreen() {
   async function handleSignIn() {
     setError(null);
     if (!b10Id || !password) {
-      setError("Please enter your B10 ID and password.");
+      setError("Please enter your student ID and password.");
       return;
     }
     setLoading(true);
@@ -39,7 +39,12 @@ export default function LoginScreen() {
       await signInWithEmailAndPassword(auth, toSyntheticEmail(b10Id), password);
     } catch (err) {
       if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found") {
-        setError("B10 ID or password is incorrect.");
+        setError("Student ID or password is incorrect.");
+      } else if (err.code === "auth/user-disabled") {
+        // Frozen or expired TOEFL accounts (setToeflFreeze, toeflExpirySweep).
+        setError("This account has been deactivated. Please contact your instructor or the TOEFL administrator.");
+      } else if (err.code === "auth/too-many-requests") {
+        setError("Too many sign-in attempts. Please wait a few minutes and try again.");
       } else {
         setError(err.message);
       }
@@ -64,8 +69,11 @@ export default function LoginScreen() {
     }
     setLoading(true);
     try {
-      const createStudentAccount = httpsCallable(functions, 'createStudentAccount');
-      const result = await createStudentAccount({
+      // TOEFL's own sign-up (functions/toeflAccounts.js), not B10-PP's
+      // createStudentAccount: it redeems a toeflAccessCodes code (T26-001)
+      // and creates the TOEFL enrollment in the same step.
+      const createToeflStudentAccount = httpsCallable(functions, 'createToeflStudentAccount');
+      const result = await createToeflStudentAccount({
         accessCode: accessCode.trim().toUpperCase(),
         password,
       });
@@ -74,14 +82,10 @@ export default function LoginScreen() {
         await signInWithEmailAndPassword(auth, email, password);
       }
     } catch (err) {
-      const msg = err?.message || 'Account creation failed.';
-      if (msg.includes('not-found')) {
-        setError('Access code not found. Please check with your instructor.');
-      } else if (msg.includes('no longer active')) {
-        setError('This access code is no longer active.');
-      } else {
-        setError(msg);
-      }
+      // The server's messages for these are written for students and are
+      // deliberately uniform (every code problem reads the same).
+      const shown = ['functions/not-found', 'functions/resource-exhausted', 'functions/invalid-argument'];
+      setError(shown.includes(err?.code) ? err.message : 'Account creation failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -123,10 +127,10 @@ export default function LoginScreen() {
         {mode === "signin" ? (
           <>
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold text-gray-700">B10 ID</label>
+              <label className="text-sm font-semibold text-gray-700">Student ID</label>
               <input
                 type="text"
-                placeholder="e.g. 26-001"
+                placeholder="e.g. T26-001"
                 value={b10Id}
                 onChange={(e) => setB10Id(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -147,12 +151,12 @@ export default function LoginScreen() {
           </>
         ) : (
           <>
-            <p className="text-xs text-gray-500 text-center">Enter your access code from your instructor and create a password.</p>
+            <p className="text-xs text-gray-500 text-center">Enter the TOEFL access code you were given and create a password. Your access code becomes your student ID.</p>
             <div className="flex flex-col gap-1">
               <label className="text-sm font-semibold text-gray-700">Access Code</label>
               <input
                 type="text"
-                placeholder="e.g. 26-001"
+                placeholder="e.g. T26-001"
                 value={accessCode}
                 onChange={(e) => setAccessCode(e.target.value)}
                 autoCapitalize="characters"

@@ -34,7 +34,7 @@ const call = (data, ip = "203.0.113.1") => createToeflStudentAccount.run({ data,
 
 async function seedCode(code, extra = {}) {
   await db.collection("toeflAccessCodes").doc(code).set({
-    code, active: true, instructorUid: null, createdAt: new Date(), ...extra,
+    code, active: true, instructorId: null, createdAt: new Date(), ...extra,
   });
 }
 
@@ -71,7 +71,7 @@ describe("createToeflStudentAccount — success path", () => {
     assert.strictEqual(e.b10Id, "T26-001");
     assert.strictEqual(e.uid, user.uid);
     assert.strictEqual(e.frozen, false);
-    assert.strictEqual(e.instructorUid, null);
+    assert.strictEqual(e.instructorId, null);
     assert.strictEqual(e.expiresAt.toDate().toISOString(), "2028-01-01T00:00:00.000Z");
 
     const c = (await db.collection("toeflAccessCodes").doc("T26-001").get()).data();
@@ -88,10 +88,10 @@ describe("createToeflStudentAccount — success path", () => {
   });
 
   it("copies an instructor link from the code; self-study codes stay null", async () => {
-    await seedCode("T26-002", { instructorUid: "instr-uid-1" });
+    await seedCode("T26-002", { instructorId: "INSTR-01" });
     await call({ accessCode: "T26-002", password: "secret123" });
     const e = (await db.collection("toeflEnrollment").doc("T26-002").get()).data();
-    assert.strictEqual(e.instructorUid, "instr-uid-1");
+    assert.strictEqual(e.instructorId, "INSTR-01");
   });
 
   it("normalizes case and whitespace in the entered code", async () => {
